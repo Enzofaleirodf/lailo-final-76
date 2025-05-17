@@ -7,8 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ChevronDown, Filter, FilterX } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const FilterContent = () => {
@@ -128,10 +127,10 @@ const FilterSection = () => {
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
   
-  // For large screens, render the sidebar directly
+  // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
     return (
-      <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col">
+      <div className="w-full lg:w-[448px] bg-white rounded-md border p-6 flex flex-col">
         <FilterContent />
       </div>
     );
@@ -140,7 +139,7 @@ const FilterSection = () => {
   // For mobile and tablet screens, use a drawer
   return (
     <>
-      <div className="md:hidden w-full mb-4">
+      <div className="w-full mb-4">
         <Button 
           variant="outline" 
           onClick={() => setOpen(true)} 
@@ -152,7 +151,7 @@ const FilterSection = () => {
       </div>
 
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerContent className="p-6">
+        <DrawerContent className="p-6 max-h-[80vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-medium">Filtros</h2>
             <Button 
