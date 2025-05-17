@@ -1,11 +1,28 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import Sidebar from '@/components/Sidebar';
+import FilterSection from '@/components/FilterSection';
+import TopFilters from '@/components/TopFilters';
+import ResultHeader from '@/components/ResultHeader';
+import AuctionList from '@/components/AuctionList';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar />
+      <div className="flex-1 pl-14">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <TopFilters />
+          <div className="flex gap-6">
+            <aside className="shrink-0">
+              <FilterSection />
+            </aside>
+            <main className="flex-1">
+              <ResultHeader />
+              <AuctionList />
+            </main>
+          </div>
+        </div>
       </div>
     </div>
   );
