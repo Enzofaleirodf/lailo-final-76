@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Select } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
@@ -8,7 +7,7 @@ import { ChevronDown } from 'lucide-react';
 
 const FilterSection = () => {
   return (
-    <div className="w-[320px] bg-white rounded-md border p-6 flex flex-col gap-5">
+    <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col gap-5">
       <div>
         <h3 className="text-sm font-medium mb-2">Localização</h3>
         <div className="relative">
