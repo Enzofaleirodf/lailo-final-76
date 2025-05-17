@@ -22,7 +22,7 @@ const FilterSection = () => {
 
       <div>
         <h3 className="text-sm font-medium mb-2">Tipo de veículo</h3>
-        <ToggleGroup type="multiple" className="flex flex-wrap gap-2 w-full">
+        <ToggleGroup type="multiple" className="flex flex-wrap gap-2 w-full justify-start">
           <ToggleGroupItem value="aereos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
             <Plane size={14} />
             <span>Aéreos</span>
