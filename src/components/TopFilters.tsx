@@ -28,41 +28,34 @@ const TopFilters = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-        <ToggleGroup 
-          type="single" 
-          className="flex w-full"
-          value={activeVehicleType}
-          onValueChange={(value) => {
-            if (value) setActiveVehicleType(value as 'property' | 'vehicle');
-          }}
-        >
-          <ToggleGroupItem 
-            value="property" 
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <div className="flex h-12">
+          <button 
+            onClick={() => setActiveVehicleType('property')}
             className={cn(
-              "flex-1 px-4 py-3 gap-2 text-sm font-medium border-none rounded-none transition-all",
-              activeVehicleType === 'property'
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-transparent text-gray-700 hover:bg-gray-50"
+              "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+              activeVehicleType === 'property' 
+                ? "bg-purple-600 text-white" 
+                : "text-gray-700 hover:bg-gray-50"
             )}
           >
-            <Building2 size={18} />
+            <Building2 size={18} className="shrink-0" />
             <span>Imóveis</span>
-          </ToggleGroupItem>
-          
-          <ToggleGroupItem 
-            value="vehicle" 
+          </button>
+          <div className="w-[1px] bg-gray-200"></div>
+          <button 
+            onClick={() => setActiveVehicleType('vehicle')}
             className={cn(
-              "flex-1 px-4 py-3 gap-2 text-sm font-medium border-none rounded-none transition-all",
-              activeVehicleType === 'vehicle'
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-transparent text-gray-700 hover:bg-gray-50"
+              "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+              activeVehicleType === 'vehicle' 
+                ? "bg-purple-600 text-white" 
+                : "text-gray-700 hover:bg-gray-50"
             )}
           >
-            <Car size={18} />
+            <Car size={18} className="shrink-0" />
             <span>Veículos</span>
-          </ToggleGroupItem>
-        </ToggleGroup>
+          </button>
+        </div>
       </div>
       
       {/* Format Dropdown */}
