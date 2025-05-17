@@ -23,21 +23,21 @@ const FilterSection = () => {
       <div>
         <h3 className="text-sm font-medium mb-2">Tipo de veículo</h3>
         <ToggleGroup type="multiple" className="flex flex-wrap gap-2">
-          <ToggleGroupItem value="car" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
-            <Car size={24} className="mb-2" />
-            <span className="text-xs">Carros</span>
+          <ToggleGroupItem value="car" className="flex items-center justify-center h-10 px-3 border rounded-md">
+            <Car size={16} className="mr-2" />
+            <span className="text-sm">Carros</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="suv" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
-            <CarFront size={24} className="mb-2" />
-            <span className="text-xs">SUVs</span>
+          <ToggleGroupItem value="suv" className="flex items-center justify-center h-10 px-3 border rounded-md">
+            <CarFront size={16} className="mr-2" />
+            <span className="text-sm">SUVs</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="truck" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
-            <Truck size={24} className="mb-2" />
-            <span className="text-xs">Caminhões</span>
+          <ToggleGroupItem value="truck" className="flex items-center justify-center h-10 px-3 border rounded-md">
+            <Truck size={16} className="mr-2" />
+            <span className="text-sm">Caminhões</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="bus" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
-            <Bus size={24} className="mb-2" />
-            <span className="text-xs">Ônibus</span>
+          <ToggleGroupItem value="bus" className="flex items-center justify-center h-10 px-3 border rounded-md">
+            <Bus size={16} className="mr-2" />
+            <span className="text-sm">Ônibus</span>
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
