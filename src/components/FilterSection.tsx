@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChevronDown } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Car, Truck, Bus, CarFront } from 'lucide-react';
+import { Plane, Car, Truck, Tractor, Motorcycle, Ship, Bus } from 'lucide-react';
 
 const FilterSection = () => {
   return <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col gap-5">
@@ -22,22 +22,46 @@ const FilterSection = () => {
 
       <div>
         <h3 className="text-sm font-medium mb-2">Tipo de veículo</h3>
-        <ToggleGroup type="multiple" className="flex flex-wrap gap-2">
-          <ToggleGroupItem value="car" className="flex items-center justify-center h-10 px-3 border rounded-md">
+        <ToggleGroup type="multiple" className="flex flex-col gap-1 w-full">
+          <ToggleGroupItem value="aereos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Plane size={16} className="mr-2" />
+            <span className="text-sm">Aéreos</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="carros" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
             <Car size={16} className="mr-2" />
             <span className="text-sm">Carros</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="suv" className="flex items-center justify-center h-10 px-3 border rounded-md">
-            <CarFront size={16} className="mr-2" />
-            <span className="text-sm">SUVs</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="truck" className="flex items-center justify-center h-10 px-3 border rounded-md">
+          <ToggleGroupItem value="caminhoes" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
             <Truck size={16} className="mr-2" />
             <span className="text-sm">Caminhões</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="bus" className="flex items-center justify-center h-10 px-3 border rounded-md">
+          <ToggleGroupItem value="maquinas" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Tractor size={16} className="mr-2" />
+            <span className="text-sm">Maquinas</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="micromobilidade" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Car size={16} className="mr-2" />
+            <span className="text-sm">Micromobilidade</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="motos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Motorcycle size={16} className="mr-2" />
+            <span className="text-sm">Motos</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="nauticos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Ship size={16} className="mr-2" />
+            <span className="text-sm">Naúticos</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="onibus" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
             <Bus size={16} className="mr-2" />
             <span className="text-sm">Ônibus</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="reboques" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Truck size={16} className="mr-2" />
+            <span className="text-sm">Reboques</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="tratores" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
+            <Tractor size={16} className="mr-2" />
+            <span className="text-sm">Tratores</span>
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
