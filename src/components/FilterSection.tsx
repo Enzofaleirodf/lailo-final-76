@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChevronDown } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Plane, Car, Truck, Tractor, Motorcycle, Ship, Bus } from 'lucide-react';
+import { Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
 
 const FilterSection = () => {
   return <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col gap-5">
@@ -44,7 +44,7 @@ const FilterSection = () => {
             <span className="text-sm">Micromobilidade</span>
           </ToggleGroupItem>
           <ToggleGroupItem value="motos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Motorcycle size={16} className="mr-2" />
+            <Bike size={16} className="mr-2" />
             <span className="text-sm">Motos</span>
           </ToggleGroupItem>
           <ToggleGroupItem value="nauticos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
