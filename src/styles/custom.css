@@ -104,3 +104,40 @@
 .hover-shadow:hover {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
+/* Custom toggle group styling */
+.custom-toggle-group {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.custom-toggle-item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.custom-toggle-item[data-state="on"] {
+  background-color: #7c3aed;
+  color: white;
+}
+
+.custom-toggle-item[data-state="on"]:hover {
+  background-color: #6d28d9;
+}
+
+.custom-toggle-item[data-state="off"] {
+  background-color: transparent;
+  color: #4b5563;
+}
+
+.custom-toggle-item[data-state="off"]:hover {
+  background-color: #f3f4f6;
+}
