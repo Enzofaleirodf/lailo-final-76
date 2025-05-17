@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Building2, Car } from 'lucide-react';
 
 const FilterButton = ({ label, hasDropdown = true }: { label: string, hasDropdown?: boolean }) => {
   return (
@@ -14,9 +14,15 @@ const FilterButton = ({ label, hasDropdown = true }: { label: string, hasDropdow
 const TopFilters = () => {
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
-      <div className="flex gap-2 bg-white rounded-md border overflow-hidden">
-        <button className="px-5 py-2 hover:bg-gray-50 text-sm font-medium">Imóveis</button>
-        <button className="px-5 py-2 hover:bg-gray-50 text-sm font-medium bg-gray-100">Veículos</button>
+      <div className="flex gap-0 bg-white rounded-md border overflow-hidden h-10">
+        <button className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm font-medium flex-1">
+          <Building2 size={16} />
+          Imóveis
+        </button>
+        <button className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm font-medium bg-gray-100 flex-1">
+          <Car size={16} />
+          Veículos
+        </button>
       </div>
       
       <FilterButton label="Formato: Leilão" />
