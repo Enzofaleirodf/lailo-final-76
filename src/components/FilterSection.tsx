@@ -1,9 +1,13 @@
+
 import React from 'react';
 import { Select } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ChevronDown } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Car, Truck, Bus, CarFront } from 'lucide-react';
+
 const FilterSection = () => {
   return <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col gap-5">
       <div>
@@ -18,6 +22,24 @@ const FilterSection = () => {
 
       <div>
         <h3 className="text-sm font-medium mb-2">Tipo de veículo</h3>
+        <ToggleGroup type="multiple" className="flex flex-wrap gap-2">
+          <ToggleGroupItem value="car" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
+            <Car size={24} className="mb-2" />
+            <span className="text-xs">Carros</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="suv" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
+            <CarFront size={24} className="mb-2" />
+            <span className="text-xs">SUVs</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="truck" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
+            <Truck size={24} className="mb-2" />
+            <span className="text-xs">Caminhões</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="bus" className="flex flex-col items-center justify-center h-20 w-[calc(50%-4px)] border rounded-md">
+            <Bus size={24} className="mb-2" />
+            <span className="text-xs">Ônibus</span>
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
 
       <div>
