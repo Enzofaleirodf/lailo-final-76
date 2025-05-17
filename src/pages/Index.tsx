@@ -5,19 +5,25 @@ import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import ResultHeader from '@/components/ResultHeader';
 import AuctionList from '@/components/AuctionList';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Sidebar />
       <div className="flex-1 pl-14">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           <TopFilters />
-          <div className="flex gap-6">
-            <aside className="shrink-0">
-              <FilterSection />
-            </aside>
+          <div className={`flex ${isMobile ? 'flex-col' : 'flex-row gap-6'}`}>
+            {!isMobile && (
+              <aside className="shrink-0">
+                <FilterSection />
+              </aside>
+            )}
             <main className="flex-1">
+              {isMobile && <FilterSection />}
               <ResultHeader />
               <AuctionList />
             </main>

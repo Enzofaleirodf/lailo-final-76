@@ -1,15 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Select } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Filter, FilterX } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-const FilterSection = () => {
-  return <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col gap-5">
+const FilterContent = () => {
+  return (
+    <div className="flex flex-col gap-5">
       <div>
         <h3 className="text-sm font-medium mb-2">Localização</h3>
         <div className="relative">
@@ -116,6 +120,56 @@ const FilterSection = () => {
           Resetar filtros
         </Button>
       </div>
-    </div>;
+    </div>
+  );
 };
+
+const FilterSection = () => {
+  const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // For large screens, render the sidebar directly
+  if (!isMobile) {
+    return (
+      <div className="w-[448px] bg-white rounded-md border p-6 flex flex-col">
+        <FilterContent />
+      </div>
+    );
+  }
+  
+  // For mobile and tablet screens, use a drawer
+  return (
+    <>
+      <div className="md:hidden w-full mb-4">
+        <Button 
+          variant="outline" 
+          onClick={() => setOpen(true)} 
+          className="w-full flex items-center justify-center gap-2"
+        >
+          <Filter size={16} />
+          <span>Filtros</span>
+        </Button>
+      </div>
+
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-medium">Filtros</h2>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2 text-gray-500" 
+              onClick={() => setOpen(false)}
+            >
+              <FilterX size={16} className="mr-2" />
+              Limpar
+            </Button>
+          </div>
+          <FilterContent />
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+};
+
 export default FilterSection;
