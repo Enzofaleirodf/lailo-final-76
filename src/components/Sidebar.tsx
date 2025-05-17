@@ -57,10 +57,10 @@ const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonP
       <TooltipTrigger asChild>
         <button 
           className={cn(
-            "w-full flex items-center px-3 py-2 transition-all",
+            "w-full flex items-center px-3 py-3 transition-all rounded-md mx-1",
             expanded ? "justify-start" : "justify-center",
             isActive 
-              ? "text-white bg-purple-600" 
+              ? "text-white bg-purple-600 shadow-md" 
               : "text-purple-200 hover:text-white hover:bg-purple-700/50"
           )}
         >
@@ -71,7 +71,7 @@ const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonP
         </button>
       </TooltipTrigger>
       {!expanded && (
-        <TooltipContent side="right">
+        <TooltipContent side="right" className="bg-purple-800 text-white border-purple-700">
           {label}
         </TooltipContent>
       )}

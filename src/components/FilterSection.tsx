@@ -10,9 +10,29 @@ import { Plane, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import TopFilters from './TopFilters';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const FilterContent = () => {
+  // State for dropdown filters in mobile view
+  const [mobileFilters, setMobileFilters] = useState({
+    format: 'Leilão',
+    origin: 'Todas',
+    place: 'Todas'
+  });
+
+  // Handle dropdown selection for mobile
+  const handleMobileFilterChange = (filterType: 'format' | 'origin' | 'place', value: string) => {
+    setMobileFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
+
   // State to track which filter sections are expanded
   const [expandedSections, setExpandedSections] = useState({
     location: true,
@@ -64,12 +84,109 @@ const FilterContent = () => {
     </div>
   );
   
+  // Mobile filter type toggle
+  const [activeVehicleType, setActiveVehicleType] = useState<'property' | 'vehicle'>('vehicle');
+
+  const isMobile = useIsMobile();
+  
   return (
     <div className="flex flex-col gap-3">
+      {isMobile && (
+        <>
+          <div className="flex gap-0 bg-white rounded-lg border border-gray-200 overflow-hidden h-12 shadow-sm mb-4">
+            <button 
+              onClick={() => setActiveVehicleType('property')}
+              className={cn(
+                "flex items-center justify-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm font-medium flex-1",
+                activeVehicleType === 'property' ? "bg-purple-600 text-white" : "text-gray-700"
+              )}
+            >
+              <Building2 size={16} />
+              Imóveis
+            </button>
+            <button 
+              onClick={() => setActiveVehicleType('vehicle')}
+              className={cn(
+                "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium flex-1",
+                activeVehicleType === 'vehicle' ? "bg-purple-600 text-white" : "text-gray-700"
+              )}
+            >
+              <Car size={16} />
+              Veículos
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            {/* Format Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-12 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
+                  <span className="text-sm font-medium text-gray-700">Formato: {mobileFilters.format}</span>
+                  <ChevronDown size={16} className="text-gray-400" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full min-w-[200px] bg-white">
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('format', 'Leilão')} className="cursor-pointer">
+                  Leilão
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('format', 'Venda Direta')} className="cursor-pointer">
+                  Venda Direta
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Origin Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-12 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
+                  <span className="text-sm font-medium text-gray-700">Origem: {mobileFilters.origin}</span>
+                  <ChevronDown size={16} className="text-gray-400" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full min-w-[200px] bg-white">
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('origin', 'Todas')} className="cursor-pointer">
+                  Todas
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('origin', 'Judicial')} className="cursor-pointer">
+                  Judicial
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('origin', 'Extrajudicial')} className="cursor-pointer">
+                  Extrajudicial
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Place Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-12 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
+                  <span className="text-sm font-medium text-gray-700">Praça: {mobileFilters.place}</span>
+                  <ChevronDown size={16} className="text-gray-400" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full min-w-[200px] bg-white">
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('place', 'Todas')} className="cursor-pointer">
+                  Todas
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('place', 'Primeira')} className="cursor-pointer">
+                  Primeira
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleMobileFilterChange('place', 'Segunda')} className="cursor-pointer">
+                  Segunda
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </>
+      )}
+
       <FilterSection title="Localização" section="location">
         <div className="relative">
-          <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
+          <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
             <option value="" disabled>Selecione</option>
+            <option value="sp">São Paulo</option>
+            <option value="rj">Rio de Janeiro</option>
+            <option value="mg">Minas Gerais</option>
           </select>
           <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
         </div>
@@ -123,14 +240,20 @@ const FilterContent = () => {
       <FilterSection title="Marca e Modelo" section="model">
         <div className="space-y-3">
           <div className="relative">
-            <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todas">
+            <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todas">
               <option value="todas">Todas as marcas</option>
+              <option value="toyota">Toyota</option>
+              <option value="honda">Honda</option>
+              <option value="ford">Ford</option>
             </select>
             <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
           </div>
           <div className="relative">
-            <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todos">
+            <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todos">
               <option value="todos">Todos os modelos</option>
+              <option value="corolla">Corolla</option>
+              <option value="civic">Civic</option>
+              <option value="focus">Focus</option>
             </select>
             <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
           </div>
@@ -139,8 +262,13 @@ const FilterContent = () => {
 
       <FilterSection title="Cor" section="color">
         <div className="relative">
-          <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
+          <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
             <option value="" disabled>Selecione</option>
+            <option value="preto">Preto</option>
+            <option value="branco">Branco</option>
+            <option value="prata">Prata</option>
+            <option value="azul">Azul</option>
+            <option value="vermelho">Vermelho</option>
           </select>
           <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
         </div>
@@ -148,8 +276,8 @@ const FilterContent = () => {
 
       <FilterSection title="Ano" section="year">
         <div className="flex gap-2">
-          <Input type="text" placeholder="Ano mínimo" className="h-10 text-sm" />
-          <Input type="text" placeholder="Ano máximo" className="h-10 text-sm" />
+          <Input type="text" placeholder="Ano mínimo" className="h-12 text-sm" />
+          <Input type="text" placeholder="Ano máximo" className="h-12 text-sm" />
         </div>
       </FilterSection>
 
@@ -159,8 +287,8 @@ const FilterContent = () => {
             <Slider defaultValue={[30]} max={100} step={1} className="my-4" />
           </div>
           <div className="flex gap-2">
-            <Input type="text" placeholder="Valor mínimo" className="h-10 text-sm" />
-            <Input type="text" placeholder="Valor máximo" className="h-10 text-sm" />
+            <Input type="text" placeholder="Valor mínimo" className="h-12 text-sm" />
+            <Input type="text" placeholder="Valor máximo" className="h-12 text-sm" />
           </div>
         </div>
       </FilterSection>
@@ -168,7 +296,7 @@ const FilterContent = () => {
       <div className="mt-2">
         <Button 
           variant="outline" 
-          className="w-full h-10 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors"
+          className="w-full h-12 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors"
         >
           Resetar filtros
         </Button>
@@ -222,36 +350,6 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
           </div>
           
           <div className="bg-gray-50 p-4">
-            {/* Mobile Top Filters */}
-            <div className="mb-6">
-              <div className="flex gap-0 bg-white rounded-lg border border-gray-200 overflow-hidden h-12 shadow-sm mb-4">
-                <button className="flex items-center justify-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm font-medium flex-1">
-                  <Building2 size={16} />
-                  Imóveis
-                </button>
-                <button className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium bg-purple-600 text-white flex-1">
-                  <Car size={16} />
-                  Veículos
-                </button>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-2">
-                <button className="w-full border rounded-lg h-10 px-4 flex items-center justify-between bg-white shadow-sm hover:bg-gray-50">
-                  <span className="text-sm">Formato: Leilão</span>
-                  <ChevronDown size={16} className="ml-2 text-gray-400" />
-                </button>
-                <button className="w-full border rounded-lg h-10 px-4 flex items-center justify-between bg-white shadow-sm hover:bg-gray-50">
-                  <span className="text-sm">Origem: Todas</span>
-                  <ChevronDown size={16} className="ml-2 text-gray-400" />
-                </button>
-                <button className="w-full border rounded-lg h-10 px-4 flex items-center justify-between bg-white shadow-sm hover:bg-gray-50">
-                  <span className="text-sm">Praça: Todas</span>
-                  <ChevronDown size={16} className="ml-2 text-gray-400" />
-                </button>
-              </div>
-            </div>
-            
-            {/* Filter Content */}
             <FilterContent />
             
             <div className="sticky bottom-0 pt-4 pb-6 bg-gray-50 mt-4">
