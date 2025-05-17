@@ -22,46 +22,46 @@ const FilterSection = () => {
 
       <div>
         <h3 className="text-sm font-medium mb-2">Tipo de veículo</h3>
-        <ToggleGroup type="multiple" className="flex flex-col gap-1 w-full">
-          <ToggleGroupItem value="aereos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Plane size={16} className="mr-2" />
-            <span className="text-sm">Aéreos</span>
+        <ToggleGroup type="multiple" className="flex flex-wrap gap-2 w-full">
+          <ToggleGroupItem value="aereos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Plane size={14} />
+            <span>Aéreos</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="carros" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Car size={16} className="mr-2" />
-            <span className="text-sm">Carros</span>
+          <ToggleGroupItem value="carros" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Car size={14} />
+            <span>Carros</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="caminhoes" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Truck size={16} className="mr-2" />
-            <span className="text-sm">Caminhões</span>
+          <ToggleGroupItem value="caminhoes" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Truck size={14} />
+            <span>Caminhões</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="maquinas" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Tractor size={16} className="mr-2" />
-            <span className="text-sm">Maquinas</span>
+          <ToggleGroupItem value="maquinas" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Tractor size={14} />
+            <span>Maquinas</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="micromobilidade" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Car size={16} className="mr-2" />
-            <span className="text-sm">Micromobilidade</span>
+          <ToggleGroupItem value="micromobilidade" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Car size={14} />
+            <span>Micromobilidade</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="motos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Bike size={16} className="mr-2" />
-            <span className="text-sm">Motos</span>
+          <ToggleGroupItem value="motos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Bike size={14} />
+            <span>Motos</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="nauticos" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Ship size={16} className="mr-2" />
-            <span className="text-sm">Naúticos</span>
+          <ToggleGroupItem value="nauticos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Ship size={14} />
+            <span>Naúticos</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="onibus" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Bus size={16} className="mr-2" />
-            <span className="text-sm">Ônibus</span>
+          <ToggleGroupItem value="onibus" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Bus size={14} />
+            <span>Ônibus</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="reboques" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Truck size={16} className="mr-2" />
-            <span className="text-sm">Reboques</span>
+          <ToggleGroupItem value="reboques" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Truck size={14} />
+            <span>Reboques</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="tratores" className="flex items-center justify-start h-10 px-3 border rounded-md w-full">
-            <Tractor size={16} className="mr-2" />
-            <span className="text-sm">Tratores</span>
+          <ToggleGroupItem value="tratores" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-gray-50">
+            <Tractor size={14} />
+            <span>Tratores</span>
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
