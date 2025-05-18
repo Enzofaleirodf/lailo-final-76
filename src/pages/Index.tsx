@@ -16,12 +16,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
       <Sidebar />
-      <div className="flex-1 pl-0 sm:pl-14">
+      <div className="flex-1 pl-0 sm:pl-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           {!isMobile && <TopFilters />}
           
           {isMobile && (
-            <div className="mb-6">
+            <div className="mb-6 mt-12"> {/* Added top margin to accommodate floating hamburger button */}
               <Button 
                 onClick={() => setFiltersOpen(true)}
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium flex items-center justify-center gap-2"
