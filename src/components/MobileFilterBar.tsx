@@ -14,7 +14,7 @@ const MobileFilterBar = ({
   onSortClick
 }: MobileFilterBarProps) => {
   return <div className="sticky top-0 z-10 w-full pt-0 pb-6 shadow-sm mt-0 bg-transparent\\n px-0">
-      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
+      <div className="flex rounded-lg border border-gray-200 overflow-hidden w-full bg-white\n">
         <button onClick={() => onTabChange('property')} className={cn("w-11 h-10 flex items-center justify-center text-sm font-medium transition-colors", activeTab === 'property' ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" : "bg-white text-gray-700 hover:bg-gray-50")} aria-label="Imóveis">
           <Building2 size={18} className="shrink-0" />
         </button>
