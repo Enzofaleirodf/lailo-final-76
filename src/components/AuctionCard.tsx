@@ -64,9 +64,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Conteúdo/Informações à direita */}
-          <div className="w-2/3 p-4 flex flex-col justify-between" style={{
+          <div style={{
           marginLeft: '12px'
-        }}>
+        }} className="w-2/3 pt-4 pr-4 pb-4 flex flex-col justify-between\n\n">
             <div>
               {/* Linha 1: Marca + Modelo + Botão Favoritar */}
               <div className="flex justify-between items-center mb-1">
