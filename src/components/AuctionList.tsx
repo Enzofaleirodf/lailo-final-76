@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFilter } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
 import AuctionCard from '@/components/AuctionCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
 import { sampleAuctions } from '@/data/sampleAuctions';
-import { sortAuctions, filterAuctions } from '@/utils/auctionUtils';
+import { sortAuctions, filterAuctions, useFilteredAndSortedAuctions } from '@/utils/auctionUtils';
 import { toast } from '@/components/ui/sonner';
 
 const AuctionList: React.FC = () => {
@@ -14,26 +14,28 @@ const AuctionList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [auctions, setAuctions] = useState([]);
 
-  useEffect(() => {
-    // Simulate API loading delay
-    setLoading(true);
-    
-    const timer = setTimeout(() => {
-      try {
-        // Filter and sort the auctions
-        const filteredAuctions = filterAuctions(sampleAuctions, filters);
-        const sortedAuctions = sortAuctions(filteredAuctions, sortOption);
-        setAuctions(sortedAuctions);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error processing auctions:', error);
-        toast.error('Ocorreu um erro ao carregar os leilões');
-        setLoading(false);
-      }
-    }, 800); // Simulate loading delay
-    
-    return () => clearTimeout(timer);
+  // Use callback to prevent recreation on each render
+  const fetchAuctions = useCallback(async () => {
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // In a real app, this would be an API call
+      const filteredAuctions = filterAuctions(sampleAuctions, filters);
+      const sortedAuctions = sortAuctions(filteredAuctions, sortOption);
+      setAuctions(sortedAuctions);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error processing auctions:', error);
+      toast.error('Ocorreu um erro ao carregar os leilões');
+      setLoading(false);
+    }
   }, [filters, sortOption]);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchAuctions();
+  }, [fetchAuctions]);
 
   if (loading) {
     return (
@@ -68,4 +70,4 @@ const AuctionList: React.FC = () => {
   );
 };
 
-export default AuctionList;
+export default React.memo(AuctionList);

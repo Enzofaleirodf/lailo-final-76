@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useFilter } from '@/contexts/FilterContext';
 import { useSort } from '@/contexts/SortContext';
 import ActiveFilterBadges from './filters/ActiveFilterBadges';
@@ -10,12 +10,15 @@ const ResultHeader: React.FC = () => {
   const { filters, activeFilters } = useFilter();
   const { sortOption } = useSort();
   
-  // Calculate filtered results count
-  const filteredAuctions = filterAuctions(sampleAuctions, filters);
+  // Calculate filtered results count - memoized for performance
+  const filteredAuctions = useMemo(() => {
+    return filterAuctions(sampleAuctions, filters);
+  }, [filters]);
+  
   const resultCount = filteredAuctions.length;
   
-  // Get sort label
-  const getSortLabel = () => {
+  // Get sort label - memoized for consistent rendering
+  const sortLabel = useMemo(() => {
     switch (sortOption) {
       case 'newest': return 'Mais recentes';
       case 'ending-soon': return 'Terminando em breve';
@@ -24,7 +27,7 @@ const ResultHeader: React.FC = () => {
       case 'relevance': 
       default: return 'Mais relevantes';
     }
-  };
+  }, [sortOption]);
   
   return (
     <div className="mb-6">
@@ -34,7 +37,7 @@ const ResultHeader: React.FC = () => {
           {activeFilters > 0 ? ` (${activeFilters} ${activeFilters === 1 ? 'filtro' : 'filtros'})` : ''}
         </h1>
         <p className="text-sm text-gray-500">
-          <span className="font-medium">Ordenação:</span> {getSortLabel()}
+          <span className="font-medium">Ordenação:</span> {sortLabel}
         </p>
       </div>
       
@@ -43,4 +46,4 @@ const ResultHeader: React.FC = () => {
   );
 };
 
-export default ResultHeader;
+export default React.memo(ResultHeader);

@@ -1,6 +1,7 @@
 
 import { AuctionItem } from '@/types/auction';
 import { SortOption } from '@/contexts/SortContext';
+import { useMemo } from 'react';
 
 export const sortAuctions = (auctions: AuctionItem[], sortOption: SortOption): AuctionItem[] => {
   const sortedAuctions = [...auctions];
@@ -31,6 +32,17 @@ export const formatCurrency = (value: number): string => {
     style: 'currency',
     currency: 'BRL',
   });
+};
+
+export const useFilteredAndSortedAuctions = (
+  auctions: AuctionItem[], 
+  filters: any, 
+  sortOption: SortOption
+): AuctionItem[] => {
+  return useMemo(() => {
+    const filteredAuctions = filterAuctions(auctions, filters);
+    return sortAuctions(filteredAuctions, sortOption);
+  }, [auctions, filters, sortOption]);
 };
 
 export const filterAuctions = (auctions: AuctionItem[], filters: any): AuctionItem[] => {

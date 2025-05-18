@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Clock, MapPin, GavelIcon } from 'lucide-react';
+import { Clock, MapPin } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 
@@ -9,7 +9,7 @@ interface AuctionCardProps {
   auction: AuctionItem;
 }
 
-const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
+const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   const daysRemaining = Math.ceil((auction.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   
   const getFormatBadgeColor = () => {
@@ -29,6 +29,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
           src={auction.imageUrl} 
           alt={auction.title} 
           className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+          loading="lazy" // Added for performance
         />
         <Badge className={`absolute top-3 left-3 ${getFormatBadgeColor()}`}>
           {auction.format}
@@ -76,6 +77,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
       </div>
     </div>
   );
-};
+});
+
+AuctionCard.displayName = 'AuctionCard';
 
 export default AuctionCard;
