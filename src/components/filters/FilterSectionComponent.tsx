@@ -24,9 +24,9 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
     <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm z-10">
       {/* Title section - only toggleable on mobile */}
       <div 
-        className="w-full flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-3"
+        className="w-full flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-3"
       >
-        <h3 className="text-sm font-medium text-purple-900">{title}</h3>
+        <h3 className="text-sm font-medium text-brand-900">{title}</h3>
         
         {/* Only show chevron and make it clickable on mobile */}
         {isMobile && (
@@ -39,7 +39,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
             <ChevronDown 
               size={18} 
               className={cn(
-                "text-purple-700 transition-transform", 
+                "text-brand-700 transition-transform", 
                 isExpanded ? "transform rotate-180" : ""
               )} 
               aria-hidden="true"

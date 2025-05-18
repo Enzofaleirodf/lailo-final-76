@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Home, Search, Heart, Building2, Bell, User, Menu, X } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -25,14 +26,14 @@ const Sidebar = () => {
   return (
     <div 
       className={cn(
-        "h-full bg-gradient-to-b from-purple-800 to-purple-900 border-r border-purple-700/50 flex flex-col items-center py-6 fixed left-0 top-0 z-10 transition-all duration-300 shadow-lg",
+        "h-full bg-gradient-to-b from-brand-800 to-brand-900 border-r border-brand-700/50 flex flex-col items-center py-6 fixed left-0 top-0 z-10 transition-all duration-300 shadow-lg",
         expanded ? "w-48" : "w-16"
       )}
     >
       <div className="mb-8 flex justify-center w-full px-3">
         <button 
           onClick={toggleSidebar}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-700/50 hover:bg-purple-700 transition-colors"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-brand-700/50 hover:bg-brand-700 transition-colors"
         >
           <Menu size={20} className="text-white" />
         </button>
@@ -71,8 +72,8 @@ const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonP
             "w-full flex items-center px-3 py-3 transition-all rounded-md mx-1",
             expanded ? "justify-start" : "justify-center",
             isActive 
-              ? "text-white bg-purple-600 shadow-md" 
-              : "text-purple-200 hover:text-white hover:bg-purple-700/50"
+              ? "text-white bg-brand-600 shadow-md" 
+              : "text-brand-200 hover:text-white hover:bg-brand-700/50"
           )}
         >
           <Icon size={20} />
@@ -82,7 +83,7 @@ const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonP
         </button>
       </TooltipTrigger>
       {!expanded && (
-        <TooltipContent side="right" className="bg-purple-800 text-white border-purple-700">
+        <TooltipContent side="right" className="bg-brand-800 text-white border-brand-700">
           {label}
         </TooltipContent>
       )}

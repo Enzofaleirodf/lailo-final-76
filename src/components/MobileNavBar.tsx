@@ -41,7 +41,7 @@ const MobileNavBar: React.FC = () => {
             href={item.href}
             className={cn(
               "flex flex-col items-center justify-center w-full h-full",
-              isActive ? "text-purple-700" : "text-gray-500"
+              isActive ? "text-brand-600" : "text-gray-500"
             )}
             aria-current={isActive ? "page" : undefined}
           >

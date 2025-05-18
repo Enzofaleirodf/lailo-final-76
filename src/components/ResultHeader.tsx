@@ -67,7 +67,7 @@ const ResultHeader: React.FC = () => {
                 Ordenar:
               </p>
               <Select value={sortOption} onValueChange={handleSortChange}>
-                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors">
+                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-brand-700 font-medium focus:ring-0 hover:text-brand-900 transition-colors">
                   <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
                 </SelectTrigger>
                 <SelectContent align="end">

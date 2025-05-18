@@ -37,7 +37,7 @@ const TopFilters: React.FC = () => {
             className={cn(
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               filters.contentType === 'property' 
-                ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
+                ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
             aria-label="Filtrar imóveis"
@@ -53,7 +53,7 @@ const TopFilters: React.FC = () => {
             className={cn(
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               filters.contentType === 'vehicle' 
-                ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
+                ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
             aria-label="Filtrar veículos"
@@ -74,15 +74,15 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar formato"
             style={{ height: '40px' }}  
           >
-            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
-            <ChevronDown size={16} className="text-purple-500" />
+            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-brand-700">{filters.format}</span></span>
+            <ChevronDown size={16} className="text-brand-500" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Leilão')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Leilão')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Leilão
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Venda Direta
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -96,18 +96,18 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar origem"
             style={{ height: '40px' }}  
           >
-            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
-            <ChevronDown size={16} className="text-purple-500" />
+            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-brand-700">{filters.origin}</span></span>
+            <ChevronDown size={16} className="text-brand-500" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Judicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Judicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Judicial
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Extrajudicial
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -121,18 +121,18 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar etapa"
             style={{ height: '40px' }}
           >
-            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
-            <ChevronDown size={16} className="text-purple-500" />
+            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-brand-700">{filters.place}</span></span>
+            <ChevronDown size={16} className="text-brand-500" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Primeira
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Segunda
           </DropdownMenuItem>
         </DropdownMenuContent>

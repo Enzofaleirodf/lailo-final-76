@@ -87,17 +87,17 @@ const ActiveFilterBadges: React.FC = () => {
         <Badge 
           key={badge.key}
           variant="outline"
-          className="flex items-center gap-1 px-2 py-1 bg-purple-50 border-purple-200 text-purple-800"
+          className="flex items-center gap-1 px-2 py-1 bg-brand-50 border-brand-200 text-brand-800"
         >
           <span className="text-xs">{badge.label}</span>
           <Button
             variant="ghost"
             size="sm"
-            className="h-4 w-4 p-0 hover:bg-purple-200 rounded-full flex items-center justify-center"
+            className="h-4 w-4 p-0 hover:bg-brand-200 rounded-full flex items-center justify-center"
             onClick={badge.onRemove}
             aria-label={`Remover filtro ${badge.label}`}
           >
-            <X size={10} className="text-purple-800" />
+            <X size={10} className="text-brand-800" />
           </Button>
         </Badge>
       ))}
@@ -106,7 +106,7 @@ const ActiveFilterBadges: React.FC = () => {
         <Button
           variant="ghost"
           size="sm" 
-          className="text-xs text-purple-700 hover:text-purple-800 hover:bg-purple-100 h-6"
+          className="text-xs text-brand-700 hover:text-brand-800 hover:bg-brand-100 h-6"
           onClick={resetFilters}
           aria-label="Limpar todos os filtros"
         >

@@ -41,7 +41,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
         Cancelar
       </Button>
       <Button 
-        className="flex-1 h-10 bg-purple-600 hover:bg-purple-700"
+        className="flex-1 h-10 bg-brand-600 hover:bg-brand-700"
         onClick={() => handleOpenChange(false)}
       >
         Aplicar
@@ -52,7 +52,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
   // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
     return (
-      <div className="w-full lg:w-[448px] bg-gradient-to-br from-white to-purple-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
+      <div className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
         <FilterContent />
       </div>
     );
@@ -67,12 +67,12 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
         isOpen={filtersOpen} // Pass the open state to DrawerContent
       >
         <div className="flex flex-col h-full">
-          <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
+          <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-brand-600 text-white border-b border-brand-700">
             <h2 className="text-base font-medium" id="drawer-title">Filtros</h2>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-8 w-8 p-0 text-white hover:bg-purple-700 flex items-center justify-center" 
+              className="h-8 w-8 p-0 text-white hover:bg-brand-700 flex items-center justify-center" 
               onClick={() => handleOpenChange(false)}
               aria-label="Fechar filtros"
             >
