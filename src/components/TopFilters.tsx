@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const TopFilters = () => {
   const [activeVehicleType, setActiveVehicleType] = useState<'property' | 'vehicle'>('vehicle');
@@ -35,7 +34,7 @@ const TopFilters = () => {
             className={cn(
               "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               activeVehicleType === 'property' 
-                ? "bg-purple-600 text-white" 
+                ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
           >
@@ -48,7 +47,7 @@ const TopFilters = () => {
             className={cn(
               "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               activeVehicleType === 'vehicle' 
-                ? "bg-purple-600 text-white" 
+                ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
           >
@@ -61,16 +60,16 @@ const TopFilters = () => {
       {/* Format Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
-            <span className="text-sm font-medium text-gray-700">Formato: {activeFilters.format}</span>
-            <ChevronDown size={16} className="text-gray-400" />
+          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{activeFilters.format}</span></span>
+            <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white">
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Leilão')} className="cursor-pointer">
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Leilão')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Leilão
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Venda Direta
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -79,19 +78,19 @@ const TopFilters = () => {
       {/* Origin Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
-            <span className="text-sm font-medium text-gray-700">Origem: {activeFilters.origin}</span>
-            <ChevronDown size={16} className="text-gray-400" />
+          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{activeFilters.origin}</span></span>
+            <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white">
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Todas')} className="cursor-pointer">
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Judicial')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Judicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Judicial
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Extrajudicial
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -100,19 +99,19 @@ const TopFilters = () => {
       {/* Place Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50">
-            <span className="text-sm font-medium text-gray-700">Praça: {activeFilters.place}</span>
-            <ChevronDown size={16} className="text-gray-400" />
+          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+            <span className="text-sm font-medium text-gray-700">Praça: <span className="text-purple-700">{activeFilters.place}</span></span>
+            <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white">
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer">
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Primeira
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Segunda
           </DropdownMenuItem>
         </DropdownMenuContent>

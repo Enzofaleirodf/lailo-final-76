@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FilterSection from '@/components/FilterSection';
@@ -6,18 +7,23 @@ import ResultHeader from '@/components/ResultHeader';
 import AuctionList from '@/components/AuctionList';
 import MobileNavBar from '@/components/MobileNavBar';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 const Index = () => {
   const isMobile = useIsMobile();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'property' | 'vehicle'>('vehicle');
+  
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
+  
   const handleSortClick = () => {
     // This will be implemented later when adding sorting functionality
     console.log('Sort clicked');
   };
-  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 flex">
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-[24px]">
@@ -37,6 +43,8 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
