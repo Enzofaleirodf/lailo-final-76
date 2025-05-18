@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState } from 'react';
 
-type SortOption = 'relevance' | 'newest' | 'ending-soon' | 'price-asc' | 'price-desc';
+export type SortOption = 'relevance' | 'newest' | 'ending-soon' | 'price-asc' | 'price-desc';
 
 interface SortContextType {
   sortOption: SortOption;

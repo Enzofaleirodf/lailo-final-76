@@ -63,7 +63,7 @@ const Index = () => {
           <SortOptions 
             open={sortOpen} 
             onOpenChange={setSortOpen} 
-            selectedOption={sortOption} 
+            selectedOption={sortOption} // Change from sortOption to selectedOption
             onSortChange={handleSortChange} 
           />
           

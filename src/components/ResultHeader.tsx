@@ -1,10 +1,12 @@
 
 import React from 'react';
 import { useFilter } from '@/contexts/FilterContext';
+import { useSort } from '@/contexts/SortContext';
 import ActiveFilterBadges from './filters/ActiveFilterBadges';
 
 const ResultHeader: React.FC = () => {
   const { activeFilters } = useFilter();
+  const { sortOption } = useSort();
   
   return (
     <div className="mb-6">

@@ -52,11 +52,11 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     footerContent?: React.ReactNode;
+    isOpen?: boolean; // Add isOpen prop to use instead of context
   }
->(({ className, children, footerContent, ...props }, ref) => {
-  // Get open state from drawer context
-  const { open } = React.useContext(DrawerPrimitive.Context);
-  useModalBodyClass(open);
+>(({ className, children, footerContent, isOpen = false, ...props }, ref) => {
+  // Use isOpen prop directly instead of accessing from context
+  useModalBodyClass(isOpen);
   
   return (
     <DrawerPortal>

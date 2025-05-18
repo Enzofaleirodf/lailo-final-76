@@ -63,6 +63,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
       <DrawerContent 
         className="p-0 overflow-hidden h-[90vh] max-h-[90vh]" 
         footerContent={footerContent}
+        isOpen={open} // Pass the open state to DrawerContent
       >
         <div className="flex flex-col h-full">
           <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
