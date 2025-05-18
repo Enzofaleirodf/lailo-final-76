@@ -30,7 +30,7 @@ const MobileNavBar = ({
           className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
         >
           <Search size={20} className="shrink-0" />
-          <span>Buscar</span>
+          <span>Buscador</span>
         </button>
         
         <button
