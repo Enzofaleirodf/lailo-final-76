@@ -50,7 +50,7 @@ const ResultHeader: React.FC = () => {
   
   return (
     <motion.div 
-      className={`${isMobile ? 'mb-[-8px]' : 'mb-6'}`}
+      className={`${isMobile ? 'mb-[-8px]' : 'mb-0'}`}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -61,7 +61,7 @@ const ResultHeader: React.FC = () => {
           <AuctionStatus />
           
           {!isMobile && (
-            <div className="flex items-center ml-4">
+            <div className="flex items-center ml-4 mt-0">
               <p className="text-sm text-gray-500 mr-2">
                 Ordenar:
               </p>
