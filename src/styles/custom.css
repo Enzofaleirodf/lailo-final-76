@@ -83,6 +83,7 @@
 .radix-drawer-content {
   max-height: 85vh !important;
   overflow-y: auto !important;
+  z-index: 99 !important; /* Make sure drawer is below the navigation bar */
 }
 
 /* Ensure proper height for toggle items in FilterSection */
@@ -190,4 +191,36 @@
   padding: 1rem;
   border-top: 1px solid #e5e7eb;
   margin-top: auto;
+}
+
+/* Fix for mobile navigation bar positioning */
+.mobile-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: white;
+  border-top: 1px solid rgba(229, 231, 235, 1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Add padding to content area to prevent overlap with navigation */
+.content-with-nav {
+  padding-bottom: 5rem;
+}
+
+/* Ensure dialogs are above navigation bar */
+.radix-dialog-content {
+  z-index: 101 !important;
+}
+
+/* Fix for vaul drawer component */
+[vaul-drawer] {
+  z-index: 99 !important;
+}
+
+[vaul-drawer-content] {
+  z-index: 99 !important;
+  max-height: 85vh !important;
 }

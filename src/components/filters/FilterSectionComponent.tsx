@@ -16,7 +16,7 @@ const FilterSectionComponent = ({
   onToggle,
   children 
 }: FilterSectionComponentProps) => (
-  <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm">
+  <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm z-10">
     <button 
       onClick={onToggle} 
       className="w-full flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-3 cursor-pointer"
