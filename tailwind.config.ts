@@ -63,19 +63,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Changing custom theme colors from purple to #202A44
 				brand: {
 					DEFAULT: '#202A44',
-					50: '#E6E8EB',
-					100: '#CED2D8',
-					200: '#9AA4B1',
-					300: '#66778A',
-					400: '#334963',
+					50: '#E6E8EC',
+					100: '#CED2D9',
+					200: '#9CA5B4',
+					300: '#6A798F',
+					400: '#384C6A',
 					500: '#202A44',
-					600: '#1D2740',
-					700: '#1A233B',
-					800: '#172036',
-					900: '#131C32',
+					600: '#1D273F',
+					700: '#19233A',
+					800: '#162035',
+					900: '#121C30',
 				},
 			},
 			borderRadius: {
