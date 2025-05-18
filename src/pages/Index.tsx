@@ -38,7 +38,7 @@ const Index = () => {
             />
           )}
           
-          <div className={`flex ${isMobile ? 'flex-col' : 'flex-row gap-6'}`}>
+          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4' : 'flex-row gap-6'}`}>
             {!isMobile && (
               <aside className="shrink-0 w-full lg:w-[448px]">
                 <FilterSection />

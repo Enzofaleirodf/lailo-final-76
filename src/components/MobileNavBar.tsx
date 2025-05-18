@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Building2, Car, Filter, ArrowUpDown } from 'lucide-react';
+import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileNavBarProps {
@@ -17,12 +17,12 @@ const MobileNavBar = ({
   onSortClick
 }: MobileNavBarProps) => {
   return (
-    <div className="sticky top-0 z-10 w-full px-4 pb-4 pt-2 bg-gradient-to-br from-slate-50 to-gray-100">
-      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+    <div className="sticky top-0 z-10 w-full px-4 pb-4 pt-2 bg-gradient-to-br from-slate-50 to-gray-100 mt-6">
+      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full">
         <button 
           onClick={() => onTabChange('property')}
           className={cn(
-            "flex-1 h-11 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+            "w-11 h-11 flex items-center justify-center text-sm font-medium transition-colors",
             activeTab === 'property' 
               ? "bg-purple-600 text-white" 
               : "bg-white text-gray-700 hover:bg-gray-50"
@@ -35,7 +35,7 @@ const MobileNavBar = ({
         <button 
           onClick={() => onTabChange('vehicle')}
           className={cn(
-            "flex-1 h-11 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+            "w-11 h-11 flex items-center justify-center text-sm font-medium transition-colors",
             activeTab === 'vehicle' 
               ? "bg-purple-600 text-white" 
               : "bg-white text-gray-700 hover:bg-gray-50"
