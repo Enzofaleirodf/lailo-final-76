@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Building2, Car } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -50,13 +50,44 @@ const FilterContent = () => {
   
   return (
     <div className="flex flex-col gap-3">
-      {isMobile && (
+      {isMobile ? (
         <MobileFilterOptions 
           activeType={activeVehicleType}
           setActiveType={setActiveVehicleType}
           filters={mobileFilters}
           onFilterChange={handleMobileFilterChange}
         />
+      ) : (
+        // Desktop version of the vehicle/property toggle
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-4">
+          <div className="flex h-12">
+            <button 
+              onClick={() => setActiveVehicleType('property')}
+              className={cn(
+                "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+                activeVehicleType === 'property' 
+                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
+                  : "text-gray-700 hover:bg-gray-50"
+              )}
+            >
+              <Building2 size={18} className="shrink-0" />
+              <span>Imóveis</span>
+            </button>
+            <div className="w-[1px] bg-gray-200"></div>
+            <button 
+              onClick={() => setActiveVehicleType('vehicle')}
+              className={cn(
+                "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+                activeVehicleType === 'vehicle' 
+                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
+                  : "text-gray-700 hover:bg-gray-50"
+              )}
+            >
+              <Car size={18} className="shrink-0" />
+              <span>Veículos</span>
+            </button>
+          </div>
+        </div>
       )}
 
       <FilterSectionComponent 

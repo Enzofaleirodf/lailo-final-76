@@ -96,11 +96,11 @@ const TopFilters = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Place Dropdown */}
+      {/* Place Dropdown (renamed from "Praça" to "Etapa" for consistency) */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
-            <span className="text-sm font-medium text-gray-700">Praça: <span className="text-purple-700">{activeFilters.place}</span></span>
+            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{activeFilters.place}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
