@@ -52,10 +52,10 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     footerContent?: React.ReactNode;
-    open?: boolean; // Add optional open prop explicitly
+    open?: boolean; // Explicitly add the open prop type
   }
 >(({ className, children, footerContent, open = false, ...props }, ref) => {
-  // Use the explicit open prop we extracted
+  // Use the explicitly passed open prop
   useModalBodyClass(open);
   
   return (
