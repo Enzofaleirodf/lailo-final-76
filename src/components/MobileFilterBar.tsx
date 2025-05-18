@@ -17,7 +17,7 @@ const MobileFilterBar = ({
   onSortClick
 }: MobileFilterBarProps) => {
   return (
-    <div className="sticky top-0 z-10 w-full pt-0 pb-4 mt-0 bg-transparent px-4">
+    <div className="fixed top-0 left-0 right-0 z-[180] w-full pt-0 pb-4 mt-0 bg-white px-4">
       <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
         <button 
           onClick={() => onTabChange('property')} 

@@ -46,6 +46,14 @@ const DrawerContent = React.forwardRef<
         className
       )}
       {...props}
+      onOpenChange={(open) => {
+        if(!open) {
+          document.body.classList.remove('modal-open');
+        } else {
+          document.body.classList.add('modal-open');
+        }
+        props.onOpenChange && props.onOpenChange(open);
+      }}
     >
       <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted z-[161]" />
       {children}
@@ -70,7 +78,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("mt-auto flex flex-col gap-2 p-4 z-[161] bg-background", className)}
+    className={cn("mt-auto flex flex-col gap-2 p-4 z-[161] bg-background drawer-footer", className)}
     {...props}
   />
 )
