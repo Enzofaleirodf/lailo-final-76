@@ -14,7 +14,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { SortOption } from '@/stores/useSortStore';
-import { ArrowDown, ArrowUp, MapPin } from 'lucide-react';
+import { ArrowDown, ArrowUp, MapPin, ChevronDown } from 'lucide-react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -56,19 +56,20 @@ const ResultHeader: React.FC = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center w-full">
+        <div className="flex items-start justify-between w-full">
           <div className="flex-grow">
             <AuctionStatus />
           </div>
           
           {!isMobile && (
-            <div className="flex items-center ml-auto">
-              <p className="text-sm text-gray-500 mr-2">
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-gray-500">
                 Ordenar:
               </p>
               <Select value={sortOption} onValueChange={handleSortChange}>
-                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors">
+                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors leading-none">
                   <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
+                  <ChevronDown className="ml-1 h-4 w-4" />
                 </SelectTrigger>
                 <SelectContent align="end">
                   {sortOptions.map((option) => (
