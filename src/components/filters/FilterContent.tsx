@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import FilterSectionComponent from './FilterSectionComponent';
 import MobileFilterOptions from './MobileFilterOptions';
 import VehicleTypeFilter from './VehicleTypeFilter';
+import { cn } from '@/lib/utils';
 
 const FilterContent = () => {
   // State for dropdown filters in mobile view
