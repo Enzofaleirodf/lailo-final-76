@@ -1,15 +1,18 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Clock, MapPin } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
+import { motion } from 'framer-motion';
 
 interface AuctionCardProps {
   auction: AuctionItem;
 }
 
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const daysRemaining = Math.ceil((auction.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   
   const getFormatBadgeColor = () => {
@@ -21,17 +24,37 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
     if (daysRemaining <= 3) return 'text-orange-600';
     return 'text-green-600';
   };
+  
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden border border-gray-200 transition-all duration-200 hover:shadow-md card-shadow">
+    <motion.div
+      className="bg-white rounded-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full"
+      whileHover={{ 
+        y: -5, 
+        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.08)'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="relative aspect-video overflow-hidden">
-        <img 
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        )}
+        <motion.img 
           src={auction.imageUrl} 
           alt={auction.title} 
-          className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-          loading="lazy" // Added for performance
+          className={`object-cover w-full h-full transition-all duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
+          loading="lazy"
+          onLoad={handleImageLoad}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: imageLoaded ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
         />
-        <Badge className={`absolute top-3 left-3 ${getFormatBadgeColor()}`}>
+        <Badge className={`absolute top-3 left-3 ${getFormatBadgeColor()} transition-transform duration-300 ${isHovered ? 'scale-105' : ''}`}>
           {auction.format}
         </Badge>
       </div>
@@ -50,10 +73,21 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
           {auction.description}
         </p>
         
-        <div className="flex justify-between items-end mb-2">
+        <motion.div 
+          className="flex justify-between items-end mb-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
           <div>
             <p className="text-xs text-gray-500">Lance atual</p>
-            <p className="text-xl font-bold text-purple-700">{formatCurrency(auction.currentBid)}</p>
+            <motion.p 
+              className="text-xl font-bold text-purple-700"
+              whileHover={{ scale: 1.03 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              {formatCurrency(auction.currentBid)}
+            </motion.p>
           </div>
           
           <div className="flex items-center">
@@ -62,20 +96,28 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
               {daysRemaining} {daysRemaining === 1 ? 'dia' : 'dias'}
             </span>
           </div>
-        </div>
+        </motion.div>
         
-        <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
+        <motion.div 
+          className="pt-4 border-t border-gray-100 flex justify-between items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
           <div className="flex items-center">
             <div className="w-2 h-2 rounded-full bg-purple-600 mr-2"></div>
             <span className="text-xs text-gray-500">{auction.bidCount} lances</span>
           </div>
           
-          <Badge variant="outline" className="text-purple-700 border-purple-200 hover:bg-purple-50">
+          <Badge 
+            variant="outline" 
+            className="text-purple-700 border-purple-200 hover:bg-purple-50 transition-all duration-200"
+          >
             {auction.vehicleInfo.brand} {auction.vehicleInfo.year}
           </Badge>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 });
 

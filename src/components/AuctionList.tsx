@@ -5,39 +5,156 @@ import { useSort } from '@/contexts/SortContext';
 import AuctionCard from '@/components/AuctionCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
 import { sampleAuctions } from '@/data/sampleAuctions';
-import { sortAuctions, filterAuctions, useFilteredAndSortedAuctions } from '@/utils/auctionUtils';
+import { sortAuctions, filterAuctions } from '@/utils/auctionUtils';
 import { toast } from '@/components/ui/sonner';
+import { useSearchParams } from 'react-router-dom';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from '@/components/ui/pagination';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const ITEMS_PER_PAGE = 30;
 
 const AuctionList: React.FC = () => {
   const { filters } = useFilter();
   const { sortOption } = useSort();
   const [loading, setLoading] = useState(true);
   const [auctions, setAuctions] = useState([]);
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage] = useState(ITEMS_PER_PAGE);
+  const [isChangingPage, setIsChangingPage] = useState(false);
+  
   // Use callback to prevent recreation on each render
   const fetchAuctions = useCallback(async () => {
     try {
+      setIsChangingPage(true);
+      
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // In a real app, this would be an API call
+      // In a real app, this would be an API call with pagination
       const filteredAuctions = filterAuctions(sampleAuctions, filters);
       const sortedAuctions = sortAuctions(filteredAuctions, sortOption);
-      setAuctions(sortedAuctions);
+      
+      // Calculate total pages
+      const total = Math.ceil(sortedAuctions.length / itemsPerPage);
+      setTotalPages(total > 0 ? total : 1);
+      
+      // Apply pagination
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedAuctions = sortedAuctions.slice(start, end);
+      
+      setAuctions(paginatedAuctions);
       setLoading(false);
+      setTimeout(() => setIsChangingPage(false), 300); // Small delay for smoother animation
     } catch (error) {
       console.error('Error processing auctions:', error);
       toast.error('Ocorreu um erro ao carregar os leilões');
       setLoading(false);
+      setIsChangingPage(false);
     }
-  }, [filters, sortOption]);
+  }, [filters, sortOption, currentPage, itemsPerPage]);
+
+  // Ensure valid page number
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      const params = new URLSearchParams(searchParams);
+      params.set('page', '1');
+      setSearchParams(params);
+    }
+  }, [totalPages, currentPage, searchParams, setSearchParams]);
 
   useEffect(() => {
     setLoading(true);
     fetchAuctions();
+    // Scroll to top on page change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [fetchAuctions]);
 
-  if (loading) {
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+    setSearchParams(params);
+  };
+
+  const renderPaginationItems = () => {
+    const items = [];
+    const maxVisible = window.innerWidth < 640 ? 3 : 5; // Less numbers on mobile
+    
+    // Always show first page
+    items.push(
+      <PaginationItem key="first">
+        <PaginationLink 
+          isActive={currentPage === 1} 
+          onClick={() => handlePageChange(1)}
+          className="transition-all duration-200 hover:scale-105"
+        >
+          1
+        </PaginationLink>
+      </PaginationItem>
+    );
+    
+    // Calculate range of pages to show
+    let startPage = Math.max(2, currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages - 1, startPage + maxVisible - 2);
+    
+    if (endPage - startPage < maxVisible - 2) {
+      startPage = Math.max(2, endPage - maxVisible + 2);
+    }
+    
+    // Add ellipsis after first page if needed
+    if (startPage > 2) {
+      items.push(
+        <PaginationItem key="ellipsis-start">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
+    }
+    
+    // Add middle pages
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink 
+            isActive={currentPage === i} 
+            onClick={() => handlePageChange(i)}
+            className="transition-all duration-200 hover:scale-105"
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    // Add ellipsis before last page if needed
+    if (endPage < totalPages - 1) {
+      items.push(
+        <PaginationItem key="ellipsis-end">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
+    }
+    
+    // Always show last page if there's more than one page
+    if (totalPages > 1) {
+      items.push(
+        <PaginationItem key="last">
+          <PaginationLink 
+            isActive={currentPage === totalPages} 
+            onClick={() => handlePageChange(totalPages)}
+            className="transition-all duration-200 hover:scale-105"
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    return items;
+  };
+  
+  if (loading && !isChangingPage) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, index) => (
@@ -47,9 +164,13 @@ const AuctionList: React.FC = () => {
     );
   }
 
-  if (auctions.length === 0) {
+  if (auctions.length === 0 && !isChangingPage) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col items-center justify-center py-16 px-4 text-center"
+      >
         <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
           <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -57,15 +178,64 @@ const AuctionList: React.FC = () => {
         </div>
         <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum item encontrado</h3>
         <p className="text-gray-500 mb-4">Tente ajustar seus filtros para encontrar mais opções</p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {auctions.map((auction) => (
-        <AuctionCard key={auction.id} auction={auction} />
-      ))}
+    <div className="space-y-8">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentPage}
+          initial={isChangingPage ? { opacity: 0, y: 20 } : false}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {auctions.map((auction) => (
+            <motion.div
+              key={auction.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
+            >
+              <AuctionCard auction={auction} />
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+      
+      {totalPages > 1 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="py-4"
+        >
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                  className={`${currentPage <= 1 ? 'pointer-events-none opacity-50' : 'hover:scale-105 transition-transform'}`}
+                  aria-disabled={currentPage <= 1}
+                />
+              </PaginationItem>
+              
+              {renderPaginationItems()}
+              
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                  className={`${currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'hover:scale-105 transition-transform'}`}
+                  aria-disabled={currentPage >= totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </motion.div>
+      )}
     </div>
   );
 };

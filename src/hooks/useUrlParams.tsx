@@ -17,64 +17,117 @@ export const useUrlParams = (
   
   // Update URL when filters or sort option changes
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
+    
+    // Preserve current page if it exists
+    const currentPage = params.get('page');
     
     // Add sort option to URL
     if (sortOption !== 'relevance') {
       params.set('sort', sortOption);
+    } else {
+      params.delete('sort');
     }
     
     // Add filters to URL
     if (filters.location) {
       params.set('location', filters.location);
+    } else {
+      params.delete('location');
     }
     
     if (filters.vehicleTypes.length > 0) {
       params.set('types', filters.vehicleTypes.join(','));
+    } else {
+      params.delete('types');
     }
     
     if (filters.brand !== 'todas') {
       params.set('brand', filters.brand);
+    } else {
+      params.delete('brand');
     }
     
     if (filters.model !== 'todos') {
       params.set('model', filters.model);
+    } else {
+      params.delete('model');
     }
     
     if (filters.color) {
       params.set('color', filters.color);
+    } else {
+      params.delete('color');
     }
     
     if (filters.year.min) {
       params.set('yearMin', filters.year.min);
+    } else {
+      params.delete('yearMin');
     }
     
     if (filters.year.max) {
       params.set('yearMax', filters.year.max);
+    } else {
+      params.delete('yearMax');
     }
     
     if (filters.price.range.min) {
       params.set('priceMin', filters.price.range.min);
+    } else {
+      params.delete('priceMin');
     }
     
     if (filters.price.range.max) {
       params.set('priceMax', filters.price.range.max);
+    } else {
+      params.delete('priceMax');
     }
     
     if (filters.format !== 'Leilão') {
       params.set('format', filters.format);
+    } else {
+      params.delete('format');
     }
     
     if (filters.origin !== 'Todas') {
       params.set('origin', filters.origin);
+    } else {
+      params.delete('origin');
     }
     
     if (filters.place !== 'Todas') {
       params.set('place', filters.place);
+    } else {
+      params.delete('place');
+    }
+    
+    // Preserve page parameter or reset when filters change
+    if (currentPage && !hasFilterChanged(filters, searchParams)) {
+      params.set('page', currentPage);
+    } else {
+      params.set('page', '1');
     }
     
     setSearchParams(params);
   }, [filters, sortOption, setSearchParams]);
+  
+  // Helper to check if filter has changed
+  const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
+    if ((params.get('location') || '') !== currentFilters.location) return true;
+    if ((params.get('types')?.split(',') || []).join(',') !== currentFilters.vehicleTypes.join(',')) return true;
+    if ((params.get('brand') || 'todas') !== currentFilters.brand) return true;
+    if ((params.get('model') || 'todos') !== currentFilters.model) return true;
+    if ((params.get('color') || '') !== currentFilters.color) return true;
+    if ((params.get('yearMin') || '') !== currentFilters.year.min) return true;
+    if ((params.get('yearMax') || '') !== currentFilters.year.max) return true;
+    if ((params.get('priceMin') || '') !== currentFilters.price.range.min) return true;
+    if ((params.get('priceMax') || '') !== currentFilters.price.range.max) return true;
+    if ((params.get('format') || 'Leilão') !== currentFilters.format) return true;
+    if ((params.get('origin') || 'Todas') !== currentFilters.origin) return true;
+    if ((params.get('place') || 'Todas') !== currentFilters.place) return true;
+    return false;
+  };
   
   // Load filters from URL on initial load
   useEffect(() => {
