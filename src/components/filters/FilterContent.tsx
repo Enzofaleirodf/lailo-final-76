@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -51,12 +52,49 @@ const FilterContent = () => {
   return (
     <div className="flex flex-col gap-3">
       {isMobile ? (
-        <MobileFilterOptions 
-          activeType={activeVehicleType}
-          setActiveType={setActiveVehicleType}
-          filters={mobileFilters}
-          onFilterChange={handleMobileFilterChange}
-        />
+        // For mobile, we only show the filter options, not the vehicle/property toggle
+        <div className="grid grid-cols-1 gap-3 mb-4">
+          {/* Format Dropdown */}
+          <div className="relative">
+            <select 
+              className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" 
+              value={mobileFilters.format}
+              onChange={(e) => handleMobileFilterChange('format', e.target.value)}
+            >
+              <option value="Leilão">Leilão</option>
+              <option value="Venda Direta">Venda Direta</option>
+            </select>
+            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
+          </div>
+          
+          {/* Origin Dropdown */}
+          <div className="relative">
+            <select 
+              className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" 
+              value={mobileFilters.origin}
+              onChange={(e) => handleMobileFilterChange('origin', e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              <option value="Judicial">Judicial</option>
+              <option value="Extrajudicial">Extrajudicial</option>
+            </select>
+            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
+          </div>
+          
+          {/* Place/Etapa Dropdown */}
+          <div className="relative">
+            <select 
+              className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" 
+              value={mobileFilters.place}
+              onChange={(e) => handleMobileFilterChange('place', e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              <option value="Primeira">Primeira</option>
+              <option value="Segunda">Segunda</option>
+            </select>
+            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
+          </div>
+        </div>
       ) : (
         // Desktop version of the vehicle/property toggle
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-4">
