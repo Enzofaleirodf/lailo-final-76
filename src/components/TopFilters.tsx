@@ -1,6 +1,6 @@
 
 import React, { useCallback } from 'react';
-import { ChevronDown, Building2, Car, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -31,17 +31,18 @@ const TopFilters: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <div className="flex h-12">
+        <div className="flex h-10">
           <button 
             onClick={() => handleContentTypeChange('property')}
             className={cn(
-              "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+              "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               filters.contentType === 'property' 
                 ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
             aria-label="Filtrar imóveis"
             aria-pressed={filters.contentType === 'property'}
+            style={{ height: '40px' }}
           >
             <Building2 size={18} className="shrink-0" />
             <span>Imóveis</span>
@@ -50,13 +51,14 @@ const TopFilters: React.FC = () => {
           <button 
             onClick={() => handleContentTypeChange('vehicle')}
             className={cn(
-              "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+              "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               filters.contentType === 'vehicle' 
                 ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
             aria-label="Filtrar veículos"
             aria-pressed={filters.contentType === 'vehicle'}
+            style={{ height: '40px' }}
           >
             <Car size={18} className="shrink-0" />
             <span>Veículos</span>
@@ -72,10 +74,7 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar formato"
             style={{ height: '40px' }}  
           >
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal size={16} className="text-purple-500" />
-              <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
-            </div>
+            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
@@ -97,10 +96,7 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar origem"
             style={{ height: '40px' }}  
           >
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal size={16} className="text-purple-500" />
-              <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
-            </div>
+            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
@@ -125,10 +121,7 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar etapa"
             style={{ height: '40px' }}
           >
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal size={16} className="text-purple-500" />
-              <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
-            </div>
+            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
