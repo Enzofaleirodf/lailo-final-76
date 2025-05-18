@@ -1,28 +1,39 @@
 
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/components/ui/card';
 
 const AuctionCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
-      <Skeleton className="w-full h-48" />
-      <div className="p-4">
-        <Skeleton className="h-6 w-4/5 mb-2" />
-        <Skeleton className="h-4 w-2/3 mb-4" />
-        <Skeleton className="h-4 w-full mb-4" />
-        <Skeleton className="h-4 w-full mb-2" />
-        
-        <div className="flex justify-between items-end mb-2">
-          <Skeleton className="h-8 w-24" />
-          <Skeleton className="h-6 w-16" />
+    <Card className="overflow-hidden border border-gray-200">
+      <div className="flex flex-col sm:flex-row">
+        {/* Left side - image */}
+        <div className="w-full sm:w-2/5 lg:w-1/3">
+          <div className="aspect-video sm:aspect-square">
+            <Skeleton className="w-full h-full" />
+          </div>
         </div>
         
-        <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-6 w-24" />
+        {/* Right side - content */}
+        <div className="flex-1 p-4 flex flex-col">
+          <Skeleton className="h-6 w-4/5 mb-2" />
+          <Skeleton className="h-4 w-2/3 mb-2" />
+          <Skeleton className="h-4 w-full mb-3" />
+          
+          <div className="flex justify-between items-center mt-auto mb-3">
+            <Skeleton className="h-8 w-24" />
+            <div className="flex gap-2">
+              <Skeleton className="h-6 w-16" />
+              <Skeleton className="h-6 w-24" />
+            </div>
+          </div>
+          
+          <div className="pt-3 mt-3 border-t border-gray-100">
+            <Skeleton className="h-4 w-16" />
+          </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
