@@ -27,9 +27,9 @@ const MobileNavBar = ({
               ? "bg-purple-600 text-white" 
               : "bg-white text-gray-700 hover:bg-gray-50"
           )}
+          aria-label="Imóveis"
         >
           <Building2 size={18} className="shrink-0" />
-          <span>Imóveis</span>
         </button>
         <div className="w-[1px] bg-gray-200"></div>
         <button 
@@ -40,16 +40,15 @@ const MobileNavBar = ({
               ? "bg-purple-600 text-white" 
               : "bg-white text-gray-700 hover:bg-gray-50"
           )}
+          aria-label="Veículos"
         >
           <Car size={18} className="shrink-0" />
-          <span>Veículos</span>
         </button>
         <div className="w-[1px] bg-gray-200"></div>
         <button 
           onClick={onFilterClick}
           className="flex-1 h-11 flex items-center justify-center gap-2 text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 transition-colors"
         >
-          <Filter size={18} className="shrink-0" />
           <span>Filtrar</span>
         </button>
         <div className="w-[1px] bg-gray-200"></div>
@@ -57,7 +56,6 @@ const MobileNavBar = ({
           onClick={onSortClick}
           className="flex-1 h-11 flex items-center justify-center gap-2 text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 transition-colors"
         >
-          <ArrowUpDown size={18} className="shrink-0" />
           <span>Ordenar</span>
         </button>
       </div>
