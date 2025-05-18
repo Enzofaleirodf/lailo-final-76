@@ -47,6 +47,10 @@ export const formatCurrency = (value: number): string => {
   });
 };
 
+export const formatYear = (year: number): string => {
+  return year.toString().slice(-2);
+};
+
 export const useFilteredAndSortedAuctions = (
   auctions: AuctionItem[], 
   filters: FilterState, 
