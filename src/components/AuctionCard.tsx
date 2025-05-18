@@ -44,7 +44,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow">
         <div className="flex">
           {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3">
+          <div className="relative w-1/3 flex-1">
             <div className="aspect-square h-full relative">
               {!imageLoaded && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
@@ -61,17 +61,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
                 transition={{ duration: 0.5 }}
               />
               
-              {/* Botão de favoritar */}
-              <button 
-                onClick={() => setFavorited(!favorited)}
-                className="absolute top-2 right-2 h-8 w-8 bg-white bg-opacity-80 rounded-full flex items-center justify-center transition-all duration-200 hover:bg-opacity-100"
-              >
-                <Heart 
-                  size={18} 
-                  className={favorited ? "fill-red-500 text-red-500" : "text-gray-600"} 
-                />
-              </button>
-              
               {/* Badge de desconto, se houver */}
               {discount && (
                 <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
@@ -83,10 +72,23 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
           
           {/* Conteúdo/Informações à direita */}
           <div className="w-2/3 p-4 flex flex-col">
-            {/* Linha 1: Marca + Modelo */}
-            <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-              {auction.vehicleInfo.brand} {auction.title}
-            </h3>
+            {/* Linha 1: Marca + Modelo + Botão Favoritar */}
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+                {auction.vehicleInfo.brand} {auction.title}
+              </h3>
+              
+              {/* Botão de favoritar movido para aqui */}
+              <button 
+                onClick={() => setFavorited(!favorited)}
+                className="h-8 w-8 flex items-center justify-center transition-all duration-200"
+              >
+                <Heart 
+                  size={20} 
+                  className={favorited ? "fill-red-500 text-red-500" : "text-gray-600"} 
+                />
+              </button>
+            </div>
             
             {/* Linha 2: Lance atual + desconto */}
             <div className="flex items-end mt-1 gap-2">
