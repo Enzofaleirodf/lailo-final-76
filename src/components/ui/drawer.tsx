@@ -34,9 +34,9 @@ const DrawerOverlay = React.forwardRef<
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
 // Add effect to manage modal-open class on body
-const useModalBodyClass = (open: boolean) => {
+const useModalBodyClass = (isOpen: boolean) => {
   React.useEffect(() => {
-    if (open) {
+    if (isOpen) {
       document.body.classList.add('modal-open');
     } else {
       document.body.classList.remove('modal-open');
@@ -45,17 +45,18 @@ const useModalBodyClass = (open: boolean) => {
     return () => {
       document.body.classList.remove('modal-open');
     };
-  }, [open]);
+  }, [isOpen]);
 };
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     footerContent?: React.ReactNode;
+    open?: boolean; // Add optional open prop explicitly
   }
->(({ className, children, footerContent, ...props }, ref) => {
-  // Apply modal-open class to body when drawer is open
-  useModalBodyClass(props.open || false);
+>(({ className, children, footerContent, open = false, ...props }, ref) => {
+  // Use the explicit open prop we extracted
+  useModalBodyClass(open);
   
   return (
     <DrawerPortal>
