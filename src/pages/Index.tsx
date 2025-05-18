@@ -24,18 +24,21 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
-        {(isMobile) && (
-          <MobileNavBar 
-            activeVehicleType={activeVehicleType}
-            setActiveVehicleType={setActiveVehicleType}
-            onOpenFilters={handleOpenFilters}
-            onOpenSort={handleOpenSort}
-          />
+        {/* Mobile Navigation Bar now positioned below the header and outside other containers */}
+        {isMobile && (
+          <div className="sticky top-0 z-30 w-full">
+            <MobileNavBar 
+              activeVehicleType={activeVehicleType}
+              setActiveVehicleType={setActiveVehicleType}
+              onOpenFilters={handleOpenFilters}
+              onOpenSort={handleOpenSort}
+            />
+          </div>
         )}
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-          {/* Add padding to top when mobile nav bar is present */}
-          <div className={isMobile ? "pt-16" : ""}>
+          {/* No extra padding needed now that the mobile nav is outside */}
+          <div>
             {!isMobile && <TopFilters />}
             
             <div className={`flex ${isMobile ? 'flex-col' : 'flex-row gap-6'}`}>
