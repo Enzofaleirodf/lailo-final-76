@@ -6,6 +6,7 @@ import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -41,10 +42,10 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow">
-        <div className="flex flex-col">
-          {/* Imagem do veículo */}
-          <div className="relative">
-            <div className="aspect-video w-full h-48 relative">
+        <div className="flex">
+          {/* Imagem do veículo à esquerda */}
+          <div className="relative w-1/3">
+            <div className="aspect-square h-full relative">
               {!imageLoaded && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
@@ -60,20 +61,10 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
                 transition={{ duration: 0.5 }}
               />
               
-              {/* Badge de formato (Extrajudicial ou similar) posicionado no canto esquerdo inferior */}
-              <Badge className="absolute bottom-3 left-3 bg-gray-100 text-gray-800 hover:bg-gray-200">
-                {auction.origin}
-              </Badge>
-              
-              {/* Badge de tipo (Único ou similar) posicionado ao lado do primeiro badge */}
-              <Badge className="absolute bottom-3 left-24 bg-gray-100 text-gray-800 hover:bg-gray-200">
-                {auction.place}
-              </Badge>
-              
               {/* Botão de favoritar */}
               <button 
                 onClick={() => setFavorited(!favorited)}
-                className="absolute top-3 right-3 h-8 w-8 bg-white bg-opacity-80 rounded-full flex items-center justify-center transition-all duration-200 hover:bg-opacity-100"
+                className="absolute top-2 right-2 h-8 w-8 bg-white bg-opacity-80 rounded-full flex items-center justify-center transition-all duration-200 hover:bg-opacity-100"
               >
                 <Heart 
                   size={18} 
@@ -83,50 +74,60 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
               
               {/* Badge de desconto, se houver */}
               {discount && (
-                <Badge className="absolute top-3 left-3 bg-green-600 text-white hover:bg-green-700">
+                <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
                   {discount}% OFF
                 </Badge>
               )}
             </div>
           </div>
           
-          {/* Conteúdo/Informações */}
-          <div className="p-4 flex flex-col gap-1">
-            {/* Título/Modelo */}
-            <div className="flex justify-between items-start">
-              <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{auction.title}</h3>
+          {/* Conteúdo/Informações à direita */}
+          <div className="w-2/3 p-4 flex flex-col">
+            {/* Linha 1: Marca + Modelo */}
+            <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+              {auction.vehicleInfo.brand} {auction.title}
+            </h3>
+            
+            {/* Linha 2: Lance atual + desconto */}
+            <div className="flex items-end mt-1 gap-2">
+              <span className="text-xl font-bold text-purple-700">
+                {formatCurrency(auction.currentBid)}
+              </span>
+              {auction.originalPrice && (
+                <span className="text-sm text-gray-500 line-through">
+                  {formatCurrency(auction.originalPrice)}
+                </span>
+              )}
             </div>
             
-            {/* Cor e Ano */}
-            <div className="flex gap-2 items-center text-sm text-gray-600">
+            {/* Linha 3: Cor • Ano | Cidade/UF */}
+            <div className="flex items-center mt-2 text-sm text-gray-600">
               <span>{auction.vehicleInfo.color}</span>
-              <span className="text-gray-400">•</span>
+              <span className="mx-1">•</span>
               <span>{auction.vehicleInfo.year}</span>
+              <span className="mx-1">|</span>
+              <div className="flex items-center">
+                <MapPin size={14} className="mr-1" />
+                <span className="line-clamp-1">{auction.location}</span>
+              </div>
             </div>
             
-            {/* Localização */}
-            <div className="flex items-center text-sm text-gray-600 mb-2">
-              <MapPin size={14} className="mr-1" />
-              <span className="line-clamp-1">{auction.location}</span>
-            </div>
+            {/* Linha 4: Divider */}
+            <Separator className="my-3" />
             
-            {/* Preço e Data de término */}
-            <div className="flex items-center justify-between mt-2">
-              <div className="flex flex-col">
-                <p className="text-2xl font-bold text-purple-700">
-                  {formatCurrency(auction.currentBid)}
-                </p>
-                {auction.originalPrice && (
-                  <p className="text-sm text-gray-500 line-through">
-                    {formatCurrency(auction.originalPrice)}
-                  </p>
-                )}
+            {/* Linha 5: Origem + Etapa (esquerda) / Data e hora (direita) */}
+            <div className="flex justify-between items-center mt-1">
+              <div className="flex gap-2">
+                <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                  {auction.origin}
+                </Badge>
+                <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                  {auction.place}
+                </Badge>
               </div>
               
-              {/* Data de término */}
-              <Badge variant="outline" className="flex items-center gap-1">
-                <span className="text-xs">{auction.endDate.toLocaleDateString('pt-BR')}</span>
-                <span className="text-xs text-gray-500">às {auction.endDate.getHours()}h</span>
+              <Badge variant="outline" className="text-xs">
+                {auction.endDate.toLocaleDateString('pt-BR')} às {auction.endDate.getHours()}h
               </Badge>
             </div>
           </div>
