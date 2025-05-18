@@ -5,9 +5,13 @@ import { X } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import FilterContent from './filters/FilterContent';
-import { FilterProvider } from '@/contexts/FilterContext';
 
-const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChange?: (open: boolean) => void }) => {
+interface FilterSectionProps {
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) => {
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
   
@@ -48,9 +52,7 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
   if (!isMobile) {
     return (
       <div className="w-full lg:w-[320px] bg-gradient-to-br from-white to-purple-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
-        <FilterProvider>
-          <FilterContent />
-        </FilterProvider>
+        <FilterContent />
       </div>
     );
   }
@@ -61,11 +63,10 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
       <DrawerContent 
         className="p-0 overflow-hidden h-[90vh] max-h-[90vh]" 
         footerContent={footerContent}
-        open={open}
       >
         <div className="flex flex-col h-full">
           <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
-            <h2 className="text-base font-medium">Filtros</h2>
+            <h2 className="text-base font-medium" id="drawer-title">Filtros</h2>
             <Button 
               variant="ghost" 
               size="sm" 
@@ -78,10 +79,8 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
             </Button>
           </div>
           
-          <div className="bg-gray-50 p-3 flex-1 overflow-y-auto">
-            <FilterProvider>
-              <FilterContent />
-            </FilterProvider>
+          <div className="bg-gray-50 p-3 flex-1 overflow-y-auto" aria-labelledby="drawer-title">
+            <FilterContent />
           </div>
         </div>
       </DrawerContent>

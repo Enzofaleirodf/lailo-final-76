@@ -14,7 +14,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
   onSortClick
 }) => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter, activeFilters } = useFilter();
   
   const handleTabChange = (tab: ContentType) => {
     updateFilter('contentType', tab);
@@ -53,11 +53,16 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
         <div className="w-[1px] bg-gray-200"></div>
         <button 
           onClick={onFilterClick} 
-          className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 transition-colors"
+          className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 transition-colors relative"
           aria-label="Abrir filtros"
         >
           <Filter size={16} className="shrink-0 text-purple-500" />
           <span>Filtrar</span>
+          {activeFilters > 0 && (
+            <span className="absolute top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 text-[10px] font-medium text-white">
+              {activeFilters}
+            </span>
+          )}
         </button>
         <div className="w-[1px] bg-gray-200"></div>
         <button 

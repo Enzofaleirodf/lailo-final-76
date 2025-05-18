@@ -2,51 +2,47 @@
 import React from 'react';
 import { Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useFilter } from '@/contexts/FilterContext';
 
 const VehicleTypeFilter = () => {
+  const { filters, updateFilter } = useFilter();
+  
+  const handleVehicleTypeChange = (values: string[]) => {
+    updateFilter('vehicleTypes', values);
+  };
+  
+  const vehicleTypes = [
+    { value: 'aereos', icon: Plane, label: 'Aéreos' },
+    { value: 'carros', icon: Car, label: 'Carros' },
+    { value: 'caminhoes', icon: Truck, label: 'Caminhões' },
+    { value: 'maquinas', icon: Tractor, label: 'Maquinas' },
+    { value: 'micromobilidade', icon: Car, label: 'Micromobilidade' },
+    { value: 'motos', icon: Bike, label: 'Motos' },
+    { value: 'nauticos', icon: Ship, label: 'Naúticos' },
+    { value: 'onibus', icon: Bus, label: 'Ônibus' },
+    { value: 'reboques', icon: Truck, label: 'Reboques' },
+    { value: 'tratores', icon: Tractor, label: 'Tratores' }
+  ];
+
   return (
     <div className="flex flex-wrap gap-2 w-full justify-start">
-      <ToggleGroup type="multiple" className="flex flex-wrap gap-2 w-full justify-start">
-        <ToggleGroupItem value="aereos" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Plane size={14} />
-          <span>Aéreos</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="carros" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Car size={14} />
-          <span>Carros</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="caminhoes" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Truck size={14} />
-          <span>Caminhões</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="maquinas" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Tractor size={14} />
-          <span>Maquinas</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="micromobilidade" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Car size={14} />
-          <span>Micromobilidade</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="motos" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Bike size={14} />
-          <span>Motos</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="nauticos" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Ship size={14} />
-          <span>Naúticos</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="onibus" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Bus size={14} />
-          <span>Ônibus</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="reboques" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Truck size={14} />
-          <span>Reboques</span>
-        </ToggleGroupItem>
-        <ToggleGroupItem value="tratores" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-          <Tractor size={14} />
-          <span>Tratores</span>
-        </ToggleGroupItem>
+      <ToggleGroup 
+        type="multiple" 
+        className="flex flex-wrap gap-2 w-full justify-start"
+        value={filters.vehicleTypes as string[]}
+        onValueChange={handleVehicleTypeChange}
+      >
+        {vehicleTypes.map(({ value, icon: Icon, label }) => (
+          <ToggleGroupItem 
+            key={value}
+            value={value} 
+            className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300"
+            aria-label={`Filtrar por ${label}`}
+          >
+            <Icon size={14} />
+            <span>{label}</span>
+          </ToggleGroupItem>
+        ))}
       </ToggleGroup>
     </div>
   );

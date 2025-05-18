@@ -22,7 +22,7 @@ export interface YearRange {
 export interface FilterState {
   contentType: ContentType;
   location: string;
-  vehicleTypes: VehicleType[];
+  vehicleTypes: string[];
   brand: string;
   model: string;
   color: string;
@@ -40,6 +40,7 @@ export interface FilterState {
 interface FilterContextType {
   filters: FilterState;
   expandedSections: Record<string, boolean>;
+  activeFilters: number; // New property to track number of active filters
   setFilters: (filters: FilterState) => void;
   updateFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
   resetFilters: () => void;
@@ -99,14 +100,33 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }));
   };
 
+  // Calculate number of active filters
+  const activeFilters = useMemo(() => {
+    let count = 0;
+    
+    if (filters.location) count++;
+    if (filters.vehicleTypes.length > 0) count++;
+    if (filters.brand && filters.brand !== 'todas') count++;
+    if (filters.model && filters.model !== 'todos') count++;
+    if (filters.color) count++;
+    if (filters.year.min || filters.year.max) count++;
+    if (filters.price.range.min || filters.price.range.max) count++;
+    if (filters.format !== DEFAULT_FILTERS.format) count++;
+    if (filters.origin !== DEFAULT_FILTERS.origin) count++;
+    if (filters.place !== DEFAULT_FILTERS.place) count++;
+    
+    return count;
+  }, [filters]);
+
   const value = useMemo(() => ({
     filters,
     expandedSections,
+    activeFilters,
     setFilters,
     updateFilter,
     resetFilters,
     toggleSection
-  }), [filters, expandedSections]);
+  }), [filters, expandedSections, activeFilters]);
 
   return (
     <FilterContext.Provider value={value}>

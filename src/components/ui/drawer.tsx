@@ -52,10 +52,10 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     footerContent?: React.ReactNode;
-    open?: boolean; // Explicitly add the open prop type
   }
->(({ className, children, footerContent, open = false, ...props }, ref) => {
-  // Use the explicitly passed open prop
+>(({ className, children, footerContent, ...props }, ref) => {
+  // Get open state from drawer context
+  const { open } = React.useContext(DrawerPrimitive.Context);
   useModalBodyClass(open);
   
   return (
@@ -68,6 +68,8 @@ const DrawerContent = React.forwardRef<
           "h-[90vh] max-h-[90vh]", // Maximum height of 90vh
           className
         )}
+        aria-labelledby="drawer-title"
+        aria-describedby="drawer-description"
         {...props}
       >
         <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
