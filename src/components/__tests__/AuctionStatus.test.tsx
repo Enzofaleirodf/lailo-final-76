@@ -1,6 +1,7 @@
 
 import { calculateTotalSites, calculateNewAuctions } from '../AuctionStatus';
 import { AuctionItem } from '@/types/auction';
+import '@testing-library/jest-dom';
 
 describe('AuctionStatus helper functions', () => {
   const mockAuctions: AuctionItem[] = [
