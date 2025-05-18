@@ -61,7 +61,7 @@ const ResultHeader: React.FC = () => {
           <AuctionStatus />
           
           {!isMobile && (
-            <div className="flex items-center ml-4 mt-0 pt-0">
+            <div className="flex items-center ml-4 mt-0 pt-0 mb-0">
               <p className="text-sm text-gray-500 mr-2 mt-0">
                 Ordenar:
               </p>
