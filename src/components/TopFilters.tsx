@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -7,12 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const TopFilters = () => {
-  // Since we're not getting the activeVehicleType from props yet, 
-  // we'll keep the local state for now
-  const [activeVehicleType, setActiveVehicleType] = React.useState<'property' | 'vehicle'>('vehicle');
-  const [activeFilters, setActiveFilters] = React.useState({
+  const [activeVehicleType, setActiveVehicleType] = useState<'property' | 'vehicle'>('vehicle');
+  const [activeFilters, setActiveFilters] = useState({
     format: 'Leilão',
     origin: 'Todas',
     place: 'Todas'
