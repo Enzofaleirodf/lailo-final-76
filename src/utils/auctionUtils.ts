@@ -1,4 +1,3 @@
-
 import { AuctionItem } from '@/types/auction';
 import { SortOption } from '@/contexts/SortContext';
 import { useMemo } from 'react';
@@ -10,20 +9,28 @@ export const sortAuctions = (auctions: AuctionItem[], sortOption: SortOption): A
     case 'newest':
       return sortedAuctions.sort((a, b) => b.vehicleInfo.year - a.vehicleInfo.year);
     
-    case 'ending-soon':
-      return sortedAuctions.sort((a, b) => a.endDate.getTime() - b.endDate.getTime());
-    
     case 'price-asc':
       return sortedAuctions.sort((a, b) => a.currentBid - b.currentBid);
     
     case 'price-desc':
       return sortedAuctions.sort((a, b) => b.currentBid - a.currentBid);
     
-    case 'relevance':
+    case 'highest-discount':
+      // Sort by discount percentage (assuming there's originalPrice in the data)
+      return sortedAuctions.sort((a, b) => {
+        const discountA = a.originalPrice ? (a.originalPrice - a.currentBid) / a.originalPrice : 0;
+        const discountB = b.originalPrice ? (b.originalPrice - b.currentBid) / b.originalPrice : 0;
+        return discountB - discountA;
+      });
+    
+    case 'nearest':
+      // For demonstration purposes, sorting by location name alphabetically
+      // In a real app, you would calculate actual distances using coordinates
+      return sortedAuctions.sort((a, b) => a.location.localeCompare(b.location));
+      
     default:
-      // For relevance, we could use a more complex algorithm
-      // Here we'll use bid count as a simple relevance metric
-      return sortedAuctions.sort((a, b) => b.bidCount - a.bidCount);
+      // Default to newest
+      return sortedAuctions.sort((a, b) => b.vehicleInfo.year - a.vehicleInfo.year);
   }
 };
 

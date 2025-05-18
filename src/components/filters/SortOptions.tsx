@@ -26,11 +26,11 @@ const SortOptions: React.FC<SortOptionsProps> = ({
   onSortChange
 }) => {
   const sortOptions = [
-    { value: 'relevance', label: 'Mais relevantes' },
     { value: 'newest', label: 'Mais recentes' },
-    { value: 'ending-soon', label: 'Terminando em breve' },
     { value: 'price-asc', label: 'Menor preço' },
-    { value: 'price-desc', label: 'Maior preço' }
+    { value: 'price-desc', label: 'Maior preço' },
+    { value: 'highest-discount', label: 'Maior desconto' },
+    { value: 'nearest', label: 'Mais próximos' }
   ];
 
   const handleSortChange = (value: string) => {

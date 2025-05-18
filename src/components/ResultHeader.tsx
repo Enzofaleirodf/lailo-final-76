@@ -15,7 +15,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { SortOption } from '@/contexts/SortContext';
-import { ArrowDownAZ, ArrowUpAZ, ArrowDownZA, ArrowUpZA } from 'lucide-react';
+import { ArrowDown, ArrowUp, MapPin } from 'lucide-react';
 
 const ResultHeader: React.FC = () => {
   const { filters, activeFilters } = useFilter();
@@ -33,11 +33,11 @@ const ResultHeader: React.FC = () => {
   
   // Get sort options and icons
   const sortOptions = useMemo(() => [
-    { value: 'relevance', label: 'Mais relevantes', icon: <ArrowDownAZ size={16} className="mr-2" /> },
-    { value: 'newest', label: 'Mais recentes', icon: <ArrowDownZA size={16} className="mr-2" /> },
-    { value: 'ending-soon', label: 'Terminando em breve', icon: <ArrowUpZA size={16} className="mr-2" /> },
-    { value: 'price-asc', label: 'Menor preço', icon: <ArrowUpAZ size={16} className="mr-2" /> },
-    { value: 'price-desc', label: 'Maior preço', icon: <ArrowDownAZ size={16} className="mr-2" /> }
+    { value: 'newest', label: 'Mais recentes', icon: <ArrowDown size={16} className="mr-2" /> },
+    { value: 'price-asc', label: 'Menor preço', icon: <ArrowUp size={16} className="mr-2" /> },
+    { value: 'price-desc', label: 'Maior preço', icon: <ArrowDown size={16} className="mr-2" /> },
+    { value: 'highest-discount', label: 'Maior desconto', icon: <ArrowDown size={16} className="mr-2" /> },
+    { value: 'nearest', label: 'Mais próximos', icon: <MapPin size={16} className="mr-2" /> }
   ], []);
   
   // Get current sort option
@@ -57,13 +57,7 @@ const ResultHeader: React.FC = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="flex flex-wrap items-center justify-between mb-2">
-        <motion.h1 
-          className="text-xl sm:text-2xl font-semibold text-gray-800"
-          layout
-        >
-          {resultCount} {resultCount === 1 ? 'resultado encontrado' : 'resultados encontrados'}
-          {activeFilters > 0 ? ` (${activeFilters} ${activeFilters === 1 ? 'filtro' : 'filtros'})` : ''}
-        </motion.h1>
+        <div className="flex-1"></div>
         
         <div className="flex items-center">
           <p className="text-sm text-gray-500 mr-2">

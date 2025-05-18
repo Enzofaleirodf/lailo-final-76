@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState } from 'react';
 
-export type SortOption = 'relevance' | 'newest' | 'ending-soon' | 'price-asc' | 'price-desc';
+export type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'highest-discount' | 'nearest';
 
 interface SortContextType {
   sortOption: SortOption;
@@ -11,7 +11,7 @@ interface SortContextType {
 const SortContext = createContext<SortContextType | undefined>(undefined);
 
 export const SortProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sortOption, setSortOption] = useState<SortOption>('relevance');
+  const [sortOption, setSortOption] = useState<SortOption>('newest');
 
   return (
     <SortContext.Provider value={{ sortOption, setSortOption }}>
