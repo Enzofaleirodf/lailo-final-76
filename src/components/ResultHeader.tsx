@@ -13,9 +13,8 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { SortOption } from '@/stores/useSortStore';
-import { ArrowDown, ArrowUp, ChevronDown, MapPin } from 'lucide-react';
+import { ArrowDown, ArrowUp, MapPin } from 'lucide-react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -63,14 +62,13 @@ const ResultHeader: React.FC = () => {
           </div>
           
           {!isMobile && (
-            <div className="flex items-center gap-2 ml-auto">
-              <span className="text-sm text-gray-500">
+            <div className="flex items-center ml-auto">
+              <p className="text-sm text-gray-500 mr-2">
                 Ordenar:
-              </span>
+              </p>
               <Select value={sortOption} onValueChange={handleSortChange}>
-                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors leading-none">
+                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors">
                   <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
-                  <ChevronDown className="ml-2 h-4 w-4" />
                 </SelectTrigger>
                 <SelectContent align="end">
                   {sortOptions.map((option) => (
