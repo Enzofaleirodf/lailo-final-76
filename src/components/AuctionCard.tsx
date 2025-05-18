@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, MapPin } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
-import { formatCurrency } from '@/utils/auctionUtils';
+import { formatCurrency, formatYear } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -31,11 +31,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   };
 
   const discount = calculateDiscount();
-  
-  // Format year to display only the last 2 digits
-  const formatYear = (year: number) => {
-    return year.toString().slice(-2);
-  };
 
   return (
     <motion.div
@@ -50,7 +45,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full flex flex-col">
         <div className="flex h-full">
           {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3 h-full flex-1">
+          <div className="relative w-1/3 h-full flex-1 p-3">
             <div className="h-full relative">
               {!imageLoaded && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
@@ -78,9 +73,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
           
           {/* Conteúdo/Informações à direita */}
           <div className="w-2/3 p-4 flex flex-col justify-between">
-            <div className="space-y-2">
+            <div>
               {/* Linha 1: Marca + Modelo + Botão Favoritar */}
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mb-1">
                 <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
                   {auction.vehicleInfo.brand} {auction.title}
                 </h3>
@@ -98,7 +93,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
               </div>
               
               {/* Linha 2: Lance atual + desconto */}
-              <div className="flex items-end gap-2">
+              <div className="flex items-end gap-2 mb-2">
                 <span className="text-xl font-bold text-purple-700">
                   {formatCurrency(auction.currentBid)}
                 </span>
@@ -110,7 +105,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
               </div>
               
               {/* Linha 3: Cor • Ano | Cidade/UF */}
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 mb-3">
                 <span>{auction.vehicleInfo.color}</span>
                 <span className="mx-1">•</span>
                 <span>{formatYear(auction.vehicleInfo.year)}</span>
@@ -123,7 +118,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
             </div>
             
             {/* Linha 4: Divider */}
-            <Separator className="my-2" />
+            <Separator className="my-3" />
             
             {/* Linha 5: Origem + Etapa (esquerda) / Data e hora (direita) */}
             <div className="flex justify-between items-center">
