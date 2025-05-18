@@ -2,6 +2,7 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface FilterSectionComponentProps {
   title: string;
@@ -17,27 +18,38 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   children 
 }) => {
   const id = `filter-section-${title.toLowerCase().replace(/\s+/g, '-')}`;
+  const isMobile = useIsMobile();
   
   return (
     <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm z-10">
-      <button 
-        onClick={onToggle} 
-        className="w-full flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-3 cursor-pointer"
-        aria-expanded={isExpanded}
-        aria-controls={id}
+      {/* Title section - only toggleable on mobile */}
+      <div 
+        className="w-full flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-3"
       >
         <h3 className="text-sm font-medium text-purple-900">{title}</h3>
-        <ChevronDown 
-          size={18} 
-          className={cn(
-            "text-purple-700 transition-transform", 
-            isExpanded ? "transform rotate-180" : ""
-          )} 
-          aria-hidden="true"
-        />
-      </button>
+        
+        {/* Only show chevron and make it clickable on mobile */}
+        {isMobile && (
+          <button 
+            onClick={onToggle} 
+            className="cursor-pointer"
+            aria-expanded={isExpanded}
+            aria-controls={id}
+          >
+            <ChevronDown 
+              size={18} 
+              className={cn(
+                "text-purple-700 transition-transform", 
+                isExpanded ? "transform rotate-180" : ""
+              )} 
+              aria-hidden="true"
+            />
+          </button>
+        )}
+      </div>
       
-      {isExpanded && (
+      {/* Content - always visible on desktop, toggleable on mobile */}
+      {(isExpanded || !isMobile) && (
         <div className="p-3" id={id}>
           {children}
         </div>
