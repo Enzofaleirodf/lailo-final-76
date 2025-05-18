@@ -1,6 +1,7 @@
 
 import React, { useMemo } from 'react';
 import ActiveFilterBadges from './filters/ActiveFilterBadges';
+import AuctionStatus from './AuctionStatus';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
 import { useSearchParams } from 'react-router-dom';
@@ -80,6 +81,9 @@ const ResultHeader: React.FC = () => {
           </Select>
         </div>
       </div>
+      
+      {/* Add AuctionStatus component */}
+      <AuctionStatus />
       
       <ActiveFilterBadges />
     </motion.div>

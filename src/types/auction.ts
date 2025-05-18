@@ -5,10 +5,12 @@ export interface AuctionItem {
   description: string;
   currentBid: number;
   minBid: number;
-  originalPrice?: number; // Add this property as optional
+  originalPrice?: number;
   imageUrl: string;
   endDate: Date;
   location: string;
+  website?: string; // Added for future use
+  href?: string;    // Added for future use
   vehicleInfo: {
     brand: string;
     model: string;
@@ -21,4 +23,6 @@ export interface AuctionItem {
   format: 'Leilão' | 'Venda Direta';
   origin: 'Judicial' | 'Extrajudicial';
   place: 'Primeira' | 'Segunda';
+  isNew?: boolean;  // Added for future use
+  createdAt?: Date; // Added for future use
 }
