@@ -13,7 +13,7 @@ const MobileFilterBar = ({
   onFilterClick,
   onSortClick
 }: MobileFilterBarProps) => {
-  return <div className="sticky top-0 z-10 w-full bg-white pt-0 pb-6 shadow-sm mt-0 px-0">
+  return <div className="sticky top-0 z-10 w-full px-4 pt-0 pb-6 shadow-sm mt-0 bg-transparent\n">
       <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
         <button onClick={() => onTabChange('property')} className={cn("w-11 h-10 flex items-center justify-center text-sm font-medium transition-colors", activeTab === 'property' ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" : "bg-white text-gray-700 hover:bg-gray-50")} aria-label="Imóveis">
           <Building2 size={18} className="shrink-0" />
