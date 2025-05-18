@@ -11,12 +11,13 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { FilterProvider } from '@/contexts/FilterContext';
 import { SortProvider } from '@/contexts/SortContext';
 import SortOptions from '@/components/filters/SortOptions';
+import { SortOption } from '@/contexts/SortContext';
 
 const Index = () => {
   const isMobile = useIsMobile();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [sortOption, setSortOption] = useState('relevance');
+  const [sortOption, setSortOption] = useState<SortOption>('relevance');
   
   const handleFilterClick = () => {
     setFiltersOpen(true);
@@ -26,7 +27,7 @@ const Index = () => {
     setSortOpen(true);
   };
   
-  const handleSortChange = (value: string) => {
+  const handleSortChange = (value: SortOption) => {
     setSortOption(value);
   };
   
@@ -54,7 +55,7 @@ const Index = () => {
                 <main className="flex-1 min-h-[80vh] pb-20">
                   {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
                   <ResultHeader />
-                  <AuctionList sortOption={sortOption} />
+                  <AuctionList />
                 </main>
               </div>
             </div>
@@ -63,7 +64,7 @@ const Index = () => {
           <SortOptions 
             open={sortOpen} 
             onOpenChange={setSortOpen} 
-            selectedOption={sortOption} // Change from sortOption to selectedOption
+            selectedOption={sortOption} 
             onSortChange={handleSortChange} 
           />
           
