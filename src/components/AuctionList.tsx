@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import AuctionCard from '@/components/AuctionCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
@@ -156,7 +155,7 @@ const AuctionList: React.FC = () => {
   
   if (loading && !isChangingPage) {
     return (
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-4">
         {[...Array(6)].map((_, index) => (
           <AuctionCardSkeleton key={index} />
         ))}
@@ -191,7 +190,7 @@ const AuctionList: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col space-y-6"
+          className="flex flex-col space-y-4"
         >
           {auctions.map((auction) => (
             <motion.div
