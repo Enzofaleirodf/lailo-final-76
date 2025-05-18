@@ -64,12 +64,12 @@ const DrawerContent = React.forwardRef<
           className
         )}
         {...props}
-        // Use onChange instead of onOpenChange
-        onChange={(open: boolean) => {
+        // Use onOpenChange which is the correct prop for vaul/Drawer
+        onOpenChange={(open: boolean) => {
           setIsOpen(open);
-          // Call the original onChange if provided
-          if (props.onChange) {
-            props.onChange(open);
+          // Call the original onOpenChange if provided
+          if (props.onOpenChange) {
+            props.onOpenChange(open);
           }
         }}
       >
