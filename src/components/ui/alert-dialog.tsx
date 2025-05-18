@@ -39,14 +39,6 @@ const AlertDialogContent = React.forwardRef<
         className
       )}
       {...props}
-      onOpenAutoFocus={(e) => {
-        document.body.classList.add('modal-open');
-        props.onOpenAutoFocus && props.onOpenAutoFocus(e);
-      }}
-      onCloseAutoFocus={(e) => {
-        document.body.classList.remove('modal-open');
-        props.onCloseAutoFocus && props.onCloseAutoFocus(e);
-      }}
     />
   </AlertDialogPortal>
 ))
@@ -72,7 +64,7 @@ const AlertDialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 z-[181] bg-background dialog-footer",
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 z-[181] bg-background",
       className
     )}
     {...props}

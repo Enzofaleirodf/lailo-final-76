@@ -62,14 +62,6 @@ const SheetContent = React.forwardRef<
       ref={ref}
       className={cn(sheetVariants({ side }), className)}
       {...props}
-      onOpenAutoFocus={(e) => {
-        document.body.classList.add('modal-open');
-        props.onOpenAutoFocus && props.onOpenAutoFocus(e);
-      }}
-      onCloseAutoFocus={(e) => {
-        document.body.classList.remove('modal-open');
-        props.onCloseAutoFocus && props.onCloseAutoFocus(e);
-      }}
     >
       {children}
       <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary z-[171]">
@@ -101,7 +93,7 @@ const SheetFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 z-[171] bg-background drawer-footer",
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 z-[171] bg-background",
       className
     )}
     {...props}

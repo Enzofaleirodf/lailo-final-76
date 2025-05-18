@@ -1,4 +1,3 @@
-
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -191,29 +190,6 @@
   padding: 1rem;
   border-top: 1px solid #e5e7eb;
   margin-top: auto;
-  z-index: 171;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
-}
-
-/* Fix for dialog footer */
-.dialog-footer {
-  position: sticky;
-  bottom: 0;
-  background-color: white;
-  padding: 1rem;
-  border-top: 1px solid #e5e7eb;
-  margin-top: auto;
-  z-index: 191;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
-}
-
-/* Fix for modal interactions */
-.modal-open {
-  overflow: hidden;
-}
-
-.modal-open .mobile-nav-bar {
-  display: none;
 }
 
 /* Fix for mobile navigation bar positioning */
@@ -237,22 +213,15 @@
 
 /* Ensure dialogs are above navigation bar */
 .radix-dialog-content {
-  z-index: 191 !important;
+  z-index: 101 !important;
 }
 
 /* Fix for vaul drawer component */
 [vaul-drawer] {
-  z-index: 170 !important;
+  z-index: 99 !important;
 }
 
 [vaul-drawer-content] {
-  z-index: 170 !important;
+  z-index: 99 !important;
   max-height: 85vh !important;
-}
-
-/* Mobile top filter bar spacing */
-@media (max-width: 640px) {
-  body {
-    padding-top: 72px;
-  }
 }
