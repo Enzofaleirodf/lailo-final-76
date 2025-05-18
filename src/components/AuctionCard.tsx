@@ -45,7 +45,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full flex flex-col">
         <div className="flex h-full">
           {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3 h-full flex-1 p-3">
+          <div className="relative w-1/3 h-full flex-1 p-3 flex flex-col justify-center">
             <div className="h-full relative rounded-md overflow-hidden">
               {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" />}
               <motion.img 
