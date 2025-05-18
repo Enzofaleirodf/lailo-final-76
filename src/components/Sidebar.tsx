@@ -104,8 +104,8 @@ const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonP
       <TooltipTrigger asChild>
         <button 
           className={cn(
-            "w-full flex items-center px-3 py-3 transition-all rounded-md mx-1",
-            expanded ? "justify-start" : "justify-center",
+            "w-full flex items-center px-3 py-3 transition-all rounded-md",
+            expanded ? "justify-start mx-3" : "justify-center mx-2", // Added mx-3 for expanded state and mx-2 for collapsed state
             isActive 
               ? "text-white bg-purple-600 shadow-md" 
               : "text-purple-200 hover:text-white hover:bg-purple-700/50"
