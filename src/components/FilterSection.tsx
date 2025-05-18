@@ -52,7 +52,7 @@ const FilterContent = () => {
   };
 
   // Filter section component with toggle
-  const FilterSection = ({ 
+  const FilterSectionComponent = ({ 
     title, 
     section, 
     children 
@@ -61,10 +61,10 @@ const FilterContent = () => {
     section: keyof typeof expandedSections, 
     children: React.ReactNode 
   }) => (
-    <div className="mb-6 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm">
+    <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm">
       <button 
         onClick={() => toggleSection(section)} 
-        className="w-full flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-4 cursor-pointer"
+        className="w-full flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-3 cursor-pointer"
       >
         <h3 className="text-sm font-medium text-purple-900">{title}</h3>
         <ChevronDown 
@@ -77,7 +77,7 @@ const FilterContent = () => {
       </button>
       
       {expandedSections[section] && (
-        <div className="p-4">
+        <div className="p-3">
           {children}
         </div>
       )}
@@ -98,7 +98,7 @@ const FilterContent = () => {
               onClick={() => setActiveVehicleType('property')}
               className={cn(
                 "flex items-center justify-center gap-2 px-4 py-2 hover:bg-gray-50 text-sm font-medium flex-1",
-                activeVehicleType === 'property' ? "bg-purple-600 text-white" : "text-gray-700"
+                activeVehicleType === 'property' ? "bg-purple-600 text-white hover:bg-purple-700" : "text-gray-700"
               )}
             >
               <Building2 size={16} />
@@ -108,7 +108,7 @@ const FilterContent = () => {
               onClick={() => setActiveVehicleType('vehicle')}
               className={cn(
                 "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium flex-1",
-                activeVehicleType === 'vehicle' ? "bg-purple-600 text-white" : "text-gray-700"
+                activeVehicleType === 'vehicle' ? "bg-purple-600 text-white hover:bg-purple-700" : "text-gray-700 hover:bg-gray-50"
               )}
             >
               <Car size={16} />
@@ -116,7 +116,7 @@ const FilterContent = () => {
             </button>
           </div>
           
-          <div className="grid grid-cols-1 gap-4 mb-4">
+          <div className="grid grid-cols-1 gap-3 mb-4">
             {/* Format Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -125,7 +125,7 @@ const FilterContent = () => {
                   <ChevronDown size={16} className="text-gray-400" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full min-w-[200px] bg-white">
+              <DropdownMenuContent className="w-[200px] bg-white z-50">
                 <DropdownMenuItem onClick={() => handleMobileFilterChange('format', 'Leilão')} className="cursor-pointer">
                   Leilão
                 </DropdownMenuItem>
@@ -143,7 +143,7 @@ const FilterContent = () => {
                   <ChevronDown size={16} className="text-gray-400" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full min-w-[200px] bg-white">
+              <DropdownMenuContent className="w-[200px] bg-white z-50">
                 <DropdownMenuItem onClick={() => handleMobileFilterChange('origin', 'Todas')} className="cursor-pointer">
                   Todas
                 </DropdownMenuItem>
@@ -164,7 +164,7 @@ const FilterContent = () => {
                   <ChevronDown size={16} className="text-gray-400" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full min-w-[200px] bg-white">
+              <DropdownMenuContent className="w-[200px] bg-white z-50">
                 <DropdownMenuItem onClick={() => handleMobileFilterChange('place', 'Todas')} className="cursor-pointer">
                   Todas
                 </DropdownMenuItem>
@@ -180,9 +180,9 @@ const FilterContent = () => {
         </>
       )}
 
-      <FilterSection title="Localização" section="location">
+      <FilterSectionComponent title="Localização" section="location">
         <div className="relative">
-          <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
+          <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
             <option value="" disabled>Selecione</option>
             <option value="sp">São Paulo</option>
             <option value="rj">Rio de Janeiro</option>
@@ -190,57 +190,59 @@ const FilterContent = () => {
           </select>
           <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
         </div>
-      </FilterSection>
+      </FilterSectionComponent>
 
-      <FilterSection title="Tipo de veículo" section="vehicleType">
-        <ToggleGroup type="multiple" className="flex flex-wrap gap-2 w-full justify-start">
-          <ToggleGroupItem value="aereos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Plane size={14} />
-            <span>Aéreos</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="carros" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Car size={14} />
-            <span>Carros</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="caminhoes" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Truck size={14} />
-            <span>Caminhões</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="maquinas" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Tractor size={14} />
-            <span>Maquinas</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="micromobilidade" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Car size={14} />
-            <span>Micromobilidade</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="motos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Bike size={14} />
-            <span>Motos</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="nauticos" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Ship size={14} />
-            <span>Naúticos</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="onibus" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Bus size={14} />
-            <span>Ônibus</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="reboques" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Truck size={14} />
-            <span>Reboques</span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="tratores" className="h-9 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
-            <Tractor size={14} />
-            <span>Tratores</span>
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </FilterSection>
+      <FilterSectionComponent title="Tipo de veículo" section="vehicleType">
+        <div className="flex flex-wrap gap-2 w-full justify-start">
+          <ToggleGroup type="multiple" className="flex flex-wrap gap-2 w-full justify-start">
+            <ToggleGroupItem value="aereos" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Plane size={14} />
+              <span>Aéreos</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="carros" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Car size={14} />
+              <span>Carros</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="caminhoes" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Truck size={14} />
+              <span>Caminhões</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="maquinas" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Tractor size={14} />
+              <span>Maquinas</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="micromobilidade" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Car size={14} />
+              <span>Micromobilidade</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="motos" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Bike size={14} />
+              <span>Motos</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="nauticos" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Ship size={14} />
+              <span>Naúticos</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="onibus" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Bus size={14} />
+              <span>Ônibus</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="reboques" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Truck size={14} />
+              <span>Reboques</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="tratores" className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300">
+              <Tractor size={14} />
+              <span>Tratores</span>
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+      </FilterSectionComponent>
 
-      <FilterSection title="Marca e Modelo" section="model">
+      <FilterSectionComponent title="Marca e Modelo" section="model">
         <div className="space-y-3">
           <div className="relative">
-            <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todas">
+            <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todas">
               <option value="todas">Todas as marcas</option>
               <option value="toyota">Toyota</option>
               <option value="honda">Honda</option>
@@ -249,7 +251,7 @@ const FilterContent = () => {
             <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
           </div>
           <div className="relative">
-            <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todos">
+            <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="todos">
               <option value="todos">Todos os modelos</option>
               <option value="corolla">Corolla</option>
               <option value="civic">Civic</option>
@@ -258,11 +260,11 @@ const FilterContent = () => {
             <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
           </div>
         </div>
-      </FilterSection>
+      </FilterSectionComponent>
 
-      <FilterSection title="Cor" section="color">
+      <FilterSectionComponent title="Cor" section="color">
         <div className="relative">
-          <select className="w-full border rounded-md h-12 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
+          <select className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" defaultValue="">
             <option value="" disabled>Selecione</option>
             <option value="preto">Preto</option>
             <option value="branco">Branco</option>
@@ -272,31 +274,31 @@ const FilterContent = () => {
           </select>
           <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
         </div>
-      </FilterSection>
+      </FilterSectionComponent>
 
-      <FilterSection title="Ano" section="year">
+      <FilterSectionComponent title="Ano" section="year">
         <div className="flex gap-2">
-          <Input type="text" placeholder="Ano mínimo" className="h-12 text-sm" />
-          <Input type="text" placeholder="Ano máximo" className="h-12 text-sm" />
+          <Input type="text" placeholder="Min" className="h-10 text-sm" />
+          <Input type="text" placeholder="Max" className="h-10 text-sm" />
         </div>
-      </FilterSection>
+      </FilterSectionComponent>
 
-      <FilterSection title="Valor do lance" section="price">
+      <FilterSectionComponent title="Valor do lance" section="price">
         <div className="space-y-4">
           <div className="mb-4">
             <Slider defaultValue={[30]} max={100} step={1} className="my-4" />
           </div>
           <div className="flex gap-2">
-            <Input type="text" placeholder="Valor mínimo" className="h-12 text-sm" />
-            <Input type="text" placeholder="Valor máximo" className="h-12 text-sm" />
+            <Input type="text" placeholder="Min" className="h-10 text-sm" />
+            <Input type="text" placeholder="Max" className="h-10 text-sm" />
           </div>
         </div>
-      </FilterSection>
+      </FilterSectionComponent>
 
       <div className="mt-2">
         <Button 
           variant="outline" 
-          className="w-full h-12 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors"
+          className="w-full h-10 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors"
         >
           Resetar filtros
         </Button>
@@ -326,7 +328,7 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
   // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
     return (
-      <div className="w-full lg:w-[448px] bg-gradient-to-br from-white to-purple-50 rounded-lg border border-gray-200 p-6 flex flex-col shadow-sm">
+      <div className="w-full lg:w-[320px] bg-gradient-to-br from-white to-purple-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
         <FilterContent />
       </div>
     );
@@ -334,45 +336,44 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
   
   // For mobile and tablet screens, use a drawer
   return (
-    <>
-      <Drawer open={open} onOpenChange={handleOpenChange}>
-        <DrawerContent className="p-0 max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 z-10 flex justify-between items-center p-4 bg-purple-600 text-white border-b border-purple-700">
-            <h2 className="text-lg font-medium">Filtros</h2>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 px-2 text-white hover:bg-purple-700" 
-              onClick={() => handleOpenChange(false)}
-            >
-              <X size={20} />
-            </Button>
-          </div>
+    <Drawer open={open} onOpenChange={handleOpenChange}>
+      <DrawerContent className="p-0 max-h-[85vh] overflow-y-auto">
+        <div className="sticky top-0 z-10 flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
+          <h2 className="text-base font-medium">Filtros</h2>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0 text-white hover:bg-purple-700 flex items-center justify-center" 
+            onClick={() => handleOpenChange(false)}
+          >
+            <X size={18} />
+            <span className="sr-only">Close</span>
+          </Button>
+        </div>
+        
+        <div className="bg-gray-50 p-3">
+          <FilterContent />
           
-          <div className="bg-gray-50 p-4">
-            <FilterContent />
-            
-            <div className="sticky bottom-0 pt-4 pb-6 bg-gray-50 mt-4">
-              <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
-                  className="flex-1 bg-white border-gray-300"
-                  onClick={() => handleOpenChange(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  className="flex-1 bg-purple-600 hover:bg-purple-700"
-                  onClick={() => handleOpenChange(false)}
-                >
-                  Aplicar filtros
-                </Button>
-              </div>
+          <div className="sticky bottom-0 pt-3 pb-4 bg-gray-50 mt-3 border-t border-gray-100">
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                className="flex-1 h-10 bg-white border-gray-300"
+                onClick={() => handleOpenChange(false)}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                className="flex-1 h-10 bg-purple-600 hover:bg-purple-700"
+                onClick={() => handleOpenChange(false)}
+              >
+                Aplicar
+              </Button>
             </div>
           </div>
-        </DrawerContent>
-      </Drawer>
-    </>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

@@ -72,17 +72,37 @@
   z-index: 100 !important;
 }
 
+/* Fix for DropdownMenuContent visibility */
+.radix-dropdown-content {
+  background-color: white !important;
+  z-index: 50 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Fix for DrawerContent to ensure proper scrolling */
+.radix-drawer-content {
+  max-height: 85vh !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure proper height for toggle items in FilterSection */
+.filter-toggle-item {
+  height: 32px !important;
+  white-space: nowrap !important;
+}
+
 .dropdown-content {
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   background-color: white;
   overflow: hidden;
+  z-index: 50;
 }
 
 /* Consistent button heights and alignments */
 .h-button {
-  height: 48px;
+  height: 40px;
   display: flex;
   align-items: center;
 }
@@ -109,19 +129,22 @@
 .custom-toggle-group {
   position: relative;
   display: flex;
-  overflow: hidden;
-  border-radius: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow: visible;
 }
 
 .custom-toggle-item {
   position: relative;
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   font-weight: 500;
+  border-radius: 9999px;
+  height: 32px;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .custom-toggle-item[data-state="on"] {
@@ -134,7 +157,8 @@
 }
 
 .custom-toggle-item[data-state="off"] {
-  background-color: transparent;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
   color: #4b5563;
 }
 
@@ -142,30 +166,28 @@
   background-color: #f3f4f6;
 }
 
-/* Improved toggle button styling */
-.toggle-button-group {
-  display: flex;
-  border-radius: 0.5rem;
+/* Improved dropdown visibility */
+.dropdown-menu-content {
+  background-color: white;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 50;
   overflow: hidden;
 }
 
-.toggle-button {
-  flex: 1;
-  padding: 0.75rem;
-  transition: all 0.2s ease;
+/* Fix for drawer height and scrolling */
+.drawer-content {
+  max-height: 85vh;
+  overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-.toggle-button.active {
-  background-color: #7c3aed;
-  color: white;
-  font-weight: 500;
-}
-
-.toggle-button:not(.active) {
-  background-color: #ffffff;
-  color: #4b5563;
-}
-
-.toggle-button:not(.active):hover {
-  background-color: #f9fafb;
+/* Fix for bottom actions in drawer */
+.drawer-footer {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: auto;
 }
