@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, Building2, Car } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
@@ -44,88 +44,16 @@ const FilterContent = () => {
     }));
   };
   
-  // Mobile filter type toggle
-  const [activeVehicleType, setActiveVehicleType] = useState<'property' | 'vehicle'>('vehicle');
-
   const isMobile = useIsMobile();
   
   return (
     <div className="flex flex-col gap-3">
-      {isMobile ? (
-        // For mobile, we only show the filter options, not the vehicle/property toggle
-        <div className="grid grid-cols-1 gap-3 mb-4">
-          {/* Format Dropdown */}
-          <div className="relative">
-            <select 
-              className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" 
-              value={mobileFilters.format}
-              onChange={(e) => handleMobileFilterChange('format', e.target.value)}
-            >
-              <option value="Leilão">Leilão</option>
-              <option value="Venda Direta">Venda Direta</option>
-            </select>
-            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
-          </div>
-          
-          {/* Origin Dropdown */}
-          <div className="relative">
-            <select 
-              className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" 
-              value={mobileFilters.origin}
-              onChange={(e) => handleMobileFilterChange('origin', e.target.value)}
-            >
-              <option value="Todas">Todas</option>
-              <option value="Judicial">Judicial</option>
-              <option value="Extrajudicial">Extrajudicial</option>
-            </select>
-            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
-          </div>
-          
-          {/* Place/Etapa Dropdown */}
-          <div className="relative">
-            <select 
-              className="w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white" 
-              value={mobileFilters.place}
-              onChange={(e) => handleMobileFilterChange('place', e.target.value)}
-            >
-              <option value="Todas">Todas</option>
-              <option value="Primeira">Primeira</option>
-              <option value="Segunda">Segunda</option>
-            </select>
-            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400" />
-          </div>
-        </div>
-      ) : (
-        // Desktop version of the vehicle/property toggle
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-4">
-          <div className="flex h-12">
-            <button 
-              onClick={() => setActiveVehicleType('property')}
-              className={cn(
-                "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
-                activeVehicleType === 'property' 
-                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
-                  : "text-gray-700 hover:bg-gray-50"
-              )}
-            >
-              <Building2 size={18} className="shrink-0" />
-              <span>Imóveis</span>
-            </button>
-            <div className="w-[1px] bg-gray-200"></div>
-            <button 
-              onClick={() => setActiveVehicleType('vehicle')}
-              className={cn(
-                "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
-                activeVehicleType === 'vehicle' 
-                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
-                  : "text-gray-700 hover:bg-gray-50"
-              )}
-            >
-              <Car size={18} className="shrink-0" />
-              <span>Veículos</span>
-            </button>
-          </div>
-        </div>
+      {isMobile && (
+        // For mobile, we render the dropdown filter options
+        <MobileFilterOptions 
+          filters={mobileFilters} 
+          onFilterChange={handleMobileFilterChange} 
+        />
       )}
 
       <FilterSectionComponent 
