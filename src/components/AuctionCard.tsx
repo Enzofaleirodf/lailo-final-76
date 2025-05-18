@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, CalendarIcon, SprayCanIcon } from 'lucide-react';
@@ -28,7 +27,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     }
     return null;
   };
-  
+
   // Format auction end date to show only last 2 digits of year
   const formatAuctionDate = (date: Date): string => {
     const day = date.getDate().toString().padStart(2, '0');
@@ -36,7 +35,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
     return `${day}/${month}/${yearLastTwoDigits}`;
   };
-  
   const discount = calculateDiscount();
   return <motion.div whileHover={{
     y: -2,
@@ -45,28 +43,18 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full flex flex-col">
         <div className="flex h-full">
           {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3 h-full flex-1 p-3 flex flex-col justify-center">
+          <div className="relative w-1/3 h-full flex-1 pt-3 pl-3 flex flex-col justify-center\n">
             <div className="h-full relative rounded-md overflow-hidden">
               {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" />}
-              <motion.img 
-                src={auction.imageUrl} 
-                alt={auction.title} 
-                className={`object-cover w-full h-full transition-all duration-500 rounded-md ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} 
-                style={{
-                  transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-                }} 
-                loading="lazy" 
-                onLoad={handleImageLoad} 
-                initial={{
-                  opacity: 0
-                }} 
-                animate={{
-                  opacity: imageLoaded ? 1 : 0
-                }} 
-                transition={{
-                  duration: 0.5
-                }} 
-              />
+              <motion.img src={auction.imageUrl} alt={auction.title} className={`object-cover w-full h-full transition-all duration-500 rounded-md ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} style={{
+              transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+            }} loading="lazy" onLoad={handleImageLoad} initial={{
+              opacity: 0
+            }} animate={{
+              opacity: imageLoaded ? 1 : 0
+            }} transition={{
+              duration: 0.5
+            }} />
               
               {/* Badge de desconto, se houver */}
               {discount && <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
@@ -76,7 +64,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Conteúdo/Informações à direita */}
-          <div className="w-2/3 p-4 flex flex-col justify-between" style={{ marginLeft: '12px' }}>
+          <div className="w-2/3 p-4 flex flex-col justify-between" style={{
+          marginLeft: '12px'
+        }}>
             <div>
               {/* Linha 1: Marca + Modelo + Botão Favoritar */}
               <div className="flex justify-between items-center mb-1">
