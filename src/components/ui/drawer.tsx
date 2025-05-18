@@ -36,30 +36,36 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DrawerPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed inset-x-0 bottom-0 z-[160] mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
-        className
-      )}
-      {...props}
-      onOpenChange={(open) => {
-        if(!open) {
-          document.body.classList.remove('modal-open');
-        } else {
-          document.body.classList.add('modal-open');
-        }
-        props.onOpenChange && props.onOpenChange(open);
-      }}
-    >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted z-[161]" />
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-))
+>(({ className, children, ...props }, ref) => {
+  // Handle open/close state for body class
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      document.body.classList.remove('modal-open');
+    } else {
+      document.body.classList.add('modal-open');
+    }
+    // Call the original onOpenChange if provided
+    props.onOpenChange?.(open);
+  };
+
+  return (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Content
+        ref={ref}
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-[160] mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+          className
+        )}
+        {...props}
+        onOpenChange={handleOpenChange}
+      >
+        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted z-[161]" />
+        {children}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  );
+})
 DrawerContent.displayName = "DrawerContent"
 
 const DrawerHeader = ({
