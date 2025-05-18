@@ -50,7 +50,7 @@ const ResultHeader: React.FC = () => {
   
   return (
     <motion.div 
-      className={`${isMobile ? 'mb-0' : 'mb-6'}`}
+      className={`${isMobile ? 'mb-[-8px]' : 'mb-6'}`}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
