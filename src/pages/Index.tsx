@@ -5,13 +5,22 @@ import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import ResultHeader from '@/components/ResultHeader';
 import AuctionList from '@/components/AuctionList';
+import MobileNavBar from '@/components/MobileNavBar';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
-import { Filter } from 'lucide-react';
 
 const Index = () => {
   const isMobile = useIsMobile();
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'property' | 'vehicle'>('vehicle');
+
+  const handleFilterClick = () => {
+    setFiltersOpen(true);
+  };
+
+  const handleSortClick = () => {
+    // This will be implemented later when adding sorting functionality
+    console.log('Sort clicked');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
@@ -21,15 +30,12 @@ const Index = () => {
           {!isMobile && <TopFilters />}
           
           {isMobile && (
-            <div className="mb-6 mt-12"> {/* Added top margin to accommodate floating hamburger button */}
-              <Button 
-                onClick={() => setFiltersOpen(true)}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium flex items-center justify-center gap-2"
-              >
-                <Filter size={18} />
-                <span>Filtros</span>
-              </Button>
-            </div>
+            <MobileNavBar 
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              onFilterClick={handleFilterClick}
+              onSortClick={handleSortClick}
+            />
           )}
           
           <div className={`flex ${isMobile ? 'flex-col' : 'flex-row gap-6'}`}>
