@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const brandOptions = [
   { value: 'todas', label: 'Todas as marcas' },
@@ -18,15 +18,15 @@ const modelOptions = [
 ];
 
 const ModelFilter: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
   
-  const handleBrandChange = (value: string) => {
+  const handleBrandChange = useCallback((value: string) => {
     updateFilter('brand', value);
-  };
+  }, [updateFilter]);
 
-  const handleModelChange = (value: string) => {
+  const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
-  };
+  }, [updateFilter]);
 
   return (
     <div className="space-y-3">
@@ -48,4 +48,4 @@ const ModelFilter: React.FC = () => {
   );
 };
 
-export default ModelFilter;
+export default React.memo(ModelFilter);

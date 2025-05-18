@@ -1,7 +1,5 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useFilter } from '@/contexts/FilterContext';
-import { useSort } from '@/contexts/SortContext';
 import AuctionCard from '@/components/AuctionCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
 import { sampleAuctions } from '@/data/sampleAuctions';
@@ -10,12 +8,14 @@ import { toast } from '@/components/ui/sonner';
 import { useSearchParams } from 'react-router-dom';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from '@/components/ui/pagination';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useSortStore } from '@/stores/useSortStore';
 
 const ITEMS_PER_PAGE = 30;
 
 const AuctionList: React.FC = () => {
-  const { filters } = useFilter();
-  const { sortOption } = useSort();
+  const { filters } = useFilterStore();
+  const { sortOption } = useSortStore();
   const [loading, setLoading] = useState(true);
   const [auctions, setAuctions] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,13 +72,13 @@ const AuctionList: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [fetchAuctions]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', page.toString());
     setSearchParams(params);
-  };
+  }, [searchParams, setSearchParams]);
 
-  const renderPaginationItems = () => {
+  const renderPaginationItems = useCallback(() => {
     const items = [];
     const maxVisible = window.innerWidth < 640 ? 3 : 5; // Less numbers on mobile
     
@@ -152,7 +152,7 @@ const AuctionList: React.FC = () => {
     }
     
     return items;
-  };
+  }, [currentPage, handlePageChange, totalPages]);
   
   if (loading && !isChangingPage) {
     return (

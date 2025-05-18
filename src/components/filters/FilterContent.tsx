@@ -10,10 +10,10 @@ import ModelFilter from './ModelFilter';
 import ColorFilter from './ColorFilter';
 import YearRangeFilter from './YearRangeFilter';
 import PriceRangeFilter from './PriceRangeFilter';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const FilterContent: React.FC = () => {
-  const { expandedSections, toggleSection, resetFilters } = useFilter();
+  const { expandedSections, toggleSection, resetFilters } = useFilterStore();
   const isMobile = useIsMobile();
   
   return (
@@ -82,4 +82,4 @@ const FilterContent: React.FC = () => {
   );
 };
 
-export default FilterContent;
+export default React.memo(FilterContent);

@@ -1,25 +1,25 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import FilterRangeInput from './FilterRangeInput';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const YearRangeFilter: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
   const { year } = filters;
 
-  const handleMinChange = (minValue: string) => {
+  const handleMinChange = useCallback((minValue: string) => {
     updateFilter('year', {
       ...year,
       min: minValue
     });
-  };
+  }, [year, updateFilter]);
 
-  const handleMaxChange = (maxValue: string) => {
+  const handleMaxChange = useCallback((maxValue: string) => {
     updateFilter('year', {
       ...year,
       max: maxValue
     });
-  };
+  }, [year, updateFilter]);
 
   return (
     <FilterRangeInput
@@ -35,4 +35,4 @@ const YearRangeFilter: React.FC = () => {
   );
 };
 
-export default YearRangeFilter;
+export default React.memo(YearRangeFilter);

@@ -11,20 +11,19 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { X } from 'lucide-react';
+import { useSortStore } from '@/stores/useSortStore';
 
 interface SortOptionsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedOption: string;
-  onSortChange: (value: string) => void;
 }
 
 const SortOptions: React.FC<SortOptionsProps> = ({
   open,
-  onOpenChange,
-  selectedOption,
-  onSortChange
+  onOpenChange
 }) => {
+  const { sortOption, setSortOption } = useSortStore();
+  
   const sortOptions = [
     { value: 'newest', label: 'Mais recentes' },
     { value: 'price-asc', label: 'Menor preço' },
@@ -34,7 +33,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
   ];
 
   const handleSortChange = (value: string) => {
-    onSortChange(value);
+    setSortOption(value as any);
     onOpenChange(false);
   };
 
@@ -57,7 +56,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
           </div>
         </DialogHeader>
         <div className="p-4">
-          <RadioGroup value={selectedOption} onValueChange={handleSortChange}>
+          <RadioGroup value={sortOption} onValueChange={handleSortChange}>
             {sortOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2 py-2">
                 <RadioGroupItem value={option.value} id={option.value} />
@@ -73,4 +72,4 @@ const SortOptions: React.FC<SortOptionsProps> = ({
   );
 };
 
-export default SortOptions;
+export default React.memo(SortOptions);

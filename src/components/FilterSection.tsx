@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import FilterContent from './filters/FilterContent';
+import { useUIStore } from '@/stores/useUIStore';
 
 interface FilterSectionProps {
   isOpen?: boolean;
@@ -12,18 +13,18 @@ interface FilterSectionProps {
 }
 
 const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) => {
-  const [open, setOpen] = useState(false);
+  const { filtersOpen, setFiltersOpen } = useUIStore();
   const isMobile = useIsMobile();
   
   // Sync local state with parent state if provided
   useEffect(() => {
     if (isOpen !== undefined) {
-      setOpen(isOpen);
+      setFiltersOpen(isOpen);
     }
-  }, [isOpen]);
+  }, [isOpen, setFiltersOpen]);
 
   const handleOpenChange = (newOpenState: boolean) => {
-    setOpen(newOpenState);
+    setFiltersOpen(newOpenState);
     if (onOpenChange) {
       onOpenChange(newOpenState);
     }
@@ -59,11 +60,11 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
   
   // For mobile and tablet screens, use a drawer with fixed footer
   return (
-    <Drawer open={open} onOpenChange={handleOpenChange}>
+    <Drawer open={filtersOpen} onOpenChange={handleOpenChange}>
       <DrawerContent 
         className="p-0 overflow-hidden h-[90vh] max-h-[90vh]" 
         footerContent={footerContent}
-        isOpen={open} // Pass the open state to DrawerContent
+        isOpen={filtersOpen} // Pass the open state to DrawerContent
       >
         <div className="flex flex-col h-full">
           <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">

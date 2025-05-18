@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const locationOptions = [
   { value: 'sp', label: 'São Paulo' },
@@ -10,11 +10,11 @@ const locationOptions = [
 ];
 
 const LocationFilter: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
   
-  const handleLocationChange = (value: string) => {
+  const handleLocationChange = useCallback((value: string) => {
     updateFilter('location', value);
-  };
+  }, [updateFilter]);
 
   return (
     <FilterDropdown
@@ -28,4 +28,4 @@ const LocationFilter: React.FC = () => {
   );
 };
 
-export default LocationFilter;
+export default React.memo(LocationFilter);

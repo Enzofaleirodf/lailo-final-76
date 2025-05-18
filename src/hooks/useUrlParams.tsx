@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { FilterState } from '@/contexts/FilterContext';
-import { SortOption } from '@/contexts/SortContext';
+import { FilterState } from '@/stores/useFilterStore';
+import { SortOption } from '@/stores/useSortStore';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useSortStore } from '@/stores/useSortStore';
 
 /**
  * Custom hook to sync filter and sort state with URL parameters
  */
-export const useUrlParams = (
-  filters: FilterState,
-  setFilters: (filters: FilterState) => void,
-  sortOption: SortOption,
-  setSortOption: (option: SortOption) => void
-) => {
+export const useUrlParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { filters, setFilters } = useFilterStore();
+  const { sortOption, setSortOption } = useSortStore();
   
   // Update URL when filters or sort option changes
   useEffect(() => {
@@ -22,7 +21,7 @@ export const useUrlParams = (
     const currentPage = params.get('page');
     
     // Add sort option to URL
-    if (sortOption !== 'newest') { // Changed from 'relevance' to 'newest'
+    if (sortOption !== 'newest') {
       params.set('sort', sortOption);
     } else {
       params.delete('sort');
@@ -131,7 +130,7 @@ export const useUrlParams = (
   // Load filters from URL on initial load
   useEffect(() => {
     const sort = searchParams.get('sort');
-    if (sort && ['newest', 'price-asc', 'price-desc', 'highest-discount', 'nearest'].includes(sort)) { // Updated sort options
+    if (sort && ['newest', 'price-asc', 'price-desc', 'highest-discount', 'nearest'].includes(sort)) {
       setSortOption(sort as SortOption);
     }
     
@@ -212,7 +211,6 @@ export const useUrlParams = (
     if (hasChanges) {
       setFilters(newFilters);
     }
-    
   // We only want this to run once on component mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

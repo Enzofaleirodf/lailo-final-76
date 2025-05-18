@@ -1,6 +1,8 @@
+
 import { AuctionItem } from '@/types/auction';
-import { SortOption } from '@/contexts/SortContext';
+import { SortOption } from '@/stores/useSortStore';
 import { useMemo } from 'react';
+import { FilterState } from '@/stores/useFilterStore';
 
 export const sortAuctions = (auctions: AuctionItem[], sortOption: SortOption): AuctionItem[] => {
   const sortedAuctions = [...auctions];
@@ -47,7 +49,7 @@ export const formatCurrency = (value: number): string => {
 
 export const useFilteredAndSortedAuctions = (
   auctions: AuctionItem[], 
-  filters: any, 
+  filters: FilterState, 
   sortOption: SortOption
 ): AuctionItem[] => {
   return useMemo(() => {
@@ -56,7 +58,7 @@ export const useFilteredAndSortedAuctions = (
   }, [auctions, filters, sortOption]);
 };
 
-export const filterAuctions = (auctions: AuctionItem[], filters: any): AuctionItem[] => {
+export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): AuctionItem[] => {
   return auctions.filter(auction => {
     // Location filter
     if (filters.location && auction.location.toLowerCase().indexOf(filters.location.toLowerCase()) === -1) {

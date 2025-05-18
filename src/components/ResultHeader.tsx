@@ -1,7 +1,5 @@
 
 import React, { useMemo } from 'react';
-import { useFilter } from '@/contexts/FilterContext';
-import { useSort } from '@/contexts/SortContext';
 import ActiveFilterBadges from './filters/ActiveFilterBadges';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
@@ -14,22 +12,20 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { SortOption } from '@/contexts/SortContext';
+import { SortOption } from '@/stores/useSortStore';
 import { ArrowDown, ArrowUp, MapPin } from 'lucide-react';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useSortStore } from '@/stores/useSortStore';
 
 const ResultHeader: React.FC = () => {
-  const { filters, activeFilters } = useFilter();
-  const { sortOption, setSortOption } = useSort();
+  const { filters } = useFilterStore();
+  const { sortOption, setSortOption } = useSortStore();
   const [searchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const itemsPerPage = 30;
   
   // Calculate filtered results count - memoized for performance
   const filteredAuctions = useMemo(() => {
     return filterAuctions(sampleAuctions, filters);
   }, [filters]);
-  
-  const resultCount = filteredAuctions.length;
   
   // Get sort options and icons
   const sortOptions = useMemo(() => [

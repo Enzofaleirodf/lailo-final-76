@@ -2,8 +2,9 @@
 import React from 'react';
 import { Filter, ArrowUpDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useFilter } from '@/contexts/FilterContext';
-import { ContentType } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useUIStore } from '@/stores/useUIStore';
+import { ContentType } from '@/types/filters';
 
 interface MobileFilterBarProps {
   onFilterClick: () => void;
@@ -14,7 +15,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
   onSortClick
 }) => {
-  const { filters, updateFilter, activeFilters } = useFilter();
+  const { filters, updateFilter, activeFilters } = useFilterStore();
   
   const handleTabChange = (tab: ContentType) => {
     updateFilter('contentType', tab);
@@ -78,4 +79,4 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   );
 };
 
-export default MobileFilterBar;
+export default React.memo(MobileFilterBar);

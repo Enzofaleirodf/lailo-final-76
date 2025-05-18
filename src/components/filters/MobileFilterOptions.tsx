@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,23 +7,23 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
-import { useFilter } from '@/contexts/FilterContext';
-import type { FilterFormat, FilterOrigin, FilterPlace } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
+import type { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 
 const MobileFilterOptions: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
 
-  const handleFormatChange = (value: FilterFormat) => {
+  const handleFormatChange = useCallback((value: FilterFormat) => {
     updateFilter('format', value);
-  };
+  }, [updateFilter]);
 
-  const handleOriginChange = (value: FilterOrigin) => {
+  const handleOriginChange = useCallback((value: FilterOrigin) => {
     updateFilter('origin', value);
-  };
+  }, [updateFilter]);
 
-  const handlePlaceChange = (value: FilterPlace) => {
+  const handlePlaceChange = useCallback((value: FilterPlace) => {
     updateFilter('place', value);
-  };
+  }, [updateFilter]);
 
   return (
     <div className="grid grid-cols-1 gap-3 mb-4">
@@ -99,4 +99,4 @@ const MobileFilterOptions: React.FC = () => {
   );
 };
 
-export default MobileFilterOptions;
+export default React.memo(MobileFilterOptions);

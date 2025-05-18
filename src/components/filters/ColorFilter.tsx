@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const colorOptions = [
   { value: 'preto', label: 'Preto' },
@@ -12,11 +12,11 @@ const colorOptions = [
 ];
 
 const ColorFilter: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
   
-  const handleColorChange = (value: string) => {
+  const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);
-  };
+  }, [updateFilter]);
 
   return (
     <FilterDropdown
@@ -30,4 +30,4 @@ const ColorFilter: React.FC = () => {
   );
 };
 
-export default ColorFilter;
+export default React.memo(ColorFilter);

@@ -1,21 +1,21 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const PriceRangeFilter: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
   const { value, range } = filters.price;
 
-  const handleSliderChange = (newValue: number[]) => {
+  const handleSliderChange = useCallback((newValue: number[]) => {
     updateFilter('price', {
       value: newValue,
       range: filters.price.range
     });
-  };
+  }, [filters.price.range, updateFilter]);
 
-  const handleMinChange = (minValue: string) => {
+  const handleMinChange = useCallback((minValue: string) => {
     updateFilter('price', {
       value: filters.price.value,
       range: {
@@ -23,9 +23,9 @@ const PriceRangeFilter: React.FC = () => {
         min: minValue
       }
     });
-  };
+  }, [filters.price.value, filters.price.range, updateFilter]);
 
-  const handleMaxChange = (maxValue: string) => {
+  const handleMaxChange = useCallback((maxValue: string) => {
     updateFilter('price', {
       value: filters.price.value,
       range: {
@@ -33,7 +33,7 @@ const PriceRangeFilter: React.FC = () => {
         max: maxValue
       }
     });
-  };
+  }, [filters.price.value, filters.price.range, updateFilter]);
 
   return (
     <div className="space-y-4">
@@ -61,4 +61,4 @@ const PriceRangeFilter: React.FC = () => {
   );
 };
 
-export default PriceRangeFilter;
+export default React.memo(PriceRangeFilter);

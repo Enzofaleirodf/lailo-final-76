@@ -1,15 +1,15 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { useFilter } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const VehicleTypeFilter = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
   
-  const handleVehicleTypeChange = (values: string[]) => {
+  const handleVehicleTypeChange = useCallback((values: string[]) => {
     updateFilter('vehicleTypes', values);
-  };
+  }, [updateFilter]);
   
   const vehicleTypes = [
     { value: 'aereos', icon: Plane, label: 'Aéreos' },
@@ -48,4 +48,4 @@ const VehicleTypeFilter = () => {
   );
 };
 
-export default VehicleTypeFilter;
+export default React.memo(VehicleTypeFilter);

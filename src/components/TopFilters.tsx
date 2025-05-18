@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -8,17 +8,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useFilter } from '@/contexts/FilterContext';
-import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/contexts/FilterContext';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 
 const TopFilters: React.FC = () => {
-  const { filters, updateFilter } = useFilter();
+  const { filters, updateFilter } = useFilterStore();
 
-  const handleContentTypeChange = (type: ContentType) => {
+  const handleContentTypeChange = useCallback((type: ContentType) => {
     updateFilter('contentType', type);
-  };
+  }, [updateFilter]);
 
-  const handleFilterChange = (filterType: 'format' | 'origin' | 'place', value: FilterFormat | FilterOrigin | FilterPlace) => {
+  const handleFilterChange = useCallback((filterType: 'format' | 'origin' | 'place', value: FilterFormat | FilterOrigin | FilterPlace) => {
     if (filterType === 'format') {
       updateFilter('format', value as FilterFormat);
     } else if (filterType === 'origin') {
@@ -26,7 +26,7 @@ const TopFilters: React.FC = () => {
     } else if (filterType === 'place') {
       updateFilter('place', value as FilterPlace);
     }
-  };
+  }, [updateFilter]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -136,4 +136,4 @@ const TopFilters: React.FC = () => {
   );
 };
 
-export default TopFilters;
+export default React.memo(TopFilters);

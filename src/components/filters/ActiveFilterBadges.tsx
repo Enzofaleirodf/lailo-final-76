@@ -2,11 +2,11 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { useFilter } from '@/contexts/FilterContext';
 import { Button } from '@/components/ui/button';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const ActiveFilterBadges: React.FC = () => {
-  const { filters, updateFilter, resetFilters } = useFilter();
+  const { filters, updateFilter, resetFilters } = useFilterStore();
   
   const badges = [];
   
@@ -117,4 +117,4 @@ const ActiveFilterBadges: React.FC = () => {
   );
 };
 
-export default ActiveFilterBadges;
+export default React.memo(ActiveFilterBadges);
