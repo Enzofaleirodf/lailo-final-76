@@ -18,41 +18,35 @@ const AuctionContainer = () => {
   const isMobile = useIsMobile();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  
-  const { filters, setFilters } = useFilter();
-  const { sortOption, setSortOption } = useSort();
-  
+  const {
+    filters,
+    setFilters
+  } = useFilter();
+  const {
+    sortOption,
+    setSortOption
+  } = useSort();
+
   // Sync URL with filters and sort state
   useUrlParams(filters, setFilters, sortOption, setSortOption);
-  
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
-  
   const handleSortClick = () => {
     setSortOpen(true);
   };
-  
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 flex">
+  return <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 flex">
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
         <div className="max-w-7xl mx-auto sm:px-6 py-[24px] px-0">
           {!isMobile && <TopFilters />}
-          {isMobile && (
-            <MobileFilterBar 
-              onFilterClick={handleFilterClick} 
-              onSortClick={handleSortClick} 
-            />
-          )}
+          {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
           
           <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 content-with-nav' : 'flex-row gap-6'}`}>
-            {!isMobile && (
-              <aside className="shrink-0 w-full lg:w-[320px]">
+            {!isMobile && <aside className="shrink-0 w-full lg:w-[320px]">
                 <FilterSection />
-              </aside>
-            )}
-            <main className="flex-1 min-h-[80vh] pb-20">
+              </aside>}
+            <main className="flex-1 min-h-[80vh] pb-20 px-[16px]">
               {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
               <ResultHeader />
               <AuctionList />
@@ -62,28 +56,16 @@ const AuctionContainer = () => {
       </div>
       
       {/* Keep mobile sort dialog for mobile view only */}
-      {isMobile && (
-        <SortOptions 
-          open={sortOpen} 
-          onOpenChange={setSortOpen} 
-          selectedOption={sortOption} 
-          onSortChange={(value) => setSortOption(value as SortOption)} 
-        />
-      )}
+      {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} selectedOption={sortOption} onSortChange={value => setSortOption(value as SortOption)} />}
       
       {isMobile && <MobileNavBar />}
-    </div>
-  );
+    </div>;
 };
-
 const Index = () => {
-  return (
-    <FilterProvider>
+  return <FilterProvider>
       <SortProvider>
         <AuctionContainer />
       </SortProvider>
-    </FilterProvider>
-  );
+    </FilterProvider>;
 };
-
 export default Index;
