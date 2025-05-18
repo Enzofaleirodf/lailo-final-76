@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FilterSection from '@/components/FilterSection';
@@ -39,7 +38,7 @@ const AuctionContainer = () => {
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
         <div className="max-w-7xl mx-auto sm:px-6 py-[24px] px-0">
-          {!isMobile && <TopFilters onSortClick={handleSortClick} />}
+          {!isMobile && <TopFilters />}
           {isMobile && (
             <MobileFilterBar 
               onFilterClick={handleFilterClick} 
@@ -62,12 +61,15 @@ const AuctionContainer = () => {
         </div>
       </div>
       
-      <SortOptions 
-        open={sortOpen} 
-        onOpenChange={setSortOpen} 
-        selectedOption={sortOption} 
-        onSortChange={(value) => setSortOption(value as SortOption)} 
-      />
+      {/* Keep mobile sort dialog for mobile view only */}
+      {isMobile && (
+        <SortOptions 
+          open={sortOpen} 
+          onOpenChange={setSortOpen} 
+          selectedOption={sortOption} 
+          onSortChange={(value) => setSortOption(value as SortOption)} 
+        />
+      )}
       
       {isMobile && <MobileNavBar />}
     </div>

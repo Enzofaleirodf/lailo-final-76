@@ -7,10 +7,19 @@ import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { SortOption } from '@/contexts/SortContext';
+import { ArrowDownAZ, ArrowUpAZ, ArrowDownZA, ArrowUpZA } from 'lucide-react';
 
 const ResultHeader: React.FC = () => {
   const { filters, activeFilters } = useFilter();
-  const { sortOption } = useSort();
+  const { sortOption, setSortOption } = useSort();
   const [searchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const itemsPerPage = 30;
@@ -27,17 +36,23 @@ const ResultHeader: React.FC = () => {
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, resultCount);
   
-  // Get sort label - memoized for consistent rendering
-  const sortLabel = useMemo(() => {
-    switch (sortOption) {
-      case 'newest': return 'Mais recentes';
-      case 'ending-soon': return 'Terminando em breve';
-      case 'price-asc': return 'Menor preço';
-      case 'price-desc': return 'Maior preço';
-      case 'relevance': 
-      default: return 'Mais relevantes';
-    }
-  }, [sortOption]);
+  // Get sort options and icons
+  const sortOptions = useMemo(() => [
+    { value: 'relevance', label: 'Mais relevantes', icon: <ArrowDownAZ size={16} className="mr-2" /> },
+    { value: 'newest', label: 'Mais recentes', icon: <ArrowDownZA size={16} className="mr-2" /> },
+    { value: 'ending-soon', label: 'Terminando em breve', icon: <ArrowUpZA size={16} className="mr-2" /> },
+    { value: 'price-asc', label: 'Menor preço', icon: <ArrowUpAZ size={16} className="mr-2" /> },
+    { value: 'price-desc', label: 'Maior preço', icon: <ArrowDownAZ size={16} className="mr-2" /> }
+  ], []);
+  
+  // Get current sort option
+  const currentSortOption = useMemo(() => {
+    return sortOptions.find(option => option.value === sortOption) || sortOptions[0];
+  }, [sortOption, sortOptions]);
+  
+  const handleSortChange = (value: string) => {
+    setSortOption(value as SortOption);
+  };
   
   return (
     <motion.div 
@@ -54,9 +69,31 @@ const ResultHeader: React.FC = () => {
           {resultCount} {resultCount === 1 ? 'resultado encontrado' : 'resultados encontrados'}
           {activeFilters > 0 ? ` (${activeFilters} ${activeFilters === 1 ? 'filtro' : 'filtros'})` : ''}
         </motion.h1>
-        <p className="text-sm text-gray-500">
-          <span className="font-medium">Ordenação:</span> {sortLabel}
-        </p>
+        
+        <div className="flex items-center">
+          <p className="text-sm text-gray-500 mr-2">
+            Ordenar:
+          </p>
+          <Select value={sortOption} onValueChange={handleSortChange}>
+            <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors">
+              <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
+            </SelectTrigger>
+            <SelectContent align="end">
+              {sortOptions.map((option) => (
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="flex items-center"
+                >
+                  <span className="flex items-center">
+                    {option.icon}
+                    {option.label}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       
       <ActiveFilterBadges />

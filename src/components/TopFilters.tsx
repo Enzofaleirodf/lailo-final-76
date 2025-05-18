@@ -10,13 +10,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useFilter } from '@/contexts/FilterContext';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/contexts/FilterContext';
-import { Button } from '@/components/ui/button';
 
-interface TopFiltersProps {
-  onSortClick: () => void;
-}
-
-const TopFilters: React.FC<TopFiltersProps> = ({ onSortClick }) => {
+const TopFilters: React.FC = () => {
   const { filters, updateFilter } = useFilter();
 
   const handleContentTypeChange = (type: ContentType) => {
@@ -114,41 +109,29 @@ const TopFilters: React.FC<TopFiltersProps> = ({ onSortClick }) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Button with Sort & Place options */}
-      <div className="flex gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button 
-              className="h-12 flex-1 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-              aria-label="Selecionar etapa"
-            >
-              <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
-              <ChevronDown size={16} className="text-purple-500" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-            <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
-              Todas
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
-              Primeira
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
-              Segunda
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <Button 
-          onClick={onSortClick} 
-          variant="outline" 
-          className="h-12 px-4 bg-white border-gray-200 hover:bg-gray-50 text-gray-700"
-          aria-label="Ordenar resultados"
-        >
-          <ChevronDown size={16} className="text-purple-500 mr-2" />
-          Ordenar
-        </Button>
-      </div>
+      {/* Place options */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            aria-label="Selecionar etapa"
+          >
+            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
+            <ChevronDown size={16} className="text-purple-500" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+            Todas
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+            Primeira
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+            Segunda
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
