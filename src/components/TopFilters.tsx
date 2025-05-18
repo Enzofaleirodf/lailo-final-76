@@ -1,6 +1,6 @@
 
 import React, { useCallback } from 'react';
-import { ChevronDown, Building2, Car } from 'lucide-react';
+import { ChevronDown, Building2, Car, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -71,7 +71,10 @@ const TopFilters: React.FC = () => {
             className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
             aria-label="Selecionar formato"  
           >
-            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={16} className="text-purple-500" />
+              <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
+            </div>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
@@ -92,7 +95,10 @@ const TopFilters: React.FC = () => {
             className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
             aria-label="Selecionar origem"  
           >
-            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={16} className="text-purple-500" />
+              <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
+            </div>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
@@ -116,7 +122,10 @@ const TopFilters: React.FC = () => {
             className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
             aria-label="Selecionar etapa"
           >
-            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={16} className="text-purple-500" />
+              <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
+            </div>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
