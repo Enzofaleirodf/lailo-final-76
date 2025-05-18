@@ -31,6 +31,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   };
 
   const discount = calculateDiscount();
+  
+  // Format year to display only the last 2 digits
+  const formatYear = (year: number) => {
+    return year.toString().slice(-2);
+  };
 
   return (
     <motion.div
@@ -45,7 +50,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full flex flex-col">
         <div className="flex h-full">
           {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3 h-full">
+          <div className="relative w-1/3 h-full flex-1">
             <div className="h-full relative">
               {!imageLoaded && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
@@ -108,7 +113,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
               <div className="flex items-center text-sm text-gray-600">
                 <span>{auction.vehicleInfo.color}</span>
                 <span className="mx-1">•</span>
-                <span>{auction.vehicleInfo.year}</span>
+                <span>{formatYear(auction.vehicleInfo.year)}</span>
                 <span className="mx-1">|</span>
                 <div className="flex items-center">
                   <MapPin size={14} className="mr-1" />
