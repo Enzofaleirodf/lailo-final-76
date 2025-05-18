@@ -56,24 +56,27 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerContent 
-        className="p-0 overflow-hidden" 
+        className="p-0 overflow-hidden h-[90vh] max-h-[90vh]" 
         footerContent={footerContent}
+        open={open}
       >
-        <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
-          <h2 className="text-base font-medium">Filtros</h2>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-8 w-8 p-0 text-white hover:bg-purple-700 flex items-center justify-center" 
-            onClick={() => handleOpenChange(false)}
-          >
-            <X size={18} />
-            <span className="sr-only">Close</span>
-          </Button>
-        </div>
-        
-        <div className="bg-gray-50 p-3">
-          <FilterContent />
+        <div className="flex flex-col h-full">
+          <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
+            <h2 className="text-base font-medium">Filtros</h2>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 text-white hover:bg-purple-700 flex items-center justify-center" 
+              onClick={() => handleOpenChange(false)}
+            >
+              <X size={18} />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
+          
+          <div className="bg-gray-50 p-3 flex-1 overflow-y-auto">
+            <FilterContent />
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
