@@ -63,19 +63,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Adding custom theme colors
-				purple: {
-					50: '#f5f3ff',
-					100: '#ede9fe',
-					200: '#ddd6fe',
-					300: '#c4b5fd',
-					400: '#a78bfa',
-					500: '#8b5cf6',
-					600: '#7c3aed',
-					700: '#6d28d9',
-					800: '#5b21b6',
-					900: '#4c1d95',
-					950: '#2e1065',
+				// Changing custom theme colors from purple to #202A44
+				brand: {
+					DEFAULT: '#202A44',
+					50: '#E6E8EB',
+					100: '#CED2D8',
+					200: '#9AA4B1',
+					300: '#66778A',
+					400: '#334963',
+					500: '#202A44',
+					600: '#1D2740',
+					700: '#1A233B',
+					800: '#172036',
+					900: '#131C32',
 				},
 			},
 			borderRadius: {

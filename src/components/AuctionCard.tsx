@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, CalendarIcon } from 'lucide-react';
+import { Heart, CalendarIcon, SprayCanIcon } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
@@ -46,17 +46,27 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         <div className="flex h-full">
           {/* Imagem do veículo à esquerda */}
           <div className="relative w-1/3 h-full flex-1 p-3">
-            <div className="h-full relative">
-              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
-              <motion.img src={auction.imageUrl} alt={auction.title} className={`object-cover w-full h-full transition-all duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} style={{
-              transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-            }} loading="lazy" onLoad={handleImageLoad} initial={{
-              opacity: 0
-            }} animate={{
-              opacity: imageLoaded ? 1 : 0
-            }} transition={{
-              duration: 0.5
-            }} />
+            <div className="h-full relative rounded-md overflow-hidden">
+              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" />}
+              <motion.img 
+                src={auction.imageUrl} 
+                alt={auction.title} 
+                className={`object-cover w-full h-full transition-all duration-500 rounded-md ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} 
+                style={{
+                  transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+                }} 
+                loading="lazy" 
+                onLoad={handleImageLoad} 
+                initial={{
+                  opacity: 0
+                }} 
+                animate={{
+                  opacity: imageLoaded ? 1 : 0
+                }} 
+                transition={{
+                  duration: 0.5
+                }} 
+              />
               
               {/* Badge de desconto, se houver */}
               {discount && <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
@@ -66,7 +76,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Conteúdo/Informações à direita */}
-          <div className="w-2/3 p-4 flex flex-col justify-between">
+          <div className="w-2/3 p-4 flex flex-col justify-between" style={{ marginLeft: '12px' }}>
             <div>
               {/* Linha 1: Marca + Modelo + Botão Favoritar */}
               <div className="flex justify-between items-center mb-1">
@@ -82,7 +92,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               
               {/* Linha 2: Lance atual + desconto */}
               <div className="flex items-end gap-2 mb-2">
-                <span className="text-xl font-bold text-purple-700">
+                <span className="text-xl font-bold text-[#202A44]">
                   {formatCurrency(auction.currentBid)}
                 </span>
                 {auction.originalPrice && <span className="text-sm text-gray-500 line-through">
@@ -93,7 +103,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               {/* Linha 3: Cor • Ano | Cidade/UF */}
               <div className="flex items-center text-sm text-gray-600 mb-3">
                 <div className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full mr-1" style={{ backgroundColor: auction.vehicleInfo.color.toLowerCase() }}></span>
+                  <SprayCanIcon size={14} className="mr-1" />
                   <span>{auction.vehicleInfo.color}</span>
                 </div>
                 <span className="mx-2"></span>
