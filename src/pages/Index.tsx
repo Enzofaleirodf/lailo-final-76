@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FilterSection from '@/components/FilterSection';
@@ -7,43 +6,29 @@ import ResultHeader from '@/components/ResultHeader';
 import AuctionList from '@/components/AuctionList';
 import MobileNavBar from '@/components/MobileNavBar';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 const Index = () => {
   const isMobile = useIsMobile();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'property' | 'vehicle'>('vehicle');
-
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
-
   const handleSortClick = () => {
     // This will be implemented later when adding sorting functionality
     console.log('Sort clicked');
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-0">
           {!isMobile && <TopFilters />}
           
-          {isMobile && (
-            <MobileNavBar 
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              onFilterClick={handleFilterClick}
-              onSortClick={handleSortClick}
-            />
-          )}
+          {isMobile && <MobileNavBar activeTab={activeTab} onTabChange={setActiveTab} onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
           
           <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4' : 'flex-row gap-6'}`}>
-            {!isMobile && (
-              <aside className="shrink-0 w-full lg:w-[448px]">
+            {!isMobile && <aside className="shrink-0 w-full lg:w-[448px]">
                 <FilterSection />
-              </aside>
-            )}
+              </aside>}
             <main className="flex-1">
               {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
               <ResultHeader />
@@ -52,8 +37,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
