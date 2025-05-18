@@ -1,12 +1,10 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, CalendarIcon, SprayCanIcon } from 'lucide-react';
+import { Heart, Calendar, SprayCan } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -16,7 +14,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [favorited, setFavorited] = useState(false);
 
   const handleImageLoad = () => {
@@ -42,98 +39,104 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
 
   const discount = calculateDiscount();
 
-  return <motion.div whileHover={{
-    y: -2,
-    boxShadow: '0 10px 20px rgba(0, 0, 0, 0.08)'
-  }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className="h-full">
-      <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full flex flex-col">
-        <div className="flex h-full">
-          {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3 h-full flex-1 pt-3 pl-3 flex flex-col justify-between">
-            <div className="h-full relative rounded-md overflow-hidden">
-              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" />}
-              <motion.img src={auction.imageUrl} alt={auction.title} className={`object-cover w-full h-full transition-all duration-500 rounded-md ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} style={{
-              transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-            }} loading="lazy" onLoad={handleImageLoad} initial={{
-              opacity: 0
-            }} animate={{
-              opacity: imageLoaded ? 1 : 0
-            }} transition={{
-              duration: 0.5
-            }} />
-              
-              {/* Badge de desconto, se houver */}
-              {discount && <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
-                  {discount}% OFF
-                </Badge>}
+  return (
+    <motion.div 
+      whileHover={{
+        y: -2,
+        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.08)'
+      }}
+      className="mb-2"
+    >
+      <div className="flex p-3 rounded-xl bg-white border border-[#E5E5E5] shadow-sm">
+        {/* Imagem (lado esquerdo) */}
+        <div className="relative w-[30%] min-w-[96px]">
+          <div className="relative h-full w-full">
+            {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
+            <img
+              src={auction.imageUrl}
+              alt={auction.title}
+              className="h-full w-full object-cover rounded-lg"
+              loading="lazy"
+              onLoad={handleImageLoad}
+            />
+            {/* Degradê sobre a imagem */}
+            <div
+              className="absolute inset-0 rounded-lg"
+              style={{
+                background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 50%)",
+                pointerEvents: "none",
+              }}
+            />
+            
+            {/* Badge de desconto, se houver */}
+            {discount && (
+              <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
+                {discount}% OFF
+              </Badge>
+            )}
+          </div>
+        </div>
+
+        {/* Conteúdo (lado direito) */}
+        <div className="flex-1 pl-3 flex flex-col">
+          {/* Linha 1: Marca + Modelo */}
+          <div className="flex justify-between items-center">
+            <div className="text-[16px] font-semibold text-black line-clamp-1">
+              {auction.vehicleInfo.brand} {auction.title}
             </div>
+            <button onClick={() => setFavorited(!favorited)} className="p-0.5">
+              <Heart size={16} className={favorited ? "fill-red-500 text-red-500" : "text-[#6E6E73]"} />
+            </button>
           </div>
           
-          {/* Conteúdo/Informações à direita */}
-          <div style={{
-          marginLeft: '12px'
-        }} className="w-2/3 pt-4 pr-4 pb-4 ml-3 flex flex-col justify-between">
-            <div>
-              {/* Linha 1: Marca + Modelo + Botão Favoritar */}
-              <div className="flex justify-between items-center mb-1">
-                <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-                  {auction.vehicleInfo.brand} {auction.title}
-                </h3>
-                
-                {/* Botão de favoritar */}
-                <button onClick={() => setFavorited(!favorited)} className="h-8 w-8 flex items-center justify-center transition-all duration-200">
-                  <Heart size={20} className={favorited ? "fill-red-500 text-red-500" : "text-gray-600"} />
-                </button>
-              </div>
-              
-              {/* Linha 2: Lance atual + desconto */}
-              <div className="flex items-end gap-2">
-                <span className="text-xl font-bold text-[#202A44]">
-                  {formatCurrency(auction.currentBid)}
-                </span>
-                {auction.originalPrice && <span className="text-sm text-gray-500 line-through">
-                    {formatCurrency(auction.originalPrice)}
-                  </span>}
-              </div>
-              
-              {/* Linha 3: Cor • Ano | Cidade/UF */}
-              <div className="flex items-center text-sm text-gray-600 mb-3">
-                <div className="flex items-center">
-                  <SprayCanIcon size={14} className="mr-1" />
-                  <span>{auction.vehicleInfo.color}</span>
-                </div>
-                <span className="mx-2"></span>
-                <div className="flex items-center">
-                  <CalendarIcon size={14} className="mr-1" />
-                  <span>{auction.vehicleInfo.year}</span>
-                </div>
-                <span className="mx-1">|</span>
-                <span className="line-clamp-1">{auction.location}</span>
-              </div>
+          {/* Linha 2: Cor, Ano e Cidade/Estado */}
+          <div className="flex items-center text-[13px] text-gray-700 mt-1">
+            <div className="flex items-center mr-2">
+              <SprayCan size={10} className="mr-0.5 text-gray-500" />
+              {auction.vehicleInfo.color}
             </div>
-            
-            {/* Linha 4: Divider */}
-            <Separator className="my-3" />
-            
-            {/* Linha 5: Origem + Etapa (esquerda) / Data e hora (direita) */}
-            <div className="flex justify-between items-center">
-              <div className="flex gap-2">
-                <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
-                  {auction.origin}
-                </Badge>
-                <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
-                  {auction.place}
-                </Badge>
-              </div>
-              
-              <Badge variant="outline" className="text-xs">
-                {formatAuctionDate(auction.endDate)} às {auction.endDate.getHours()}h
-              </Badge>
+            <div className="flex items-center">
+              <Calendar size={10} className="mr-0.5 text-gray-500" />
+              {auction.vehicleInfo.year}
+            </div>
+            <div className="mx-2 h-3 border-r border-gray-300"></div>
+            <div className="text-gray-500 line-clamp-1">{auction.location}</div>
+          </div>
+          
+          {/* Linha 3: Preço + Badge */}
+          <div className="flex items-center gap-1.5 mt-3">
+            <span className="text-[16px] font-bold text-black">
+              {formatCurrency(auction.currentBid)}
+            </span>
+            {discount && (
+              <span className="text-[11px] bg-teal-600 text-white px-2 py-0.5 rounded-md">
+                {discount}% OFF
+              </span>
+            )}
+          </div>
+          
+          {/* Divider */}
+          <div className="border-t border-[#E5E5EA] mt-4 mb-4"></div>
+          
+          {/* Linha 4: Origem + Etapa e Data + Hora */}
+          <div className="flex justify-between items-center text-[12px]">
+            <div className="flex gap-1.5">
+              <span className="border border-gray-300 rounded-md px-1.5 py-0.5 text-gray-600">
+                {auction.origin}
+              </span>
+              <span className="border border-gray-300 rounded-md px-1.5 py-0.5 text-gray-600">
+                {auction.place === 'Primeira' ? '1ª Praça' : '2ª Praça'}
+              </span>
+            </div>
+            <div className="flex items-center bg-gray-100 rounded-md px-1.5 py-0.5 text-gray-700 font-medium">
+              <Calendar size={10} className="mr-1 text-gray-500" />
+              {formatAuctionDate(auction.endDate)} às {auction.endDate.getHours()}h
             </div>
           </div>
         </div>
-      </Card>
-    </motion.div>;
+      </div>
+    </motion.div>
+  );
 });
 
 AuctionCard.displayName = 'AuctionCard';
