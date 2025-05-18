@@ -37,7 +37,7 @@ const Index = () => {
                 <FilterSection />
               </aside>
             )}
-            <main className="flex-1 min-h-[80vh]">
+            <main className="flex-1 min-h-[80vh] pb-20">
               {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
               <ResultHeader />
               <AuctionList />

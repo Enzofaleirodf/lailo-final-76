@@ -66,6 +66,15 @@
   background-color: rgba(255, 255, 255, 0.8);
 }
 
+/* Modal open state - hides navigation bar */
+body.modal-open {
+  overflow: hidden;
+}
+
+body.modal-open .mobile-nav-bar {
+  display: none;
+}
+
 /* Dropdown menu styling improvements */
 [data-radix-popper-content-wrapper] {
   z-index: 100 !important;
@@ -80,9 +89,9 @@
 
 /* Fix for DrawerContent to ensure proper scrolling */
 .radix-drawer-content {
-  max-height: 85vh !important;
-  overflow-y: auto !important;
-  z-index: 99 !important; /* Make sure drawer is below the navigation bar */
+  max-height: 90vh !important;
+  overflow-y: hidden !important;
+  z-index: 200 !important; /* Make sure drawer is above the navigation bar */
 }
 
 /* Ensure proper height for toggle items in FilterSection */
@@ -177,19 +186,27 @@
 
 /* Fix for drawer height and scrolling */
 .drawer-content {
-  max-height: 85vh;
-  overflow-y: auto;
+  max-height: 90vh;
+  overflow-y: hidden;
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+.drawer-content-inner {
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: 70px; /* Space for fixed footer */
 }
 
 /* Fix for bottom actions in drawer */
 .drawer-footer {
   position: sticky;
   bottom: 0;
+  left: 0;
+  right: 0;
   background-color: white;
   padding: 1rem;
   border-top: 1px solid #e5e7eb;
-  margin-top: auto;
+  z-index: 201;
 }
 
 /* Fix for mobile navigation bar positioning */
@@ -198,7 +215,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 200;
+  z-index: 150;
   width: 100%;
   background-color: white;
   border-top: 1px solid rgba(229, 231, 235, 1);
@@ -213,15 +230,19 @@
 
 /* Ensure dialogs are above navigation bar */
 .radix-dialog-content {
-  z-index: 101 !important;
+  z-index: 201 !important;
 }
 
 /* Fix for vaul drawer component */
 [vaul-drawer] {
-  z-index: 99 !important;
+  z-index: 200 !important;
 }
 
 [vaul-drawer-content] {
-  z-index: 99 !important;
-  max-height: 85vh !important;
+  z-index: 200 !important;
+  max-height: 90vh !important;
+}
+
+[vaul-drawer-overlay] {
+  z-index: 200 !important; 
 }

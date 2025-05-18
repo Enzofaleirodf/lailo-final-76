@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
@@ -11,7 +11,7 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
   const isMobile = useIsMobile();
   
   // Sync local state with parent state if provided
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen !== undefined) {
       setOpen(isOpen);
     }
@@ -33,11 +33,33 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
     );
   }
   
-  // For mobile and tablet screens, use a drawer
+  // Create footer content for the drawer
+  const footerContent = (
+    <div className="flex gap-3">
+      <Button 
+        variant="outline" 
+        className="flex-1 h-10 bg-white border-gray-300"
+        onClick={() => handleOpenChange(false)}
+      >
+        Cancelar
+      </Button>
+      <Button 
+        className="flex-1 h-10 bg-purple-600 hover:bg-purple-700"
+        onClick={() => handleOpenChange(false)}
+      >
+        Aplicar
+      </Button>
+    </div>
+  );
+  
+  // For mobile and tablet screens, use a drawer with fixed footer
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerContent className="p-0 max-h-[85vh] overflow-y-auto">
-        <div className="sticky top-0 z-[165] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
+      <DrawerContent 
+        className="p-0 overflow-hidden" 
+        footerContent={footerContent}
+      >
+        <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-purple-600 text-white border-b border-purple-700">
           <h2 className="text-base font-medium">Filtros</h2>
           <Button 
             variant="ghost" 
@@ -52,24 +74,6 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
         
         <div className="bg-gray-50 p-3">
           <FilterContent />
-          
-          <div className="sticky bottom-0 pt-3 pb-4 bg-gray-50 mt-3 border-t border-gray-100 z-[165]">
-            <div className="flex gap-3">
-              <Button 
-                variant="outline" 
-                className="flex-1 h-10 bg-white border-gray-300"
-                onClick={() => handleOpenChange(false)}
-              >
-                Cancelar
-              </Button>
-              <Button 
-                className="flex-1 h-10 bg-purple-600 hover:bg-purple-700"
-                onClick={() => handleOpenChange(false)}
-              >
-                Aplicar
-              </Button>
-            </div>
-          </div>
         </div>
       </DrawerContent>
     </Drawer>

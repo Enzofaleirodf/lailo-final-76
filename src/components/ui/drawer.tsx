@@ -27,31 +27,65 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn("fixed inset-0 z-[160] bg-black/80", className)}
+    className={cn("fixed inset-0 z-[200] bg-black/80", className)}
     {...props}
   />
 ))
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
+// Add effect to manage modal-open class on body
+const useModalBodyClass = (open: boolean) => {
+  React.useEffect(() => {
+    if (open) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [open]);
+};
+
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DrawerPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed inset-x-0 bottom-0 z-[160] mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
-        className
-      )}
-      {...props}
-    >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted z-[161]" />
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-))
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
+    footerContent?: React.ReactNode;
+  }
+>(({ className, children, footerContent, ...props }, ref) => {
+  // Apply modal-open class to body when drawer is open
+  useModalBodyClass(props.open || false);
+  
+  return (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Content
+        ref={ref}
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-[200] flex flex-col rounded-t-[10px] border bg-background",
+          "h-[90vh] max-h-[90vh]", // Maximum height of 90vh
+          className
+        )}
+        {...props}
+      >
+        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+        
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto p-0">
+          {children}
+        </div>
+        
+        {/* Fixed footer if provided */}
+        {footerContent && (
+          <div className="sticky bottom-0 left-0 right-0 z-[201] bg-background border-t border-gray-100 p-4">
+            {footerContent}
+          </div>
+        )}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  );
+})
 DrawerContent.displayName = "DrawerContent"
 
 const DrawerHeader = ({
@@ -59,7 +93,7 @@ const DrawerHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("grid gap-1.5 p-4 text-center sm:text-left z-[161] bg-background", className)}
+    className={cn("sticky top-0 z-[201] grid gap-1.5 p-4 text-center sm:text-left bg-background", className)}
     {...props}
   />
 )
@@ -70,7 +104,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("mt-auto flex flex-col gap-2 p-4 z-[161] bg-background", className)}
+    className={cn("mt-auto flex flex-col gap-2 p-4 z-[201] bg-background", className)}
     {...props}
   />
 )
