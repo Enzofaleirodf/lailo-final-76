@@ -30,11 +30,6 @@ const ResultHeader: React.FC = () => {
   }, [filters]);
   
   const resultCount = filteredAuctions.length;
-  const totalPages = Math.ceil(resultCount / itemsPerPage);
-  
-  // Calculate current range of results displayed
-  const startItem = (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, resultCount);
   
   // Get sort options and icons
   const sortOptions = useMemo(() => [
@@ -97,20 +92,6 @@ const ResultHeader: React.FC = () => {
       </div>
       
       <ActiveFilterBadges />
-      
-      {resultCount > 0 && (
-        <motion.div 
-          className="mt-2 text-sm text-gray-500"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          Mostrando <span className="font-medium">{startItem}-{endItem}</span> de <span className="font-medium">{resultCount}</span> itens
-          {totalPages > 1 && (
-            <span> • Página <span className="font-medium">{currentPage}</span> de <span className="font-medium">{totalPages}</span></span>
-          )}
-        </motion.div>
-      )}
     </motion.div>
   );
 };
