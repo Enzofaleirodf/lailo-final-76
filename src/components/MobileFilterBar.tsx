@@ -20,7 +20,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   const handleTabChange = (tab: ContentType) => {
     updateFilter('contentType', tab);
   };
-  return <div className="sticky top-0 z-10 w-full pt-0 pb-5 mt-0 bg-transparent px-4">
+  return <div className="sticky top-0 z-10 w-full pt-0 pb-6 mt-0 bg-transparent px-4">
       <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
         <button onClick={() => handleTabChange('property')} className={cn("w-11 h-10 flex items-center justify-center text-sm font-medium transition-colors", filters.contentType === 'property' ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" : "bg-white text-gray-700 hover:bg-gray-50")} aria-label="Imóveis" aria-pressed={filters.contentType === 'property'}>
           <Building2 size={18} className="shrink-0" />
