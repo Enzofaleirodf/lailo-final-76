@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Building2, Car, Search, Filter } from 'lucide-react';
+import { Home, Search, Heart, Building2, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileNavBarProps {
@@ -18,47 +18,40 @@ const MobileNavBar = ({
 }: MobileNavBarProps) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
-      <div className="h-16 grid grid-cols-4">
+      <div className="h-16 grid grid-cols-5">
         <button
-          onClick={() => onTabChange('property')}
-          className={cn(
-            "flex flex-col items-center justify-center gap-1 text-xs transition-colors",
-            activeTab === 'property'
-              ? "text-purple-600"
-              : "text-gray-500 hover:text-gray-700"
-          )}
+          className="flex flex-col items-center justify-center gap-1 text-xs text-purple-600 hover:text-purple-700 transition-colors"
         >
-          <Building2 size={20} className="shrink-0" />
-          <span>Imóveis</span>
+          <Home size={20} className="shrink-0" />
+          <span>Home</span>
         </button>
         
         <button
-          onClick={() => onTabChange('vehicle')}
-          className={cn(
-            "flex flex-col items-center justify-center gap-1 text-xs transition-colors",
-            activeTab === 'vehicle'
-              ? "text-purple-600"
-              : "text-gray-500 hover:text-gray-700"
-          )}
-        >
-          <Car size={20} className="shrink-0" />
-          <span>Veículos</span>
-        </button>
-        
-        <button
-          onClick={onFilterClick}
-          className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <Filter size={20} className="shrink-0" />
-          <span>Filtrar</span>
-        </button>
-        
-        <button
-          onClick={onSortClick}
           className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
         >
           <Search size={20} className="shrink-0" />
           <span>Buscar</span>
+        </button>
+        
+        <button
+          className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          <Heart size={20} className="shrink-0" />
+          <span>Favoritos</span>
+        </button>
+        
+        <button
+          className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          <Building2 size={20} className="shrink-0" />
+          <span>Leiloeiros</span>
+        </button>
+        
+        <button
+          className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          <User size={20} className="shrink-0" />
+          <span>Perfil</span>
         </button>
       </div>
     </div>

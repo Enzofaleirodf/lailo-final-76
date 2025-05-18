@@ -6,6 +6,7 @@ import TopFilters from '@/components/TopFilters';
 import ResultHeader from '@/components/ResultHeader';
 import AuctionList from '@/components/AuctionList';
 import MobileNavBar from '@/components/MobileNavBar';
+import MobileFilterBar from '@/components/MobileFilterBar';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
@@ -28,6 +29,12 @@ const Index = () => {
       <div className="flex-1 pl-0 sm:pl-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-[24px]">
           {!isMobile && <TopFilters />}
+          {isMobile && <MobileFilterBar 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+            onFilterClick={handleFilterClick} 
+            onSortClick={handleSortClick} 
+          />}
           
           <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 pb-20' : 'flex-row gap-6'}`}>
             {!isMobile && <aside className="shrink-0 w-full lg:w-[448px]">
