@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, CalendarIcon, SprayCanIcon } from 'lucide-react';
@@ -6,15 +7,18 @@ import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+
 interface AuctionCardProps {
   auction: AuctionItem;
 }
+
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [favorited, setFavorited] = useState(false);
+
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
@@ -35,7 +39,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
     return `${day}/${month}/${yearLastTwoDigits}`;
   };
+
   const discount = calculateDiscount();
+
   return <motion.div whileHover={{
     y: -2,
     boxShadow: '0 10px 20px rgba(0, 0, 0, 0.08)'
@@ -43,7 +49,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       <Card className="overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg card-shadow h-full flex flex-col">
         <div className="flex h-full">
           {/* Imagem do veículo à esquerda */}
-          <div className="relative w-1/3 h-full flex-1 pt-3 pl-3 flex flex-col justify-between\n">
+          <div className="relative w-1/3 h-full flex-1 pt-3 pl-3 flex flex-col justify-between">
             <div className="h-full relative rounded-md overflow-hidden">
               {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" />}
               <motion.img src={auction.imageUrl} alt={auction.title} className={`object-cover w-full h-full transition-all duration-500 rounded-md ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} style={{
@@ -66,7 +72,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           {/* Conteúdo/Informações à direita */}
           <div style={{
           marginLeft: '12px'
-        }} className="w-2/3 pt-4 pr-4 pb-4 ml-3 flex flex-col justify-between\n">
+        }} className="w-2/3 pt-4 pr-4 pb-4 ml-3 flex flex-col justify-between">
             <div>
               {/* Linha 1: Marca + Modelo + Botão Favoritar */}
               <div className="flex justify-between items-center mb-1">
@@ -81,7 +87,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               </div>
               
               {/* Linha 2: Lance atual + desconto */}
-              <div className="flex items-end gap-2 mb-2">
+              <div className="flex items-end gap-2">
                 <span className="text-xl font-bold text-[#202A44]">
                   {formatCurrency(auction.currentBid)}
                 </span>
@@ -129,5 +135,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       </Card>
     </motion.div>;
 });
+
 AuctionCard.displayName = 'AuctionCard';
 export default AuctionCard;
