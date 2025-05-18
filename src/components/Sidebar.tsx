@@ -65,10 +65,10 @@ const Sidebar = () => {
         expanded ? "w-48" : "w-16"
       )}
     >
-      <div className="mb-8 flex justify-center items-center">
+      <div className="mb-8 flex justify-center w-full px-3">
         <button 
           onClick={toggleSidebar}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-700/50 hover:bg-purple-700 transition-colors mx-auto"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-700/50 hover:bg-purple-700 transition-colors"
         >
           <Menu size={20} className="text-white" />
         </button>
