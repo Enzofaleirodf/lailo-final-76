@@ -31,7 +31,7 @@ const Index = () => {
           {!isMobile && <TopFilters />}
           {isMobile && <MobileFilterBar activeTab={activeTab} onTabChange={setActiveTab} onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
           
-          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 pb-24' : 'flex-row gap-6'}`}>
+          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 pb-28' : 'flex-row gap-6'}`}>
             {!isMobile && (
               <aside className="shrink-0 w-full lg:w-[448px]">
                 <FilterSection />
