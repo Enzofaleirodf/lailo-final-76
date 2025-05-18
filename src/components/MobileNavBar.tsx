@@ -17,7 +17,7 @@ const MobileNavBar = ({
   onSortClick
 }: MobileNavBarProps) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[200] bg-white border-t border-gray-200 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 z-[200] bg-white border-t border-gray-200 shadow-lg w-full mobile-nav-bar" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="h-16 grid grid-cols-5">
         <button
           className="flex flex-col items-center justify-center gap-1 text-xs text-purple-600 hover:text-purple-700 transition-colors"

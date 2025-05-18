@@ -31,13 +31,13 @@ const Index = () => {
           {!isMobile && <TopFilters />}
           {isMobile && <MobileFilterBar activeTab={activeTab} onTabChange={setActiveTab} onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
           
-          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 pb-32' : 'flex-row gap-6'}`}>
+          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 content-with-nav' : 'flex-row gap-6'}`}>
             {!isMobile && (
               <aside className="shrink-0 w-full lg:w-[448px]">
                 <FilterSection />
               </aside>
             )}
-            <main className="flex-1">
+            <main className="flex-1 min-h-[80vh]">
               {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
               <ResultHeader />
               <AuctionList />
