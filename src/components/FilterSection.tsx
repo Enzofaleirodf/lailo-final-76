@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import FilterContent from './filters/FilterContent';
+import { FilterProvider } from '@/contexts/FilterContext';
 
 const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChange?: (open: boolean) => void }) => {
   const [open, setOpen] = useState(false);
@@ -23,15 +24,6 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
       onOpenChange(newOpenState);
     }
   };
-  
-  // For desktop (large screens), render the sidebar directly
-  if (!isMobile) {
-    return (
-      <div className="w-full lg:w-[320px] bg-gradient-to-br from-white to-purple-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
-        <FilterContent />
-      </div>
-    );
-  }
   
   // Create footer content for the drawer
   const footerContent = (
@@ -52,6 +44,17 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
     </div>
   );
   
+  // For desktop (large screens), render the sidebar directly
+  if (!isMobile) {
+    return (
+      <div className="w-full lg:w-[320px] bg-gradient-to-br from-white to-purple-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
+        <FilterProvider>
+          <FilterContent />
+        </FilterProvider>
+      </div>
+    );
+  }
+  
   // For mobile and tablet screens, use a drawer with fixed footer
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
@@ -68,6 +71,7 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
               size="sm" 
               className="h-8 w-8 p-0 text-white hover:bg-purple-700 flex items-center justify-center" 
               onClick={() => handleOpenChange(false)}
+              aria-label="Fechar filtros"
             >
               <X size={18} />
               <span className="sr-only">Close</span>
@@ -75,7 +79,9 @@ const FilterSection = ({ isOpen, onOpenChange }: { isOpen?: boolean, onOpenChang
           </div>
           
           <div className="bg-gray-50 p-3 flex-1 overflow-y-auto">
-            <FilterContent />
+            <FilterProvider>
+              <FilterContent />
+            </FilterProvider>
           </div>
         </div>
       </DrawerContent>

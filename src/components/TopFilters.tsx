@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -8,21 +8,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useFilter } from '@/contexts/FilterContext';
+import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/contexts/FilterContext';
 
-const TopFilters = () => {
-  const [activeVehicleType, setActiveVehicleType] = useState<'property' | 'vehicle'>('vehicle');
-  const [activeFilters, setActiveFilters] = useState({
-    format: 'Leilão',
-    origin: 'Todas',
-    place: 'Todas'
-  });
+const TopFilters: React.FC = () => {
+  const { filters, updateFilter } = useFilter();
 
-  // Handle dropdown selection
-  const handleFilterChange = (filterType: 'format' | 'origin' | 'place', value: string) => {
-    setActiveFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
+  const handleContentTypeChange = (type: ContentType) => {
+    updateFilter('contentType', type);
+  };
+
+  const handleFilterChange = (filterType: 'format' | 'origin' | 'place', value: FilterFormat | FilterOrigin | FilterPlace) => {
+    if (filterType === 'format') {
+      updateFilter('format', value as FilterFormat);
+    } else if (filterType === 'origin') {
+      updateFilter('origin', value as FilterOrigin);
+    } else if (filterType === 'place') {
+      updateFilter('place', value as FilterPlace);
+    }
   };
 
   return (
@@ -30,26 +33,28 @@ const TopFilters = () => {
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="flex h-12">
           <button 
-            onClick={() => setActiveVehicleType('property')}
+            onClick={() => handleContentTypeChange('property')}
             className={cn(
               "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
-              activeVehicleType === 'property' 
+              filters.contentType === 'property' 
                 ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
+            aria-label="Filtrar imóveis"
           >
             <Building2 size={18} className="shrink-0" />
             <span>Imóveis</span>
           </button>
           <div className="w-[1px] bg-gray-200"></div>
           <button 
-            onClick={() => setActiveVehicleType('vehicle')}
+            onClick={() => handleContentTypeChange('vehicle')}
             className={cn(
               "flex-1 h-full flex items-center justify-center gap-2 text-sm font-medium transition-colors",
-              activeVehicleType === 'vehicle' 
+              filters.contentType === 'vehicle' 
                 ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50"
             )}
+            aria-label="Filtrar veículos"
           >
             <Car size={18} className="shrink-0" />
             <span>Veículos</span>
@@ -60,8 +65,11 @@ const TopFilters = () => {
       {/* Format Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
-            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{activeFilters.format}</span></span>
+          <button 
+            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            aria-label="Selecionar formato"  
+          >
+            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
@@ -78,8 +86,11 @@ const TopFilters = () => {
       {/* Origin Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
-            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{activeFilters.origin}</span></span>
+          <button 
+            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            aria-label="Selecionar origem"  
+          >
+            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
@@ -96,11 +107,14 @@ const TopFilters = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Place Dropdown (renamed from "Praça" to "Etapa" for consistency) */}
+      {/* Place Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
-            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{activeFilters.place}</span></span>
+          <button 
+            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            aria-label="Selecionar etapa"
+          >
+            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
             <ChevronDown size={16} className="text-purple-500" />
           </button>
         </DropdownMenuTrigger>
