@@ -31,7 +31,7 @@ const MobileFilterOptions: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-12 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
+            className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
             aria-label="Selecionar formato"
           >
             <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
@@ -39,10 +39,10 @@ const MobileFilterOptions: React.FC = () => {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[200px] bg-white z-50">
-          <DropdownMenuItem onClick={() => handleFormatChange('Leilão')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFormatChange('Leilão')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Leilão
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFormatChange('Venda Direta')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleFormatChange('Venda Direta')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Venda Direta
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -52,7 +52,7 @@ const MobileFilterOptions: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-12 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
+            className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
             aria-label="Selecionar origem"
           >
             <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
@@ -60,13 +60,13 @@ const MobileFilterOptions: React.FC = () => {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[200px] bg-white z-50">
-          <DropdownMenuItem onClick={() => handleOriginChange('Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleOriginChange('Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOriginChange('Judicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleOriginChange('Judicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Judicial
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOriginChange('Extrajudicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handleOriginChange('Extrajudicial')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Extrajudicial
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -76,7 +76,7 @@ const MobileFilterOptions: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-12 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
+            className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
             aria-label="Selecionar etapa"
           >
             <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
@@ -84,13 +84,13 @@ const MobileFilterOptions: React.FC = () => {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[200px] bg-white z-50">
-          <DropdownMenuItem onClick={() => handlePlaceChange('Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handlePlaceChange('Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePlaceChange('Primeira')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handlePlaceChange('Primeira')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Primeira
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePlaceChange('Segunda')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
+          <DropdownMenuItem onClick={() => handlePlaceChange('Segunda')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Segunda
           </DropdownMenuItem>
         </DropdownMenuContent>

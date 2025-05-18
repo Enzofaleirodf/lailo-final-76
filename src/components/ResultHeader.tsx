@@ -17,11 +17,13 @@ import { SortOption } from '@/stores/useSortStore';
 import { ArrowDown, ArrowUp, MapPin } from 'lucide-react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ResultHeader: React.FC = () => {
   const { filters } = useFilterStore();
   const { sortOption, setSortOption } = useSortStore();
   const [searchParams] = useSearchParams();
+  const isMobile = useIsMobile();
   
   // Calculate filtered results count - memoized for performance
   const filteredAuctions = useMemo(() => {
@@ -54,36 +56,38 @@ const ResultHeader: React.FC = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="flex flex-wrap items-center justify-between mb-2">
-        <div className="flex-1"></div>
-        
-        <div className="flex items-center">
-          <p className="text-sm text-gray-500 mr-2">
-            Ordenar:
-          </p>
-          <Select value={sortOption} onValueChange={handleSortChange}>
-            <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors">
-              <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
-            </SelectTrigger>
-            <SelectContent align="end">
-              {sortOptions.map((option) => (
-                <SelectItem 
-                  key={option.value} 
-                  value={option.value}
-                  className="flex items-center"
-                >
-                  <span className="flex items-center">
-                    {option.icon}
-                    {option.label}
-                  </span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Status and sorting in the same div */}
+        <div className="flex flex-1 items-center justify-between">
+          <AuctionStatus />
+          
+          {!isMobile && (
+            <div className="flex items-center ml-4">
+              <p className="text-sm text-gray-500 mr-2">
+                Ordenar:
+              </p>
+              <Select value={sortOption} onValueChange={handleSortChange}>
+                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-purple-700 font-medium focus:ring-0 hover:text-purple-900 transition-colors">
+                  <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
+                </SelectTrigger>
+                <SelectContent align="end">
+                  {sortOptions.map((option) => (
+                    <SelectItem 
+                      key={option.value} 
+                      value={option.value}
+                      className="flex items-center"
+                    >
+                      <span className="flex items-center">
+                        {option.icon}
+                        {option.label}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
       </div>
-      
-      {/* Add AuctionStatus component */}
-      <AuctionStatus />
       
       <ActiveFilterBadges />
     </motion.div>
