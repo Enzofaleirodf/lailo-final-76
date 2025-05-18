@@ -5,6 +5,7 @@ export interface AuctionItem {
   description: string;
   currentBid: number;
   minBid: number;
+  originalPrice?: number; // Add this property as optional
   imageUrl: string;
   endDate: Date;
   location: string;

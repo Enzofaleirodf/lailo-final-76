@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FilterState } from '@/contexts/FilterContext';
@@ -23,7 +22,7 @@ export const useUrlParams = (
     const currentPage = params.get('page');
     
     // Add sort option to URL
-    if (sortOption !== 'relevance') {
+    if (sortOption !== 'newest') { // Changed from 'relevance' to 'newest'
       params.set('sort', sortOption);
     } else {
       params.delete('sort');
@@ -132,7 +131,7 @@ export const useUrlParams = (
   // Load filters from URL on initial load
   useEffect(() => {
     const sort = searchParams.get('sort');
-    if (sort && ['newest', 'ending-soon', 'price-asc', 'price-desc', 'relevance'].includes(sort)) {
+    if (sort && ['newest', 'price-asc', 'price-desc', 'highest-discount', 'nearest'].includes(sort)) { // Updated sort options
       setSortOption(sort as SortOption);
     }
     

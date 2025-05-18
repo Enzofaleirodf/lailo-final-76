@@ -16,10 +16,14 @@ export const sortAuctions = (auctions: AuctionItem[], sortOption: SortOption): A
       return sortedAuctions.sort((a, b) => b.currentBid - a.currentBid);
     
     case 'highest-discount':
-      // Sort by discount percentage (assuming there's originalPrice in the data)
+      // Sort by discount percentage, safely handling cases where originalPrice might not exist
       return sortedAuctions.sort((a, b) => {
-        const discountA = a.originalPrice ? (a.originalPrice - a.currentBid) / a.originalPrice : 0;
-        const discountB = b.originalPrice ? (b.originalPrice - b.currentBid) / b.originalPrice : 0;
+        const discountA = a.originalPrice && a.originalPrice > a.currentBid 
+          ? (a.originalPrice - a.currentBid) / a.originalPrice
+          : 0;
+        const discountB = b.originalPrice && b.originalPrice > b.currentBid 
+          ? (b.originalPrice - b.currentBid) / b.originalPrice
+          : 0;
         return discountB - discountA;
       });
     
