@@ -68,7 +68,7 @@ const Sidebar = () => {
       <div className="mb-8 flex justify-center items-center">
         <button 
           onClick={toggleSidebar}
-          className="p-2 rounded-full bg-purple-700/50 hover:bg-purple-700 transition-colors"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-700/50 hover:bg-purple-700 transition-colors mx-auto"
         >
           <Menu size={20} className="text-white" />
         </button>
