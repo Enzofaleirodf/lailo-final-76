@@ -16,5 +16,5 @@ export const useSortStore = create<SortStore>((set) => ({
   sortOption: 'newest',
   
   // Actions
-  setSortOption: (option) => set({ sortOption })
+  setSortOption: (option) => set({ sortOption: option })
 }));
