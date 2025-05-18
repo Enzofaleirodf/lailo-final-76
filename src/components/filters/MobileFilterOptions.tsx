@@ -38,7 +38,7 @@ const MobileFilterOptions: React.FC = () => {
             <ChevronDown size={16} className="text-gray-400" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] bg-white z-50">
+        <DropdownMenuContent className="w-[200px] bg-white shadow-md z-50">
           <DropdownMenuItem onClick={() => handleFormatChange('Leilão')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Leilão
           </DropdownMenuItem>
@@ -59,7 +59,7 @@ const MobileFilterOptions: React.FC = () => {
             <ChevronDown size={16} className="text-gray-400" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] bg-white z-50">
+        <DropdownMenuContent className="w-[200px] bg-white shadow-md z-50">
           <DropdownMenuItem onClick={() => handleOriginChange('Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Todas
           </DropdownMenuItem>
@@ -83,7 +83,7 @@ const MobileFilterOptions: React.FC = () => {
             <ChevronDown size={16} className="text-gray-400" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] bg-white z-50">
+        <DropdownMenuContent className="w-[200px] bg-white shadow-md z-50">
           <DropdownMenuItem onClick={() => handlePlaceChange('Todas')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700">
             Todas
           </DropdownMenuItem>

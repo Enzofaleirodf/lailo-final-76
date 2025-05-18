@@ -26,13 +26,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       <select
         id={id}
         aria-label={ariaLabel}
-        className={`w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white ${className}`}
+        className={`w-full border rounded-md h-12 pl-3 pr-10 text-sm text-gray-700 appearance-none bg-white ${className}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
-        {placeholder && <option value="" disabled>{placeholder}</option>}
+        {placeholder && <option value="" disabled className="text-gray-400">{placeholder}</option>}
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option key={option.value} value={option.value} className="text-gray-700 py-2">
             {option.label}
           </option>
         ))}
