@@ -37,16 +37,22 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  // Handle open/close state for body class
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      document.body.classList.remove('modal-open');
-    } else {
+  // Add open state management
+  const [isOpen, setIsOpen] = React.useState(false);
+  
+  // Update body class when component mounts/unmounts or open state changes
+  React.useEffect(() => {
+    if (isOpen) {
       document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
     }
-    // Call the original onOpenChange if provided
-    props.onOpenChange?.(open);
-  };
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isOpen]);
 
   return (
     <DrawerPortal>
@@ -58,7 +64,14 @@ const DrawerContent = React.forwardRef<
           className
         )}
         {...props}
-        onOpenChange={handleOpenChange}
+        // Use onChange instead of onOpenChange
+        onChange={(open: boolean) => {
+          setIsOpen(open);
+          // Call the original onChange if provided
+          if (props.onChange) {
+            props.onChange(open);
+          }
+        }}
       >
         <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted z-[161]" />
         {children}
