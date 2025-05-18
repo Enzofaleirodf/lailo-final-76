@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MapPin } from 'lucide-react';
+import { Heart, CalendarIcon } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
-import { formatCurrency, formatYear } from '@/utils/auctionUtils';
+import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -27,6 +28,15 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     }
     return null;
   };
+  
+  // Format auction end date to show only last 2 digits of year
+  const formatAuctionDate = (date: Date): string => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
+    return `${day}/${month}/${yearLastTwoDigits}`;
+  };
+  
   const discount = calculateDiscount();
   return <motion.div whileHover={{
     y: -2,
@@ -59,7 +69,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           <div className="w-2/3 p-4 flex flex-col justify-between">
             <div>
               {/* Linha 1: Marca + Modelo + Botão Favoritar */}
-              <div className="flex justify-between items-center mb-0">
+              <div className="flex justify-between items-center mb-1">
                 <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
                   {auction.vehicleInfo.brand} {auction.title}
                 </h3>
@@ -82,22 +92,25 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               
               {/* Linha 3: Cor • Ano | Cidade/UF */}
               <div className="flex items-center text-sm text-gray-600 mb-3">
-                <span>{auction.vehicleInfo.color}</span>
-                <span className="mx-1">•</span>
-                <span>{formatYear(auction.vehicleInfo.year)}</span>
-                <span className="mx-1">|</span>
                 <div className="flex items-center">
-                  <MapPin size={14} className="mr-1" />
-                  <span className="line-clamp-1">{auction.location}</span>
+                  <span className="inline-block w-3 h-3 rounded-full mr-1" style={{ backgroundColor: auction.vehicleInfo.color.toLowerCase() }}></span>
+                  <span>{auction.vehicleInfo.color}</span>
                 </div>
+                <span className="mx-2"></span>
+                <div className="flex items-center">
+                  <CalendarIcon size={14} className="mr-1" />
+                  <span>{auction.vehicleInfo.year}</span>
+                </div>
+                <span className="mx-1">|</span>
+                <span className="line-clamp-1">{auction.location}</span>
               </div>
             </div>
             
             {/* Linha 4: Divider */}
-            <Separator className="py-0 my-0" />
+            <Separator className="my-3" />
             
             {/* Linha 5: Origem + Etapa (esquerda) / Data e hora (direita) */}
-            <div className="mt-3 flex justify-between items-center">
+            <div className="flex justify-between items-center">
               <div className="flex gap-2">
                 <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
                   {auction.origin}
@@ -108,7 +121,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               </div>
               
               <Badge variant="outline" className="text-xs">
-                {auction.endDate.toLocaleDateString('pt-BR')} às {auction.endDate.getHours()}h
+                {formatAuctionDate(auction.endDate)} às {auction.endDate.getHours()}h
               </Badge>
             </div>
           </div>
