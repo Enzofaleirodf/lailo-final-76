@@ -20,7 +20,7 @@ const Index = () => {
   return <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex">
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-[24px]">
           {!isMobile && <TopFilters />}
           
           {isMobile && <MobileNavBar activeTab={activeTab} onTabChange={setActiveTab} onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
