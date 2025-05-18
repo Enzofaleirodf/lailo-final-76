@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import FilterSection from '@/components/FilterSection';
@@ -36,7 +37,7 @@ const Index = () => {
           
           <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 content-with-nav' : 'flex-row gap-6'}`}>
             {!isMobile && 
-              <aside className="shrink-0 w-full lg:w-[320px]">
+              <aside className="shrink-0 w-full lg:w-[448px]">
                 <FilterSection />
               </aside>
             }
