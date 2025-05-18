@@ -91,7 +91,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               </div>
               
               {/* Linha 2: Lance atual + desconto */}
-              <div className="flex items-end gap-2">
+              <div className="flex items-end gap-2 mb-2">
                 <span className="text-xl font-bold text-[#202A44]">
                   {formatCurrency(auction.currentBid)}
                 </span>
