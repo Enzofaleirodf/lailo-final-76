@@ -55,13 +55,14 @@ const ResultHeader: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-between mb-2">
+        {/* Status and sorting in the same div */}
+        <div className="flex flex-1 items-center justify-between">
           <AuctionStatus />
           
           {!isMobile && (
-            <div className="flex items-center">
-              <p className="text-sm text-gray-500 mr-2">
+            <div className="flex items-center ml-4 mt-0 pt-0 mb-0">
+              <p className="text-sm text-gray-500 mr-2 mt-0">
                 Ordenar:
               </p>
               <Select value={sortOption} onValueChange={handleSortChange}>
