@@ -33,6 +33,7 @@ const MobileFilterOptions: React.FC = () => {
           <button 
             className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
             aria-label="Selecionar formato"
+            style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">Formato: <span className="text-purple-700">{filters.format}</span></span>
             <ChevronDown size={16} className="text-gray-400" />
@@ -54,6 +55,7 @@ const MobileFilterOptions: React.FC = () => {
           <button 
             className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
             aria-label="Selecionar origem"
+            style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">Origem: <span className="text-purple-700">{filters.origin}</span></span>
             <ChevronDown size={16} className="text-gray-400" />
@@ -78,6 +80,7 @@ const MobileFilterOptions: React.FC = () => {
           <button 
             className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
             aria-label="Selecionar etapa"
+            style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-purple-700">{filters.place}</span></span>
             <ChevronDown size={16} className="text-gray-400" />

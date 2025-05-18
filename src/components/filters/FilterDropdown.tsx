@@ -29,6 +29,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         className={`w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white text-gray-700 ${className}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        style={{ height: '40px' }}
       >
         {placeholder && <option value="" disabled className="text-gray-500">{placeholder}</option>}
         {options.map((option) => (

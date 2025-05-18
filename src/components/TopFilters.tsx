@@ -68,8 +68,9 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-            aria-label="Selecionar formato"  
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            aria-label="Selecionar formato"
+            style={{ height: '40px' }}  
           >
             <div className="flex items-center gap-2">
               <SlidersHorizontal size={16} className="text-purple-500" />
@@ -92,8 +93,9 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
-            aria-label="Selecionar origem"  
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            aria-label="Selecionar origem"
+            style={{ height: '40px' }}  
           >
             <div className="flex items-center gap-2">
               <SlidersHorizontal size={16} className="text-purple-500" />
@@ -119,8 +121,9 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-12 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
             aria-label="Selecionar etapa"
+            style={{ height: '40px' }}
           >
             <div className="flex items-center gap-2">
               <SlidersHorizontal size={16} className="text-purple-500" />
