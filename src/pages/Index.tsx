@@ -29,9 +29,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-[24px]">
           {!isMobile && <TopFilters />}
           
-          {isMobile && <MobileNavBar activeTab={activeTab} onTabChange={setActiveTab} onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
-          
-          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4' : 'flex-row gap-6'}`}>
+          <div className={`flex ${isMobile ? 'flex-col px-4 -mx-4 pb-20' : 'flex-row gap-6'}`}>
             {!isMobile && <aside className="shrink-0 w-full lg:w-[448px]">
                 <FilterSection />
               </aside>}
@@ -43,6 +41,13 @@ const Index = () => {
           </div>
         </div>
       </div>
+      
+      {isMobile && <MobileNavBar 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+        onFilterClick={handleFilterClick} 
+        onSortClick={handleSortClick} 
+      />}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Building2, Car, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+import { Building2, Car, Search, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileNavBarProps {
@@ -17,48 +17,48 @@ const MobileNavBar = ({
   onSortClick
 }: MobileNavBarProps) => {
   return (
-    <div className="sticky top-0 z-10 w-full pb-4 pt-2 bg-gradient-to-br from-white to-purple-50 px-0 my-0 py-[24px] shadow-sm">
-      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
-        <button 
-          onClick={() => onTabChange('property')} 
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+      <div className="h-16 grid grid-cols-4">
+        <button
+          onClick={() => onTabChange('property')}
           className={cn(
-            "w-11 h-10 flex items-center justify-center text-sm font-medium transition-colors", 
-            activeTab === 'property' 
-              ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
-              : "bg-white text-gray-700 hover:bg-gray-50"
-          )} 
-          aria-label="Imóveis"
+            "flex flex-col items-center justify-center gap-1 text-xs transition-colors",
+            activeTab === 'property'
+              ? "text-purple-600"
+              : "text-gray-500 hover:text-gray-700"
+          )}
         >
-          <Building2 size={18} className="shrink-0" />
+          <Building2 size={20} className="shrink-0" />
+          <span>Imóveis</span>
         </button>
-        <div className="w-[1px] bg-gray-200"></div>
-        <button 
-          onClick={() => onTabChange('vehicle')} 
+        
+        <button
+          onClick={() => onTabChange('vehicle')}
           className={cn(
-            "w-11 h-10 flex items-center justify-center text-sm font-medium transition-colors", 
-            activeTab === 'vehicle' 
-              ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white" 
-              : "bg-white text-gray-700 hover:bg-gray-50"
-          )} 
-          aria-label="Veículos"
+            "flex flex-col items-center justify-center gap-1 text-xs transition-colors",
+            activeTab === 'vehicle'
+              ? "text-purple-600"
+              : "text-gray-500 hover:text-gray-700"
+          )}
         >
-          <Car size={18} className="shrink-0" />
+          <Car size={20} className="shrink-0" />
+          <span>Veículos</span>
         </button>
-        <div className="w-[1px] bg-gray-200"></div>
-        <button 
-          onClick={onFilterClick} 
-          className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 transition-colors"
+        
+        <button
+          onClick={onFilterClick}
+          className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
         >
-          <SlidersHorizontal size={16} className="shrink-0 text-purple-500" />
+          <Filter size={20} className="shrink-0" />
           <span>Filtrar</span>
         </button>
-        <div className="w-[1px] bg-gray-200"></div>
-        <button 
-          onClick={onSortClick} 
-          className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 transition-colors"
+        
+        <button
+          onClick={onSortClick}
+          className="flex flex-col items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
         >
-          <ArrowUpDown size={16} className="shrink-0 text-purple-500" />
-          <span>Ordenar</span>
+          <Search size={20} className="shrink-0" />
+          <span>Buscar</span>
         </button>
       </div>
     </div>
