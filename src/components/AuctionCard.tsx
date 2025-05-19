@@ -55,7 +55,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   }} className="mb-3">
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
         {/* Content (right side) */}
-        <div className="flex-1 flex flex-col p-4">
+        <div className="flex-1 flex flex-col p-0">
           {/* Top row with improved spacing and alignment */}
           <div className="flex justify-between items-start gap-2 mb-0">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${!isMobile ? 'text-lg leading-tight' : 'text-base leading-tight'}`}>
