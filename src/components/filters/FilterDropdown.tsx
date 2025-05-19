@@ -26,14 +26,14 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const isDefaultValue = value === "Todas" || value === "Todos";
 
   return (
-    <div className="relative isolate filter-dropdown-container">
+    <div className="relative isolate no-focus-styles">
       <select
         id={id}
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white",
           isDefaultValue ? "text-gray-700" : "text-gray-700",
-          "filter-dropdown-select focus-visible:ring-2 focus-visible:ring-accent2-500 focus-visible:border-accent2-500",
+          "plain-select-element", // New class for direct styling
           className
         )}
         value={value}

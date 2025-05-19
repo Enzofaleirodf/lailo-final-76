@@ -17,17 +17,27 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const { filters } = useFilterStore();
   const scrollPositionRef = useRef(0);
   
+  // Capture initial scroll position on mount
+  useEffect(() => {
+    scrollPositionRef.current = window.scrollY;
+  }, []);
+  
   // For desktop, implement automatic filter application with fixed scroll position
   useEffect(() => {
     if (!isMobile) {
-      // Capture scroll position before any changes
-      scrollPositionRef.current = window.scrollY;
+      // Store current scroll position before any filter changes
+      const currentScrollPosition = window.scrollY;
+      scrollPositionRef.current = currentScrollPosition;
       
-      // Create and dispatch the filters:applied event when filters change
+      // Create and dispatch the filters:applied event with current scroll position
       const event = new CustomEvent('filters:applied', {
-        detail: { scrollPosition: scrollPositionRef.current }
+        detail: { scrollPosition: currentScrollPosition }
       });
-      window.dispatchEvent(event);
+      
+      // Use requestAnimationFrame to ensure dispatch happens at the right time
+      requestAnimationFrame(() => {
+        window.dispatchEvent(event);
+      });
     }
   }, [filters, isMobile]);
   
@@ -36,38 +46,41 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
     
-    const handleInteraction = (e: Event) => {
+    const handleClickCapture = (e: MouseEvent) => {
+      // Capture current scroll before any interaction
+      scrollPositionRef.current = window.scrollY;
+      
       // Only modify navigation-related events
-      // Allow filter interactions to work normally
       if (e.target && 
           ((e.target as HTMLElement).closest('a') || 
            (e.target as HTMLElement).hasAttribute('href'))) {
-        
         // Prevent navigation while allowing filter functionality
         e.preventDefault();
         e.stopPropagation();
       }
     };
     
-    // Only capture link-related events
-    const eventTypes = ['click'];
+    // Prevent default browser scroll behavior on specific events
+    const handleScrollEvents = () => {
+      // Capture current scroll position
+      scrollPositionRef.current = window.scrollY;
+    };
     
-    // Use capture phase to intercept events before they reach React's event system
-    eventTypes.forEach(eventType => {
-      wrapper.addEventListener(eventType, handleInteraction, { capture: true });
-    });
+    // Add event listeners with capture phase
+    wrapper.addEventListener('click', handleClickCapture, { capture: true });
+    window.addEventListener('scroll', handleScrollEvents);
     
     return () => {
-      eventTypes.forEach(eventType => {
-        wrapper.removeEventListener(eventType, handleInteraction, { capture: true });
-      });
+      // Clean up event listeners
+      wrapper.removeEventListener('click', handleClickCapture, { capture: true });
+      window.removeEventListener('scroll', handleScrollEvents);
     };
   }, []);
   
   return (
     <div 
       ref={wrapperRef} 
-      className="filter-wrapper no-scroll-jump"
+      className="filter-wrapper no-scroll-jump prevent-scroll-restoration no-focus-styles"
       data-filter-interaction-zone="true"
     >
       {children}

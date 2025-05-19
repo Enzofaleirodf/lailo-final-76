@@ -1,3 +1,4 @@
+
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -194,50 +195,65 @@ body.modal-open .mobile-nav-bar {
   background-color: #f3f4f6;
 }
 
-/* Standardize focus styles across all elements */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-[tabindex]:focus-visible {
-  outline: 2px solid #FFD100 !important;
-  outline-offset: 2px !important;
-}
-
-/* Better focus styles for form controls */
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #FFD100 !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
-  outline: none !important;
-}
-
-/* CORREÇÃO: Garantir que apenas o elemento select receba o foco e não seu contêiner */
-.filter-wrapper select:focus {
-  border-color: #FFD100 !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
-  outline: none !important;
-}
-
-.filter-wrapper div:focus,
-.filter-wrapper div:focus-within {
+/* COMPLETELY DISABLED FOCUS STYLES - as requested */
+.no-focus-styles *:focus,
+.no-focus-styles *:focus-visible,
+.no-focus-styles *:focus-within {
   outline: none !important;
   box-shadow: none !important;
   border-color: inherit !important;
 }
 
-/* Preservação da posição de rolagem durante atualizações de filtro */
+/* Direct styling for select elements only */
+.plain-select-element:focus {
+  outline: none !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+}
+
+/* Dropdown menu radix consistent focus styles - DISABLED */
+[data-radix-collection-item]:focus {
+  outline: none !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Desabilitar scroll-behavior para evitar saltos automáticos */
 html {
+  scroll-behavior: auto !important;
+  /* Disable smooth scrolling completely */
+  overflow-anchor: none !important;
+  scroll-snap-type: none !important;
+}
+
+/* Reforço para prevenir scroll automático */
+.no-scroll-jump {
+  overflow-anchor: none !important;
   scroll-behavior: auto !important;
 }
 
-/* Override radix select focus styles */
-[data-radix-select-trigger]:focus-visible {
-  outline: 2px solid #FFD100 !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
+/* Prevent ANY page scrolling on filter change by capturing and stopping events */
+body {
+  overscroll-behavior: none;
+}
+
+/* Eliminar qualquer comportamento de scroll automático do navegador */
+* {
+  scroll-behavior: auto !important;
+}
+
+/* Hack prevention for scroll to top issues */
+.prevent-scroll-restoration {
+  scroll-behavior: auto !important;
+  overflow-anchor: none !important;
+  scroll-snap-type: none !important;
+}
+
+/* Fix for mobile scrolling issues */
+@media (max-width: 768px) {
+  html, body {
+    scroll-behavior: auto !important;
+    overscroll-behavior: none;
+  }
 }
 
 /* Improve dropdown visibility */
@@ -318,70 +334,4 @@ html {
 /* Ensure the navigation sidebar always appears on top of filter components */
 .sidebar-nav {
   z-index: var(--z-sidebar) !important;
-}
-
-/* Prevent page scrolling on filter change in desktop */
-.filter-toggle-item:focus, 
-.custom-toggle-item:focus {
-  outline-color: #FFD100 !important;
-}
-
-/* Dropdown menu radix consistent focus styles */
-[data-radix-collection-item]:focus {
-  outline-color: #FFD100 !important;
-  outline-width: 2px !important;
-  background-color: rgba(255, 209, 0, 0.1) !important;
-}
-
-/* Consistent focus state for all filter related components */
-.filter-focus-ring:focus,
-.filter-focus-ring:focus-within {
-  outline: none !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.7) !important;
-  border-color: #FFD100 !important;
-}
-
-/* CORREÇÃO COMPLETA: Garantir que o foco funcione corretamente em elementos select */
-.filter-dropdown-container {
-  position: relative;
-}
-
-.filter-dropdown-container:focus-within {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
-}
-
-.filter-dropdown-select:focus {
-  outline: 2px solid #FFD100 !important;
-  outline-offset: 2px !important;
-  box-shadow: none !important;
-  border-color: #FFD100 !important;
-}
-
-/* Sobrescrever qualquer outro estilo de foco para contêineres */
-.filter-wrapper div:focus,
-.filter-wrapper div:focus-within {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
-}
-
-/* Garantir que apenas os inputs e selects recebam o foco apropriado */
-.filter-wrapper select:focus,
-.filter-wrapper input:focus {
-  outline: 2px solid #FFD100 !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
-  border-color: #FFD100 !important;
-}
-
-/* Desabilitar scroll-behavior para evitar saltos automáticos */
-html {
-  scroll-behavior: auto !important;
-}
-
-/* Reforço para prevenir scroll automático */
-.no-scroll-jump {
-  overflow-anchor: none;
 }

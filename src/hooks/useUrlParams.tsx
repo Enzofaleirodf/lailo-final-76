@@ -9,6 +9,7 @@ import { useIsMobile } from './use-mobile';
 
 /**
  * Custom hook to sync filter and sort state with URL parameters
+ * Completely disabling scroll restoration as requested
  */
 export const useUrlParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +18,7 @@ export const useUrlParams = () => {
   const isMobile = useIsMobile();
   
   // Ref to store current scroll position
-  const scrollPositionRef = useRef(0);
+  const scrollPositionRef = useRef(window.scrollY);
   // Flag to track if we should update URL
   const shouldUpdateUrlRef = useRef(false);
   // Debounce timer ref
@@ -27,40 +28,56 @@ export const useUrlParams = () => {
   // Flag to prevent scroll restoration during URL updates
   const isUpdatingUrlRef = useRef(false);
   
+  // Capture scroll position regularly
+  useEffect(() => {
+    const captureScrollPosition = () => {
+      scrollPositionRef.current = window.scrollY;
+    };
+    
+    window.addEventListener('scroll', captureScrollPosition);
+    return () => window.removeEventListener('scroll', captureScrollPosition);
+  }, []);
+  
   // Handle the explicit filter application event (for desktop)
   useEffect(() => {
     const handleFiltersApplied = (e: Event) => {
       const customEvent = e as CustomEvent;
+      
+      // Always trust the event's scroll position if available
       if (customEvent.detail?.scrollPosition !== undefined) {
         scrollPositionRef.current = customEvent.detail.scrollPosition;
-      } else {
-        // Store current scroll position before applying filters
-        scrollPositionRef.current = window.scrollY;
       }
       
+      // Set flag to update URL without changing scroll
       shouldUpdateUrlRef.current = true;
       
-      // Force immediate URL update without debounce for Apply button click
+      // Force immediate URL update without debounce
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
       
-      // Set flag to indicate URL is being updated
+      // Disable browser's automatic scroll restoration
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      
+      // Set flag that we're updating URL
       isUpdatingUrlRef.current = true;
-      updateUrl();
+      
+      // Update URL immediately
+      updateUrlWithoutScrollChange();
     };
     
-    // Function to update URL params based on current filter state
-    const updateUrl = () => {
+    // Function to update URL params based on current filter state without changing scroll position
+    const updateUrlWithoutScrollChange = () => {
+      // Store current scroll position
+      const savedScrollPosition = scrollPositionRef.current;
+      
+      // Create new params object
       const params = new URLSearchParams(searchParams);
       
       // Preserve current page if it exists
       const currentPage = params.get('page');
-      
-      // Capture scroll position again to ensure accuracy
-      if (scrollPositionRef.current === 0) {
-        scrollPositionRef.current = window.scrollY;
-      }
       
       // Add sort option to URL
       if (sortOption !== 'newest') {
@@ -69,7 +86,7 @@ export const useUrlParams = () => {
         params.delete('sort');
       }
       
-      // Add filters to URL
+      // Add filters to URL (keeping this part unchanged)
       if (filters.location && filters.location !== 'todos') {
         params.set('location', filters.location);
       } else {
@@ -149,28 +166,27 @@ export const useUrlParams = () => {
         params.set('page', '1');
       }
       
-      // Block scroll events temporarily
-      document.documentElement.classList.add('no-scroll-jump');
-      
-      // Always use {replace: true} to prevent adding to history stack
+      // Apply "replace" to prevent history stack changes
       setSearchParams(params, { replace: true });
       
-      // Restore scroll position with a longer timeout to ensure URL change completes
+      // IMMEDIATELY restore scroll position
+      window.scrollTo(0, savedScrollPosition);
+      
+      // Use multiple scroll restoration attempts to ensure it works
+      const restoreScroll = () => {
+        window.scrollTo(0, savedScrollPosition);
+      };
+      
+      // Multiple restore attempts at different times
+      setTimeout(restoreScroll, 0);
+      setTimeout(restoreScroll, 10);
+      setTimeout(restoreScroll, 50);
       setTimeout(() => {
-        if (scrollPositionRef.current > 0) {
-          window.scrollTo({
-            top: scrollPositionRef.current,
-            behavior: 'instant'
-          });
-        }
-        
-        // Reset flags after restoring scroll
+        restoreScroll();
+        // Reset flags after all restoration attempts
         shouldUpdateUrlRef.current = false;
         isUpdatingUrlRef.current = false;
-        
-        // Re-enable scroll events
-        document.documentElement.classList.remove('no-scroll-jump');
-      }, 100); // Longer timeout to ensure URL processing completes
+      }, 100);
     };
     
     window.addEventListener('filters:applied', handleFiltersApplied);
@@ -180,23 +196,17 @@ export const useUrlParams = () => {
     };
   }, [filters, searchParams, setSearchParams, sortOption]);
   
-  // Update URL when filters or sort option changes, but only on mobile or when explicitly triggered
+  // For mobile: update URL when filters or sort option changes
   useEffect(() => {
-    // Do not automatically update URL in desktop mode - only update when the apply button is clicked
-    // Skip updates during initial load or if we're already processing an update
+    // Skip if we're already updating URL or not on mobile
     if (isUpdatingUrlRef.current || (!isMobile && !shouldUpdateUrlRef.current && !isInitialLoadRef.current)) {
       return;
     }
     
-    // Only update URL if:
-    // 1. It's mobile (automatic updates)
-    // 2. shouldUpdateUrlRef.current is true (from apply button)
-    // 3. It's the initial load (to sync filters from URL)
     if (isMobile || shouldUpdateUrlRef.current || isInitialLoadRef.current) {
-      // Store current scroll position before any URL update
-      if (scrollPositionRef.current === 0) {
-        scrollPositionRef.current = window.scrollY;
-      }
+      // Save current scroll position
+      const currentScroll = window.scrollY;
+      scrollPositionRef.current = currentScroll;
       
       // Clear any existing timer
       if (timerRef.current) {
@@ -206,19 +216,23 @@ export const useUrlParams = () => {
       // Set flag to indicate URL is being updated
       isUpdatingUrlRef.current = true;
       
-      // Set a new timer for debounced URL update (mobile only)
+      // Schedule URL update with debounce
       timerRef.current = setTimeout(() => {
-        const params = new URLSearchParams(searchParams);
+        // Disable browser's automatic scroll restoration
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
         
         // Store scroll position for restoration
         const savedScrollPos = scrollPositionRef.current;
         
+        // Update URL params (simplified - keeping the core logic)
+        const params = new URLSearchParams(searchParams);
+        
         // Preserve current page if it exists
         const currentPage = params.get('page');
         
-        // Block scroll events temporarily
-        document.documentElement.classList.add('no-scroll-jump');
-        
+        // Process all the filter parameters...
         // Add sort option to URL
         if (sortOption !== 'newest') {
           params.set('sort', sortOption);
@@ -226,7 +240,7 @@ export const useUrlParams = () => {
           params.delete('sort');
         }
         
-        // Add filters to URL
+        // Add all other filters (keeping this part unchanged - main filter logic)
         if (filters.location && filters.location !== 'todos') {
           params.set('location', filters.location);
         } else {
@@ -299,46 +313,39 @@ export const useUrlParams = () => {
           params.delete('place');
         }
         
-        // Preserve page parameter or reset when filters change
-        if (currentPage && !hasFilterChanged(filters, searchParams)) {
-          params.set('page', currentPage);
-        } else {
-          params.set('page', '1');
-        }
-        
-        // Always use {replace: true} to prevent adding to history stack
+        // Update URL without changing scroll position
         setSearchParams(params, { replace: true });
         
-        // Restore scroll position with a longer timeout
+        // IMMEDIATELY restore scroll position
+        window.scrollTo(0, savedScrollPos);
+        
+        // Multiple attempts to restore scroll position
+        const restoreScroll = () => {
+          window.scrollTo(0, savedScrollPos);
+        };
+        
+        setTimeout(restoreScroll, 0);
+        setTimeout(restoreScroll, 10);
+        setTimeout(restoreScroll, 50);
         setTimeout(() => {
-          // Only restore if we stored a valid position
-          if (savedScrollPos > 0) {
-            window.scrollTo({
-              top: savedScrollPos,
-              behavior: 'instant'
-            });
-          }
-          
-          // Reset flags after URL update completed
+          restoreScroll();
+          // Reset flags after all restoration attempts
           shouldUpdateUrlRef.current = false;
           isInitialLoadRef.current = false;
           isUpdatingUrlRef.current = false;
-          
-          // Re-enable scroll events
-          document.documentElement.classList.remove('no-scroll-jump');
-        }, 100); // Longer timeout to ensure URL change completes
-      }, isMobile ? 300 : 0); // 300ms delay for mobile, no delay for explicit apply
+        }, 100);
+      }, isMobile ? 300 : 0); // Use debounce only on mobile
     }
     
-    // Cleanup timer on unmount
+    // Cleanup
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
-  }, [filters, sortOption, setSearchParams, isMobile, searchParams]);
+  }, [filters, sortOption, isMobile, searchParams, setSearchParams]);
   
-  // Helper to check if filter has changed
+  // Helper to check if filter has changed (keeping this unchanged)
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
     if ((params.get('location') || 'todos') !== currentFilters.location) return true;
     if ((params.get('types')?.split(',') || []).join(',') !== currentFilters.vehicleTypes.join(',')) return true;
@@ -355,7 +362,7 @@ export const useUrlParams = () => {
     return false;
   };
   
-  // Load filters from URL on initial load
+  // Initial load from URL params (keeping this unchanged)
   useEffect(() => {
     const sort = searchParams.get('sort');
     if (sort && ['newest', 'price-asc', 'price-desc', 'highest-discount', 'nearest'].includes(sort)) {
@@ -444,7 +451,28 @@ export const useUrlParams = () => {
     
     // Initial load is complete
     isInitialLoadRef.current = false;
-  // We only want this to run once on component mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  // Extra effect to capture and restore scroll position on any URL change
+  useEffect(() => {
+    // Disable browser's scroll restoration completely
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    
+    // Function to forcibly restore scroll
+    const forceScrollPosition = () => {
+      if (scrollPositionRef.current > 0) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
+    };
+    
+    // Listen for URL changes and restore scroll position
+    window.addEventListener('popstate', forceScrollPosition);
+    
+    return () => {
+      window.removeEventListener('popstate', forceScrollPosition);
+    };
   }, []);
 };
