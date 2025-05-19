@@ -6,8 +6,6 @@ import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { History, ArrowDown, ArrowUp } from 'lucide-react';
-import { SortOption } from '@/stores/useSortStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -25,13 +23,13 @@ const ResultHeader: React.FC = () => {
     return filterAuctions(sampleAuctions, filters);
   }, [filters]);
   
-  // Get sort options and icons
+  // Get sort options without icons
   const sortOptions = useMemo(() => [
-    { value: 'newest', label: 'Mais recentes', icon: <History size={16} className="mr-2 text-gray-500" /> },
-    { value: 'price-asc', label: 'Menor preço', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> },
-    { value: 'price-desc', label: 'Maior preço', icon: <ArrowUp size={16} className="mr-2 text-gray-500" /> },
-    { value: 'highest-discount', label: 'Maior desconto', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> },
-    { value: 'nearest', label: 'Mais próximos', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> }
+    { value: 'newest', label: 'Mais recentes' },
+    { value: 'price-asc', label: 'Menor preço' },
+    { value: 'price-desc', label: 'Maior preço' },
+    { value: 'highest-discount', label: 'Maior desconto' },
+    { value: 'nearest', label: 'Mais próximos' }
   ], []);
   
   // Get current sort option
@@ -65,10 +63,7 @@ const ResultHeader: React.FC = () => {
                 onClick={handleSortClick}
                 className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none"
               >
-                <span className="flex items-center">
-                  {currentSortOption.icon}
-                  {currentSortOption.label}
-                </span>
+                <span>{currentSortOption.label}</span>
               </button>
               
               <SortOptions 
