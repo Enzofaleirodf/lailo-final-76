@@ -26,7 +26,7 @@ export const useUrlParams = () => {
   // Flag to indicate if this is the initial load
   const isInitialLoadRef = useRef(true);
   
-  // Handle the explicit filter application event
+  // Handle the explicit filter application event (for desktop)
   useEffect(() => {
     const handleFiltersApplied = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -148,12 +148,15 @@ export const useUrlParams = () => {
       shouldUpdateUrlRef.current = false;
       
       // After URL update, restore scroll position
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         window.scrollTo({
           top: scrollPositionRef.current,
           behavior: 'instant'
         });
-      });
+        
+        // Clear the scroll position after restoring
+        scrollPositionRef.current = 0;
+      }, 0);
     };
     
     window.addEventListener('filters:applied', handleFiltersApplied);
@@ -276,12 +279,14 @@ export const useUrlParams = () => {
         setSearchParams(params, { replace: true });
         
         // After URL update, restore scroll position on mobile
-        requestAnimationFrame(() => {
-          window.scrollTo({
-            top: scrollPositionRef.current,
-            behavior: 'instant'
-          });
-        });
+        if (isMobile) {
+          setTimeout(() => {
+            window.scrollTo({
+              top: scrollPositionRef.current,
+              behavior: 'instant'
+            });
+          }, 0);
+        }
         
         // Reset flag after initial load
         isInitialLoadRef.current = false;

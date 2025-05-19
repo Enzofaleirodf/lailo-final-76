@@ -7,8 +7,8 @@ interface FilterWrapperProps {
 
 /**
  * A wrapper component for filter elements that prevents scroll jumps
- * by preventing default browser behavior and preserving scroll position
- * during filter interactions
+ * by capturing events and preventing their propagation to avoid
+ * triggering URL changes during filter interactions
  */
 const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -19,13 +19,19 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
     if (!wrapper) return;
     
     const handleInteraction = (e: Event) => {
-      // Stop propagation to prevent URL updates during interaction
+      // Completely prevent event bubbling to avoid URL updates
       e.stopPropagation();
+      
+      // For click events, also prevent default to avoid any navigation
+      if (e.type === 'click') {
+        e.preventDefault();
+      }
     };
     
-    // Capture all interaction events
-    const eventTypes = ['click', 'change', 'input'];
+    // Capture all relevant interaction events that might trigger navigation
+    const eventTypes = ['click', 'change', 'input', 'mousedown', 'touchstart', 'keydown'];
     
+    // Use capture phase to intercept events before they reach React's event system
     eventTypes.forEach(eventType => {
       wrapper.addEventListener(eventType, handleInteraction, { capture: true });
     });
@@ -43,6 +49,9 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
       className="filter-wrapper"
       // Add data attribute for potential CSS targeting
       data-filter-interaction-zone="true"
+      // Explicitly prevent default React synthetic events as well
+      onClick={(e) => e.stopPropagation()}
+      onChange={(e) => e.stopPropagation()}
     >
       {children}
     </div>
