@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Calendar, SprayCan, Hourglass } from 'lucide-react';
+import { Heart, Calendar, Palette, Hourglass } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
@@ -132,7 +132,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           {/* Vehicle info row - better structured and aligned */}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-3">
             <div className="flex items-center text-gray-600 text-xs">
-              <SprayCan size={12} className="mr-1 text-gray-500" />
+              <Palette size={12} className="mr-1 text-gray-500" />
               <span>{auction.vehicleInfo.color}</span>
             </div>
             {auction.vehicleInfo.year && (
