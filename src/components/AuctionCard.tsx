@@ -5,6 +5,7 @@ import { Heart, Calendar, SprayCan } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -51,14 +52,16 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         {/* Imagem (lado esquerdo) */}
         <div className="relative w-[30%] min-w-[96px]">
           <div className="relative h-full w-full">
-            {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
-            <img
-              src={auction.imageUrl}
-              alt={auction.title}
-              className="h-full w-full object-cover rounded-lg"
-              loading="lazy"
-              onLoad={handleImageLoad}
-            />
+            <AspectRatio ratio={3/4} className="h-full">
+              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
+              <img
+                src={auction.imageUrl}
+                alt={auction.title}
+                className="h-full w-full object-cover rounded-lg"
+                loading="lazy"
+                onLoad={handleImageLoad}
+              />
+            </AspectRatio>
             {/* Degradê sobre a imagem */}
             <div
               className="absolute inset-0 rounded-lg"
@@ -78,7 +81,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         </div>
 
         {/* Conteúdo (lado direito) */}
-        <div className="flex-1 pl-3 flex flex-col">
+        <div className="flex-1 pl-3 flex flex-col justify-between">
           {/* Linha 1: Marca + Modelo */}
           <div className="flex justify-between items-center">
             <div className="text-[16px] font-semibold text-black line-clamp-1">
@@ -104,7 +107,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Linha 3: Preço + Badge */}
-          <div className="flex items-center gap-1.5 mt-3">
+          <div className="flex items-center gap-1.5 mt-auto">
             <span className="text-[16px] font-bold text-black">
               {formatCurrency(auction.currentBid)}
             </span>
@@ -116,7 +119,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Divider */}
-          <div className="border-t border-[#E5E5EA] mt-4 mb-4"></div>
+          <div className="border-t border-[#E5E5EA] my-2"></div>
           
           {/* Linha 4: Origem + Etapa e Data + Hora */}
           <div className="flex justify-between items-center text-[12px]">
