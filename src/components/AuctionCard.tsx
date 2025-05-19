@@ -66,8 +66,8 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       className="mb-3"
     >
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-        {/* Image (left side) */}
-        <div className="relative w-[35%] min-w-[130px]">
+        {/* Image (left side) with added top and bottom margin */}
+        <div className="relative w-[35%] min-w-[130px] py-3">
           <div className="relative h-full w-full">
             {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse" />}
             <img
