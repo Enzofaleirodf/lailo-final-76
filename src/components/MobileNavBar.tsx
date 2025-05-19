@@ -1,12 +1,19 @@
 
 import React from 'react';
-import { Home, Search, Heart, User } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { Home, Search, Heart, Gavel, User } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const MobileNavBar: React.FC = () => {
   const location = useLocation();
   const path = location.pathname;
+
+  // Check if the path starts with the given route
+  const isActiveRoute = (route: string) => {
+    if (route === '/' && path === '/') return true;
+    if (route !== '/' && path.startsWith(route)) return true;
+    return false;
+  };
 
   const navItems = [
     {
@@ -16,13 +23,18 @@ const MobileNavBar: React.FC = () => {
     },
     {
       icon: Search,
-      label: 'Buscar',
-      href: '/buscar'
+      label: 'Buscador',
+      href: '/buscador'
     },
     {
       icon: Heart,
       label: 'Favoritos',
       href: '/favoritos'
+    },
+    {
+      icon: Gavel,
+      label: 'Leiloeiros',
+      href: '/leiloeiros'
     },
     {
       icon: User,
@@ -34,11 +46,11 @@ const MobileNavBar: React.FC = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center z-40">
       {navItems.map((item, index) => {
-        const isActive = item.href === path;
+        const isActive = isActiveRoute(item.href);
         return (
-          <a
+          <Link
             key={index}
-            href={item.href}
+            to={item.href}
             className={cn(
               "flex flex-col items-center justify-center w-full h-full",
               isActive ? "text-brand-600" : "text-gray-500"
@@ -47,7 +59,7 @@ const MobileNavBar: React.FC = () => {
           >
             <item.icon className="h-5 w-5 mb-1" />
             <span className="text-xs">{item.label}</span>
-          </a>
+          </Link>
         );
       })}
     </div>

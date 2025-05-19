@@ -1,17 +1,25 @@
 
 import React, { useState } from 'react';
-import { Home, Search, Heart, Building2, Bell, User, Menu, X } from 'lucide-react';
+import { Home, Search, Heart, Gavel, User, Menu } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(false);
   const isMobile = useIsMobile();
+  const location = useLocation();
   
   const toggleSidebar = () => {
     setExpanded(!expanded);
+  };
+
+  // Check if the path starts with the given route
+  const isActiveRoute = (route: string) => {
+    if (route === '/' && location.pathname === '/') return true;
+    if (route !== '/' && location.pathname.startsWith(route)) return true;
+    return false;
   };
   
   // Mobile sidebar with header and hamburger icon
@@ -41,15 +49,44 @@ const Sidebar = () => {
       
       <TooltipProvider delayDuration={300}>
         <div className="flex flex-col items-center gap-6 w-full">
-          <NavButton icon={Home} label="Home" expanded={expanded} />
-          <NavButton icon={Search} label="Search" expanded={expanded} />
-          <NavButton icon={Heart} label="Favorites" expanded={expanded} />
-          <NavButton icon={Building2} label="Properties" expanded={expanded} isActive />
+          <NavButton 
+            icon={Home} 
+            label="Início" 
+            to="/" 
+            expanded={expanded} 
+            isActive={isActiveRoute('/')} 
+          />
+          <NavButton 
+            icon={Search} 
+            label="Buscador" 
+            to="/buscador" 
+            expanded={expanded} 
+            isActive={isActiveRoute('/buscador')} 
+          />
+          <NavButton 
+            icon={Heart} 
+            label="Favoritos" 
+            to="/favoritos" 
+            expanded={expanded} 
+            isActive={isActiveRoute('/favoritos')} 
+          />
+          <NavButton 
+            icon={Gavel} 
+            label="Leiloeiros" 
+            to="/leiloeiros" 
+            expanded={expanded} 
+            isActive={isActiveRoute('/leiloeiros')} 
+          />
         </div>
       
         <div className="mt-auto flex flex-col items-center gap-6 w-full">
-          <NavButton icon={Bell} label="Notifications" expanded={expanded} />
-          <NavButton icon={User} label="Profile" expanded={expanded} />
+          <NavButton 
+            icon={User} 
+            label="Perfil" 
+            to="/perfil" 
+            expanded={expanded} 
+            isActive={isActiveRoute('/perfil')} 
+          />
         </div>
       </TooltipProvider>
     </div>
@@ -59,15 +96,17 @@ const Sidebar = () => {
 interface NavButtonProps {
   icon: React.ElementType;
   label: string;
+  to: string;
   expanded: boolean;
   isActive?: boolean;
 }
 
-const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonProps) => {
+const NavButton = ({ icon: Icon, label, to, expanded, isActive = false }: NavButtonProps) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button 
+        <Link 
+          to={to}
           className={cn(
             "w-full flex items-center px-3 py-3 transition-all rounded-md mx-1",
             expanded ? "justify-start" : "justify-center",
@@ -80,7 +119,7 @@ const NavButton = ({ icon: Icon, label, expanded, isActive = false }: NavButtonP
           {expanded && (
             <span className="ml-3 text-sm font-medium truncate">{label}</span>
           )}
-        </button>
+        </Link>
       </TooltipTrigger>
       {!expanded && (
         <TooltipContent side="right" className="bg-brand-800 text-white border-brand-700">
