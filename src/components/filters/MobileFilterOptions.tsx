@@ -48,6 +48,9 @@ const MobileFilterOptions: React.FC = () => {
           <DropdownMenuItem onClick={() => handleFormatChange('Venda Direta')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
             Venda Direta
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFormatChange('Alienação Particular')} className="cursor-pointer hover:bg-purple-50 hover:text-purple-700 text-gray-600">
+            Alienação Particular
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

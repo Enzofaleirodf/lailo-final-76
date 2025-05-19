@@ -87,6 +87,9 @@ const TopFilters: React.FC = () => {
           <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Venda Direta
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Alienação Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Alienação Particular
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

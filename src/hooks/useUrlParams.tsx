@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FilterState } from '@/stores/useFilterStore';
@@ -185,7 +186,7 @@ export const useUrlParams = () => {
     
     if (searchParams.has('format')) {
       const format = searchParams.get('format');
-      if (format === 'Leilão' || format === 'Venda Direta') {
+      if (format === 'Leilão' || format === 'Venda Direta' || format === 'Alienação Particular') {
         newFilters.format = format;
         hasChanges = true;
       }
