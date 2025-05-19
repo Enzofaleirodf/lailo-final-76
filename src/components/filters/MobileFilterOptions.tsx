@@ -3,7 +3,7 @@ import React from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import type { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
-import FilterSectionComponent from '../FilterSectionComponent';
+import FilterSectionComponent from '@/components/FilterSectionComponent';
 
 const MobileFilterOptions: React.FC = () => {
   const { filters, updateFilter, expandedSections, toggleSection } = useFilterStore();
