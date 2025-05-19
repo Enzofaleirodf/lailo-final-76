@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { Home, Search, Heart, Gavel, User } from 'lucide-react';
+import { Home, Search, Heart, Gavel } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import UserAvatar from './UserAvatar';
 
 const MobileNavBar: React.FC = () => {
   const location = useLocation();
@@ -35,12 +36,7 @@ const MobileNavBar: React.FC = () => {
       icon: Gavel,
       label: 'Leiloeiros',
       href: '/leiloeiros'
-    },
-    {
-      icon: User,
-      label: 'Perfil',
-      href: '/perfil'
-    },
+    }
   ];
 
   return (
@@ -62,6 +58,18 @@ const MobileNavBar: React.FC = () => {
           </Link>
         );
       })}
+      
+      <Link
+        to="/perfil"
+        className={cn(
+          "flex flex-col items-center justify-center w-full h-full",
+          isActiveRoute('/perfil') ? "text-brand-600" : "text-gray-500"
+        )}
+        aria-current={isActiveRoute('/perfil') ? "page" : undefined}
+      >
+        <UserAvatar mobile={true} />
+        <span className="text-xs mt-1">Perfil</span>
+      </Link>
     </div>
   );
 };

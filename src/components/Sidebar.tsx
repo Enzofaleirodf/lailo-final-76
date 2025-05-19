@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import { Home, Search, Heart, Gavel, User, Menu } from 'lucide-react';
+import { Home, Search, Heart, Gavel, Menu } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Link, useLocation } from 'react-router-dom';
+import UserAvatar from './UserAvatar';
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(false);
@@ -81,11 +82,12 @@ const Sidebar = () => {
       
         <div className="mt-auto flex flex-col items-center gap-6 w-full">
           <NavButton 
-            icon={User} 
+            icon={UserAvatar} 
             label="Perfil" 
             to="/perfil" 
             expanded={expanded} 
-            isActive={isActiveRoute('/perfil')} 
+            isActive={isActiveRoute('/perfil')}
+            isAvatar={true}
           />
         </div>
       </TooltipProvider>
@@ -99,9 +101,10 @@ interface NavButtonProps {
   to: string;
   expanded: boolean;
   isActive?: boolean;
+  isAvatar?: boolean;
 }
 
-const NavButton = ({ icon: Icon, label, to, expanded, isActive = false }: NavButtonProps) => {
+const NavButton = ({ icon: Icon, label, to, expanded, isActive = false, isAvatar = false }: NavButtonProps) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -115,7 +118,11 @@ const NavButton = ({ icon: Icon, label, to, expanded, isActive = false }: NavBut
               : "text-brand-200 hover:text-white hover:bg-brand-700/50"
           )}
         >
-          <Icon size={20} />
+          {isAvatar ? (
+            <UserAvatar />
+          ) : (
+            <Icon size={20} />
+          )}
           {expanded && (
             <span className="ml-3 text-sm font-medium truncate">{label}</span>
           )}
