@@ -25,6 +25,8 @@ export const useUrlParams = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   // Flag to indicate if this is the initial load
   const isInitialLoadRef = useRef(true);
+  // Flag to prevent scroll restoration during URL updates
+  const isUpdatingUrlRef = useRef(false);
   
   // Handle the explicit filter application event (for desktop)
   useEffect(() => {
@@ -32,13 +34,20 @@ export const useUrlParams = () => {
       const customEvent = e as CustomEvent;
       if (customEvent.detail?.scrollPosition !== undefined) {
         scrollPositionRef.current = customEvent.detail.scrollPosition;
+      } else {
+        // Store current scroll position before applying filters
+        scrollPositionRef.current = window.scrollY;
       }
+      
       shouldUpdateUrlRef.current = true;
       
       // Force immediate URL update without debounce for Apply button click
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
+      
+      // Set flag to indicate URL is being updated
+      isUpdatingUrlRef.current = true;
       updateUrl();
     };
     
@@ -153,7 +162,9 @@ export const useUrlParams = () => {
           // Clear the scroll position after restoring
           scrollPositionRef.current = 0;
         }
-      }, 0);
+        // Reset flag after completed URL update and scroll restoration
+        isUpdatingUrlRef.current = false;
+      }, 10);
     };
     
     window.addEventListener('filters:applied', handleFiltersApplied);
@@ -165,18 +176,29 @@ export const useUrlParams = () => {
   
   // Update URL when filters or sort option changes, but only on mobile or when explicitly triggered
   useEffect(() => {
+    // Do not automatically update URL in desktop mode - only update when the apply button is clicked
+    // Skip updates during initial load or if we're already processing an update
+    if (isUpdatingUrlRef.current || (!isMobile && !shouldUpdateUrlRef.current && !isInitialLoadRef.current)) {
+      return;
+    }
+    
     // Only update URL if:
     // 1. It's mobile (automatic updates)
     // 2. shouldUpdateUrlRef.current is true (from apply button)
     // 3. It's the initial load (to sync filters from URL)
     if (isMobile || shouldUpdateUrlRef.current || isInitialLoadRef.current) {
       // Store current scroll position before any URL update
-      scrollPositionRef.current = window.scrollY;
+      if (scrollPositionRef.current === 0) {
+        scrollPositionRef.current = window.scrollY;
+      }
       
       // Clear any existing timer
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
+      
+      // Set flag to indicate URL is being updated
+      isUpdatingUrlRef.current = true;
       
       // Set a new timer for debounced URL update (mobile only)
       timerRef.current = setTimeout(() => {
@@ -275,9 +297,9 @@ export const useUrlParams = () => {
         // Always use {replace: true} to prevent adding to history stack
         setSearchParams(params, { replace: true });
         
-        // After URL update, restore scroll position on mobile
-        if (isMobile && scrollPositionRef.current > 0) {
-          setTimeout(() => {
+        // After URL update, restore scroll position
+        setTimeout(() => {
+          if (scrollPositionRef.current > 0) {
             window.scrollTo({
               top: scrollPositionRef.current,
               behavior: 'instant'
@@ -285,11 +307,13 @@ export const useUrlParams = () => {
             
             // Clear the scroll position after restoring
             scrollPositionRef.current = 0;
-          }, 0);
-        }
-        
-        // Reset flag after initial load
-        isInitialLoadRef.current = false;
+          }
+          
+          // Reset flags
+          shouldUpdateUrlRef.current = false;
+          isInitialLoadRef.current = false;
+          isUpdatingUrlRef.current = false;
+        }, 10);
       }, isMobile ? 300 : 0); // 300ms delay for mobile, no delay for explicit apply
     }
     

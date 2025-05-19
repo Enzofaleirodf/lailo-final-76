@@ -38,7 +38,8 @@ const TopFilters: React.FC = () => {
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               filters.contentType === 'property' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-                : "text-gray-700 hover:bg-gray-50"
+                : "text-gray-700 hover:bg-gray-50",
+              "focus:outline-none focus:ring-2 focus:ring-accent2-500"
             )}
             aria-label="Filtrar imóveis"
             aria-pressed={filters.contentType === 'property'}
@@ -54,7 +55,8 @@ const TopFilters: React.FC = () => {
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
               filters.contentType === 'vehicle' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-                : "text-gray-700 hover:bg-gray-50"
+                : "text-gray-700 hover:bg-gray-50",
+              "focus:outline-none focus:ring-2 focus:ring-accent2-500"
             )}
             aria-label="Filtrar veículos"
             aria-pressed={filters.contentType === 'vehicle'}
@@ -70,7 +72,7 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent2-500"
             aria-label="Selecionar formato"
             style={{ height: '40px' }}  
           >
@@ -102,7 +104,7 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent2-500"
             aria-label="Selecionar origem"
             style={{ height: '40px' }}  
           >
@@ -137,7 +139,7 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent2-500"
             aria-label="Selecionar etapa"
             style={{ height: '40px' }}
           >

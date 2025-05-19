@@ -29,7 +29,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       <select
         id={id}
         aria-label={ariaLabel}
-        className={`w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white ${isDefaultValue ? 'text-gray-700' : 'text-gray-700'} ${className}`}
+        className={`w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white 
+          ${isDefaultValue ? 'text-gray-700' : 'text-gray-700'} 
+          focus:outline-none focus:ring-2 focus:ring-accent2-500 focus:border-accent2-500
+          ${className}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         style={{ height: '40px' }}

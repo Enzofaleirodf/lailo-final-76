@@ -29,7 +29,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   };
   
   return (
-    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-accent2-500">
       {/* Title section - only toggleable on mobile */}
       <div 
         className="w-full flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-3"
@@ -40,7 +40,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
         {isMobile && (
           <button 
             onClick={handleToggle}
-            className="cursor-pointer"
+            className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent2-500 rounded-full p-1"
             aria-expanded={isExpanded}
             aria-controls={id}
           >
