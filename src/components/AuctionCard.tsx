@@ -57,7 +57,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         {/* Content (right side) */}
         <div className="flex-1 flex flex-col p-0">
           {/* Top row with improved spacing and alignment */}
-          <div className="flex justify-between items-start gap-2 mb-0">
+          <div className="mb-0 pb-0 p-0 gap-0\n">
             <h3 className="leading-none">
               {getVehicleTitle()}
             </h3>
