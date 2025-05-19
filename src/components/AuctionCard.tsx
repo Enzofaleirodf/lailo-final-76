@@ -87,10 +87,10 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
 
         {/* Conteúdo (lado direito) */}
         <div className="flex-1 pl-3 flex flex-col">
-          {/* Linha 1: Marca + Modelo */}
+          {/* Linha 1: Modelo - removida duplicação da marca */}
           <div className="flex justify-between items-center">
-            <div className={`font-semibold text-black line-clamp-1 ${!isMobile ? 'text-[20px]' : 'text-[16px]'}`}>
-              {auction.vehicleInfo.brand} {auction.title}
+            <div className={`font-semibold text-black line-clamp-1 ${!isMobile ? 'text-[22px]' : 'text-[16px]'}`}>
+              {auction.title}
             </div>
             <button onClick={() => setFavorited(!favorited)} className="p-0.5">
               <Heart size={!isMobile ? 20 : 16} className={favorited ? "fill-red-500 text-red-500" : "text-[#6E6E73]"} />
@@ -113,7 +113,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           
           {/* Linha 3: Preço + Badge */}
           <div className="flex items-center gap-1.5 mt-3">
-            <span className={`font-bold text-black ${!isMobile ? 'text-[20px]' : 'text-[16px]'}`}>
+            <span className={`font-bold text-black ${!isMobile ? 'text-[22px]' : 'text-[16px]'}`}>
               {formatCurrency(auction.currentBid)}
             </span>
             {discount && (

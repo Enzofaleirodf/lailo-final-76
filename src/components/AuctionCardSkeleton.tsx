@@ -22,10 +22,10 @@ const AuctionCardSkeleton: React.FC = () => {
         
         {/* Right side - content */}
         <div className="flex-1 pl-3 flex flex-col">
-          <Skeleton className={`${!isMobile ? 'h-[20px]' : 'h-5'} w-4/5 mb-2`} />
+          <Skeleton className={`${!isMobile ? 'h-[22px]' : 'h-5'} w-4/5 mb-2`} />
           <Skeleton className={`${!isMobile ? 'h-[17px]' : 'h-4'} w-2/3 mb-3`} />
           
-          <Skeleton className={`${!isMobile ? 'h-[20px]' : 'h-5'} w-24 mt-2`} />
+          <Skeleton className={`${!isMobile ? 'h-[22px]' : 'h-5'} w-24 mt-2`} />
           
           <div className="border-t border-[#E5E5EA] mt-4 mb-4"></div>
           
