@@ -6,36 +6,35 @@ import { motion } from 'framer-motion';
 
 const AuctionCardSkeleton: React.FC = () => {
   return (
-    <motion.div>
-      <Card className="overflow-hidden border border-gray-200">
-        <div className="flex flex-col sm:flex-row">
-          {/* Left side - image */}
-          <div className="w-full sm:w-2/5 lg:w-1/3">
-            <div className="aspect-video sm:aspect-square">
-              <Skeleton className="w-full h-full" />
-            </div>
-          </div>
-          
-          {/* Right side - content */}
-          <div className="flex-1 p-4 flex flex-col">
-            <Skeleton className="h-6 w-4/5 mb-2" />
-            <Skeleton className="h-4 w-2/3 mb-2" />
-            <Skeleton className="h-4 w-full mb-3" />
-            
-            <div className="flex justify-between items-center mt-auto mb-3">
-              <Skeleton className="h-8 w-24" />
-              <div className="flex gap-2">
-                <Skeleton className="h-6 w-16" />
-                <Skeleton className="h-6 w-24" />
-              </div>
-            </div>
-            
-            <div className="pt-3 mt-3 border-t border-gray-100">
-              <Skeleton className="h-4 w-16" />
+    <motion.div className="mb-2">
+      <div className="flex p-3 rounded-xl bg-white border border-[#E5E5E5] shadow-sm">
+        {/* Left side - image */}
+        <div className="relative w-[30%] min-w-[96px]">
+          <div className="relative h-full w-full flex">
+            <div className="flex-1 relative overflow-hidden rounded-lg">
+              <Skeleton className="h-full w-full" style={{ aspectRatio: '4/3' }} />
             </div>
           </div>
         </div>
-      </Card>
+        
+        {/* Right side - content */}
+        <div className="flex-1 pl-3 flex flex-col">
+          <Skeleton className="h-5 w-4/5 mb-2" />
+          <Skeleton className="h-4 w-2/3 mb-3" />
+          
+          <Skeleton className="h-5 w-24 mt-2" />
+          
+          <div className="border-t border-[#E5E5EA] mt-4 mb-4"></div>
+          
+          <div className="flex justify-between items-center mt-auto">
+            <div className="flex gap-2">
+              <Skeleton className="h-5 w-16" />
+              <Skeleton className="h-5 w-16" />
+            </div>
+            <Skeleton className="h-5 w-24" />
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };

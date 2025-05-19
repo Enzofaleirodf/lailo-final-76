@@ -50,30 +50,36 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       <div className="flex p-3 rounded-xl bg-white border border-[#E5E5E5] shadow-sm">
         {/* Imagem (lado esquerdo) */}
         <div className="relative w-[30%] min-w-[96px]">
-          <div className="relative h-full w-full">
-            {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
-            <img
-              src={auction.imageUrl}
-              alt={auction.title}
-              className="h-full w-full object-cover rounded-lg"
-              loading="lazy"
-              onLoad={handleImageLoad}
-            />
-            {/* Degradê sobre a imagem */}
-            <div
-              className="absolute inset-0 rounded-lg"
-              style={{
-                background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 50%)",
-                pointerEvents: "none",
-              }}
-            />
-            
-            {/* Badge de desconto, se houver */}
-            {discount && (
-              <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
-                {discount}% OFF
-              </Badge>
-            )}
+          <div className="relative h-full w-full flex">
+            <div className="flex-1 relative overflow-hidden rounded-lg">
+              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
+              <img
+                src={auction.imageUrl}
+                alt={auction.title}
+                className="h-full w-full object-cover rounded-lg"
+                loading="lazy"
+                onLoad={handleImageLoad}
+                style={{
+                  aspectRatio: '4/3',
+                  objectFit: 'cover'
+                }}
+              />
+              {/* Degradê sobre a imagem */}
+              <div
+                className="absolute inset-0 rounded-lg"
+                style={{
+                  background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 50%)",
+                  pointerEvents: "none",
+                }}
+              />
+              
+              {/* Badge de desconto, se houver */}
+              {discount && (
+                <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
+                  {discount}% OFF
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
 
