@@ -102,7 +102,7 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
     }
     
     // Format filter
-    if (filters.format !== auction.format) {
+    if (filters.format !== 'Todos' && filters.format !== auction.format) {
       return false;
     }
     
@@ -111,7 +111,8 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
       return false;
     }
     
-    // Place filter
+    // Place filter 
+    // Fix: Make sure the type comparison aligns with the expected values
     if (filters.place !== 'Todas' && filters.place !== auction.place) {
       return false;
     }

@@ -5,6 +5,7 @@ import { FilterState } from '@/stores/useFilterStore';
 import { SortOption } from '@/stores/useSortStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
+import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 
 /**
  * Custom hook to sync filter and sort state with URL parameters
@@ -186,26 +187,26 @@ export const useUrlParams = () => {
     
     if (searchParams.has('format')) {
       const format = searchParams.get('format');
-      if (format === 'Todos' || format === 'Alienação Particular' || format === 'Leilão' || format === 'Venda Direta') {
-        newFilters.format = format;
+      if (format && (format === 'Todos' || format === 'Alienação Particular' || format === 'Leilão' || format === 'Venda Direta')) {
+        newFilters.format = format as FilterFormat;
         hasChanges = true;
       }
     }
     
     if (searchParams.has('origin')) {
       const origin = searchParams.get('origin');
-      if (origin === 'Todas' || origin === 'Extrajudicial' || origin === 'Judicial' || 
-          origin === 'Particular' || origin === 'Público') {
-        newFilters.origin = origin;
+      if (origin && (origin === 'Todas' || origin === 'Extrajudicial' || origin === 'Judicial' || 
+          origin === 'Particular' || origin === 'Público')) {
+        newFilters.origin = origin as FilterOrigin;
         hasChanges = true;
       }
     }
     
     if (searchParams.has('place')) {
       const place = searchParams.get('place');
-      if (place === 'Todas' || place === 'Praça única' || place === '1ª Praça' || 
-          place === '2ª Praça' || place === '3ª Praça') {
-        newFilters.place = place;
+      if (place && (place === 'Todas' || place === 'Praça única' || place === '1ª Praça' || 
+          place === '2ª Praça' || place === '3ª Praça')) {
+        newFilters.place = place as FilterPlace;
         hasChanges = true;
       }
     }
