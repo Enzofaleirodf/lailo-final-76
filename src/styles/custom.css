@@ -295,6 +295,9 @@ body.modal-open .mobile-nav-bar {
 [vaul-drawer-content] {
   z-index: var(--z-drawer) !important;
   max-height: 90vh !important;
+  overflow-y: hidden !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
 }
 
 [vaul-drawer-overlay] {

@@ -53,8 +53,9 @@ const DrawerContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     footerContent?: React.ReactNode;
     isOpen?: boolean; // Add isOpen prop to use instead of context
+    showHandle?: boolean; // Add prop to control handle visibility
   }
->(({ className, children, footerContent, isOpen = false, ...props }, ref) => {
+>(({ className, children, footerContent, isOpen = false, showHandle = true, ...props }, ref) => {
   // Use isOpen prop directly instead of accessing from context
   useModalBodyClass(isOpen);
   
@@ -72,7 +73,9 @@ const DrawerContent = React.forwardRef<
         aria-describedby="drawer-description"
         {...props}
       >
-        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+        {showHandle && (
+          <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+        )}
         
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto p-0">
