@@ -25,13 +25,15 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
   
   // Filter by content type
   if (filters.contentType === 'property') {
-    filteredAuctions = filteredAuctions.filter(auction => auction.vehicleInfo?.type !== 'car' && 
-                                                         auction.vehicleInfo?.type !== 'motorcycle' && 
-                                                         auction.vehicleInfo?.type !== 'truck');
+    filteredAuctions = filteredAuctions.filter(auction => 
+      !(auction.vehicleInfo?.type === 'car' || 
+        auction.vehicleInfo?.type === 'motorcycle' || 
+        auction.vehicleInfo?.type === 'truck'));
   } else if (filters.contentType === 'vehicle') {
-    filteredAuctions = filteredAuctions.filter(auction => auction.vehicleInfo?.type === 'car' || 
-                                                         auction.vehicleInfo?.type === 'motorcycle' || 
-                                                         auction.vehicleInfo?.type === 'truck');
+    filteredAuctions = filteredAuctions.filter(auction => 
+      auction.vehicleInfo?.type === 'car' || 
+      auction.vehicleInfo?.type === 'motorcycle' || 
+      auction.vehicleInfo?.type === 'truck');
   }
   
   // Filter by location
