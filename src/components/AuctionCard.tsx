@@ -89,22 +89,22 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         <div className="flex-1 pl-3 flex flex-col">
           {/* Linha 1: Marca + Modelo */}
           <div className="flex justify-between items-center">
-            <div className={`font-semibold text-black line-clamp-1 ${!isMobile ? 'text-[18px]' : 'text-[16px]'}`}>
+            <div className={`font-semibold text-black line-clamp-1 ${!isMobile ? 'text-[20px]' : 'text-[16px]'}`}>
               {auction.vehicleInfo.brand} {auction.title}
             </div>
             <button onClick={() => setFavorited(!favorited)} className="p-0.5">
-              <Heart size={!isMobile ? 18 : 16} className={favorited ? "fill-red-500 text-red-500" : "text-[#6E6E73]"} />
+              <Heart size={!isMobile ? 20 : 16} className={favorited ? "fill-red-500 text-red-500" : "text-[#6E6E73]"} />
             </button>
           </div>
           
           {/* Linha 2: Cor, Ano e Cidade/Estado */}
-          <div className={`flex items-center mt-1 text-gray-700 ${!isMobile ? 'text-[15px]' : 'text-[13px]'}`}>
+          <div className={`flex items-center mt-1 text-gray-700 ${!isMobile ? 'text-[17px]' : 'text-[13px]'}`}>
             <div className="flex items-center mr-2">
-              <SprayCan size={!isMobile ? 12 : 10} className="mr-0.5 text-gray-500" />
+              <SprayCan size={!isMobile ? 14 : 10} className="mr-0.5 text-gray-500" />
               {auction.vehicleInfo.color}
             </div>
             <div className="flex items-center">
-              <Calendar size={!isMobile ? 12 : 10} className="mr-0.5 text-gray-500" />
+              <Calendar size={!isMobile ? 14 : 10} className="mr-0.5 text-gray-500" />
               {auction.vehicleInfo.year}
             </div>
             <div className="mx-2 h-3 border-r border-gray-300"></div>
@@ -113,11 +113,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           
           {/* Linha 3: Preço + Badge */}
           <div className="flex items-center gap-1.5 mt-3">
-            <span className={`font-bold text-black ${!isMobile ? 'text-[18px]' : 'text-[16px]'}`}>
+            <span className={`font-bold text-black ${!isMobile ? 'text-[20px]' : 'text-[16px]'}`}>
               {formatCurrency(auction.currentBid)}
             </span>
             {discount && (
-              <span className={`bg-teal-600 text-white px-2 py-0.5 rounded-md ${!isMobile ? 'text-[13px]' : 'text-[11px]'}`}>
+              <span className={`bg-teal-600 text-white px-2 py-0.5 rounded-md ${!isMobile ? 'text-[15px]' : 'text-[11px]'}`}>
                 {discount}% OFF
               </span>
             )}
@@ -127,7 +127,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           <div className="border-t border-[#E5E5EA] mt-4 mb-4"></div>
           
           {/* Linha 4: Origem + Etapa e Data + Hora */}
-          <div className={`flex justify-between items-center ${!isMobile ? 'text-[14px]' : 'text-[12px]'}`}>
+          <div className={`flex justify-between items-center ${!isMobile ? 'text-[16px]' : 'text-[12px]'}`}>
             <div className="flex gap-1.5">
               <span className="border border-gray-300 rounded-md px-1.5 py-0.5 text-gray-600">
                 {auction.origin}
@@ -137,7 +137,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               </span>
             </div>
             <div className="flex items-center bg-gray-100 rounded-md px-1.5 py-0.5 text-gray-700 font-medium">
-              <Calendar size={!isMobile ? 12 : 10} className="mr-1 text-gray-500" />
+              <Calendar size={!isMobile ? 14 : 10} className="mr-1 text-gray-500" />
               {formatAuctionDate(auction.endDate)} às {auction.endDate.getHours()}h
             </div>
           </div>
