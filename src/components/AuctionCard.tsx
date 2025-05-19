@@ -67,15 +67,15 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       className="mb-3"
     >
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-        {/* Image (left side) with consistent margins and border radius */}
-        <div className="relative w-[35%] min-w-[130px] py-3 pl-3 rounded-md flex">
-          <div className="relative h-full w-full rounded-[4px] overflow-hidden flex">
-            <AspectRatio ratio={4/3} className="h-full w-full">
+        {/* Image (left side) - adjusted to match content height */}
+        <div className="w-[35%] min-w-[130px] p-3">
+          <div className="relative rounded-[4px] overflow-hidden h-auto">
+            <AspectRatio ratio={4/3} className="w-full">
               {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-[4px]" />}
               <img
                 src={auction.imageUrl}
                 alt={getVehicleTitle()}
-                className="h-full w-full object-cover rounded-[4px]"
+                className="w-full object-cover rounded-[4px]"
                 loading="lazy"
                 onLoad={handleImageLoad}
               />
