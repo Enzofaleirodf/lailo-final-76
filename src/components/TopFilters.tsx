@@ -74,7 +74,9 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar formato"
             style={{ height: '40px' }}  
           >
-            <span className="text-sm font-medium text-gray-700">Formato: <span className="text-brand-700">{filters.format}</span></span>
+            <span className="text-sm font-medium text-gray-700">
+              <span className="text-gray-500">Formato:</span> <span className="text-brand-700">{filters.format}</span>
+            </span>
             <ChevronDown size={16} className="text-brand-500" />
           </button>
         </DropdownMenuTrigger>
@@ -96,7 +98,9 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar origem"
             style={{ height: '40px' }}  
           >
-            <span className="text-sm font-medium text-gray-700">Origem: <span className="text-brand-700">{filters.origin}</span></span>
+            <span className="text-sm font-medium text-gray-700">
+              <span className="text-gray-500">Origem:</span> <span className="text-brand-700">{filters.origin}</span>
+            </span>
             <ChevronDown size={16} className="text-brand-500" />
           </button>
         </DropdownMenuTrigger>
@@ -121,7 +125,9 @@ const TopFilters: React.FC = () => {
             aria-label="Selecionar etapa"
             style={{ height: '40px' }}
           >
-            <span className="text-sm font-medium text-gray-700">Etapa: <span className="text-brand-700">{filters.place}</span></span>
+            <span className="text-sm font-medium text-gray-700">
+              <span className="text-gray-500">Etapa:</span> <span className="text-brand-700">{filters.place}</span>
+            </span>
             <ChevronDown size={16} className="text-brand-500" />
           </button>
         </DropdownMenuTrigger>
