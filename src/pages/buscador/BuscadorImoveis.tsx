@@ -39,8 +39,8 @@ const BuscadorImoveis = () => {
         }
         <main className="flex-1 min-h-[80vh] pb-20 px-[16px]">
           {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
-          <ResultHeader contentType="property" />
-          <AuctionList contentType="property" />
+          <ResultHeader />
+          <AuctionList />
         </main>
       </div>
       

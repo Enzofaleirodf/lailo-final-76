@@ -39,8 +39,8 @@ const BuscadorVeiculos = () => {
         }
         <main className="flex-1 min-h-[80vh] pb-20 px-[16px]">
           {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
-          <ResultHeader contentType="vehicle" />
-          <AuctionList contentType="vehicle" />
+          <ResultHeader />
+          <AuctionList />
         </main>
       </div>
       
