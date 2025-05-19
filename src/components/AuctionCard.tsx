@@ -55,10 +55,10 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   }} className="mb-3">
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
         {/* Content (right side) */}
-        <div className="flex-1 flex flex-col p-0">
+        <div className="flex-1 flex flex-col p-4">
           {/* Top row with improved spacing and alignment */}
-          <div className="mb-0 pb-0 p-0 gap-0\n">
-            <h3 className="leading-none">
+          <div className="flex justify-between items-start gap-2 mb-0">
+            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${!isMobile ? 'text-lg leading-tight' : 'text-base leading-tight'}`}>
               {getVehicleTitle()}
             </h3>
             <button onClick={() => setFavorited(!favorited)} className={`flex-shrink-0 p-1.5 -mr-1 rounded-full transition-all ${favorited ? 'bg-accent2-50 text-accent2-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-500'}`} aria-label={favorited ? "Remove from favorites" : "Add to favorites"}>
