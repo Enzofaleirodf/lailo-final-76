@@ -4,6 +4,7 @@ import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 
 const locationOptions = [
+  { value: 'todos', label: 'Todos os locais' },
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' }
@@ -20,7 +21,7 @@ const LocationFilter: React.FC = () => {
     <FilterDropdown
       id="location-filter"
       aria-label="Selecione a localização"
-      value={filters.location}
+      value={filters.location || 'todos'}
       onChange={handleLocationChange}
       options={locationOptions}
       placeholder="Selecione"

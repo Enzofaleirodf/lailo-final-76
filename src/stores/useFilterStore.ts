@@ -23,11 +23,11 @@ export interface FilterState {
 // Default filter values
 export const DEFAULT_FILTERS: FilterState = {
   contentType: 'vehicle',
-  location: '',
+  location: 'todos',
   vehicleTypes: [],
   brand: 'todas',
   model: 'todos',
-  color: '',
+  color: 'todas',
   year: { min: '', max: '' },
   price: {
     value: [30],

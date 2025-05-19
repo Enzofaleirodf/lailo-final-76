@@ -30,7 +30,7 @@ export const useUrlParams = () => {
     }
     
     // Add filters to URL
-    if (filters.location) {
+    if (filters.location && filters.location !== 'todos') {
       params.set('location', filters.location);
     } else {
       params.delete('location');
@@ -54,7 +54,7 @@ export const useUrlParams = () => {
       params.delete('model');
     }
     
-    if (filters.color) {
+    if (filters.color && filters.color !== 'todas') {
       params.set('color', filters.color);
     } else {
       params.delete('color');
@@ -114,11 +114,11 @@ export const useUrlParams = () => {
   
   // Helper to check if filter has changed
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
-    if ((params.get('location') || '') !== currentFilters.location) return true;
+    if ((params.get('location') || 'todos') !== currentFilters.location) return true;
     if ((params.get('types')?.split(',') || []).join(',') !== currentFilters.vehicleTypes.join(',')) return true;
     if ((params.get('brand') || 'todas') !== currentFilters.brand) return true;
     if ((params.get('model') || 'todos') !== currentFilters.model) return true;
-    if ((params.get('color') || '') !== currentFilters.color) return true;
+    if ((params.get('color') || 'todas') !== currentFilters.color) return true;
     if ((params.get('yearMin') || '') !== currentFilters.year.min) return true;
     if ((params.get('yearMax') || '') !== currentFilters.year.max) return true;
     if ((params.get('priceMin') || '') !== currentFilters.price.range.min) return true;

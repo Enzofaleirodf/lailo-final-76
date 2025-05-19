@@ -21,8 +21,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   id,
   "aria-label": ariaLabel
 }) => {
-  // Check if value is empty or equals default values like "todas" or "todos"
-  const isDefaultValue = !value || value === "todas" || value === "todos";
+  // Check if value is empty or equals default values like "todas", "todos"
+  const isDefaultValue = !value || value === "todas" || value === "todos" || value === "";
 
   return (
     <div className="relative">

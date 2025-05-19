@@ -4,6 +4,7 @@ import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 
 const colorOptions = [
+  { value: 'todas', label: 'Todas as cores' },
   { value: 'preto', label: 'Preto' },
   { value: 'branco', label: 'Branco' },
   { value: 'prata', label: 'Prata' },
@@ -22,7 +23,7 @@ const ColorFilter: React.FC = () => {
     <FilterDropdown
       id="color-filter"
       aria-label="Selecione a cor"
-      value={filters.color}
+      value={filters.color || 'todas'}
       onChange={handleColorChange}
       options={colorOptions}
       placeholder="Selecione"
