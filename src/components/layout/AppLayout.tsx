@@ -26,7 +26,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       <Sidebar />
       <div className="flex-1 pl-0 sm:pl-16">
         <div className="max-w-7xl mx-auto sm:px-6 py-[24px] px-0">
-          <main className="pb-20">
+          <main className={isMobile ? "pb-28" : "pb-20"}>
             {children}
           </main>
         </div>
