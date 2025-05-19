@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FilterDropdownProps {
   value: string;
@@ -25,21 +26,23 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const isDefaultValue = value === "Todas" || value === "Todos";
 
   return (
-    <div className="relative isolate">
+    <div className="relative isolate filter-dropdown-container">
       <select
         id={id}
         aria-label={ariaLabel}
-        className={`w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white 
-          ${isDefaultValue ? 'text-gray-700' : 'text-gray-700'} 
-          focus:outline-none focus:ring-2 focus:ring-accent2-500 focus:border-accent2-500
-          ${className}`}
+        className={cn(
+          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white",
+          isDefaultValue ? "text-gray-700" : "text-gray-700",
+          "filter-dropdown-select focus-visible:ring-2 focus-visible:ring-accent2-500 focus-visible:border-accent2-500",
+          className
+        )}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         style={{ height: '40px' }}
       >
         {placeholder && <option value="" disabled className="text-gray-500 font-normal">{placeholder}</option>}
         {options.map((option) => (
-          <option key={option.value} value={option.value} className="text-gray-700 font-normal">
+          <option key={option.value} value={option.value} className="text-gray-500 font-normal">
             {option.label}
           </option>
         ))}

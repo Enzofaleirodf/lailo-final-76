@@ -17,10 +17,10 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const { filters } = useFilterStore();
   const scrollPositionRef = useRef(0);
   
-  // For desktop, implement automatic filter application
+  // For desktop, implement automatic filter application with fixed scroll position
   useEffect(() => {
     if (!isMobile) {
-      // Store current scroll position before dispatching the event
+      // Capture scroll position before any changes
       scrollPositionRef.current = window.scrollY;
       
       // Create and dispatch the filters:applied event when filters change
@@ -67,7 +67,7 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   return (
     <div 
       ref={wrapperRef} 
-      className="filter-wrapper"
+      className="filter-wrapper no-scroll-jump"
       data-filter-interaction-zone="true"
     >
       {children}

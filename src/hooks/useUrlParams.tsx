@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FilterState } from '@/stores/useFilterStore';
 import { SortOption } from '@/stores/useSortStore';
@@ -56,6 +56,11 @@ export const useUrlParams = () => {
       
       // Preserve current page if it exists
       const currentPage = params.get('page');
+      
+      // Capture scroll position again to ensure accuracy
+      if (scrollPositionRef.current === 0) {
+        scrollPositionRef.current = window.scrollY;
+      }
       
       // Add sort option to URL
       if (sortOption !== 'newest') {
@@ -144,14 +149,13 @@ export const useUrlParams = () => {
         params.set('page', '1');
       }
       
+      // Block scroll events temporarily
+      document.documentElement.classList.add('no-scroll-jump');
+      
       // Always use {replace: true} to prevent adding to history stack
       setSearchParams(params, { replace: true });
       
-      // Reset flags after URL update
-      shouldUpdateUrlRef.current = false;
-      
-      // IMPORTANTE: Use um timeout mais longo para restaurar a posição de rolagem
-      // e garantir que o navegador tenha tempo suficiente de processar as mudanças de URL
+      // Restore scroll position with a longer timeout to ensure URL change completes
       setTimeout(() => {
         if (scrollPositionRef.current > 0) {
           window.scrollTo({
@@ -159,9 +163,14 @@ export const useUrlParams = () => {
             behavior: 'instant'
           });
         }
-        // Reset flag after completed URL update and scroll restoration
+        
+        // Reset flags after restoring scroll
+        shouldUpdateUrlRef.current = false;
         isUpdatingUrlRef.current = false;
-      }, 50);
+        
+        // Re-enable scroll events
+        document.documentElement.classList.remove('no-scroll-jump');
+      }, 100); // Longer timeout to ensure URL processing completes
     };
     
     window.addEventListener('filters:applied', handleFiltersApplied);
@@ -201,8 +210,14 @@ export const useUrlParams = () => {
       timerRef.current = setTimeout(() => {
         const params = new URLSearchParams(searchParams);
         
+        // Store scroll position for restoration
+        const savedScrollPos = scrollPositionRef.current;
+        
         // Preserve current page if it exists
         const currentPage = params.get('page');
+        
+        // Block scroll events temporarily
+        document.documentElement.classList.add('no-scroll-jump');
         
         // Add sort option to URL
         if (sortOption !== 'newest') {
@@ -294,20 +309,24 @@ export const useUrlParams = () => {
         // Always use {replace: true} to prevent adding to history stack
         setSearchParams(params, { replace: true });
         
-        // IMPORTANTE: Use um timeout mais longo para restaurar a posição de rolagem
+        // Restore scroll position with a longer timeout
         setTimeout(() => {
-          if (scrollPositionRef.current > 0) {
+          // Only restore if we stored a valid position
+          if (savedScrollPos > 0) {
             window.scrollTo({
-              top: scrollPositionRef.current,
+              top: savedScrollPos,
               behavior: 'instant'
             });
           }
           
-          // Reset flags
+          // Reset flags after URL update completed
           shouldUpdateUrlRef.current = false;
           isInitialLoadRef.current = false;
           isUpdatingUrlRef.current = false;
-        }, 50);
+          
+          // Re-enable scroll events
+          document.documentElement.classList.remove('no-scroll-jump');
+        }, 100); // Longer timeout to ensure URL change completes
       }, isMobile ? 300 : 0); // 300ms delay for mobile, no delay for explicit apply
     }
     
