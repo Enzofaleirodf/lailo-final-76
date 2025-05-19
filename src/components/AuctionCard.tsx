@@ -50,14 +50,14 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     >
       <div className="flex p-3 rounded-xl bg-white border border-[#E5E5E5] shadow-sm">
         {/* Imagem (lado esquerdo) */}
-        <div className="relative w-[30%] min-w-[96px]">
-          <div className="relative h-full w-full">
-            <AspectRatio ratio={3/4} className="h-full">
+        <div className="relative flex-1 min-w-[96px]">
+          <div className="relative h-full w-full flex-1">
+            <AspectRatio ratio={4/3} className="h-full flex-1">
               {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
               <img
                 src={auction.imageUrl}
                 alt={auction.title}
-                className="h-full w-full object-cover rounded-lg"
+                className="h-full w-full object-cover rounded-lg flex-1"
                 loading="lazy"
                 onLoad={handleImageLoad}
               />

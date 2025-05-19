@@ -10,9 +10,9 @@ const AuctionCardSkeleton: React.FC = () => {
     <motion.div>
       <Card className="flex p-3 overflow-hidden border border-gray-200">
         {/* Left side - image */}
-        <div className="w-[30%] min-w-[96px]">
-          <AspectRatio ratio={3/4} className="h-full">
-            <Skeleton className="w-full h-full rounded-lg" />
+        <div className="flex-1 min-w-[96px]">
+          <AspectRatio ratio={4/3} className="h-full flex-1">
+            <Skeleton className="w-full h-full rounded-lg flex-1" />
           </AspectRatio>
         </div>
         
