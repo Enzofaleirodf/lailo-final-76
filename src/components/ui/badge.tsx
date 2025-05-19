@@ -18,8 +18,6 @@ const badgeVariants = cva(
         outline: "text-foreground",
         highlight:
           "border-transparent bg-accent2-500 text-black font-semibold hover:bg-accent2-600",
-        hot:
-          "border-transparent bg-accent2-500 text-black font-semibold hover:bg-accent2-600",
         new:
           "border-transparent bg-accent2-500 text-black font-semibold hover:bg-accent2-600", 
         discount:

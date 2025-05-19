@@ -51,11 +51,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     return diffHours < 24;
   };
 
-  // Determine if the auction is "hot" (lots of bids)
-  const isHot = () => {
-    return auction.bidCount && auction.bidCount > 10;
-  };
-
   return (
     <motion.div 
       whileHover={{
@@ -94,9 +89,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             <div className="absolute top-3 left-3 flex gap-1.5">
               {isNew() && (
                 <Badge variant="new" className="shadow-sm">Novo</Badge>
-              )}
-              {isHot() && (
-                <Badge variant="hot" className="shadow-sm">Hot</Badge>
               )}
             </div>
             
@@ -180,7 +172,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
                 {auction.origin}
               </Badge>
-              <Badge variant="outline" className={`bg-gray-50 font-normal border-gray-200 text-xs px-2 py-0.5 ${auction.place.includes('1ª') ? 'border-accent2-300 bg-accent2-50 text-accent2-800' : 'text-gray-700'}`}>
+              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
                 {auction.place}
               </Badge>
             </div>
