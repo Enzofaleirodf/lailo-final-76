@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FilterState } from '@/stores/useFilterStore';
 import { SortOption } from '@/stores/useSortStore';
@@ -17,108 +17,136 @@ export const useUrlParams = () => {
   const { sortOption, setSortOption } = useSortStore();
   const isMobile = useIsMobile();
   
-  // Update URL when filters or sort option changes
+  // Ref to store current scroll position
+  const scrollPositionRef = useRef(0);
+  // Debounce timer ref
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Update URL when filters or sort option changes with debounce
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
+    // Store current scroll position before any URL update
+    scrollPositionRef.current = window.scrollY;
     
-    // Preserve current page if it exists
-    const currentPage = params.get('page');
-    
-    // Add sort option to URL
-    if (sortOption !== 'newest') {
-      params.set('sort', sortOption);
-    } else {
-      params.delete('sort');
+    // Clear any existing timer
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
     }
     
-    // Add filters to URL
-    if (filters.location && filters.location !== 'todos') {
-      params.set('location', filters.location);
-    } else {
-      params.delete('location');
-    }
-    
-    if (filters.vehicleTypes.length > 0) {
-      params.set('types', filters.vehicleTypes.join(','));
-    } else {
-      params.delete('types');
-    }
-    
-    if (filters.brand !== 'todas') {
-      params.set('brand', filters.brand);
-    } else {
-      params.delete('brand');
-    }
-    
-    if (filters.model !== 'todos') {
-      params.set('model', filters.model);
-    } else {
-      params.delete('model');
-    }
-    
-    if (filters.color && filters.color !== 'todas') {
-      params.set('color', filters.color);
-    } else {
-      params.delete('color');
-    }
-    
-    if (filters.year.min) {
-      params.set('yearMin', filters.year.min);
-    } else {
-      params.delete('yearMin');
-    }
-    
-    if (filters.year.max) {
-      params.set('yearMax', filters.year.max);
-    } else {
-      params.delete('yearMax');
-    }
-    
-    if (filters.price.range.min) {
-      params.set('priceMin', filters.price.range.min);
-    } else {
-      params.delete('priceMin');
-    }
-    
-    if (filters.price.range.max) {
-      params.set('priceMax', filters.price.range.max);
-    } else {
-      params.delete('priceMax');
-    }
-    
-    if (filters.format !== 'Todos') {
-      params.set('format', filters.format);
-    } else {
-      params.delete('format');
-    }
-    
-    if (filters.origin !== 'Todas') {
-      params.set('origin', filters.origin);
-    } else {
-      params.delete('origin');
-    }
-    
-    if (filters.place !== 'Todas') {
-      params.set('place', filters.place);
-    } else {
-      params.delete('place');
-    }
-    
-    // Preserve page parameter or reset when filters change
-    if (currentPage && !hasFilterChanged(filters, searchParams)) {
-      params.set('page', currentPage);
-    } else {
-      params.set('page', '1');
-    }
-    
-    // Use {replace: true} for desktop to prevent scroll jumps
-    // For mobile views, use default behavior which allows back navigation to previous filter states
-    if (!isMobile) {
+    // Set a new timer for debounced URL update
+    timerRef.current = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      
+      // Preserve current page if it exists
+      const currentPage = params.get('page');
+      
+      // Add sort option to URL
+      if (sortOption !== 'newest') {
+        params.set('sort', sortOption);
+      } else {
+        params.delete('sort');
+      }
+      
+      // Add filters to URL
+      if (filters.location && filters.location !== 'todos') {
+        params.set('location', filters.location);
+      } else {
+        params.delete('location');
+      }
+      
+      if (filters.vehicleTypes.length > 0) {
+        params.set('types', filters.vehicleTypes.join(','));
+      } else {
+        params.delete('types');
+      }
+      
+      if (filters.brand !== 'todas') {
+        params.set('brand', filters.brand);
+      } else {
+        params.delete('brand');
+      }
+      
+      if (filters.model !== 'todos') {
+        params.set('model', filters.model);
+      } else {
+        params.delete('model');
+      }
+      
+      if (filters.color && filters.color !== 'todas') {
+        params.set('color', filters.color);
+      } else {
+        params.delete('color');
+      }
+      
+      if (filters.year.min) {
+        params.set('yearMin', filters.year.min);
+      } else {
+        params.delete('yearMin');
+      }
+      
+      if (filters.year.max) {
+        params.set('yearMax', filters.year.max);
+      } else {
+        params.delete('yearMax');
+      }
+      
+      if (filters.price.range.min) {
+        params.set('priceMin', filters.price.range.min);
+      } else {
+        params.delete('priceMin');
+      }
+      
+      if (filters.price.range.max) {
+        params.set('priceMax', filters.price.range.max);
+      } else {
+        params.delete('priceMax');
+      }
+      
+      if (filters.format !== 'Todos') {
+        params.set('format', filters.format);
+      } else {
+        params.delete('format');
+      }
+      
+      if (filters.origin !== 'Todas') {
+        params.set('origin', filters.origin);
+      } else {
+        params.delete('origin');
+      }
+      
+      if (filters.place !== 'Todas') {
+        params.set('place', filters.place);
+      } else {
+        params.delete('place');
+      }
+      
+      // Preserve page parameter or reset when filters change
+      if (currentPage && !hasFilterChanged(filters, searchParams)) {
+        params.set('page', currentPage);
+      } else {
+        params.set('page', '1');
+      }
+      
+      // Always use {replace: true} to prevent adding to history stack
       setSearchParams(params, { replace: true });
-    } else {
-      setSearchParams(params);
-    }
-  }, [filters, sortOption, setSearchParams, isMobile]);
+      
+      // After URL update, restore scroll position on desktop
+      if (!isMobile) {
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: scrollPositionRef.current,
+            behavior: 'instant'
+          });
+        });
+      }
+    }, isMobile ? 0 : 300); // No delay for mobile, 300ms delay for desktop
+    
+    // Cleanup timer on unmount
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [filters, sortOption, setSearchParams, isMobile, searchParams]);
   
   // Helper to check if filter has changed
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
