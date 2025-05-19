@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, Palette, Hourglass } from 'lucide-react';
@@ -7,11 +6,9 @@ import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
-
 interface AuctionCardProps {
   auction: AuctionItem;
 }
-
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
@@ -34,9 +31,8 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
     return `${day}/${month}/${yearLastTwoDigits}`;
   };
-
   const discount = calculateDiscount();
-  
+
   // Determine if the auction is new (less than 24 hours old)
   const isNew = () => {
     const today = new Date();
@@ -51,32 +47,22 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     // Remove any year pattern like "2021" from the title
     return auction.title.replace(/\s+\d{4}$|\s+\d{4}\s+/, ' ').trim();
   };
-
-  return (
-    <motion.div 
-      whileHover={{
-        y: -4,
-        transition: { duration: 0.2 }
-      }}
-      className="mb-3"
-    >
+  return <motion.div whileHover={{
+    y: -4,
+    transition: {
+      duration: 0.2
+    }
+  }} className="mb-3">
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
         {/* Content (right side) */}
         <div className="flex-1 flex flex-col p-4">
           {/* Top row with improved spacing and alignment */}
-          <div className="flex justify-between items-start gap-2 mb-1.5">
+          <div className="flex justify-between items-start gap-2 mb-0">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${!isMobile ? 'text-lg leading-tight' : 'text-base leading-tight'}`}>
               {getVehicleTitle()}
             </h3>
-            <button 
-              onClick={() => setFavorited(!favorited)} 
-              className={`flex-shrink-0 p-1.5 -mr-1 rounded-full transition-all ${favorited ? 'bg-accent2-50 text-accent2-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-500'}`}
-              aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
-            >
-              <Heart 
-                size={isMobile ? 18 : 20} 
-                className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`}
-              />
+            <button onClick={() => setFavorited(!favorited)} className={`flex-shrink-0 p-1.5 -mr-1 rounded-full transition-all ${favorited ? 'bg-accent2-50 text-accent2-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-500'}`} aria-label={favorited ? "Remove from favorites" : "Add to favorites"}>
+              <Heart size={isMobile ? 18 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
             </button>
           </div>
           
@@ -86,18 +72,14 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               <Palette size={12} className="mr-1 text-gray-500" />
               <span>{auction.vehicleInfo.color}</span>
             </div>
-            {auction.vehicleInfo.year && (
-              <div className="flex items-center text-gray-600 text-xs">
+            {auction.vehicleInfo.year && <div className="flex items-center text-gray-600 text-xs">
                 <Hourglass size={12} className="mr-1 text-gray-500" />
                 <span>{auction.vehicleInfo.year}</span>
-              </div>
-            )}
-            {auction.location && (
-              <div className="flex items-center text-gray-600 text-xs">
+              </div>}
+            {auction.location && <div className="flex items-center text-gray-600 text-xs">
                 <Separator orientation="vertical" className="mx-2 h-3 bg-gray-200" />
                 <span className="line-clamp-1">{auction.location}</span>
-              </div>
-            )}
+              </div>}
           </div>
           
           {/* Price section - more prominent with better hierarchy */}
@@ -105,18 +87,14 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             <span className="font-bold text-gray-900 text-xl leading-none">
               {formatCurrency(auction.currentBid)}
             </span>
-            {auction.originalPrice && (
-              <div className="flex items-center gap-2">
-                {discount && (
-                  <span className="bg-accent2-50 text-accent2-700 px-2 py-0.5 rounded-md text-xs font-medium">
+            {auction.originalPrice && <div className="flex items-center gap-2">
+                {discount && <span className="bg-accent2-50 text-accent2-700 px-2 py-0.5 rounded-md text-xs font-medium">
                     {discount}% OFF
-                  </span>
-                )}
+                  </span>}
                 <span className="text-gray-500 line-through text-sm">
                   {formatCurrency(auction.originalPrice)}
                 </span>
-              </div>
-            )}
+              </div>}
           </div>
           
           {/* Subtle divider with precisely 12px margin below */}
@@ -139,9 +117,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>;
 });
-
 AuctionCard.displayName = 'AuctionCard';
 export default AuctionCard;
