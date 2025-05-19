@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FilterState } from '@/stores/useFilterStore';
@@ -151,20 +150,18 @@ export const useUrlParams = () => {
       // Reset flags after URL update
       shouldUpdateUrlRef.current = false;
       
-      // After URL update, restore scroll position
+      // IMPORTANTE: Use um timeout mais longo para restaurar a posição de rolagem
+      // e garantir que o navegador tenha tempo suficiente de processar as mudanças de URL
       setTimeout(() => {
         if (scrollPositionRef.current > 0) {
           window.scrollTo({
             top: scrollPositionRef.current,
             behavior: 'instant'
           });
-          
-          // Clear the scroll position after restoring
-          scrollPositionRef.current = 0;
         }
         // Reset flag after completed URL update and scroll restoration
         isUpdatingUrlRef.current = false;
-      }, 10);
+      }, 50);
     };
     
     window.addEventListener('filters:applied', handleFiltersApplied);
@@ -297,23 +294,20 @@ export const useUrlParams = () => {
         // Always use {replace: true} to prevent adding to history stack
         setSearchParams(params, { replace: true });
         
-        // After URL update, restore scroll position
+        // IMPORTANTE: Use um timeout mais longo para restaurar a posição de rolagem
         setTimeout(() => {
           if (scrollPositionRef.current > 0) {
             window.scrollTo({
               top: scrollPositionRef.current,
               behavior: 'instant'
             });
-            
-            // Clear the scroll position after restoring
-            scrollPositionRef.current = 0;
           }
           
           // Reset flags
           shouldUpdateUrlRef.current = false;
           isInitialLoadRef.current = false;
           isUpdatingUrlRef.current = false;
-        }, 10);
+        }, 50);
       }, isMobile ? 300 : 0); // 300ms delay for mobile, no delay for explicit apply
     }
     

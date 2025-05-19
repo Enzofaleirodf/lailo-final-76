@@ -215,6 +215,25 @@ textarea:focus {
   outline: none !important;
 }
 
+/* CORREÇÃO: Garantir que apenas o elemento select receba o foco e não seu contêiner */
+.filter-wrapper select:focus {
+  border-color: #FFD100 !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
+  outline: none !important;
+}
+
+.filter-wrapper div:focus,
+.filter-wrapper div:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: inherit !important;
+}
+
+/* Preservação da posição de rolagem durante atualizações de filtro */
+html {
+  scroll-behavior: auto !important;
+}
+
 /* Override radix select focus styles */
 [data-radix-select-trigger]:focus-visible {
   outline: 2px solid #FFD100 !important;

@@ -15,13 +15,17 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const { filters } = useFilterStore();
+  const scrollPositionRef = useRef(0);
   
   // For desktop, implement automatic filter application
   useEffect(() => {
     if (!isMobile) {
+      // Store current scroll position before dispatching the event
+      scrollPositionRef.current = window.scrollY;
+      
       // Create and dispatch the filters:applied event when filters change
       const event = new CustomEvent('filters:applied', {
-        detail: { scrollPosition: window.scrollY }
+        detail: { scrollPosition: scrollPositionRef.current }
       });
       window.dispatchEvent(event);
     }
