@@ -79,12 +79,21 @@ export const useUrlParams = () => {
         params.delete('sort');
       }
       
-      // Adicionar filtros à URL
-      if (filters.location && filters.location !== 'todos') {
-        params.set('location', filters.location);
+      // Adicionar filtro de localização à URL (agora usando state e city)
+      if (filters.location.state) {
+        params.set('state', filters.location.state);
       } else {
-        params.delete('location');
+        params.delete('state');
       }
+      
+      if (filters.location.city) {
+        params.set('city', filters.location.city);
+      } else {
+        params.delete('city');
+      }
+      
+      // Para compatibilidade com a versão anterior do parâmetro 'location'
+      params.delete('location');
       
       if (filters.vehicleTypes.length > 0) {
         params.set('types', filters.vehicleTypes.join(','));
@@ -261,12 +270,21 @@ export const useUrlParams = () => {
           params.delete('sort');
         }
         
-        // Adicionar filtros à URL
-        if (filters.location && filters.location !== 'todos') {
-          params.set('location', filters.location);
+        // Adicionar filtro de localização à URL (agora usando state e city)
+        if (filters.location.state) {
+          params.set('state', filters.location.state);
         } else {
-          params.delete('location');
+          params.delete('state');
         }
+        
+        if (filters.location.city) {
+          params.set('city', filters.location.city);
+        } else {
+          params.delete('city');
+        }
+        
+        // Para compatibilidade com a versão anterior do parâmetro 'location'
+        params.delete('location');
         
         if (filters.vehicleTypes.length > 0) {
           params.set('types', filters.vehicleTypes.join(','));
@@ -412,7 +430,12 @@ export const useUrlParams = () => {
   
   // Helper para verificar se o filtro mudou
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
-    if ((params.get('location') || 'todos') !== currentFilters.location) return true;
+    if ((params.get('state') || '') !== currentFilters.location.state) return true;
+    if ((params.get('city') || '') !== currentFilters.location.city) return true;
+    // Checar também o parâmetro legado 'location'
+    const oldLocation = params.get('location');
+    if (oldLocation && oldLocation !== 'todos' && !currentFilters.location.state && !currentFilters.location.city) return true;
+    
     if ((params.get('types')?.split(',') || []).join(',') !== currentFilters.vehicleTypes.join(',')) return true;
     if ((params.get('brand') || 'todas') !== currentFilters.brand) return true;
     if ((params.get('model') || 'todos') !== currentFilters.model) return true;
@@ -438,8 +461,33 @@ export const useUrlParams = () => {
     let hasChanges = false;
     
     // Analisar parâmetros de URL para o estado do filtro
-    if (searchParams.has('location')) {
-      newFilters.location = searchParams.get('location') || '';
+    // Primeiro verificar os novos parâmetros 'state' e 'city'
+    if (searchParams.has('state') || searchParams.has('city')) {
+      newFilters.location = {
+        state: searchParams.get('state') || '',
+        city: searchParams.get('city') || ''
+      };
+      hasChanges = true;
+    } 
+    // Se não tiver state nem city, mas tiver o parâmetro legado 'location'
+    else if (searchParams.has('location')) {
+      const legacyLocation = searchParams.get('location') || '';
+      
+      // Tentar determinar se é um estado ou cidade
+      // (Esta é uma simplificação e pode não funcionar para todos os casos)
+      if (legacyLocation.length === 2 && legacyLocation === legacyLocation.toUpperCase()) {
+        // Provavelmente é uma sigla de estado
+        newFilters.location = {
+          state: legacyLocation,
+          city: ''
+        };
+      } else {
+        // Provavelmente é uma cidade ou outro tipo de localização
+        newFilters.location = {
+          state: '',
+          city: legacyLocation
+        };
+      }
       hasChanges = true;
     }
     
@@ -515,8 +563,6 @@ export const useUrlParams = () => {
     }
     
     // O carregamento inicial continua em andamento até que uma atualização de URL ocorra
-    // isInitialLoadRef.current = false; // Não definimos isso aqui, mas deixamos para o handler de atualização
-  // Queremos que isso seja executado apenas uma vez na montagem do componente
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   

@@ -1,11 +1,11 @@
 
 import { create } from 'zustand';
-import { ContentType, FilterFormat, FilterOrigin, FilterPlace, YearRange, PriceRange } from '@/types/filters';
+import { ContentType, FilterFormat, FilterOrigin, FilterPlace, YearRange, PriceRange, LocationFilter } from '@/types/filters';
 
 // Define the filter state interface
 export interface FilterState {
   contentType: ContentType;
-  location: string;
+  location: LocationFilter;
   vehicleTypes: string[];
   brand: string;
   model: string;
@@ -23,7 +23,7 @@ export interface FilterState {
 // Default filter values
 export const DEFAULT_FILTERS: FilterState = {
   contentType: 'vehicle',
-  location: 'todos',
+  location: { state: '', city: '' },
   vehicleTypes: [],
   brand: 'todas',
   model: 'todos',
@@ -73,8 +73,8 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
     const filters = get().filters;
     let count = 0;
     
-    // Only count location if not default
-    if (filters.location && filters.location !== 'todos') count++;
+    // Count location if either state or city is set
+    if (filters.location.state || filters.location.city) count++;
     
     // Only count vehicle types if not empty and not containing default
     if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) count++;

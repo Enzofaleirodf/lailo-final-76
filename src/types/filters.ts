@@ -16,3 +16,8 @@ export interface PriceRange {
   min: string;
   max: string;
 }
+
+export interface LocationFilter {
+  state: string;
+  city: string;
+}
