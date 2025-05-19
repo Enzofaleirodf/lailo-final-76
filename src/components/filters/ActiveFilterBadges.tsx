@@ -10,25 +10,35 @@ const ActiveFilterBadges: React.FC = () => {
   
   const badges = [];
   
-  // Location badge
-  if (filters.location) {
+  // Location badge - only if not the default value
+  if (filters.location && filters.location !== 'todos') {
     badges.push({
       key: 'location',
       label: `Localização: ${filters.location}`,
-      onRemove: () => updateFilter('location', '')
+      onRemove: () => updateFilter('location', 'todos')
     });
   }
   
-  // Vehicle types badges
-  filters.vehicleTypes.forEach(type => {
-    badges.push({
-      key: `vehicle-${type}`,
-      label: `Tipo: ${type}`,
-      onRemove: () => updateFilter('vehicleTypes', filters.vehicleTypes.filter(t => t !== type))
-    });
-  });
+  // Vehicle types badges - don't show if it's "todos" or empty
+  if (filters.vehicleTypes.length > 0) {
+    // Skip the "todos" option if present
+    const nonDefaultTypes = filters.vehicleTypes.filter(type => type !== 'todos');
+    
+    if (nonDefaultTypes.length > 0) {
+      nonDefaultTypes.forEach(type => {
+        badges.push({
+          key: `vehicle-${type}`,
+          label: `Tipo: ${type}`,
+          onRemove: () => {
+            const updatedTypes = filters.vehicleTypes.filter(t => t !== type);
+            updateFilter('vehicleTypes', updatedTypes);
+          }
+        });
+      });
+    }
+  }
   
-  // Brand badge
+  // Brand badge - only if not the default value
   if (filters.brand && filters.brand !== 'todas') {
     badges.push({
       key: 'brand',
@@ -37,7 +47,7 @@ const ActiveFilterBadges: React.FC = () => {
     });
   }
   
-  // Model badge
+  // Model badge - only if not the default value
   if (filters.model && filters.model !== 'todos') {
     badges.push({
       key: 'model',
@@ -46,16 +56,16 @@ const ActiveFilterBadges: React.FC = () => {
     });
   }
   
-  // Color badge
-  if (filters.color) {
+  // Color badge - only if not the default value
+  if (filters.color && filters.color !== 'todas') {
     badges.push({
       key: 'color',
       label: `Cor: ${filters.color}`,
-      onRemove: () => updateFilter('color', '')
+      onRemove: () => updateFilter('color', 'todas')
     });
   }
   
-  // Year range badge
+  // Year range badge - only if values are set
   if (filters.year.min || filters.year.max) {
     badges.push({
       key: 'year',
@@ -64,7 +74,7 @@ const ActiveFilterBadges: React.FC = () => {
     });
   }
   
-  // Price range badge
+  // Price range badge - only if values are set
   if (filters.price.range.min || filters.price.range.max) {
     badges.push({
       key: 'price',
@@ -73,6 +83,33 @@ const ActiveFilterBadges: React.FC = () => {
         value: filters.price.value,
         range: { min: '', max: '' }
       })
+    });
+  }
+  
+  // Format badge - only if not default value
+  if (filters.format && filters.format !== 'Todos') {
+    badges.push({
+      key: 'format',
+      label: `Formato: ${filters.format}`,
+      onRemove: () => updateFilter('format', 'Todos')
+    });
+  }
+  
+  // Origin badge - only if not default value
+  if (filters.origin && filters.origin !== 'Todas') {
+    badges.push({
+      key: 'origin',
+      label: `Origem: ${filters.origin}`,
+      onRemove: () => updateFilter('origin', 'Todas')
+    });
+  }
+  
+  // Place badge - only if not default value
+  if (filters.place && filters.place !== 'Todas') {
+    badges.push({
+      key: 'place',
+      label: `Etapa: ${filters.place}`,
+      onRemove: () => updateFilter('place', 'Todas')
     });
   }
   

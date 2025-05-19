@@ -1,6 +1,6 @@
 
 import React, { useCallback } from 'react';
-import { Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
+import { List, Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useFilterStore } from '@/stores/useFilterStore';
 
@@ -12,6 +12,7 @@ const VehicleTypeFilter = () => {
   }, [updateFilter]);
   
   const vehicleTypes = [
+    { value: 'todos', icon: List, label: 'Todos' },
     { value: 'aereos', icon: Plane, label: 'Aéreos' },
     { value: 'carros', icon: Car, label: 'Carros' },
     { value: 'caminhoes', icon: Truck, label: 'Caminhões' },
