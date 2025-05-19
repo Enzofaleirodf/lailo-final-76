@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, Palette, Hourglass } from 'lucide-react';
@@ -66,14 +65,14 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       className="mb-3"
     >
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-        {/* Image (left side) with added top and bottom margin */}
-        <div className="relative w-[35%] min-w-[130px] py-3">
-          <div className="relative h-full w-full">
-            {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse" />}
+        {/* Image (left side) with margin and border radius */}
+        <div className="relative w-[35%] min-w-[130px] py-3 ml-3 rounded-md">
+          <div className="relative h-full w-full rounded-md overflow-hidden">
+            {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-md" />}
             <img
               src={auction.imageUrl}
               alt={getVehicleTitle()}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover rounded-md"
               loading="lazy"
               onLoad={handleImageLoad}
               style={{
@@ -84,7 +83,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             
             {/* Image gradient overlay for better text readability */}
             <div
-              className="absolute inset-0"
+              className="absolute inset-0 rounded-md"
               style={{
                 background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%)",
                 pointerEvents: "none",
