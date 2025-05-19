@@ -1,4 +1,3 @@
-
 import { AuctionItem } from '@/types/auction';
 import { SortOption } from '@/stores/useSortStore';
 import { useMemo } from 'react';
@@ -111,8 +110,7 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
       return false;
     }
     
-    // Place filter 
-    // Fix: Make sure the type comparison aligns with the expected values
+    // Place filter - now the types match correctly
     if (filters.place !== 'Todas' && filters.place !== auction.place) {
       return false;
     }

@@ -22,7 +22,7 @@ export interface AuctionItem {
   bidCount: number;
   format: 'Leilão' | 'Venda Direta';
   origin: 'Judicial' | 'Extrajudicial';
-  place: 'Primeira' | 'Segunda';
+  place: 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
   isNew?: boolean;  // Added for future use
   createdAt?: Date; // Added for future use
 }
