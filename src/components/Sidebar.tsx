@@ -26,7 +26,7 @@ const Sidebar = () => {
   return (
     <div 
       className={cn(
-        "h-full bg-gradient-to-b from-brand-800 to-brand-900 border-r border-brand-700/50 flex flex-col items-center py-6 fixed left-0 top-0 z-10 transition-all duration-300 shadow-lg",
+        "h-full bg-gradient-to-b from-brand-800 to-brand-900 border-r border-brand-700/50 flex flex-col items-center py-6 fixed left-0 top-0 z-50 transition-all duration-300 shadow-lg",
         expanded ? "w-48" : "w-16"
       )}
     >

@@ -52,7 +52,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
   // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
     return (
-      <div className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm">
+      <div className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10">
         <FilterContent />
       </div>
     );
