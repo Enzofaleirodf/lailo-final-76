@@ -1,4 +1,4 @@
-import { Auction } from '@/types/auction';
+import { AuctionItem } from '@/types/auction';
 import { FilterState } from '@/stores/useFilterStore';
 
 export const formatPrice = (price: number): string => {
@@ -8,6 +8,9 @@ export const formatPrice = (price: number): string => {
   });
 };
 
+// Add alias for formatCurrency to maintain compatibility
+export const formatCurrency = formatPrice;
+
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -16,7 +19,7 @@ export const formatDate = (dateString: string): string => {
   return `${day}/${month}/${year}`;
 };
 
-export const filterAuctions = (auctions: Auction[], filters: FilterState): Auction[] => {
+export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): AuctionItem[] => {
   let filteredAuctions = [...auctions];
   
   // Filter by content type
@@ -110,7 +113,7 @@ export const filterAuctions = (auctions: Auction[], filters: FilterState): Aucti
   return filteredAuctions;
 };
 
-export const sortAuctions = (auctions: Auction[], sortBy: string): Auction[] => {
+export const sortAuctions = (auctions: AuctionItem[], sortBy: string): AuctionItem[] => {
   switch (sortBy) {
     case 'lowerPrice':
       return [...auctions].sort((a, b) => a.price - b.price);
