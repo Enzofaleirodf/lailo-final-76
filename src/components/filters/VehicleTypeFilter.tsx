@@ -4,12 +4,21 @@ import { List, Plane, Car, Truck, Tractor, Bike, Ship, Bus } from 'lucide-react'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useFilterStore } from '@/stores/useFilterStore';
 
-const VehicleTypeFilter = () => {
+interface VehicleTypeFilterProps {
+  onFilterChange?: () => void;
+}
+
+const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
   const handleVehicleTypeChange = useCallback((values: string[]) => {
     updateFilter('vehicleTypes', values);
-  }, [updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [updateFilter, onFilterChange]);
   
   const vehicleTypes = [
     { value: 'todos', icon: List, label: 'Todos' },

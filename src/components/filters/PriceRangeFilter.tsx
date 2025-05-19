@@ -4,7 +4,11 @@ import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 
-const PriceRangeFilter: React.FC = () => {
+interface PriceRangeFilterProps {
+  onFilterChange?: () => void;
+}
+
+const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { value, range } = filters.price;
 
@@ -13,7 +17,12 @@ const PriceRangeFilter: React.FC = () => {
       value: newValue,
       range: filters.price.range
     });
-  }, [filters.price.range, updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [filters.price.range, updateFilter, onFilterChange]);
 
   const handleMinChange = useCallback((minValue: string) => {
     updateFilter('price', {
@@ -23,7 +32,12 @@ const PriceRangeFilter: React.FC = () => {
         min: minValue
       }
     });
-  }, [filters.price.value, filters.price.range, updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [filters.price.value, filters.price.range, updateFilter, onFilterChange]);
 
   const handleMaxChange = useCallback((maxValue: string) => {
     updateFilter('price', {
@@ -33,7 +47,12 @@ const PriceRangeFilter: React.FC = () => {
         max: maxValue
       }
     });
-  }, [filters.price.value, filters.price.range, updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [filters.price.value, filters.price.range, updateFilter, onFilterChange]);
 
   return (
     <div className="space-y-4">

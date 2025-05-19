@@ -3,7 +3,11 @@ import React, { useCallback } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 
-const YearRangeFilter: React.FC = () => {
+interface YearRangeFilterProps {
+  onFilterChange?: () => void;
+}
+
+const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { year } = filters;
 
@@ -12,14 +16,24 @@ const YearRangeFilter: React.FC = () => {
       ...year,
       min: minValue
     });
-  }, [year, updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [year, updateFilter, onFilterChange]);
 
   const handleMaxChange = useCallback((maxValue: string) => {
     updateFilter('year', {
       ...year,
       max: maxValue
     });
-  }, [year, updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [year, updateFilter, onFilterChange]);
 
   return (
     <FilterRangeInput

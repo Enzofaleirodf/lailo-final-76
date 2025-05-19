@@ -3,6 +3,10 @@ import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 
+interface ModelFilterProps {
+  onFilterChange?: () => void;
+}
+
 const brandOptions = [
   { value: 'todas', label: 'Todas as marcas' },
   { value: 'toyota', label: 'Toyota' },
@@ -17,16 +21,26 @@ const modelOptions = [
   { value: 'focus', label: 'Focus' }
 ];
 
-const ModelFilter: React.FC = () => {
+const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
   const handleBrandChange = useCallback((value: string) => {
     updateFilter('brand', value);
-  }, [updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [updateFilter, onFilterChange]);
 
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
-  }, [updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+  }, [updateFilter, onFilterChange]);
 
   return (
     <div className="space-y-3">
