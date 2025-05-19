@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
@@ -9,7 +8,7 @@ const AuctionCardSkeleton: React.FC = () => {
   const isMobile = useIsMobile();
   
   return (
-    <motion.div className="mb-4">
+    <motion.div className="mb-3">
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {/* Left side - image */}
         <div className="relative w-[35%] min-w-[130px]">

@@ -48,7 +48,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         y: -4,
         transition: { duration: 0.2 }
       }}
-      className="mb-4"
+      className="mb-3"
     >
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
         {/* Image (left side) */}
