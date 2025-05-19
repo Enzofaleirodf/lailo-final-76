@@ -7,6 +7,7 @@ import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -66,25 +67,23 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       className="mb-3"
     >
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-        {/* Image (left side) with margin and border radius */}
-        <div className="relative w-[35%] min-w-[130px] py-3 ml-3 rounded-md">
-          <div className="relative h-full w-full rounded-md overflow-hidden">
-            {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-md" />}
-            <img
-              src={auction.imageUrl}
-              alt={getVehicleTitle()}
-              className="h-full w-full object-cover rounded-md"
-              loading="lazy"
-              onLoad={handleImageLoad}
-              style={{
-                aspectRatio: '4/3',
-                objectFit: 'cover'
-              }}
-            />
+        {/* Image (left side) with consistent margins and border radius */}
+        <div className="relative w-[35%] min-w-[130px] py-3 pl-3 rounded-md flex">
+          <div className="relative h-full w-full rounded-[4px] overflow-hidden flex">
+            <AspectRatio ratio={4/3} className="h-full w-full">
+              {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-[4px]" />}
+              <img
+                src={auction.imageUrl}
+                alt={getVehicleTitle()}
+                className="h-full w-full object-cover rounded-[4px]"
+                loading="lazy"
+                onLoad={handleImageLoad}
+              />
+            </AspectRatio>
             
             {/* Image gradient overlay for better text readability */}
             <div
-              className="absolute inset-0 rounded-md"
+              className="absolute inset-0 rounded-[4px]"
               style={{
                 background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%)",
                 pointerEvents: "none",
@@ -168,11 +167,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             )}
           </div>
           
-          {/* Subtle divider with reduced bottom margin */}
-          <Separator className="my-2 bg-gray-100" />
+          {/* Subtle divider with precisely 12px margin below */}
+          <Separator className="mb-3 mt-1 bg-gray-100" />
           
-          {/* Bottom row - redesigned badges and date indicator (positioned 12px below the separator) */}
-          <div className="flex justify-between items-center mt-2">
+          {/* Bottom row with consistent 12px spacing from separator */}
+          <div className="flex justify-between items-center">
             <div className="flex gap-1.5">
               <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
                 {auction.origin}
