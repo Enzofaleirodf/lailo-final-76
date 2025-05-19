@@ -25,7 +25,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const isDefaultValue = value === "Todas" || value === "Todos";
 
   return (
-    <div className="relative">
+    <div className="relative isolate">
       <select
         id={id}
         aria-label={ariaLabel}

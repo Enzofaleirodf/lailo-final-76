@@ -11,8 +11,9 @@ interface VehicleTypeFilterProps {
 const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
-  const handleVehicleTypeChange = useCallback((values: string[]) => {
-    updateFilter('vehicleTypes', values);
+  const handleVehicleTypeChange = useCallback((value: string) => {
+    // Convert to array with single value for compatibility with existing filter logic
+    updateFilter('vehicleTypes', value ? [value] : []);
     
     // Notify parent component that filter has changed
     if (onFilterChange) {
@@ -34,12 +35,17 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
     { value: 'tratores', icon: Tractor, label: 'Tratores' }
   ];
 
+  // Get the current single value from the array
+  const currentValue = filters.vehicleTypes && filters.vehicleTypes.length > 0 
+    ? filters.vehicleTypes[0] 
+    : '';
+
   return (
     <div className="flex flex-wrap gap-2 w-full justify-start">
       <ToggleGroup 
-        type="multiple" 
+        type="single" 
         className="flex flex-wrap gap-2 w-full justify-start"
-        value={filters.vehicleTypes as string[]}
+        value={currentValue}
         onValueChange={handleVehicleTypeChange}
       >
         {vehicleTypes.map(({ value, icon: Icon, label }) => (

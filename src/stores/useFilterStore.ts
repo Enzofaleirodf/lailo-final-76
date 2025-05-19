@@ -30,7 +30,7 @@ export const DEFAULT_FILTERS: FilterState = {
   color: 'todas',
   year: { min: '', max: '' },
   price: {
-    value: [30],
+    value: [0, 100],
     range: { min: '', max: '' }
   },
   format: 'Todos',

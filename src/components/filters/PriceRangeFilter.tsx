@@ -1,8 +1,11 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { useQuery } from '@tanstack/react-query';
+import { fetchSampleAuctions } from '@/data/sampleAuctions';
+import { formatCurrency } from '@/utils/auctionUtils';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
@@ -11,22 +14,78 @@ interface PriceRangeFilterProps {
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { value, range } = filters.price;
+  
+  // Fetch auction data to find min/max prices
+  const { data: auctions } = useQuery({
+    queryKey: ['auctions'],
+    queryFn: fetchSampleAuctions
+  });
+  
+  // Calculate min and max prices from the auctions data
+  const { minPrice, maxPrice, priceSteps } = React.useMemo(() => {
+    if (!auctions || auctions.length === 0) {
+      return { minPrice: 0, maxPrice: 100000, priceSteps: 100 };
+    }
+    
+    const prices = auctions.map(auction => auction.currentBid);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    return {
+      minPrice: min,
+      maxPrice: max,
+      priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
+    };
+  }, [auctions]);
+  
+  // Initialize the filter with the min/max values if they're empty
+  useEffect(() => {
+    if ((!range.min || !range.max) && auctions && auctions.length > 0) {
+      updateFilter('price', {
+        value: [minPrice, maxPrice],
+        range: {
+          min: range.min || String(minPrice),
+          max: range.max || String(maxPrice)
+        }
+      });
+    }
+  }, [auctions, minPrice, maxPrice, range.min, range.max, updateFilter]);
+
+  // Convert slider values to price values
+  const sliderToPriceValue = (sliderValue: number): number => {
+    return minPrice + (sliderValue * (maxPrice - minPrice) / 100);
+  };
+  
+  // Convert price values to slider values (0-100)
+  const priceToSliderValue = (priceValue: number): number => {
+    return ((priceValue - minPrice) / (maxPrice - minPrice)) * 100;
+  };
 
   const handleSliderChange = useCallback((newValue: number[]) => {
-    updateFilter('price', {
-      value: newValue,
-      range: filters.price.range
-    });
-    
-    // Notify parent component that filter has changed
-    if (onFilterChange) {
-      onFilterChange();
+    if (newValue.length === 2) {
+      const minPrice = sliderToPriceValue(newValue[0]);
+      const maxPrice = sliderToPriceValue(newValue[1]);
+      
+      updateFilter('price', {
+        value: newValue,
+        range: {
+          min: String(Math.round(minPrice)),
+          max: String(Math.round(maxPrice))
+        }
+      });
+      
+      // Notify parent component that filter has changed
+      if (onFilterChange) {
+        onFilterChange();
+      }
     }
-  }, [filters.price.range, updateFilter, onFilterChange]);
+  }, [updateFilter, onFilterChange]);
 
   const handleMinChange = useCallback((minValue: string) => {
+    const numericValue = minValue === '' ? minPrice : Number(minValue);
+    const sliderValue = priceToSliderValue(numericValue);
+    
     updateFilter('price', {
-      value: filters.price.value,
+      value: [sliderValue, value[1] || 100],
       range: {
         ...filters.price.range,
         min: minValue
@@ -37,11 +96,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     if (onFilterChange) {
       onFilterChange();
     }
-  }, [filters.price.value, filters.price.range, updateFilter, onFilterChange]);
+  }, [filters.price.range, value, minPrice, priceToSliderValue, updateFilter, onFilterChange]);
 
   const handleMaxChange = useCallback((maxValue: string) => {
+    const numericValue = maxValue === '' ? maxPrice : Number(maxValue);
+    const sliderValue = priceToSliderValue(numericValue);
+    
     updateFilter('price', {
-      value: filters.price.value,
+      value: [value[0] || 0, sliderValue],
       range: {
         ...filters.price.range,
         max: maxValue
@@ -52,30 +114,42 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     if (onFilterChange) {
       onFilterChange();
     }
-  }, [filters.price.value, filters.price.range, updateFilter, onFilterChange]);
+  }, [filters.price.range, value, maxPrice, priceToSliderValue, updateFilter, onFilterChange]);
+
+  // Ensure we always have two values for the slider
+  const sliderValues = value.length === 2 
+    ? value 
+    : [value[0] || 0, value[0] === 100 ? 100 : (value[0] || 0) + 50];
 
   return (
     <div className="space-y-4">
       <div className="mb-4">
         <Slider 
-          value={value} 
+          value={sliderValues} 
           onValueChange={handleSliderChange} 
-          max={100} 
+          min={0}
+          max={100}
           step={1} 
           className="my-4" 
-          aria-label="Ajustar valor do lance"
+          aria-label="Ajustar intervalo de preço"
         />
       </div>
-      <FilterRangeInput
-        minValue={range.min}
-        maxValue={range.max}
-        onMinChange={handleMinChange}
-        onMaxChange={handleMaxChange}
-        minPlaceholder="Mínimo"
-        maxPlaceholder="Máximo"
-        ariaLabelMin="Valor mínimo do lance"
-        ariaLabelMax="Valor máximo do lance"
-      />
+      <div className="flex flex-col space-y-2">
+        <div className="flex justify-between text-sm text-gray-500">
+          <span>{formatCurrency(sliderToPriceValue(sliderValues[0]))}</span>
+          <span>{formatCurrency(sliderToPriceValue(sliderValues[1]))}</span>
+        </div>
+        <FilterRangeInput
+          minValue={range.min}
+          maxValue={range.max}
+          onMinChange={handleMinChange}
+          onMaxChange={handleMaxChange}
+          minPlaceholder={formatCurrency(minPrice).replace('R$', '')}
+          maxPlaceholder={formatCurrency(maxPrice).replace('R$', '')}
+          ariaLabelMin="Valor mínimo do lance"
+          ariaLabelMax="Valor máximo do lance"
+        />
+      </div>
     </div>
   );
 };

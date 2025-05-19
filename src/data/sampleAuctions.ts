@@ -1,4 +1,3 @@
-
 import { AuctionItem } from '@/types/auction';
 
 // Helper function to generate random dates in the near future
@@ -143,3 +142,9 @@ export const sampleAuctions: AuctionItem[] = [
     place: '2ª Praça'
   }
 ];
+
+export const fetchSampleAuctions = async () => {
+  // In a real app, this would be an API call
+  // For now, we'll just return the existing sample data
+  return sampleAuctions;
+};
