@@ -7,7 +7,6 @@ import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -16,13 +15,8 @@ interface AuctionCardProps {
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [favorited, setFavorited] = useState(false);
   const isMobile = useIsMobile();
-
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
 
   // Calculate discount if original price exists
   const calculateDiscount = () => {
@@ -67,48 +61,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       className="mb-3"
     >
       <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-        {/* Image (left side) - adjusted to match content height */}
-        <div className="w-[35%] min-w-[130px] p-3">
-          <div className="relative rounded-[4px] overflow-hidden h-auto">
-            <AspectRatio ratio={4/3} className="w-full">
-              {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-[4px]" />}
-              <img
-                src={auction.imageUrl}
-                alt={getVehicleTitle()}
-                className="w-full object-cover rounded-[4px]"
-                loading="lazy"
-                onLoad={handleImageLoad}
-              />
-            </AspectRatio>
-            
-            {/* Image gradient overlay for better text readability */}
-            <div
-              className="absolute inset-0 rounded-[4px]"
-              style={{
-                background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%)",
-                pointerEvents: "none",
-              }}
-            />
-            
-            {/* Special badge indicators */}
-            <div className="absolute top-3 left-3 flex gap-1.5">
-              {isNew() && (
-                <Badge variant="new" className="shadow-sm">Novo</Badge>
-              )}
-            </div>
-            
-            {/* Discount badge - with yellow highlight */}
-            {discount && (
-              <Badge 
-                variant="discount" 
-                className="absolute bottom-3 left-3 shadow-sm"
-              >
-                {discount}% OFF
-              </Badge>
-            )}
-          </div>
-        </div>
-
         {/* Content (right side) */}
         <div className="flex-1 flex flex-col p-4">
           {/* Top row with improved spacing and alignment */}
