@@ -21,8 +21,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   id,
   "aria-label": ariaLabel
 }) => {
-  // Check if value equals default values like "todas", "todos"
-  const isDefaultValue = value === "todas" || value === "todos";
+  // Check if value equals default values like "Todas", "Todos"
+  const isDefaultValue = value === "Todas" || value === "Todos";
 
   return (
     <div className="relative">
@@ -36,7 +36,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       >
         {placeholder && <option value="" disabled className="text-gray-500 font-normal">{placeholder}</option>}
         {options.map((option) => (
-          <option key={option.value} value={option.value} className={option.value === "todas" || option.value === "todos" ? "text-brand-700 font-normal" : "text-gray-700 font-normal"}>
+          <option key={option.value} value={option.value} className={option.value === "Todas" || option.value === "Todos" ? "text-brand-700 font-normal" : "text-gray-700 font-normal"}>
             {option.label}
           </option>
         ))}

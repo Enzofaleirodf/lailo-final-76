@@ -1,133 +1,84 @@
 
 import React, { useCallback } from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import type { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+import FilterDropdown from './FilterDropdown';
 
 const MobileFilterOptions: React.FC = () => {
   const { filters, updateFilter } = useFilterStore();
 
-  const handleFormatChange = useCallback((value: FilterFormat) => {
-    updateFilter('format', value);
+  const handleFormatChange = useCallback((value: string) => {
+    updateFilter('format', value as FilterFormat);
   }, [updateFilter]);
 
-  const handleOriginChange = useCallback((value: FilterOrigin) => {
-    updateFilter('origin', value);
+  const handleOriginChange = useCallback((value: string) => {
+    updateFilter('origin', value as FilterOrigin);
   }, [updateFilter]);
 
-  const handlePlaceChange = useCallback((value: FilterPlace) => {
-    updateFilter('place', value);
+  const handlePlaceChange = useCallback((value: string) => {
+    updateFilter('place', value as FilterPlace);
   }, [updateFilter]);
+
+  const formatOptions = [
+    { value: 'Todos', label: 'Todos' },
+    { value: 'Alienação Particular', label: 'Alienação Particular' },
+    { value: 'Leilão', label: 'Leilão' },
+    { value: 'Venda Direta', label: 'Venda Direta' }
+  ];
+
+  const originOptions = [
+    { value: 'Todas', label: 'Todas' },
+    { value: 'Extrajudicial', label: 'Extrajudicial' },
+    { value: 'Judicial', label: 'Judicial' },
+    { value: 'Particular', label: 'Particular' },
+    { value: 'Público', label: 'Público' }
+  ];
+
+  const placeOptions = [
+    { value: 'Todas', label: 'Todas' },
+    { value: 'Praça única', label: 'Praça única' },
+    { value: '1ª Praça', label: '1ª Praça' },
+    { value: '2ª Praça', label: '2ª Praça' },
+    { value: '3ª Praça', label: '3ª Praça' }
+  ];
 
   return (
     <div className="grid grid-cols-1 gap-3 mb-4">
-      {/* Format Dropdown */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button 
-            className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
-            aria-label="Selecionar formato"
-            style={{ height: '40px' }}
-          >
-            <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
-                {filters.format}
-              </span>
-            </span>
-            <ChevronDown size={16} className="text-gray-400" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] bg-white z-50">
-          <DropdownMenuItem onClick={() => handleFormatChange('Todos')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Todos
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFormatChange('Alienação Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Alienação Particular
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFormatChange('Leilão')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Leilão
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFormatChange('Venda Direta')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Venda Direta
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="space-y-2">
+        <label htmlFor="format-filter-mobile" className="text-sm text-gray-500 font-normal">Formato:</label>
+        <FilterDropdown
+          id="format-filter-mobile"
+          aria-label="Selecionar formato"
+          value={filters.format}
+          onChange={handleFormatChange}
+          options={formatOptions}
+          className="border-gray-200 shadow-sm"
+        />
+      </div>
 
-      {/* Origin Dropdown */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button 
-            className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
-            aria-label="Selecionar origem"
-            style={{ height: '40px' }}
-          >
-            <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
-                {filters.origin}
-              </span>
-            </span>
-            <ChevronDown size={16} className="text-gray-400" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] bg-white z-50">
-          <DropdownMenuItem onClick={() => handleOriginChange('Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Todas
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOriginChange('Extrajudicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Extrajudicial
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOriginChange('Judicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Judicial
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOriginChange('Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Particular
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOriginChange('Público')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Público
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="space-y-2">
+        <label htmlFor="origin-filter-mobile" className="text-sm text-gray-500 font-normal">Origem:</label>
+        <FilterDropdown
+          id="origin-filter-mobile"
+          aria-label="Selecionar origem"
+          value={filters.origin}
+          onChange={handleOriginChange}
+          options={originOptions}
+          className="border-gray-200 shadow-sm"
+        />
+      </div>
 
-      {/* Place Dropdown */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button 
-            className="h-10 w-full flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50"
-            aria-label="Selecionar etapa"
-            style={{ height: '40px' }}
-          >
-            <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
-                {filters.place}
-              </span>
-            </span>
-            <ChevronDown size={16} className="text-gray-400" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[200px] bg-white z-50">
-          <DropdownMenuItem onClick={() => handlePlaceChange('Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Todas
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePlaceChange('Praça única')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            Praça única
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePlaceChange('1ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            1ª Praça
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePlaceChange('2ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            2ª Praça
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handlePlaceChange('3ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 text-gray-600 font-normal">
-            3ª Praça
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="space-y-2">
+        <label htmlFor="place-filter-mobile" className="text-sm text-gray-500 font-normal">Etapa:</label>
+        <FilterDropdown
+          id="place-filter-mobile"
+          aria-label="Selecionar etapa"
+          value={filters.place}
+          onChange={handlePlaceChange}
+          options={placeOptions}
+          className="border-gray-200 shadow-sm"
+        />
+      </div>
     </div>
   );
 };
