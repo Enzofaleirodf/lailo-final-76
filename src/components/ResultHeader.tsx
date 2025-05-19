@@ -63,7 +63,7 @@ const ResultHeader: React.FC = () => {
                 onClick={handleSortClick}
                 className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none"
               >
-                <span>{currentSortOption.label}</span>
+                <span className="font-medium text-gray-700">{currentSortOption.label}</span>
               </button>
               
               <SortOptions 

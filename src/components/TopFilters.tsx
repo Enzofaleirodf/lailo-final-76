@@ -1,3 +1,4 @@
+
 import React, { useCallback } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -74,7 +75,9 @@ const TopFilters: React.FC = () => {
             style={{ height: '40px' }}  
           >
             <span className="text-sm font-medium text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className="text-brand-700">{filters.format}</span>
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-medium" : "text-brand-700"}>
+                {filters.format}
+              </span>
             </span>
             <ChevronDown size={16} className="text-brand-500" />
           </button>
@@ -104,7 +107,9 @@ const TopFilters: React.FC = () => {
             style={{ height: '40px' }}  
           >
             <span className="text-sm font-medium text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className="text-brand-700">{filters.origin}</span>
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-medium" : "text-brand-700"}>
+                {filters.origin}
+              </span>
             </span>
             <ChevronDown size={16} className="text-brand-500" />
           </button>
@@ -137,7 +142,9 @@ const TopFilters: React.FC = () => {
             style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className="text-brand-700">{filters.place}</span>
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-medium" : "text-brand-700"}>
+                {filters.place}
+              </span>
             </span>
             <ChevronDown size={16} className="text-brand-500" />
           </button>

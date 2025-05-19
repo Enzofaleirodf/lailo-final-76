@@ -21,12 +21,15 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   id,
   "aria-label": ariaLabel
 }) => {
+  // Check if value is empty or equals default values like "todas" or "todos"
+  const isDefaultValue = !value || value === "todas" || value === "todos";
+
   return (
     <div className="relative">
       <select
         id={id}
         aria-label={ariaLabel}
-        className={`w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white text-gray-700 ${className}`}
+        className={`w-full border rounded-md h-10 pl-3 pr-10 text-sm appearance-none bg-white ${isDefaultValue ? 'text-brand-700' : 'text-gray-700 font-medium'} ${className}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         style={{ height: '40px' }}

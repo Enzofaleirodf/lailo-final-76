@@ -36,7 +36,9 @@ const MobileFilterOptions: React.FC = () => {
             style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className="text-purple-700">{filters.format}</span>
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-medium" : "text-purple-700"}>
+                {filters.format}
+              </span>
             </span>
             <ChevronDown size={16} className="text-gray-400" />
           </button>
@@ -66,7 +68,9 @@ const MobileFilterOptions: React.FC = () => {
             style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className="text-purple-700">{filters.origin}</span>
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-medium" : "text-purple-700"}>
+                {filters.origin}
+              </span>
             </span>
             <ChevronDown size={16} className="text-gray-400" />
           </button>
@@ -99,7 +103,9 @@ const MobileFilterOptions: React.FC = () => {
             style={{ height: '40px' }}
           >
             <span className="text-sm font-medium text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className="text-purple-700">{filters.place}</span>
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-medium" : "text-purple-700"}>
+                {filters.place}
+              </span>
             </span>
             <ChevronDown size={16} className="text-gray-400" />
           </button>
