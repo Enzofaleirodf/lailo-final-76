@@ -3,39 +3,36 @@ import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const AuctionCardSkeleton: React.FC = () => {
   return (
     <motion.div>
-      <Card className="flex p-3 overflow-hidden border border-gray-200">
-        {/* Left side - image */}
-        <div className="flex-1 min-w-[96px]">
-          <AspectRatio ratio={4/3} className="h-full flex-1">
-            <Skeleton className="w-full h-full rounded-lg flex-1" />
-          </AspectRatio>
-        </div>
-        
-        {/* Right side - content */}
-        <div className="flex-1 pl-3 flex flex-col justify-between">
-          <div>
-            <div className="flex justify-between">
-              <Skeleton className="h-6 w-4/5 mb-2" />
-              <Skeleton className="h-4 w-4 rounded-full" />
+      <Card className="overflow-hidden border border-gray-200">
+        <div className="flex flex-col sm:flex-row">
+          {/* Left side - image */}
+          <div className="w-full sm:w-2/5 lg:w-1/3">
+            <div className="aspect-video sm:aspect-square">
+              <Skeleton className="w-full h-full" />
             </div>
-            <Skeleton className="h-4 w-2/3 mb-2" />
           </div>
           
-          <Skeleton className="h-6 w-24 mt-auto" />
-          
-          <div className="border-t border-gray-100 my-2"></div>
-          
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2">
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-5 w-16" />
+          {/* Right side - content */}
+          <div className="flex-1 p-4 flex flex-col">
+            <Skeleton className="h-6 w-4/5 mb-2" />
+            <Skeleton className="h-4 w-2/3 mb-2" />
+            <Skeleton className="h-4 w-full mb-3" />
+            
+            <div className="flex justify-between items-center mt-auto mb-3">
+              <Skeleton className="h-8 w-24" />
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-24" />
+              </div>
             </div>
-            <Skeleton className="h-5 w-24" />
+            
+            <div className="pt-3 mt-3 border-t border-gray-100">
+              <Skeleton className="h-4 w-16" />
+            </div>
           </div>
         </div>
       </Card>
