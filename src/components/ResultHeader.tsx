@@ -6,8 +6,13 @@ import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { SortOption } from '@/stores/useSortStore';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -28,11 +33,16 @@ const ResultHeader: React.FC = () => {
   // Get sort options and icons
   const sortOptions = useMemo(() => [
     { value: 'newest', label: 'Mais recentes' },
-    { value: 'price-asc', label: 'Menor preço' },
-    { value: 'price-desc', label: 'Maior preço' },
-    { value: 'highest-discount', label: 'Maior desconto' },
-    { value: 'nearest', label: 'Mais próximos' }
+    { value: 'price-asc', label: 'Menor preço', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> },
+    { value: 'price-desc', label: 'Maior preço', icon: <ArrowUp size={16} className="mr-2 text-gray-500" /> },
+    { value: 'highest-discount', label: 'Maior desconto', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> },
+    { value: 'nearest', label: 'Mais próximos', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> }
   ], []);
+  
+  // Get current sort option
+  const currentSortOption = useMemo(() => {
+    return sortOptions.find(option => option.value === sortOption) || sortOptions[0];
+  }, [sortOption, sortOptions]);
   
   const handleSortChange = (value: string) => {
     setSortOption(value as SortOption);
@@ -53,23 +63,28 @@ const ResultHeader: React.FC = () => {
           
           {!isMobile && (
             <div className="flex items-center ml-auto">
-              <p className="text-sm text-gray-500 mr-3">
+              <p className="text-sm text-gray-500 mr-2">
                 Ordenar por:
               </p>
-              <RadioGroup 
-                value={sortOption} 
-                onValueChange={handleSortChange} 
-                className="flex items-center gap-3"
-              >
-                {sortOptions.map((option) => (
-                  <div key={option.value} className="flex items-center space-x-2">
-                    <RadioGroupItem value={option.value} id={`desktop-${option.value}`} />
-                    <Label htmlFor={`desktop-${option.value}`} className="cursor-pointer text-sm">
-                      {option.label}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
+              <Select value={sortOption} onValueChange={handleSortChange}>
+                <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-brand-700 font-medium focus:ring-0 hover:text-brand-900 transition-colors">
+                  <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
+                </SelectTrigger>
+                <SelectContent align="end">
+                  {sortOptions.map((option) => (
+                    <SelectItem 
+                      key={option.value} 
+                      value={option.value}
+                      className="flex items-center"
+                    >
+                      <span className="flex items-center">
+                        {option.icon && option.icon}
+                        {option.label}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
         </div>

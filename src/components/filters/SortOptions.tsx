@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { X } from 'lucide-react';
+import { X, ArrowDown, ArrowUp } from 'lucide-react';
 import { useSortStore } from '@/stores/useSortStore';
 
 interface SortOptionsProps {
@@ -26,10 +26,10 @@ const SortOptions: React.FC<SortOptionsProps> = ({
   
   const sortOptions = [
     { value: 'newest', label: 'Mais recentes' },
-    { value: 'price-asc', label: 'Menor preço' },
-    { value: 'price-desc', label: 'Maior preço' },
-    { value: 'highest-discount', label: 'Maior desconto' },
-    { value: 'nearest', label: 'Mais próximos' }
+    { value: 'price-asc', label: 'Menor preço', icon: <ArrowDown size={14} className="mr-1 text-gray-500" /> },
+    { value: 'price-desc', label: 'Maior preço', icon: <ArrowUp size={14} className="mr-1 text-gray-500" /> },
+    { value: 'highest-discount', label: 'Maior desconto', icon: <ArrowDown size={14} className="mr-1 text-gray-500" /> },
+    { value: 'nearest', label: 'Mais próximos', icon: <ArrowDown size={14} className="mr-1 text-gray-500" /> }
   ];
 
   const handleSortChange = (value: string) => {
@@ -60,7 +60,8 @@ const SortOptions: React.FC<SortOptionsProps> = ({
             {sortOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2 py-2">
                 <RadioGroupItem value={option.value} id={option.value} />
-                <Label htmlFor={option.value} className="cursor-pointer flex-1">
+                <Label htmlFor={option.value} className="cursor-pointer flex-1 flex items-center">
+                  {option.icon && option.icon}
                   {option.label}
                 </Label>
               </div>
