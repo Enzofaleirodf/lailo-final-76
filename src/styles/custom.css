@@ -1,4 +1,3 @@
-
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -195,13 +194,20 @@ body.modal-open .mobile-nav-bar {
   background-color: #f3f4f6;
 }
 
-/* COMPLETELY DISABLED FOCUS STYLES - as requested */
-.no-focus-styles *:focus,
-.no-focus-styles *:focus-visible,
-.no-focus-styles *:focus-within {
+/* COMPLETELY DISABLED FOCUS STYLES - for all elements */
+*:focus,
+*:focus-visible,
+*:focus-within {
   outline: none !important;
   box-shadow: none !important;
   border-color: inherit !important;
+}
+
+/* EXCEPT for select elements with our special class - these get yellow focus ring */
+.select-with-focus:focus {
+  outline: none !important;
+  border-color: #FFD100 !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.4) !important;
 }
 
 /* Direct styling for select elements only */
@@ -334,4 +340,9 @@ body {
 /* Ensure the navigation sidebar always appears on top of filter components */
 .sidebar-nav {
   z-index: var(--z-sidebar) !important;
+}
+
+/* Remove no-focus-styles class since we're handling focus globally */
+.no-focus-styles {
+  /* This class is now empty as we control focus globally */
 }

@@ -20,67 +20,49 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   // Capture initial scroll position on mount
   useEffect(() => {
     scrollPositionRef.current = window.scrollY;
-  }, []);
-  
-  // For desktop, implement automatic filter application with fixed scroll position
-  useEffect(() => {
-    if (!isMobile) {
-      // Store current scroll position before any filter changes
-      const currentScrollPosition = window.scrollY;
-      scrollPositionRef.current = currentScrollPosition;
-      
-      // Create and dispatch the filters:applied event with current scroll position
-      const event = new CustomEvent('filters:applied', {
-        detail: { scrollPosition: currentScrollPosition }
-      });
-      
-      // Use requestAnimationFrame to ensure dispatch happens at the right time
-      requestAnimationFrame(() => {
-        window.dispatchEvent(event);
-      });
-    }
-  }, [filters, isMobile]);
-  
-  // Event handling logic - prevents URL jumps but allows filter interactions
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
     
-    const handleClickCapture = (e: MouseEvent) => {
-      // Capture current scroll before any interaction
-      scrollPositionRef.current = window.scrollY;
-      
-      // Only modify navigation-related events
-      if (e.target && 
-          ((e.target as HTMLElement).closest('a') || 
-           (e.target as HTMLElement).hasAttribute('href'))) {
-        // Prevent navigation while allowing filter functionality
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-    
-    // Prevent default browser scroll behavior on specific events
-    const handleScrollEvents = () => {
-      // Capture current scroll position
+    // Create a handler to preserve scroll position
+    const handleScroll = () => {
       scrollPositionRef.current = window.scrollY;
     };
     
-    // Add event listeners with capture phase
-    wrapper.addEventListener('click', handleClickCapture, { capture: true });
-    window.addEventListener('scroll', handleScrollEvents);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
-      // Clean up event listeners
-      wrapper.removeEventListener('click', handleClickCapture, { capture: true });
-      window.removeEventListener('scroll', handleScrollEvents);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  
+  // For desktop, ensure we don't jump to top when filters change
+  useEffect(() => {
+    if (!isMobile) {
+      // Store current scroll position
+      const savedPosition = scrollPositionRef.current;
+      
+      // Create a handler for the filters:applied event
+      const handleFiltersApplied = (e: CustomEvent) => {
+        // Immediately restore scroll position in this microtask
+        window.scrollTo(0, savedPosition);
+        
+        // And also after a small delay to handle race conditions
+        setTimeout(() => {
+          window.scrollTo(0, savedPosition);
+        }, 0);
+      };
+      
+      // Add typed event listener
+      window.addEventListener('filters:applied' as any, handleFiltersApplied as EventListener);
+      
+      return () => {
+        window.removeEventListener('filters:applied' as any, handleFiltersApplied as EventListener);
+      };
+    }
+  }, [filters, isMobile]);
   
   return (
     <div 
       ref={wrapperRef} 
-      className="filter-wrapper no-scroll-jump prevent-scroll-restoration no-focus-styles"
+      className="filter-wrapper prevent-scroll-restoration"
       data-filter-interaction-zone="true"
     >
       {children}
