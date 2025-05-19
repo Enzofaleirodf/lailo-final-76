@@ -1,3 +1,4 @@
+
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -206,6 +207,26 @@ body.modal-open .mobile-nav-bar {
 
 [data-state="checked"] {
   border-color: #202A44;
+}
+
+/* Remove focus ring from select components */
+.select-no-focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.select-no-focus:focus, 
+.select-no-focus:focus-visible,
+.select-no-focus:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+  ring-width: 0 !important;
+}
+
+/* Override radix select focus styles */
+[data-radix-select-trigger]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Improved dropdown visibility */
