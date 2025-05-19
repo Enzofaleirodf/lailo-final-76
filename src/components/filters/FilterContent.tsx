@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import FilterSectionComponent from './FilterSectionComponent';
@@ -19,7 +19,25 @@ const FilterContent: React.FC = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   
-  // No botão para desktop, os filtros aplicam-se automaticamente ao selecionar
+  // Trigger filter application when filters change on desktop
+  const handleFilterChange = () => {
+    if (!isMobile) {
+      // No ambiente desktop, notificar que filtros foram alterados
+      console.log('Filter change detected on desktop');
+    }
+  };
+  
+  // Reset filters and notify
+  const handleResetFilters = () => {
+    resetFilters();
+    
+    // Mostrar toast quando filtros são resetados
+    toast({
+      title: "Filtros resetados",
+      description: "Todos os filtros foram removidos",
+      duration: 2000,
+    });
+  };
   
   return (
     <div className="flex flex-col gap-3">
@@ -31,7 +49,7 @@ const FilterContent: React.FC = () => {
           isExpanded={expandedSections.location}
           onToggle={() => toggleSection('location')}
         >
-          <LocationFilter />
+          <LocationFilter onFilterChange={handleFilterChange} />
         </FilterSectionComponent>
 
         <FilterSectionComponent 
@@ -39,7 +57,7 @@ const FilterContent: React.FC = () => {
           isExpanded={expandedSections.vehicleType}
           onToggle={() => toggleSection('vehicleType')}
         >
-          <VehicleTypeFilter />
+          <VehicleTypeFilter onFilterChange={handleFilterChange} />
         </FilterSectionComponent>
 
         <FilterSectionComponent 
@@ -47,7 +65,7 @@ const FilterContent: React.FC = () => {
           isExpanded={expandedSections.model}
           onToggle={() => toggleSection('model')}
         >
-          <ModelFilter />
+          <ModelFilter onFilterChange={handleFilterChange} />
         </FilterSectionComponent>
 
         <FilterSectionComponent 
@@ -55,7 +73,7 @@ const FilterContent: React.FC = () => {
           isExpanded={expandedSections.color}
           onToggle={() => toggleSection('color')}
         >
-          <ColorFilter />
+          <ColorFilter onFilterChange={handleFilterChange} />
         </FilterSectionComponent>
 
         <FilterSectionComponent 
@@ -63,7 +81,7 @@ const FilterContent: React.FC = () => {
           isExpanded={expandedSections.year}
           onToggle={() => toggleSection('year')}
         >
-          <YearRangeFilter />
+          <YearRangeFilter onFilterChange={handleFilterChange} />
         </FilterSectionComponent>
 
         <FilterSectionComponent 
@@ -71,7 +89,7 @@ const FilterContent: React.FC = () => {
           isExpanded={expandedSections.price}
           onToggle={() => toggleSection('price')}
         >
-          <PriceRangeFilter />
+          <PriceRangeFilter onFilterChange={handleFilterChange} />
         </FilterSectionComponent>
       </FilterWrapper>
 
@@ -79,7 +97,7 @@ const FilterContent: React.FC = () => {
         <Button 
           variant="outline" 
           className="w-full h-10 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors"
-          onClick={resetFilters}
+          onClick={handleResetFilters}
           aria-label="Resetar todos os filtros"
         >
           Resetar filtros

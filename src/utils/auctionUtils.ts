@@ -63,6 +63,23 @@ const normalizeString = (str: string): string => {
   return str.toLowerCase().trim();
 };
 
+// Função para mapear abreviações de estados para nomes completos e vice-versa
+const getStateVariations = (state: string): string[] => {
+  const stateMap: Record<string, string[]> = {
+    'sp': ['são paulo', 'sp', 'sao paulo'],
+    'rj': ['rio de janeiro', 'rj'],
+    'mg': ['minas gerais', 'mg'],
+    'são paulo': ['sp', 'sao paulo', 'são paulo'],
+    'sao paulo': ['sp', 'são paulo', 'sao paulo'],
+    'rio de janeiro': ['rj', 'rio de janeiro'],
+    'minas gerais': ['mg', 'minas gerais'],
+    // Adicione mais estados conforme necessário
+  };
+  
+  const normalized = normalizeString(state);
+  return stateMap[normalized] || [normalized];
+};
+
 // Função auxiliar para verificar se um item está em um array, ignorando case e trim
 const isInArray = (array: string[], value: string): boolean => {
   const normalizedValue = normalizeString(value);
@@ -75,8 +92,17 @@ const stringsMatch = (str1: string, str2: string): boolean => {
 };
 
 // Função auxiliar para verificar se uma string contém outra, ignorando case e trim
+// Agora também lida com abreviações de estados
 const stringContains = (str: string, searchStr: string): boolean => {
-  return normalizeString(str).includes(normalizeString(searchStr));
+  const normalizedStr = normalizeString(str);
+  const normalizedSearch = normalizeString(searchStr);
+  
+  // Verificação direta se a string contém a busca
+  if (normalizedStr.includes(normalizedSearch)) return true;
+  
+  // Verificação de variações de estados (abreviações e nomes completos)
+  const variations = getStateVariations(searchStr);
+  return variations.some(variation => normalizedStr.includes(variation));
 };
 
 export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): AuctionItem[] => {
@@ -84,6 +110,7 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
     // Filtro de localização - aplicar apenas se não for o valor padrão
     if (filters.location && filters.location !== 'todos') {
       // Verificar se a localização do leilão contém o texto de filtro
+      // ou se corresponde a uma abreviação de estado
       const locationMatch = stringContains(auction.location, filters.location);
       if (!locationMatch) return false;
     }

@@ -3,6 +3,10 @@ import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 
+interface LocationFilterProps {
+  onFilterChange?: () => void;
+}
+
 const locationOptions = [
   { value: 'todos', label: 'Todos os locais' },
   { value: 'sp', label: 'São Paulo' },
@@ -10,12 +14,23 @@ const locationOptions = [
   { value: 'mg', label: 'Minas Gerais' }
 ];
 
-const LocationFilter: React.FC = () => {
+const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
   const handleLocationChange = useCallback((value: string) => {
     updateFilter('location', value);
-  }, [updateFilter]);
+    
+    // Notify parent component that filter has changed
+    if (onFilterChange) {
+      onFilterChange();
+    }
+    
+    // Dispatch event to trigger URL update (for desktop)
+    const event = new CustomEvent('filters:applied', {
+      detail: { scrollPosition: window.scrollY }
+    });
+    window.dispatchEvent(event);
+  }, [updateFilter, onFilterChange]);
 
   return (
     <FilterDropdown

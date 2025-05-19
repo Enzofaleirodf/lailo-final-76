@@ -1,5 +1,7 @@
 
 import React, { useRef, useEffect, ReactNode } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 interface FilterWrapperProps {
   children: ReactNode;
@@ -7,39 +9,44 @@ interface FilterWrapperProps {
 
 /**
  * A wrapper component for filter elements that prevents scroll jumps
- * by capturing events and preventing their propagation to avoid
- * triggering URL changes during filter interactions
+ * by capturing events and selectively handling them based on context
  */
 const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const { filters } = useFilterStore();
   
-  // Prevent default behavior for filter interactions
+  // For desktop, implement automatic filter application
+  useEffect(() => {
+    if (!isMobile) {
+      // Create and dispatch the filters:applied event when filters change
+      const event = new CustomEvent('filters:applied', {
+        detail: { scrollPosition: window.scrollY }
+      });
+      window.dispatchEvent(event);
+    }
+  }, [filters, isMobile]);
+  
+  // Event handling logic - prevents URL jumps but allows filter interactions
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
     
     const handleInteraction = (e: Event) => {
-      // Only stop propagation for filter-related interactions
-      // This prevents URL updates while still allowing normal clicking
+      // Only modify navigation-related events
+      // Allow filter interactions to work normally
       if (e.target && 
-          ((e.target as HTMLElement).closest('input') || 
-           (e.target as HTMLElement).closest('select') || 
-           (e.target as HTMLElement).closest('[role="listbox"]') ||
-           (e.target as HTMLElement).closest('[role="option"]') ||
-           (e.target as HTMLElement).closest('.toggle-group-item'))) {
+          ((e.target as HTMLElement).closest('a') || 
+           (e.target as HTMLElement).hasAttribute('href'))) {
         
-        // Completely prevent event bubbling to avoid URL updates
+        // Prevent navigation while allowing filter functionality
+        e.preventDefault();
         e.stopPropagation();
-        
-        // For click events, also prevent default to avoid any navigation
-        if (e.type === 'click') {
-          e.preventDefault();
-        }
       }
     };
     
-    // Capture all relevant interaction events that might trigger navigation
-    const eventTypes = ['click', 'change', 'input', 'mousedown', 'touchstart', 'keydown'];
+    // Only capture link-related events
+    const eventTypes = ['click'];
     
     // Use capture phase to intercept events before they reach React's event system
     eventTypes.forEach(eventType => {
@@ -57,11 +64,7 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
     <div 
       ref={wrapperRef} 
       className="filter-wrapper"
-      // Add data attribute for potential CSS targeting
       data-filter-interaction-zone="true"
-      // Explicitly prevent default React synthetic events as well
-      onClick={(e) => e.stopPropagation()}
-      onChange={(e) => e.stopPropagation()}
     >
       {children}
     </div>
