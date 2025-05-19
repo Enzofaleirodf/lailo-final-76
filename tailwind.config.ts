@@ -76,6 +76,19 @@ export default {
 					800: '#162035',
 					900: '#121C30',
 				},
+				accent2: {
+					DEFAULT: '#FFD100',
+					50: '#FFFAE6',
+					100: '#FFF6CC',
+					200: '#FFEE99',
+					300: '#FFE566',
+					400: '#FFDD33',
+					500: '#FFD100',
+					600: '#E6BC00',
+					700: '#CC8700',
+					800: '#B36E00',
+					900: '#994D00',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

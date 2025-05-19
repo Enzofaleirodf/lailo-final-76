@@ -41,6 +41,20 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   };
 
   const discount = calculateDiscount();
+  
+  // Determine if the auction is new (less than 24 hours old)
+  const isNew = () => {
+    const today = new Date();
+    const auctionDate = new Date(auction.createdAt || today);
+    const diffTime = Math.abs(today.getTime() - auctionDate.getTime());
+    const diffHours = diffTime / (1000 * 60 * 60);
+    return diffHours < 24;
+  };
+
+  // Determine if the auction is "hot" (lots of bids)
+  const isHot = () => {
+    return auction.bidCount && auction.bidCount > 10;
+  };
 
   return (
     <motion.div 
@@ -76,9 +90,22 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               }}
             />
             
-            {/* Discount badge - redesigned with more prominent styling */}
+            {/* Special badge indicators */}
+            <div className="absolute top-3 left-3 flex gap-1.5">
+              {isNew() && (
+                <Badge variant="new" className="shadow-sm">Novo</Badge>
+              )}
+              {isHot() && (
+                <Badge variant="hot" className="shadow-sm">Hot</Badge>
+              )}
+            </div>
+            
+            {/* Discount badge - with yellow highlight */}
             {discount && (
-              <Badge className="absolute bottom-3 left-3 bg-green-600 hover:bg-green-700 text-white font-medium px-2.5 py-1 text-xs shadow-sm">
+              <Badge 
+                variant="discount" 
+                className="absolute bottom-3 left-3 shadow-sm"
+              >
                 {discount}% OFF
               </Badge>
             )}
@@ -94,12 +121,12 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             </h3>
             <button 
               onClick={() => setFavorited(!favorited)} 
-              className={`flex-shrink-0 p-1.5 -mr-1 rounded-full transition-all ${favorited ? 'bg-red-50 text-red-500' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-500'}`}
+              className={`flex-shrink-0 p-1.5 -mr-1 rounded-full transition-all ${favorited ? 'bg-accent2-50 text-accent2-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-500'}`}
               aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             >
               <Heart 
                 size={isMobile ? 18 : 20} 
-                className={`${favorited ? "fill-red-500" : ""} transition-colors`}
+                className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`}
               />
             </button>
           </div>
@@ -133,7 +160,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             {auction.originalPrice && (
               <div className="flex items-center gap-2">
                 {discount && (
-                  <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded-md text-xs font-medium">
+                  <span className="bg-accent2-50 text-accent2-700 px-2 py-0.5 rounded-md text-xs font-medium">
                     {discount}% OFF
                   </span>
                 )}
@@ -153,7 +180,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
                 {auction.origin}
               </Badge>
-              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
+              <Badge variant="outline" className={`bg-gray-50 font-normal border-gray-200 text-xs px-2 py-0.5 ${auction.place.includes('1ª') ? 'border-accent2-300 bg-accent2-50 text-accent2-800' : 'text-gray-700'}`}>
                 {auction.place}
               </Badge>
             </div>

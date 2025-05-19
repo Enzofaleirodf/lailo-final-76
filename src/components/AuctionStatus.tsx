@@ -56,7 +56,7 @@ const AuctionStatus: React.FC = () => {
     >
       Encontramos <span className="text-foreground font-medium">{stats.totalAuctions.toLocaleString('pt-BR')}</span> leilões em{' '}
       <span className="text-foreground font-medium">{stats.totalSites.toLocaleString('pt-BR')}</span> sites ·{' '}
-      <span className="text-foreground font-medium">{stats.newAuctions.toLocaleString('pt-BR')}</span> novos hoje
+      <span className="text-accent2-500 font-medium">{stats.newAuctions.toLocaleString('pt-BR')}</span> novos hoje
     </motion.div>
   );
 };
