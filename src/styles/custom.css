@@ -1,3 +1,4 @@
+
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -207,6 +208,12 @@ body.modal-open .mobile-nav-bar {
 /* ONLY apply yellow focus ring to select elements with our special class */
 .select-with-focus:focus {
   outline: none !important;
+  border-color: #FFD100 !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.4) !important;
+}
+
+/* Apply yellow border to selected dropdown items that aren't default values */
+select.select-with-focus[value]:not([value="Todas"]):not([value="Todos"]):not([value=""]) {
   border-color: #FFD100 !important;
   box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.4) !important;
 }

@@ -32,7 +32,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white select-with-focus",
-          isDefaultValue ? "text-gray-700" : "text-gray-700",
+          isDefaultValue ? "text-gray-700" : "text-brand-700 border-accent2-500",
           className
         )}
         value={value}
