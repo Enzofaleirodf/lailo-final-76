@@ -4,18 +4,23 @@ import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { LocationFilter } from '@/types/filters';
 
 const ActiveFilterBadges: React.FC = () => {
   const { filters, updateFilter, resetFilters } = useFilterStore();
   
   const badges = [];
   
-  // Location badge - only if not the default value
-  if (filters.location && filters.location !== 'todos') {
+  // Location badge - only if state or city is set
+  if (filters.location && (filters.location.state || filters.location.city)) {
+    const locationText = [];
+    if (filters.location.city) locationText.push(filters.location.city);
+    if (filters.location.state) locationText.push(filters.location.state);
+    
     badges.push({
       key: 'location',
-      label: `Localização: ${filters.location}`,
-      onRemove: () => updateFilter('location', 'todos')
+      label: `Localização: ${locationText.join(', ')}`,
+      onRemove: () => updateFilter('location', { state: '', city: '' })
     });
   }
   
