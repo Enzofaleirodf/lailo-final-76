@@ -83,7 +83,7 @@ export const useUrlParams = () => {
       params.delete('priceMax');
     }
     
-    if (filters.format !== 'Leilão') {
+    if (filters.format !== 'Todos') {
       params.set('format', filters.format);
     } else {
       params.delete('format');
@@ -122,7 +122,7 @@ export const useUrlParams = () => {
     if ((params.get('yearMax') || '') !== currentFilters.year.max) return true;
     if ((params.get('priceMin') || '') !== currentFilters.price.range.min) return true;
     if ((params.get('priceMax') || '') !== currentFilters.price.range.max) return true;
-    if ((params.get('format') || 'Leilão') !== currentFilters.format) return true;
+    if ((params.get('format') || 'Todos') !== currentFilters.format) return true;
     if ((params.get('origin') || 'Todas') !== currentFilters.origin) return true;
     if ((params.get('place') || 'Todas') !== currentFilters.place) return true;
     return false;
@@ -186,7 +186,7 @@ export const useUrlParams = () => {
     
     if (searchParams.has('format')) {
       const format = searchParams.get('format');
-      if (format === 'Leilão' || format === 'Venda Direta' || format === 'Alienação Particular') {
+      if (format === 'Todos' || format === 'Alienação Particular' || format === 'Leilão' || format === 'Venda Direta') {
         newFilters.format = format;
         hasChanges = true;
       }
@@ -194,7 +194,8 @@ export const useUrlParams = () => {
     
     if (searchParams.has('origin')) {
       const origin = searchParams.get('origin');
-      if (origin === 'Todas' || origin === 'Judicial' || origin === 'Extrajudicial') {
+      if (origin === 'Todas' || origin === 'Extrajudicial' || origin === 'Judicial' || 
+          origin === 'Particular' || origin === 'Público') {
         newFilters.origin = origin;
         hasChanges = true;
       }
@@ -202,7 +203,8 @@ export const useUrlParams = () => {
     
     if (searchParams.has('place')) {
       const place = searchParams.get('place');
-      if (place === 'Todas' || place === 'Primeira' || place === 'Segunda') {
+      if (place === 'Todas' || place === 'Praça única' || place === '1ª Praça' || 
+          place === '2ª Praça' || place === '3ª Praça') {
         newFilters.place = place;
         hasChanges = true;
       }

@@ -81,14 +81,17 @@ const TopFilters: React.FC = () => {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Todos')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Todos
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Alienação Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Alienação Particular
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleFilterChange('format', 'Leilão')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Leilão
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Venda Direta
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Alienação Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
-            Alienação Particular
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -111,11 +114,17 @@ const TopFilters: React.FC = () => {
           <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Todas
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Extrajudicial
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Judicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Judicial
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
-            Extrajudicial
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Particular
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Público')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Público
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -138,11 +147,17 @@ const TopFilters: React.FC = () => {
           <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
             Todas
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Primeira')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
-            Primeira
+          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Praça única')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            Praça única
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Segunda')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
-            Segunda
+          <DropdownMenuItem onClick={() => handleFilterChange('place', '1ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            1ª Praça
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('place', '2ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            2ª Praça
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleFilterChange('place', '3ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700">
+            3ª Praça
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -33,7 +33,7 @@ export const DEFAULT_FILTERS: FilterState = {
     value: [30],
     range: { min: '', max: '' }
   },
-  format: 'Leilão',
+  format: 'Todos',
   origin: 'Todas',
   place: 'Todas'
 };
