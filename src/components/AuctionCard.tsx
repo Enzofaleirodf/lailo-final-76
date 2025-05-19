@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Calendar, SprayCan } from 'lucide-react';
+import { Heart, Calendar, SprayCan, MapPin } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Separator } from "@/components/ui/separator";
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -22,7 +23,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     setImageLoaded(true);
   };
 
-  // Calcular o desconto se houver preço original
+  // Calculate discount if original price exists
   const calculateDiscount = () => {
     if (auction.originalPrice && auction.originalPrice > auction.currentBid) {
       const discount = Math.round((auction.originalPrice - auction.currentBid) / auction.originalPrice * 100);
@@ -44,17 +45,17 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   return (
     <motion.div 
       whileHover={{
-        y: -2,
-        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.08)'
+        y: -3,
+        transition: { duration: 0.2 }
       }}
-      className="mb-2"
+      className="mb-3"
     >
-      <div className="flex p-3 rounded-xl bg-white border border-[#E5E5E5] shadow-sm">
-        {/* Imagem (lado esquerdo) */}
-        <div className="relative w-[30%] min-w-[96px]">
+      <div className="flex p-4 rounded-xl bg-white border border-[#EAECF0] shadow-[0_1px_3px_rgba(16,24,40,0.1),0_1px_2px_rgba(16,24,40,0.06)]">
+        {/* Image (left side) */}
+        <div className="relative w-[30%] min-w-[100px]">
           <div className="relative h-full w-full flex">
             <div className="flex-1 relative overflow-hidden rounded-lg">
-              {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />}
+              {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-lg" />}
               <img
                 src={auction.imageUrl}
                 alt={auction.title}
@@ -66,7 +67,8 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                   objectFit: 'cover'
                 }}
               />
-              {/* Degradê sobre a imagem */}
+              
+              {/* Image overlay */}
               <div
                 className="absolute inset-0 rounded-lg"
                 style={{
@@ -75,9 +77,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                 }}
               />
               
-              {/* Badge de desconto, se houver */}
+              {/* Discount badge */}
               {discount && (
-                <Badge className="absolute bottom-2 left-2 bg-green-600 text-white hover:bg-green-700">
+                <Badge className="absolute bottom-2 left-2 bg-green-600 text-white font-medium hover:bg-green-700 px-2 py-1">
                   {discount}% OFF
                 </Badge>
               )}
@@ -85,59 +87,77 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
         </div>
 
-        {/* Conteúdo (lado direito) */}
-        <div className="flex-1 pl-3 flex flex-col">
-          {/* Linha 1: Modelo - removida duplicação da marca */}
-          <div className="flex justify-between items-center">
-            <div className={`font-semibold text-black line-clamp-1 ${!isMobile ? 'text-[22px]' : 'text-[16px]'}`}>
+        {/* Content (right side) */}
+        <div className="flex-1 pl-4 flex flex-col">
+          {/* Top row: Title + Favorite button */}
+          <div className="flex justify-between items-start">
+            <h3 className={`font-semibold text-gray-900 line-clamp-1 ${!isMobile ? 'text-[22px] leading-7' : 'text-[16px] leading-5'} tracking-tight`}>
               {auction.title}
-            </div>
-            <button onClick={() => setFavorited(!favorited)} className="p-0.5">
-              <Heart size={!isMobile ? 20 : 16} className={favorited ? "fill-red-500 text-red-500" : "text-[#6E6E73]"} />
+            </h3>
+            <button 
+              onClick={() => setFavorited(!favorited)} 
+              className={`p-1 -mt-1 -mr-1 rounded-full transition-colors ${favorited ? 'bg-red-50' : 'hover:bg-gray-100'}`}
+            >
+              <Heart 
+                size={!isMobile ? 20 : 18} 
+                className={favorited ? "fill-red-500 text-red-500" : "text-gray-400"}
+              />
             </button>
           </div>
           
-          {/* Linha 2: Cor, Ano e Cidade/Estado */}
-          <div className={`flex items-center mt-1 text-gray-700 ${!isMobile ? 'text-[17px]' : 'text-[13px]'}`}>
-            <div className="flex items-center mr-2">
-              <SprayCan size={!isMobile ? 14 : 10} className="mr-0.5 text-gray-500" />
+          {/* Vehicle info row */}
+          <div className={`flex flex-wrap items-center gap-x-3 mt-1 text-gray-600 ${!isMobile ? 'text-[15px]' : 'text-[13px]'}`}>
+            <div className="flex items-center">
+              <SprayCan size={!isMobile ? 14 : 12} className="mr-1 text-gray-500" />
               {auction.vehicleInfo.color}
             </div>
-            <div className="flex items-center">
-              <Calendar size={!isMobile ? 14 : 10} className="mr-0.5 text-gray-500" />
-              {auction.vehicleInfo.year}
-            </div>
-            <div className="mx-2 h-3 border-r border-gray-300"></div>
-            <div className="text-gray-500 line-clamp-1">{auction.location}</div>
+            {auction.vehicleInfo.year && (
+              <div className="flex items-center">
+                <span className="text-gray-400 mx-1">•</span>
+                {auction.vehicleInfo.year}
+              </div>
+            )}
+            {auction.location && (
+              <div className="flex items-center">
+                <span className="text-gray-400 mx-1">•</span>
+                <MapPin size={!isMobile ? 14 : 12} className="mr-1 text-gray-500" />
+                <span className="line-clamp-1">{auction.location}</span>
+              </div>
+            )}
           </div>
           
-          {/* Linha 3: Preço + Badge */}
-          <div className="flex items-center gap-1.5 mt-3">
-            <span className={`font-bold text-black ${!isMobile ? 'text-[22px]' : 'text-[16px]'}`}>
+          {/* Price section */}
+          <div className="flex items-center gap-2 mt-3">
+            <span className={`font-bold text-gray-900 ${!isMobile ? 'text-[24px] leading-7' : 'text-[18px] leading-5'}`}>
               {formatCurrency(auction.currentBid)}
             </span>
             {discount && (
-              <span className={`bg-teal-600 text-white px-2 py-0.5 rounded-md ${!isMobile ? 'text-[15px]' : 'text-[11px]'}`}>
+              <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded-md text-xs font-medium">
                 {discount}% OFF
+              </span>
+            )}
+            {auction.originalPrice && (
+              <span className="text-gray-500 line-through text-sm">
+                {formatCurrency(auction.originalPrice)}
               </span>
             )}
           </div>
           
           {/* Divider */}
-          <div className="border-t border-[#E5E5EA] mt-4 mb-4"></div>
+          <Separator className="my-3 bg-gray-100" />
           
-          {/* Linha 4: Origem + Etapa e Data + Hora */}
-          <div className={`flex justify-between items-center ${!isMobile ? 'text-[16px]' : 'text-[12px]'}`}>
+          {/* Bottom row: Origin + Place and Date */}
+          <div className={`flex justify-between items-center ${!isMobile ? 'text-[14px]' : 'text-[12px]'}`}>
             <div className="flex gap-1.5">
-              <span className="border border-gray-300 rounded-md px-1.5 py-0.5 text-gray-600">
+              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 hover:bg-gray-100 px-2">
                 {auction.origin}
-              </span>
-              <span className="border border-gray-300 rounded-md px-1.5 py-0.5 text-gray-600">
+              </Badge>
+              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 hover:bg-gray-100 px-2">
                 {auction.place === 'Primeira' ? '1ª Praça' : '2ª Praça'}
-              </span>
+              </Badge>
             </div>
-            <div className="flex items-center bg-gray-100 rounded-md px-1.5 py-0.5 text-gray-700 font-medium">
-              <Calendar size={!isMobile ? 14 : 10} className="mr-1 text-gray-500" />
+            <div className="flex items-center bg-gray-50 rounded-md px-2 py-1 text-gray-700 font-medium text-xs">
+              <Calendar size={!isMobile ? 13 : 11} className="mr-1 text-gray-500" />
               {formatAuctionDate(auction.endDate)} às {auction.endDate.getHours()}h
             </div>
           </div>
