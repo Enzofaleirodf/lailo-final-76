@@ -62,7 +62,10 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
     model: true,
     color: true,
     year: true,
-    price: true
+    price: true,
+    format: true,
+    origin: true,
+    place: true
   },
   
   // Computed values

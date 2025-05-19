@@ -1,24 +1,24 @@
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import type { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
-import { Label } from '@/components/ui/label';
+import FilterSectionComponent from '../FilterSectionComponent';
 
 const MobileFilterOptions: React.FC = () => {
-  const { filters, updateFilter } = useFilterStore();
+  const { filters, updateFilter, expandedSections, toggleSection } = useFilterStore();
 
-  const handleFormatChange = useCallback((value: string) => {
+  const handleFormatChange = (value: string) => {
     updateFilter('format', value as FilterFormat);
-  }, [updateFilter]);
+  };
 
-  const handleOriginChange = useCallback((value: string) => {
+  const handleOriginChange = (value: string) => {
     updateFilter('origin', value as FilterOrigin);
-  }, [updateFilter]);
+  };
 
-  const handlePlaceChange = useCallback((value: string) => {
+  const handlePlaceChange = (value: string) => {
     updateFilter('place', value as FilterPlace);
-  }, [updateFilter]);
+  };
 
   const formatOptions = [
     { value: 'Todos', label: 'Todos' },
@@ -45,8 +45,11 @@ const MobileFilterOptions: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 gap-4 mb-4">
-      <div className="space-y-3">
-        <Label className="text-sm font-medium text-gray-700">Formato</Label>
+      <FilterSectionComponent 
+        title="Formato"
+        isExpanded={expandedSections.format || false}
+        onToggle={() => toggleSection('format')}
+      >
         <FilterDropdown
           id="format-filter-mobile"
           aria-label="Selecionar formato"
@@ -55,10 +58,13 @@ const MobileFilterOptions: React.FC = () => {
           options={formatOptions}
           className="border-gray-200 shadow-sm"
         />
-      </div>
+      </FilterSectionComponent>
 
-      <div className="space-y-3">
-        <Label className="text-sm font-medium text-gray-700">Origem</Label>
+      <FilterSectionComponent 
+        title="Origem"
+        isExpanded={expandedSections.origin || false}
+        onToggle={() => toggleSection('origin')}
+      >
         <FilterDropdown
           id="origin-filter-mobile"
           aria-label="Selecionar origem"
@@ -67,10 +73,13 @@ const MobileFilterOptions: React.FC = () => {
           options={originOptions}
           className="border-gray-200 shadow-sm"
         />
-      </div>
+      </FilterSectionComponent>
 
-      <div className="space-y-3">
-        <Label className="text-sm font-medium text-gray-700">Etapa</Label>
+      <FilterSectionComponent 
+        title="Etapa"
+        isExpanded={expandedSections.place || false}
+        onToggle={() => toggleSection('place')}
+      >
         <FilterDropdown
           id="place-filter-mobile"
           aria-label="Selecionar etapa"
@@ -79,9 +88,7 @@ const MobileFilterOptions: React.FC = () => {
           options={placeOptions}
           className="border-gray-200 shadow-sm"
         />
-      </div>
-
-      <div className="h-3"></div>
+      </FilterSectionComponent>
     </div>
   );
 };
