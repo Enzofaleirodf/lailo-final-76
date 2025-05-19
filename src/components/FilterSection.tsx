@@ -62,13 +62,13 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
   return (
     <Drawer open={filtersOpen} onOpenChange={handleOpenChange}>
       <DrawerContent 
-        className="p-0 overflow-hidden h-[90vh] max-h-[90vh] rounded-t-none" 
+        className="p-0 overflow-hidden h-[98vh] max-h-[98vh]" 
         footerContent={footerContent}
-        isOpen={filtersOpen} // Pass the open state to DrawerContent
-        showHandle={false} // Hide the handle
+        isOpen={filtersOpen}
+        showHandle={false}
       >
         <div className="flex flex-col h-full">
-          <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-brand-600 text-white border-b border-brand-700 rounded-t-none">
+          <div className="sticky top-0 z-[201] flex justify-between items-center p-3 bg-brand-600 text-white border-b border-brand-700 rounded-t-lg">
             <h2 className="text-base font-medium" id="drawer-title">Filtros</h2>
             <Button 
               variant="ghost" 

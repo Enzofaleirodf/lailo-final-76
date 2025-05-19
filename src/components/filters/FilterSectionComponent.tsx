@@ -20,6 +20,14 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   const id = `filter-section-${title.toLowerCase().replace(/\s+/g, '-')}`;
   const isMobile = useIsMobile();
   
+  // Prevent default browser scroll behavior when clicking on filter items in desktop
+  const handleContentClick = (e: React.MouseEvent) => {
+    if (!isMobile) {
+      // Prevent event bubbling that might cause scroll to top
+      e.stopPropagation();
+    }
+  };
+  
   return (
     <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm z-10">
       {/* Title section - only toggleable on mobile */}
@@ -50,7 +58,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
       
       {/* Content - always visible on desktop, toggleable on mobile */}
       {(isExpanded || !isMobile) && (
-        <div className="p-3" id={id}>
+        <div className="p-3" id={id} onClick={handleContentClick}>
           {children}
         </div>
       )}

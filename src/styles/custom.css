@@ -101,7 +101,7 @@ body.modal-open .mobile-nav-bar {
 
 /* Fix for DrawerContent to ensure proper scrolling */
 .radix-drawer-content {
-  max-height: 90vh !important;
+  max-height: 98vh !important;
   overflow-y: hidden !important;
   z-index: var(--z-drawer) !important;
 }
@@ -294,10 +294,10 @@ body.modal-open .mobile-nav-bar {
 
 [vaul-drawer-content] {
   z-index: var(--z-drawer) !important;
-  max-height: 90vh !important;
+  max-height: 98vh !important;
   overflow-y: hidden !important;
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
 }
 
 [vaul-drawer-overlay] {
@@ -307,4 +307,11 @@ body.modal-open .mobile-nav-bar {
 /* Ensure the navigation sidebar always appears on top of filter components */
 .sidebar-nav {
   z-index: var(--z-sidebar) !important;
+}
+
+/* Prevent page scrolling on filter change in desktop */
+.filter-toggle-item:focus, 
+.custom-toggle-item:focus,
+[data-radix-collection-item]:focus {
+  outline: none !important;
 }

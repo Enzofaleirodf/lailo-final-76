@@ -65,8 +65,8 @@ const DrawerContent = React.forwardRef<
       <DrawerPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-[200] flex flex-col rounded-t-[10px] border bg-background",
-          "h-[90vh] max-h-[90vh]", // Maximum height of 90vh
+          "fixed inset-x-0 bottom-0 z-[200] flex flex-col rounded-t-lg border bg-background",
+          "h-[98vh] max-h-[98vh]", // Maximum height of 98vh
           className
         )}
         aria-labelledby="drawer-title"
