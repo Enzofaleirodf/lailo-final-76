@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Calendar, SprayCan, MapPin } from 'lucide-react';
+import { Heart, Calendar, SprayCan, Hourglass } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
@@ -51,6 +51,12 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     return diffHours < 24;
   };
 
+  // Extract vehicle brand and model (without year)
+  const getVehicleTitle = () => {
+    // Remove any year pattern like "2021" from the title
+    return auction.title.replace(/\s+\d{4}$|\s+\d{4}\s+/, ' ').trim();
+  };
+
   return (
     <motion.div 
       whileHover={{
@@ -66,7 +72,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             {!imageLoaded && <div className="absolute inset-0 bg-gray-100 animate-pulse" />}
             <img
               src={auction.imageUrl}
-              alt={auction.title}
+              alt={getVehicleTitle()}
               className="h-full w-full object-cover"
               loading="lazy"
               onLoad={handleImageLoad}
@@ -109,7 +115,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           {/* Top row with improved spacing and alignment */}
           <div className="flex justify-between items-start gap-2 mb-1.5">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${!isMobile ? 'text-lg leading-tight' : 'text-base leading-tight'}`}>
-              {auction.title}
+              {getVehicleTitle()}
             </h3>
             <button 
               onClick={() => setFavorited(!favorited)} 
@@ -131,14 +137,13 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             </div>
             {auction.vehicleInfo.year && (
               <div className="flex items-center text-gray-600 text-xs">
-                <span className="text-gray-400 mx-1">•</span>
+                <Hourglass size={12} className="mr-1 text-gray-500" />
                 <span>{auction.vehicleInfo.year}</span>
               </div>
             )}
             {auction.location && (
               <div className="flex items-center text-gray-600 text-xs">
-                <span className="text-gray-400 mx-1">•</span>
-                <MapPin size={12} className="mr-1 text-gray-500" />
+                <Separator orientation="vertical" className="mx-2 h-3 bg-gray-200" />
                 <span className="line-clamp-1">{auction.location}</span>
               </div>
             )}
