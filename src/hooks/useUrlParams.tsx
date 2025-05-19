@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FilterState } from '@/stores/useFilterStore';
@@ -16,55 +17,69 @@ export const useUrlParams = () => {
   const { sortOption, setSortOption } = useSortStore();
   const isMobile = useIsMobile();
   
-  // Ref to store current scroll position
+  // Ref para armazenar a posição de rolagem atual
   const scrollPositionRef = useRef(0);
-  // Flag to track if we should update URL
+  // Flag para rastrear se devemos atualizar a URL
   const shouldUpdateUrlRef = useRef(false);
-  // Debounce timer ref
+  // Ref do timer para debounce
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  // Flag to indicate if this is the initial load
+  // Flag para indicar se este é o carregamento inicial
   const isInitialLoadRef = useRef(true);
-  // Flag to prevent scroll restoration during URL updates
+  // Flag para prevenir restauração de rolagem durante atualizações de URL
   const isUpdatingUrlRef = useRef(false);
+  // Timestamp da última atualização de rolagem
+  const lastScrollUpdateRef = useRef(0);
+  // Flag para desabilitar rolagem automática do navegador
+  const preventBrowserScrollRef = useRef(false);
   
-  // Handle the explicit filter application event (for desktop)
+  // Manipula o evento de aplicação de filtros explícito (para desktop)
   useEffect(() => {
     const handleFiltersApplied = (e: Event) => {
       const customEvent = e as CustomEvent;
+      
+      // Obter posição de rolagem e timestamp do evento
       if (customEvent.detail?.scrollPosition !== undefined) {
         scrollPositionRef.current = customEvent.detail.scrollPosition;
+        lastScrollUpdateRef.current = customEvent.detail.timestamp || Date.now();
       } else {
-        // Store current scroll position before applying filters
+        // Armazenar a posição de rolagem atual antes de aplicar os filtros
         scrollPositionRef.current = window.scrollY;
+        lastScrollUpdateRef.current = Date.now();
       }
       
+      // Marcar que devemos atualizar a URL
       shouldUpdateUrlRef.current = true;
       
-      // Force immediate URL update without debounce for Apply button click
+      // Forçar atualização imediata da URL sem debounce para clique no botão Aplicar
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
       
-      // Set flag to indicate URL is being updated
+      // Prevenir rolagem automática do navegador
+      preventBrowserScrollRef.current = true;
+      
+      // Definir flag para indicar que a URL está sendo atualizada
       isUpdatingUrlRef.current = true;
+      
+      // Chamar a função para atualizar URL
       updateUrl();
     };
     
-    // Function to update URL params based on current filter state
+    // Função para atualizar parâmetros de URL com base no estado atual do filtro
     const updateUrl = () => {
       const params = new URLSearchParams(searchParams);
       
-      // Preserve current page if it exists
+      // Preservar página atual se existir
       const currentPage = params.get('page');
       
-      // Add sort option to URL
+      // Adicionar opção de ordenação à URL
       if (sortOption !== 'newest') {
         params.set('sort', sortOption);
       } else {
         params.delete('sort');
       }
       
-      // Add filters to URL
+      // Adicionar filtros à URL
       if (filters.location && filters.location !== 'todos') {
         params.set('location', filters.location);
       } else {
@@ -137,33 +152,62 @@ export const useUrlParams = () => {
         params.delete('place');
       }
       
-      // Preserve page parameter or reset when filters change
+      // Preservar parâmetro de página ou reiniciar quando os filtros mudam
       if (currentPage && !hasFilterChanged(filters, searchParams)) {
         params.set('page', currentPage);
       } else {
         params.set('page', '1');
       }
       
-      // Always use {replace: true} to prevent adding to history stack
+      // Sempre use {replace: true} para evitar adicionar ao histórico
       setSearchParams(params, { replace: true });
       
-      // Reset flags after URL update
+      // Resetar flags após atualização da URL
       shouldUpdateUrlRef.current = false;
       
-      // IMPORTANTE: Use um timeout mais longo para restaurar a posição de rolagem
-      // e garantir que o navegador tenha tempo suficiente de processar as mudanças de URL
-      setTimeout(() => {
-        if (scrollPositionRef.current > 0) {
-          window.scrollTo({
-            top: scrollPositionRef.current,
-            behavior: 'instant'
-          });
+      // Implementar um sistema mais robusto de restauração de rolagem
+      const originalScrollPos = scrollPositionRef.current;
+      const originalTimestamp = lastScrollUpdateRef.current;
+      
+      // IMPORTANTE: Usar um sistema de múltiplas tentativas para garantir restauração de rolagem
+      const maxAttempts = 3;
+      let attempts = 0;
+      
+      const attemptRestoreScroll = () => {
+        // Verificar se ainda estamos na mesma atualização
+        if (originalTimestamp === lastScrollUpdateRef.current && preventBrowserScrollRef.current) {
+          if (originalScrollPos > 0) {
+            window.scrollTo({
+              top: originalScrollPos,
+              behavior: 'instant'
+            });
+            
+            // Verificar se a rolagem foi efetivamente aplicada
+            if (Math.abs(window.scrollY - originalScrollPos) < 5 || attempts >= maxAttempts - 1) {
+              // Rolagem restaurada com sucesso ou tentativas esgotadas
+              isUpdatingUrlRef.current = false;
+              preventBrowserScrollRef.current = false;
+            } else {
+              // Tentar novamente após um intervalo maior
+              attempts++;
+              setTimeout(attemptRestoreScroll, 50 * attempts);
+            }
+          } else {
+            // Não há rolagem para restaurar
+            isUpdatingUrlRef.current = false;
+            preventBrowserScrollRef.current = false;
+          }
+        } else {
+          // Uma nova atualização ocorreu, abandonar esta restauração
+          isUpdatingUrlRef.current = false;
         }
-        // Reset flag after completed URL update and scroll restoration
-        isUpdatingUrlRef.current = false;
-      }, 50);
+      };
+      
+      // Iniciar restauração de rolagem após um pequeno atraso
+      setTimeout(attemptRestoreScroll, 50);
     };
     
+    // Adicionar ouvinte para o evento de aplicação de filtros
     window.addEventListener('filters:applied', handleFiltersApplied);
     
     return () => {
@@ -171,47 +215,53 @@ export const useUrlParams = () => {
     };
   }, [filters, searchParams, setSearchParams, sortOption]);
   
-  // Update URL when filters or sort option changes, but only on mobile or when explicitly triggered
+  // Atualizar URL quando filtros ou opção de ordenação mudam, mas apenas no mobile ou quando explicitamente acionado
   useEffect(() => {
-    // Do not automatically update URL in desktop mode - only update when the apply button is clicked
-    // Skip updates during initial load or if we're already processing an update
+    // Não atualizar automaticamente a URL no modo desktop - apenas atualizar quando o botão Aplicar for clicado
+    // Pular atualizações durante o carregamento inicial ou se já estivermos processando uma atualização
     if (isUpdatingUrlRef.current || (!isMobile && !shouldUpdateUrlRef.current && !isInitialLoadRef.current)) {
       return;
     }
     
-    // Only update URL if:
-    // 1. It's mobile (automatic updates)
-    // 2. shouldUpdateUrlRef.current is true (from apply button)
-    // 3. It's the initial load (to sync filters from URL)
+    // Apenas atualizar URL se:
+    // 1. É mobile (atualizações automáticas)
+    // 2. shouldUpdateUrlRef.current é true (do botão aplicar)
+    // 3. É o carregamento inicial (para sincronizar filtros da URL)
     if (isMobile || shouldUpdateUrlRef.current || isInitialLoadRef.current) {
-      // Store current scroll position before any URL update
+      // Armazenar posição de rolagem atual antes de qualquer atualização de URL
       if (scrollPositionRef.current === 0) {
         scrollPositionRef.current = window.scrollY;
+        lastScrollUpdateRef.current = Date.now();
       }
       
-      // Clear any existing timer
+      // Limpar qualquer timer existente
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
       
-      // Set flag to indicate URL is being updated
+      // Definir flag para indicar que a URL está sendo atualizada
       isUpdatingUrlRef.current = true;
       
-      // Set a new timer for debounced URL update (mobile only)
+      // Prevenir rolagem automática do navegador apenas para atualizações que não são carregamento inicial
+      if (!isInitialLoadRef.current) {
+        preventBrowserScrollRef.current = true;
+      }
+      
+      // Definir um novo timer para atualização de URL com debounce (apenas mobile)
       timerRef.current = setTimeout(() => {
         const params = new URLSearchParams(searchParams);
         
-        // Preserve current page if it exists
+        // Preservar página atual se existir
         const currentPage = params.get('page');
         
-        // Add sort option to URL
+        // Adicionar opção de ordenação à URL
         if (sortOption !== 'newest') {
           params.set('sort', sortOption);
         } else {
           params.delete('sort');
         }
         
-        // Add filters to URL
+        // Adicionar filtros à URL
         if (filters.location && filters.location !== 'todos') {
           params.set('location', filters.location);
         } else {
@@ -284,34 +334,75 @@ export const useUrlParams = () => {
           params.delete('place');
         }
         
-        // Preserve page parameter or reset when filters change
+        // Preservar parâmetro de página ou reiniciar quando os filtros mudam
         if (currentPage && !hasFilterChanged(filters, searchParams)) {
           params.set('page', currentPage);
         } else {
           params.set('page', '1');
         }
         
-        // Always use {replace: true} to prevent adding to history stack
+        // Sempre use {replace: true} para evitar adicionar ao histórico
         setSearchParams(params, { replace: true });
         
-        // IMPORTANTE: Use um timeout mais longo para restaurar a posição de rolagem
-        setTimeout(() => {
-          if (scrollPositionRef.current > 0) {
-            window.scrollTo({
-              top: scrollPositionRef.current,
-              behavior: 'instant'
-            });
+        // Armazenar a posição da rolagem original e timestamp para restauração
+        const originalScrollPos = scrollPositionRef.current;
+        const originalTimestamp = lastScrollUpdateRef.current;
+        
+        // IMPORTANTE: Implementar sistema de múltiplas tentativas para garantir restauração de rolagem
+        const maxAttempts = 3;
+        let attempts = 0;
+        
+        const attemptRestoreScroll = () => {
+          // Verificar se ainda estamos na mesma atualização
+          if (originalTimestamp === lastScrollUpdateRef.current && preventBrowserScrollRef.current) {
+            if (originalScrollPos > 0) {
+              window.scrollTo({
+                top: originalScrollPos,
+                behavior: 'instant'
+              });
+              
+              // Verificar se a rolagem foi efetivamente aplicada
+              if (Math.abs(window.scrollY - originalScrollPos) < 5 || attempts >= maxAttempts - 1) {
+                // Rolagem restaurada com sucesso ou tentativas esgotadas
+                isUpdatingUrlRef.current = false;
+                preventBrowserScrollRef.current = false;
+                
+                // Se for carregamento inicial, marcar como concluído após restauração de rolagem
+                if (isInitialLoadRef.current) {
+                  isInitialLoadRef.current = false;
+                }
+              } else {
+                // Tentar novamente após um intervalo maior
+                attempts++;
+                setTimeout(attemptRestoreScroll, 50 * attempts);
+              }
+            } else {
+              // Não há rolagem para restaurar
+              isUpdatingUrlRef.current = false;
+              preventBrowserScrollRef.current = false;
+              
+              // Se for carregamento inicial, marcar como concluído
+              if (isInitialLoadRef.current) {
+                isInitialLoadRef.current = false;
+              }
+            }
+          } else {
+            // Uma nova atualização ocorreu, abandonar esta restauração
+            isUpdatingUrlRef.current = false;
+            
+            // Se for carregamento inicial, marcar como concluído independentemente
+            if (isInitialLoadRef.current) {
+              isInitialLoadRef.current = false;
+            }
           }
-          
-          // Reset flags
-          shouldUpdateUrlRef.current = false;
-          isInitialLoadRef.current = false;
-          isUpdatingUrlRef.current = false;
-        }, 50);
-      }, isMobile ? 300 : 0); // 300ms delay for mobile, no delay for explicit apply
+        };
+        
+        // Iniciar restauração de rolagem após um pequeno atraso
+        setTimeout(attemptRestoreScroll, 50);
+      }, isMobile ? 300 : 0); // 300ms de atraso para mobile, sem atraso para aplicação explícita
     }
     
-    // Cleanup timer on unmount
+    // Limpar timer ao desmontar
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -319,7 +410,7 @@ export const useUrlParams = () => {
     };
   }, [filters, sortOption, setSearchParams, isMobile, searchParams]);
   
-  // Helper to check if filter has changed
+  // Helper para verificar se o filtro mudou
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
     if ((params.get('location') || 'todos') !== currentFilters.location) return true;
     if ((params.get('types')?.split(',') || []).join(',') !== currentFilters.vehicleTypes.join(',')) return true;
@@ -336,7 +427,7 @@ export const useUrlParams = () => {
     return false;
   };
   
-  // Load filters from URL on initial load
+  // Carregar filtros da URL no carregamento inicial
   useEffect(() => {
     const sort = searchParams.get('sort');
     if (sort && ['newest', 'price-asc', 'price-desc', 'highest-discount', 'nearest'].includes(sort)) {
@@ -346,7 +437,7 @@ export const useUrlParams = () => {
     const newFilters = { ...filters };
     let hasChanges = false;
     
-    // Parse URL params to filter state
+    // Analisar parâmetros de URL para o estado do filtro
     if (searchParams.has('location')) {
       newFilters.location = searchParams.get('location') || '';
       hasChanges = true;
@@ -418,14 +509,33 @@ export const useUrlParams = () => {
       }
     }
     
-    // Only update filters if changes were detected
+    // Apenas atualizar filtros se mudanças foram detectadas
     if (hasChanges) {
       setFilters(newFilters);
     }
     
-    // Initial load is complete
-    isInitialLoadRef.current = false;
-  // We only want this to run once on component mount
+    // O carregamento inicial continua em andamento até que uma atualização de URL ocorra
+    // isInitialLoadRef.current = false; // Não definimos isso aqui, mas deixamos para o handler de atualização
+  // Queremos que isso seja executado apenas uma vez na montagem do componente
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  // Adicionar um ouvinte global para capturar eventos de rolagem durante a atualização de URL
+  useEffect(() => {
+    const handleScroll = () => {
+      // Se estamos no meio de uma atualização de URL e preventBrowserScrollRef é true,
+      // armazenar a posição de rolagem atual
+      if (isUpdatingUrlRef.current && preventBrowserScrollRef.current) {
+        // Atualizar a posição de rolagem armazenada para a restauração
+        scrollPositionRef.current = window.scrollY;
+      }
+    };
+    
+    // Adicionar ouvinte com opção passive: true para melhor performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import AuctionCard from '@/components/AuctionCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
 import { sampleAuctions } from '@/data/sampleAuctions';
@@ -22,6 +22,9 @@ const AuctionList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(ITEMS_PER_PAGE);
   const [isChangingPage, setIsChangingPage] = useState(false);
+  
+  // Ref para controlar se estamos mudando de página (para evitar rolagem)
+  const isPageChangeRef = useRef(false);
   
   // Use callback to prevent recreation on each render
   const fetchAuctions = useCallback(async () => {
@@ -64,18 +67,49 @@ const AuctionList: React.FC = () => {
     }
   }, [totalPages, currentPage, searchParams, setSearchParams]);
 
+  // Modificar o efeito para rolar para o topo apenas com mudanças de página,
+  // não com mudanças de filtro
   useEffect(() => {
     setLoading(true);
     fetchAuctions();
-    // Scroll to top on page change
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Rolar para o topo APENAS em mudanças de página explícitas,
+    // não em mudanças de filtro (que já têm seu próprio mecanismo)
+    if (isPageChangeRef.current) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      isPageChangeRef.current = false;
+    }
   }, [fetchAuctions]);
 
   const handlePageChange = useCallback((page: number) => {
+    // Marcar que estamos mudando de página explicitamente
+    isPageChangeRef.current = true;
+    
+    // Capturar a posição atual de rolagem antes de mudar a página
+    const currentScrollPosition = window.scrollY;
+    
     const params = new URLSearchParams(searchParams);
+    
+    // Se estamos indo para a mesma página, não faz nada
+    if (page.toString() === params.get('page')) {
+      return;
+    }
+    
     params.set('page', page.toString());
+    
+    // Criar e despachar um evento customizado antes de mudar a página
+    const event = new CustomEvent('page:changing', {
+      detail: { 
+        fromPage: currentPage,
+        toPage: page,
+        scrollPosition: currentScrollPosition
+      }
+    });
+    window.dispatchEvent(event);
+    
+    // Atualizar os parâmetros de busca para mudar a página
     setSearchParams(params);
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, currentPage]);
 
   const renderPaginationItems = useCallback(() => {
     const items = [];

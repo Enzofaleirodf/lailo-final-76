@@ -20,14 +20,21 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   // For desktop, implement automatic filter application
   useEffect(() => {
     if (!isMobile) {
-      // Store current scroll position before dispatching the event
+      // Armazenar a posição de rolagem antes de enviar o evento
       scrollPositionRef.current = window.scrollY;
       
-      // Create and dispatch the filters:applied event when filters change
+      // Criar e despachar o evento filters:applied com a posição de rolagem atual
       const event = new CustomEvent('filters:applied', {
-        detail: { scrollPosition: scrollPositionRef.current }
+        detail: { 
+          scrollPosition: scrollPositionRef.current,
+          timestamp: Date.now() // Adicionar timestamp para tornar cada evento único
+        }
       });
-      window.dispatchEvent(event);
+      
+      // Adicionar um atraso pequeno para garantir que a rolagem seja capturada corretamente
+      setTimeout(() => {
+        window.dispatchEvent(event);
+      }, 10);
     }
   }, [filters, isMobile]);
   
