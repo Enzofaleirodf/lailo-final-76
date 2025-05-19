@@ -6,6 +6,8 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import FilterContent from './filters/FilterContent';
 import { useUIStore } from '@/stores/useUIStore';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useToast } from '@/hooks/use-toast';
 
 interface FilterSectionProps {
   isOpen?: boolean;
@@ -14,7 +16,9 @@ interface FilterSectionProps {
 
 const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) => {
   const { filtersOpen, setFiltersOpen } = useUIStore();
+  const { activeFilters } = useFilterStore();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   
   // Sync local state with parent state if provided
   useEffect(() => {
@@ -30,7 +34,27 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
     }
   };
   
-  // Create footer content for the drawer
+  // Função para aplicar filtros no mobile (mostra toast)
+  const handleApplyFilters = () => {
+    handleOpenChange(false);
+    
+    // Mostrar toast de confirmação quando os filtros são aplicados
+    if (activeFilters > 0) {
+      toast({
+        title: "Filtros aplicados",
+        description: `${activeFilters} ${activeFilters === 1 ? 'filtro ativo' : 'filtros ativos'}`,
+        duration: 2000,
+      });
+    } else {
+      toast({
+        title: "Filtros aplicados",
+        description: "Nenhum filtro ativo",
+        duration: 2000,
+      });
+    }
+  };
+  
+  // Create footer content for the drawer (mobile only)
   const footerContent = (
     <div className="flex gap-3">
       <Button 
@@ -42,9 +66,9 @@ const FilterSection: React.FC<FilterSectionProps> = ({ isOpen, onOpenChange }) =
       </Button>
       <Button 
         className="flex-1 h-10 bg-brand-600 hover:bg-brand-700"
-        onClick={() => handleOpenChange(false)}
+        onClick={handleApplyFilters}
       >
-        Aplicar
+        Aplicar {activeFilters > 0 ? `(${activeFilters})` : ''}
       </Button>
     </div>
   );

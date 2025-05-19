@@ -19,32 +19,7 @@ const FilterContent: React.FC = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   
-  // Function to handle apply button click on desktop
-  // This triggers the explicit URL update after all filter selections are done
-  const handleApplyFilters = (e: React.MouseEvent) => {
-    // Store current scroll position before applying filters
-    const currentScrollPosition = window.scrollY;
-    
-    // Dispatch custom event with current scroll position
-    window.dispatchEvent(new CustomEvent('filters:applied', { 
-      detail: { scrollPosition: currentScrollPosition }
-    }));
-    
-    // Show toast confirmation when filters are applied
-    if (activeFilters > 0) {
-      toast({
-        title: "Filtros aplicados",
-        description: `${activeFilters} ${activeFilters === 1 ? 'filtro ativo' : 'filtros ativos'}`,
-        duration: 2000,
-      });
-    } else {
-      toast({
-        title: "Filtros aplicados",
-        description: "Nenhum filtro ativo",
-        duration: 2000,
-      });
-    }
-  };
+  // No botão para desktop, os filtros aplicam-se automaticamente ao selecionar
   
   return (
     <div className="flex flex-col gap-3">
@@ -101,18 +76,6 @@ const FilterContent: React.FC = () => {
       </FilterWrapper>
 
       <div className="mt-4 flex flex-col gap-2">
-        {/* Apply button for desktop only - triggers URL update explicitly */}
-        {!isMobile && (
-          <Button 
-            variant="default"
-            className="w-full h-10 text-sm font-medium bg-brand-600 hover:bg-brand-700 transition-colors"
-            onClick={handleApplyFilters}
-            aria-label="Aplicar filtros"
-          >
-            Aplicar filtros {activeFilters > 0 && `(${activeFilters})`}
-          </Button>
-        )}
-        
         <Button 
           variant="outline" 
           className="w-full h-10 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors"

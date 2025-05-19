@@ -58,34 +58,81 @@ export const useFilteredAndSortedAuctions = (
   }, [auctions, filters, sortOption]);
 };
 
+// Função auxiliar para normalizar strings para comparação
+const normalizeString = (str: string): string => {
+  return str.toLowerCase().trim();
+};
+
+// Função auxiliar para verificar se um item está em um array, ignorando case e trim
+const isInArray = (array: string[], value: string): boolean => {
+  const normalizedValue = normalizeString(value);
+  return array.some(item => normalizeString(item) === normalizedValue);
+};
+
+// Função auxiliar para comparar strings, ignorando case e trim
+const stringsMatch = (str1: string, str2: string): boolean => {
+  return normalizeString(str1) === normalizeString(str2);
+};
+
+// Função auxiliar para verificar se uma string contém outra, ignorando case e trim
+const stringContains = (str: string, searchStr: string): boolean => {
+  return normalizeString(str).includes(normalizeString(searchStr));
+};
+
 export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): AuctionItem[] => {
   return auctions.filter(auction => {
-    // Only apply location filter if it's not the default value
-    if (filters.location && filters.location !== 'todos' && auction.location.toLowerCase().indexOf(filters.location.toLowerCase()) === -1) {
-      return false;
+    // Filtro de localização - aplicar apenas se não for o valor padrão
+    if (filters.location && filters.location !== 'todos') {
+      // Verificar se a localização do leilão contém o texto de filtro
+      const locationMatch = stringContains(auction.location, filters.location);
+      if (!locationMatch) return false;
     }
     
-    // Vehicle type filter - only apply if not empty
-    if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos') && !filters.vehicleTypes.includes(auction.vehicleInfo.type)) {
-      return false;
+    // Filtro de tipo de veículo - aplicar apenas se não estiver vazio
+    if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) {
+      // Verificar se o tipo de veículo está na lista de tipos selecionados
+      // Mapear os tipos para valores compatíveis com os dados mockados
+      const typeMap: Record<string, string> = {
+        'carros': 'car',
+        'motos': 'motorcycle',
+        'caminhoes': 'truck'
+      };
+      
+      // Converter o tipo de veículo do filtro para o valor no mock de dados
+      let found = false;
+      for (const type of filters.vehicleTypes) {
+        const mappedType = typeMap[type] || type;
+        if (stringsMatch(mappedType, auction.vehicleInfo.type)) {
+          found = true;
+          break;
+        }
+      }
+      
+      if (!found) return false;
     }
     
-    // Brand filter - only apply if not the default value
-    if (filters.brand !== DEFAULT_FILTERS.brand && auction.vehicleInfo.brand !== filters.brand) {
-      return false;
+    // Filtro de marca - aplicar apenas se não for o valor padrão
+    if (filters.brand !== DEFAULT_FILTERS.brand) {
+      // Converter para lowercase para evitar problemas de case sensitivity
+      const brandMatch = stringsMatch(filters.brand, auction.vehicleInfo.brand);
+      if (!brandMatch) return false;
     }
     
-    // Model filter - only apply if not the default value
-    if (filters.model !== DEFAULT_FILTERS.model && auction.vehicleInfo.model !== filters.model) {
-      return false;
+    // Filtro de modelo - aplicar apenas se não for o valor padrão
+    if (filters.model !== DEFAULT_FILTERS.model) {
+      // Verificar se o modelo do veículo contém o texto de filtro
+      const modelMatch = stringContains(auction.vehicleInfo.model, filters.model);
+      if (!modelMatch) return false;
     }
     
-    // Color filter - only apply if not the default value
-    if (filters.color !== DEFAULT_FILTERS.color && auction.vehicleInfo.color !== filters.color) {
-      return false;
+    // Filtro de cor - aplicar apenas se não for o valor padrão
+    if (filters.color !== DEFAULT_FILTERS.color) {
+      // Verificar se a cor do veículo corresponde ao filtro
+      const colorMatch = stringsMatch(filters.color, auction.vehicleInfo.color);
+      if (!colorMatch) return false;
     }
     
-    // Year range filter - only apply if values are set
+    // Filtro de ano - aplicar apenas se min ou max estiver definido
     if (filters.year.min && auction.vehicleInfo.year < parseInt(filters.year.min)) {
       return false;
     }
@@ -93,7 +140,7 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
       return false;
     }
     
-    // Price range filter - only apply if values are set
+    // Filtro de preço - aplicar apenas se min ou max estiver definido
     if (filters.price.range.min && auction.currentBid < parseInt(filters.price.range.min)) {
       return false;
     }
@@ -101,19 +148,22 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
       return false;
     }
     
-    // Format filter - only apply if not the default value
-    if (filters.format !== DEFAULT_FILTERS.format && filters.format !== auction.format) {
-      return false;
+    // Filtro de formato - aplicar apenas se não for o valor padrão
+    if (filters.format !== DEFAULT_FILTERS.format) {
+      const formatMatch = stringsMatch(filters.format, auction.format);
+      if (!formatMatch) return false;
     }
     
-    // Origin filter - only apply if not the default value
-    if (filters.origin !== DEFAULT_FILTERS.origin && filters.origin !== auction.origin) {
-      return false;
+    // Filtro de origem - aplicar apenas se não for o valor padrão
+    if (filters.origin !== DEFAULT_FILTERS.origin) {
+      const originMatch = stringsMatch(filters.origin, auction.origin);
+      if (!originMatch) return false;
     }
     
-    // Place filter - only apply if not the default value
-    if (filters.place !== DEFAULT_FILTERS.place && filters.place !== auction.place) {
-      return false;
+    // Filtro de etapa - aplicar apenas se não for o valor padrão
+    if (filters.place !== DEFAULT_FILTERS.place) {
+      const placeMatch = stringsMatch(filters.place, auction.place);
+      if (!placeMatch) return false;
     }
     
     return true;
