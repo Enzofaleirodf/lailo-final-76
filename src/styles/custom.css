@@ -1,4 +1,3 @@
-
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -291,7 +290,7 @@ html {
 
 /* Add padding to content area to prevent overlap with navigation */
 .content-with-nav {
-  padding-bottom: 6rem !important;
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0)) !important;
 }
 
 /* Ensure dialogs are above navigation bar */
