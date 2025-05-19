@@ -56,7 +56,7 @@ const ResultHeader: React.FC = () => {
           
           {!isMobile && (
             <div className="flex items-center ml-auto">
-              <p className="text-sm text-gray-500 mr-2">
+              <p className="text-sm text-gray-500 mr-2 font-normal">
                 Ordenar por:
               </p>
               <button 
