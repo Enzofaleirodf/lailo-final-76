@@ -1,6 +1,5 @@
 
 import React, { useMemo, useState } from 'react';
-import ActiveFilterBadges from './filters/ActiveFilterBadges';
 import AuctionStatus from './AuctionStatus';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
@@ -74,9 +73,6 @@ const ResultHeader: React.FC = () => {
           )}
         </div>
       </div>
-      
-      {/* Only show ActiveFilterBadges on desktop */}
-      {!isMobile && <ActiveFilterBadges />}
     </motion.div>
   );
 };

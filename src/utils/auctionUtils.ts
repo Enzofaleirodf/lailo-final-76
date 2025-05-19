@@ -1,7 +1,8 @@
+
 import { AuctionItem } from '@/types/auction';
 import { SortOption } from '@/stores/useSortStore';
 import { useMemo } from 'react';
-import { FilterState } from '@/stores/useFilterStore';
+import { FilterState, DEFAULT_FILTERS } from '@/stores/useFilterStore';
 
 export const sortAuctions = (auctions: AuctionItem[], sortOption: SortOption): AuctionItem[] => {
   const sortedAuctions = [...auctions];
@@ -59,32 +60,32 @@ export const useFilteredAndSortedAuctions = (
 
 export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): AuctionItem[] => {
   return auctions.filter(auction => {
-    // Location filter
-    if (filters.location && auction.location.toLowerCase().indexOf(filters.location.toLowerCase()) === -1) {
+    // Only apply location filter if it's not the default value
+    if (filters.location && filters.location !== 'todos' && auction.location.toLowerCase().indexOf(filters.location.toLowerCase()) === -1) {
       return false;
     }
     
-    // Vehicle type filter
-    if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes(auction.vehicleInfo.type)) {
+    // Vehicle type filter - only apply if not empty
+    if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos') && !filters.vehicleTypes.includes(auction.vehicleInfo.type)) {
       return false;
     }
     
-    // Brand filter
-    if (filters.brand !== 'todas' && auction.vehicleInfo.brand !== filters.brand) {
+    // Brand filter - only apply if not the default value
+    if (filters.brand !== DEFAULT_FILTERS.brand && auction.vehicleInfo.brand !== filters.brand) {
       return false;
     }
     
-    // Model filter
-    if (filters.model !== 'todos' && auction.vehicleInfo.model !== filters.model) {
+    // Model filter - only apply if not the default value
+    if (filters.model !== DEFAULT_FILTERS.model && auction.vehicleInfo.model !== filters.model) {
       return false;
     }
     
-    // Color filter
-    if (filters.color && auction.vehicleInfo.color !== filters.color) {
+    // Color filter - only apply if not the default value
+    if (filters.color !== DEFAULT_FILTERS.color && auction.vehicleInfo.color !== filters.color) {
       return false;
     }
     
-    // Year range filter
+    // Year range filter - only apply if values are set
     if (filters.year.min && auction.vehicleInfo.year < parseInt(filters.year.min)) {
       return false;
     }
@@ -92,7 +93,7 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
       return false;
     }
     
-    // Price range filter
+    // Price range filter - only apply if values are set
     if (filters.price.range.min && auction.currentBid < parseInt(filters.price.range.min)) {
       return false;
     }
@@ -100,18 +101,18 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
       return false;
     }
     
-    // Format filter
-    if (filters.format !== 'Todos' && filters.format !== auction.format) {
+    // Format filter - only apply if not the default value
+    if (filters.format !== DEFAULT_FILTERS.format && filters.format !== auction.format) {
       return false;
     }
     
-    // Origin filter
-    if (filters.origin !== 'Todas' && filters.origin !== auction.origin) {
+    // Origin filter - only apply if not the default value
+    if (filters.origin !== DEFAULT_FILTERS.origin && filters.origin !== auction.origin) {
       return false;
     }
     
-    // Place filter - now the types match correctly
-    if (filters.place !== 'Todas' && filters.place !== auction.place) {
+    // Place filter - only apply if not the default value
+    if (filters.place !== DEFAULT_FILTERS.place && filters.place !== auction.place) {
       return false;
     }
     
