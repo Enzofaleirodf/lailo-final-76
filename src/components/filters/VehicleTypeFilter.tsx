@@ -37,7 +37,7 @@ const VehicleTypeFilter = () => {
           <ToggleGroupItem 
             key={value}
             value={value} 
-            className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300"
+            className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-800 data-[state=on]:border-purple-300 font-normal"
             aria-label={`Filtrar por ${label}`}
           >
             <Icon size={14} />
