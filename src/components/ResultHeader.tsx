@@ -1,29 +1,24 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ActiveFilterBadges from './filters/ActiveFilterBadges';
 import AuctionStatus from './AuctionStatus';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { filterAuctions } from '@/utils/auctionUtils';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { History, ArrowDown, ArrowUp } from 'lucide-react';
 import { SortOption } from '@/stores/useSortStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
+import SortOptions from './filters/SortOptions';
 
 const ResultHeader: React.FC = () => {
   const { filters } = useFilterStore();
   const { sortOption, setSortOption } = useSortStore();
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
+  const [sortDialogOpen, setSortDialogOpen] = useState(false);
   
   // Calculate filtered results count - memoized for performance
   const filteredAuctions = useMemo(() => {
@@ -32,7 +27,7 @@ const ResultHeader: React.FC = () => {
   
   // Get sort options and icons
   const sortOptions = useMemo(() => [
-    { value: 'newest', label: 'Mais recentes' },
+    { value: 'newest', label: 'Mais recentes', icon: <History size={16} className="mr-2 text-gray-500" /> },
     { value: 'price-asc', label: 'Menor preço', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> },
     { value: 'price-desc', label: 'Maior preço', icon: <ArrowUp size={16} className="mr-2 text-gray-500" /> },
     { value: 'highest-discount', label: 'Maior desconto', icon: <ArrowDown size={16} className="mr-2 text-gray-500" /> },
@@ -44,12 +39,8 @@ const ResultHeader: React.FC = () => {
     return sortOptions.find(option => option.value === sortOption) || sortOptions[0];
   }, [sortOption, sortOptions]);
   
-  const handleSortChange = (value: string) => {
-    setSortOption(value as SortOption);
-    // Remove focus from select after selection
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
+  const handleSortClick = () => {
+    setSortDialogOpen(true);
   };
   
   return (
@@ -70,31 +61,20 @@ const ResultHeader: React.FC = () => {
               <p className="text-sm text-gray-500 mr-2">
                 Ordenar por:
               </p>
-              <Select 
-                value={sortOption} 
-                onValueChange={handleSortChange}
+              <button 
+                onClick={handleSortClick}
+                className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none"
               >
-                <SelectTrigger 
-                  className="border-none p-0 h-auto bg-transparent w-auto text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors select-no-focus" 
-                  aria-label="Opções de ordenação"
-                >
-                  <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
-                </SelectTrigger>
-                <SelectContent align="end" className="bg-white">
-                  {sortOptions.map((option) => (
-                    <SelectItem 
-                      key={option.value} 
-                      value={option.value}
-                      className="flex items-center"
-                    >
-                      <span className="flex items-center">
-                        {option.icon && option.icon}
-                        {option.label}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <span className="flex items-center">
+                  {currentSortOption.icon}
+                  {currentSortOption.label}
+                </span>
+              </button>
+              
+              <SortOptions 
+                open={sortDialogOpen} 
+                onOpenChange={setSortDialogOpen} 
+              />
             </div>
           )}
         </div>
