@@ -7,7 +7,8 @@ interface FilterWrapperProps {
 
 /**
  * A wrapper component for filter elements that prevents scroll jumps
- * by preserving scroll position during interactions
+ * by preventing default browser behavior and preserving scroll position
+ * during filter interactions
  */
 const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -17,20 +18,32 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
     
-    const handleClick = (e: Event) => {
-      // Prevent events from bubbling up that might cause page navigation
+    const handleInteraction = (e: Event) => {
+      // Stop propagation to prevent URL updates during interaction
       e.stopPropagation();
     };
     
-    wrapper.addEventListener('click', handleClick, { capture: true });
+    // Capture all interaction events
+    const eventTypes = ['click', 'change', 'input'];
+    
+    eventTypes.forEach(eventType => {
+      wrapper.addEventListener(eventType, handleInteraction, { capture: true });
+    });
     
     return () => {
-      wrapper.removeEventListener('click', handleClick, { capture: true });
+      eventTypes.forEach(eventType => {
+        wrapper.removeEventListener(eventType, handleInteraction, { capture: true });
+      });
     };
   }, []);
   
   return (
-    <div ref={wrapperRef} className="filter-wrapper">
+    <div 
+      ref={wrapperRef} 
+      className="filter-wrapper"
+      // Add data attribute for potential CSS targeting
+      data-filter-interaction-zone="true"
+    >
       {children}
     </div>
   );

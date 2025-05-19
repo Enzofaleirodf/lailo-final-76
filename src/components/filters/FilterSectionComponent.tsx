@@ -22,6 +22,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   
   // Handle section toggle without propagating event
   const handleToggle = (e: React.MouseEvent) => {
+    // Stop propagation and prevent default
     e.preventDefault();
     e.stopPropagation();
     onToggle();
