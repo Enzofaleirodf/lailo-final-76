@@ -25,10 +25,7 @@ const Sidebar = () => {
   
   // Mobile sidebar with header and hamburger icon
   if (isMobile) {
-    return (
-      // This is just a placeholder for the space the fixed sidebar would take
-      <div className="w-0"></div>
-    );
+    return null; // No sidebar on mobile, we use MobileNavBar instead
   }
   
   // Desktop sidebar
