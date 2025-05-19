@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, Palette, Hourglass } from 'lucide-react';
@@ -167,11 +168,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             )}
           </div>
           
-          {/* Subtle divider */}
-          <Separator className="my-3 bg-gray-100" />
+          {/* Subtle divider with reduced bottom margin */}
+          <Separator className="my-2 bg-gray-100" />
           
-          {/* Bottom row - redesigned badges and date indicator */}
-          <div className="flex justify-between items-center mt-auto">
+          {/* Bottom row - redesigned badges and date indicator (positioned 12px below the separator) */}
+          <div className="flex justify-between items-center mt-2">
             <div className="flex gap-1.5">
               <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
                 {auction.origin}
