@@ -34,6 +34,10 @@ const SortOptions: React.FC<SortOptionsProps> = ({
 
   const handleSortChange = (value: string) => {
     setSortOption(value as any);
+    // Remove focus from radio buttons after selection
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     onOpenChange(false);
   };
 
@@ -56,10 +60,18 @@ const SortOptions: React.FC<SortOptionsProps> = ({
           </div>
         </DialogHeader>
         <div className="p-4">
-          <RadioGroup value={sortOption} onValueChange={handleSortChange}>
+          <RadioGroup 
+            value={sortOption} 
+            onValueChange={handleSortChange} 
+            className="space-y-1.5"
+          >
             {sortOptions.map((option) => (
               <div key={option.value} className="flex items-center space-x-2 py-2">
-                <RadioGroupItem value={option.value} id={option.value} />
+                <RadioGroupItem 
+                  value={option.value} 
+                  id={option.value}
+                  className="focus:ring-0"
+                />
                 <Label htmlFor={option.value} className="cursor-pointer flex-1 flex items-center">
                   {option.icon && option.icon}
                   {option.label}

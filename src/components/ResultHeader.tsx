@@ -46,6 +46,10 @@ const ResultHeader: React.FC = () => {
   
   const handleSortChange = (value: string) => {
     setSortOption(value as SortOption);
+    // Remove focus from select after selection
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   };
   
   return (
@@ -66,7 +70,10 @@ const ResultHeader: React.FC = () => {
               <p className="text-sm text-gray-500 mr-2">
                 Ordenar por:
               </p>
-              <Select value={sortOption} onValueChange={handleSortChange}>
+              <Select 
+                value={sortOption} 
+                onValueChange={handleSortChange}
+              >
                 <SelectTrigger className="border-none p-0 h-auto bg-transparent w-auto text-sm text-brand-700 font-medium focus:ring-0 hover:text-brand-900 transition-colors">
                   <SelectValue className="m-0 p-0">{currentSortOption.label}</SelectValue>
                 </SelectTrigger>
