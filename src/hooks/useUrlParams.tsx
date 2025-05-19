@@ -6,6 +6,7 @@ import { SortOption } from '@/stores/useSortStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+import { useIsMobile } from './use-mobile';
 
 /**
  * Custom hook to sync filter and sort state with URL parameters
@@ -14,6 +15,7 @@ export const useUrlParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { filters, setFilters } = useFilterStore();
   const { sortOption, setSortOption } = useSortStore();
+  const isMobile = useIsMobile();
   
   // Update URL when filters or sort option changes
   useEffect(() => {
@@ -109,8 +111,14 @@ export const useUrlParams = () => {
       params.set('page', '1');
     }
     
-    setSearchParams(params);
-  }, [filters, sortOption, setSearchParams]);
+    // Use {replace: true} for desktop to prevent scroll jumps
+    // For mobile views, use default behavior which allows back navigation to previous filter states
+    if (!isMobile) {
+      setSearchParams(params, { replace: true });
+    } else {
+      setSearchParams(params);
+    }
+  }, [filters, sortOption, setSearchParams, isMobile]);
   
   // Helper to check if filter has changed
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
