@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import type { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
+import { Label } from '@/components/ui/label';
 
 const MobileFilterOptions: React.FC = () => {
   const { filters, updateFilter } = useFilterStore();
@@ -43,9 +44,9 @@ const MobileFilterOptions: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-3 mb-4">
-      <div>
-        <label htmlFor="format-filter-mobile" className="text-sm text-gray-700 font-normal block mb-1">Formato</label>
+    <div className="grid grid-cols-1 gap-4 mb-4">
+      <div className="space-y-3">
+        <Label className="text-sm font-medium text-gray-700">Formato</Label>
         <FilterDropdown
           id="format-filter-mobile"
           aria-label="Selecionar formato"
@@ -56,8 +57,8 @@ const MobileFilterOptions: React.FC = () => {
         />
       </div>
 
-      <div>
-        <label htmlFor="origin-filter-mobile" className="text-sm text-gray-700 font-normal block mb-1">Origem</label>
+      <div className="space-y-3">
+        <Label className="text-sm font-medium text-gray-700">Origem</Label>
         <FilterDropdown
           id="origin-filter-mobile"
           aria-label="Selecionar origem"
@@ -68,8 +69,8 @@ const MobileFilterOptions: React.FC = () => {
         />
       </div>
 
-      <div>
-        <label htmlFor="place-filter-mobile" className="text-sm text-gray-700 font-normal block mb-1">Etapa</label>
+      <div className="space-y-3">
+        <Label className="text-sm font-medium text-gray-700">Etapa</Label>
         <FilterDropdown
           id="place-filter-mobile"
           aria-label="Selecionar etapa"
@@ -79,6 +80,8 @@ const MobileFilterOptions: React.FC = () => {
           className="border-gray-200 shadow-sm"
         />
       </div>
+
+      <div className="h-3"></div>
     </div>
   );
 };
