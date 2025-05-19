@@ -26,8 +26,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       <div className="flex w-full relative">
         <Sidebar />
         <div className="flex-1 w-full overflow-x-hidden">
-          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-6">
-            <main className={`w-full ${isMobile ? "pb-28" : "pb-20"}`}>
+          <div className={`max-w-7xl mx-auto w-full ${isMobile ? 'px-3 py-3' : 'px-4 sm:px-6 py-6'}`}>
+            <main className={`w-full ${isMobile ? "pb-24" : "pb-20"}`}>
               {children}
             </main>
           </div>

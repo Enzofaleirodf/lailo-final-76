@@ -14,8 +14,8 @@ const FavoritosImoveis = () => {
   
   return (
     <AppLayout>
-      <div className="px-4 md:px-0">
-        <h1 className="text-2xl font-bold mb-6">Imóveis Favoritos</h1>
+      <div className={isMobile ? "px-0" : "px-4 md:px-0"}>
+        <h1 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold mb-4`}>Imóveis Favoritos</h1>
         
         <div className="flex mb-4 border-b">
           <Button 
@@ -34,9 +34,9 @@ const FavoritosImoveis = () => {
           </Button>
         </div>
         
-        <div className="mt-6">
+        <div className={`${isMobile ? 'mt-4' : 'mt-6'}`}>
           <Card className="shadow-sm border border-gray-200">
-            <CardContent className="p-8 text-center">
+            <CardContent className={`${isMobile ? 'p-6' : 'p-8'} text-center`}>
               <p className="text-gray-500 mb-4">Você ainda não tem imóveis favoritos.</p>
               <Button onClick={() => navigate('/buscador/imoveis')}>
                 Encontrar Imóveis

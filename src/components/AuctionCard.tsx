@@ -57,23 +57,23 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         y: -4,
         transition: { duration: 0.2 }
       }} 
-      className="mb-3 w-full"
+      className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
     >
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
         {/* Content (right side) */}
-        <div className="flex flex-col p-4 w-full">
+        <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
           {/* Top row with improved spacing and alignment */}
           <div className="flex justify-between items-start gap-2 mb-1 w-full">
-            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${!isMobile ? 'text-lg leading-tight' : 'text-base leading-tight'}`}>
+            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
               {getVehicleTitle()}
             </h3>
             <button onClick={() => setFavorited(!favorited)} aria-label={favorited ? "Remove from favorites" : "Add to favorites"} className="flex-shrink-0">
-              <Heart size={isMobile ? 18 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
+              <Heart size={isMobile ? 16 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
             </button>
           </div>
           
           {/* Vehicle info row - better structured and aligned */}
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-3 w-full">
+          <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
             <div className="flex items-center text-gray-600 text-xs">
               <Palette size={12} className="mr-1 text-gray-500" />
               <span>{auction.vehicleInfo.color}</span>
@@ -93,8 +93,8 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Price section - more prominent with better hierarchy */}
-          <div className="flex items-center flex-wrap gap-2 mb-3 w-full">
-            <span className="font-bold text-gray-900 text-xl leading-none">
+          <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
+            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none`}>
               {formatCurrency(auction.currentBid)}
             </span>
             {auction.originalPrice && (
@@ -104,7 +104,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                     {discount}% OFF
                   </span>
                 )}
-                <span className="text-gray-500 line-through text-sm">
+                <span className="text-gray-500 line-through text-xs">
                   {formatCurrency(auction.originalPrice)}
                 </span>
               </div>
@@ -112,20 +112,20 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Subtle divider with precisely 12px margin below */}
-          <Separator className="mb-3 mt-1 bg-gray-100" />
+          <Separator className={`${isMobile ? 'mb-2 mt-1' : 'mb-3 mt-1'} bg-gray-100`} />
           
           {/* Bottom row with consistent 12px spacing from separator */}
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
-              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5 rounded">
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}>
                 {auction.origin}
               </Badge>
-              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5 rounded">
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}>
                 {auction.place}
               </Badge>
             </div>
-            <div className="flex items-center bg-gray-50 rounded-md px-2 py-1 text-gray-700 font-medium text-xs whitespace-nowrap flex-shrink-0">
-              <Calendar size={12} className="mr-1 text-gray-500" />
+            <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0`}>
+              <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
               {formatAuctionDate(auction.endDate)} às {auction.endDate.getHours()}h
             </div>
           </div>

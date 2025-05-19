@@ -31,7 +31,7 @@ const BuscadorVeiculos = () => {
       {!isMobile && <TopFilters />}
       {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
       
-      <div className={`w-full ${isMobile ? 'flex flex-col' : 'flex flex-row gap-6'}`}>
+      <div className={`w-full ${isMobile ? 'flex flex-col space-y-2' : 'flex flex-row gap-6'}`}>
         {!isMobile && 
           <aside className="shrink-0 w-full lg:w-[448px]">
             <FilterSection />
