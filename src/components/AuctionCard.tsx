@@ -103,7 +103,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           {/* Bottom row with consistent 12px spacing from separator */}
           <div className="flex justify-between items-center">
             <div className="flex gap-1.5">
-              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
+              <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5 rounded">
                 {auction.origin}
               </Badge>
               <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
