@@ -75,7 +75,8 @@ const ResultHeader: React.FC = () => {
         </div>
       </div>
       
-      <ActiveFilterBadges />
+      {/* Only show ActiveFilterBadges on desktop */}
+      {!isMobile && <ActiveFilterBadges />}
     </motion.div>
   );
 };
