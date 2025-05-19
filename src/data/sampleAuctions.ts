@@ -30,7 +30,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 12,
     format: 'Leilão',
     origin: 'Extrajudicial',
-    place: 'Primeira'
+    place: '1ª Praça'
   },
   {
     id: '2',
@@ -52,7 +52,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 8,
     format: 'Leilão',
     origin: 'Judicial',
-    place: 'Segunda'
+    place: '2ª Praça'
   },
   {
     id: '3',
@@ -74,7 +74,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 15,
     format: 'Venda Direta',
     origin: 'Extrajudicial',
-    place: 'Primeira'
+    place: '1ª Praça'
   },
   {
     id: '4',
@@ -96,7 +96,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 20,
     format: 'Leilão',
     origin: 'Judicial',
-    place: 'Segunda'
+    place: '2ª Praça'
   },
   {
     id: '5',
@@ -118,7 +118,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 7,
     format: 'Leilão',
     origin: 'Extrajudicial',
-    place: 'Primeira'
+    place: '1ª Praça'
   },
   {
     id: '6',
@@ -140,6 +140,6 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 14,
     format: 'Venda Direta',
     origin: 'Judicial',
-    place: 'Segunda'
+    place: '2ª Praça'
   }
 ];

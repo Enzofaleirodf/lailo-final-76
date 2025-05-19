@@ -25,7 +25,7 @@ describe('AuctionStatus helper functions', () => {
       bidCount: 5,
       format: 'Leilão',
       origin: 'Judicial',
-      place: 'Primeira'
+      place: '1ª Praça'
     },
     {
       id: '2',
@@ -47,7 +47,7 @@ describe('AuctionStatus helper functions', () => {
       bidCount: 3,
       format: 'Leilão',
       origin: 'Extrajudicial',
-      place: 'Segunda'
+      place: '2ª Praça'
     },
     {
       id: '3',
@@ -69,7 +69,7 @@ describe('AuctionStatus helper functions', () => {
       bidCount: 7,
       format: 'Venda Direta',
       origin: 'Judicial',
-      place: 'Primeira'
+      place: '1ª Praça'
     }
   ];
 

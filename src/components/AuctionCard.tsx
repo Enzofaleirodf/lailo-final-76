@@ -154,7 +154,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                 {auction.origin}
               </Badge>
               <Badge variant="outline" className="bg-gray-50 text-gray-700 font-normal border-gray-200 text-xs px-2 py-0.5">
-                {auction.place === 'Primeira' ? '1ª Praça' : '2ª Praça'}
+                {auction.place}
               </Badge>
             </div>
             <div className="flex items-center bg-gray-50 rounded-md px-2 py-1 text-gray-700 font-medium text-xs">
