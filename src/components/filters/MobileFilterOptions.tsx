@@ -44,8 +44,8 @@ const MobileFilterOptions: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 gap-3 mb-4">
-      <div className="space-y-2">
-        <label htmlFor="format-filter-mobile" className="text-sm text-gray-500 font-normal">Formato:</label>
+      <div>
+        <label htmlFor="format-filter-mobile" className="text-sm text-gray-700 font-normal block mb-1">Formato</label>
         <FilterDropdown
           id="format-filter-mobile"
           aria-label="Selecionar formato"
@@ -56,8 +56,8 @@ const MobileFilterOptions: React.FC = () => {
         />
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="origin-filter-mobile" className="text-sm text-gray-500 font-normal">Origem:</label>
+      <div>
+        <label htmlFor="origin-filter-mobile" className="text-sm text-gray-700 font-normal block mb-1">Origem</label>
         <FilterDropdown
           id="origin-filter-mobile"
           aria-label="Selecionar origem"
@@ -68,8 +68,8 @@ const MobileFilterOptions: React.FC = () => {
         />
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="place-filter-mobile" className="text-sm text-gray-500 font-normal">Etapa:</label>
+      <div>
+        <label htmlFor="place-filter-mobile" className="text-sm text-gray-700 font-normal block mb-1">Etapa</label>
         <FilterDropdown
           id="place-filter-mobile"
           aria-label="Selecionar etapa"
