@@ -1,3 +1,4 @@
+
 import { AuctionItem } from '@/types/auction';
 import { FilterState } from '@/stores/useFilterStore';
 
@@ -24,19 +25,28 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
   
   // Filter by content type
   if (filters.contentType === 'property') {
-    filteredAuctions = filteredAuctions.filter(auction => auction.type === 'property');
+    filteredAuctions = filteredAuctions.filter(auction => auction.vehicleInfo?.type !== 'car' && 
+                                                         auction.vehicleInfo?.type !== 'motorcycle' && 
+                                                         auction.vehicleInfo?.type !== 'truck');
   } else if (filters.contentType === 'vehicle') {
-    filteredAuctions = filteredAuctions.filter(auction => auction.type === 'vehicle');
+    filteredAuctions = filteredAuctions.filter(auction => auction.vehicleInfo?.type === 'car' || 
+                                                         auction.vehicleInfo?.type === 'motorcycle' || 
+                                                         auction.vehicleInfo?.type === 'truck');
   }
   
   // Filter by location
   if (filters.location && (filters.location.state || filters.location.city)) {
     filteredAuctions = filteredAuctions.filter(auction => {
+      // Split the location string (format: "City, State")
+      const locationParts = auction.location ? auction.location.split(', ') : ['', ''];
+      const auctionCity = locationParts[0] || '';
+      const auctionState = locationParts[1] || '';
+      
       // If state is selected, check if auction's state matches
-      const stateMatch = !filters.location.state || auction.location.state === filters.location.state;
+      const stateMatch = !filters.location.state || auctionState === filters.location.state;
       
       // If city is selected, check if auction's city matches
-      const cityMatch = !filters.location.city || auction.location.city === filters.location.city;
+      const cityMatch = !filters.location.city || auctionCity === filters.location.city;
       
       // Both state and city must match if both are selected
       return stateMatch && cityMatch;
@@ -46,52 +56,52 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
   // Filter by vehicle types
   if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) {
     filteredAuctions = filteredAuctions.filter(auction =>
-      filters.vehicleTypes.includes(auction.vehicleType)
+      filters.vehicleTypes.includes(auction.vehicleInfo?.type || '')
     );
   }
 
   // Filter by brand
   if (filters.brand && filters.brand !== 'todas') {
     filteredAuctions = filteredAuctions.filter(auction =>
-      auction.brand.toLowerCase().includes(filters.brand.toLowerCase())
+      (auction.vehicleInfo?.brand || '').toLowerCase().includes(filters.brand.toLowerCase())
     );
   }
 
   // Filter by model
   if (filters.model && filters.model !== 'todos') {
     filteredAuctions = filteredAuctions.filter(auction =>
-      auction.model.toLowerCase().includes(filters.model.toLowerCase())
+      (auction.vehicleInfo?.model || '').toLowerCase().includes(filters.model.toLowerCase())
     );
   }
 
   // Filter by color
   if (filters.color && filters.color !== 'todas') {
     filteredAuctions = filteredAuctions.filter(auction =>
-      auction.color.toLowerCase().includes(filters.color.toLowerCase())
+      (auction.vehicleInfo?.color || '').toLowerCase().includes(filters.color.toLowerCase())
     );
   }
 
   // Filter by year range
   if (filters.year.min) {
     filteredAuctions = filteredAuctions.filter(auction =>
-      parseInt(auction.year) >= parseInt(filters.year.min)
+      (auction.vehicleInfo?.year || 0) >= parseInt(filters.year.min)
     );
   }
   if (filters.year.max) {
     filteredAuctions = filteredAuctions.filter(auction =>
-      parseInt(auction.year) <= parseInt(filters.year.max)
+      (auction.vehicleInfo?.year || 0) <= parseInt(filters.year.max)
     );
   }
 
   // Filter by price range
   if (filters.price.range.min) {
     filteredAuctions = filteredAuctions.filter(auction =>
-      auction.price >= parseInt(filters.price.range.min)
+      auction.currentBid >= parseInt(filters.price.range.min)
     );
   }
   if (filters.price.range.max) {
     filteredAuctions = filteredAuctions.filter(auction =>
-      auction.price <= parseInt(filters.price.range.max)
+      auction.currentBid <= parseInt(filters.price.range.max)
     );
   }
 
@@ -116,13 +126,13 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
 export const sortAuctions = (auctions: AuctionItem[], sortBy: string): AuctionItem[] => {
   switch (sortBy) {
     case 'lowerPrice':
-      return [...auctions].sort((a, b) => a.price - b.price);
+      return [...auctions].sort((a, b) => a.currentBid - b.currentBid);
     case 'higherPrice':
-      return [...auctions].sort((a, b) => b.price - a.price);
+      return [...auctions].sort((a, b) => b.currentBid - a.currentBid);
     case 'newer':
-      return [...auctions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return [...auctions].sort((a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime());
     case 'older':
     default:
-      return [...auctions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      return [...auctions].sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
   }
 };
