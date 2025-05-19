@@ -136,11 +136,6 @@ export const useUrlParams = () => {
         params.set('page', '1');
       }
       
-      // Save the current scroll position before URL update
-      if (scrollPositionRef.current === 0) {
-        scrollPositionRef.current = window.scrollY;
-      }
-      
       // Always use {replace: true} to prevent adding to history stack
       setSearchParams(params, { replace: true });
       
@@ -149,13 +144,15 @@ export const useUrlParams = () => {
       
       // After URL update, restore scroll position
       setTimeout(() => {
-        window.scrollTo({
-          top: scrollPositionRef.current,
-          behavior: 'instant'
-        });
-        
-        // Clear the scroll position after restoring
-        scrollPositionRef.current = 0;
+        if (scrollPositionRef.current > 0) {
+          window.scrollTo({
+            top: scrollPositionRef.current,
+            behavior: 'instant'
+          });
+          
+          // Clear the scroll position after restoring
+          scrollPositionRef.current = 0;
+        }
       }, 0);
     };
     
@@ -168,19 +165,19 @@ export const useUrlParams = () => {
   
   // Update URL when filters or sort option changes, but only on mobile or when explicitly triggered
   useEffect(() => {
-    // Store current scroll position before any URL update
-    scrollPositionRef.current = window.scrollY;
-    
-    // Clear any existing timer
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    
     // Only update URL if:
     // 1. It's mobile (automatic updates)
     // 2. shouldUpdateUrlRef.current is true (from apply button)
     // 3. It's the initial load (to sync filters from URL)
     if (isMobile || shouldUpdateUrlRef.current || isInitialLoadRef.current) {
+      // Store current scroll position before any URL update
+      scrollPositionRef.current = window.scrollY;
+      
+      // Clear any existing timer
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      
       // Set a new timer for debounced URL update (mobile only)
       timerRef.current = setTimeout(() => {
         const params = new URLSearchParams(searchParams);
@@ -279,12 +276,15 @@ export const useUrlParams = () => {
         setSearchParams(params, { replace: true });
         
         // After URL update, restore scroll position on mobile
-        if (isMobile) {
+        if (isMobile && scrollPositionRef.current > 0) {
           setTimeout(() => {
             window.scrollTo({
               top: scrollPositionRef.current,
               behavior: 'instant'
             });
+            
+            // Clear the scroll position after restoring
+            scrollPositionRef.current = 0;
           }, 0);
         }
         
@@ -299,7 +299,7 @@ export const useUrlParams = () => {
         clearTimeout(timerRef.current);
       }
     };
-  }, [filters, sortOption, setSearchParams, isMobile, searchParams, shouldUpdateUrlRef]);
+  }, [filters, sortOption, setSearchParams, isMobile, searchParams]);
   
   // Helper to check if filter has changed
   const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {

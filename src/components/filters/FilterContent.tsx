@@ -12,10 +12,12 @@ import YearRangeFilter from './YearRangeFilter';
 import PriceRangeFilter from './PriceRangeFilter';
 import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
+import { useToast } from '@/hooks/use-toast';
 
 const FilterContent: React.FC = () => {
-  const { expandedSections, toggleSection, resetFilters } = useFilterStore();
+  const { expandedSections, toggleSection, resetFilters, activeFilters } = useFilterStore();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   
   // Function to handle apply button click on desktop
   // This triggers the explicit URL update after all filter selections are done
@@ -23,10 +25,25 @@ const FilterContent: React.FC = () => {
     // Store current scroll position before applying filters
     const currentScrollPosition = window.scrollY;
     
-    // Create a custom event that indicates filters were explicitly applied
+    // Dispatch custom event with current scroll position
     window.dispatchEvent(new CustomEvent('filters:applied', { 
       detail: { scrollPosition: currentScrollPosition }
     }));
+    
+    // Show toast confirmation when filters are applied
+    if (activeFilters > 0) {
+      toast({
+        title: "Filtros aplicados",
+        description: `${activeFilters} ${activeFilters === 1 ? 'filtro ativo' : 'filtros ativos'}`,
+        duration: 2000,
+      });
+    } else {
+      toast({
+        title: "Filtros aplicados",
+        description: "Nenhum filtro ativo",
+        duration: 2000,
+      });
+    }
   };
   
   return (
@@ -92,7 +109,7 @@ const FilterContent: React.FC = () => {
             onClick={handleApplyFilters}
             aria-label="Aplicar filtros"
           >
-            Aplicar filtros
+            Aplicar filtros {activeFilters > 0 && `(${activeFilters})`}
           </Button>
         )}
         

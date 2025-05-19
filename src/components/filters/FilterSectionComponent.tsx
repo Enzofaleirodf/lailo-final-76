@@ -29,7 +29,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   };
   
   return (
-    <div className="mb-4 border border-gray-100 rounded-lg overflow-hidden bg-white shadow-sm z-10">
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
       {/* Title section - only toggleable on mobile */}
       <div 
         className="w-full flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-3"

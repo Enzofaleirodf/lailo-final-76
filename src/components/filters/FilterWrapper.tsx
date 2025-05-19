@@ -19,12 +19,22 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
     if (!wrapper) return;
     
     const handleInteraction = (e: Event) => {
-      // Completely prevent event bubbling to avoid URL updates
-      e.stopPropagation();
-      
-      // For click events, also prevent default to avoid any navigation
-      if (e.type === 'click') {
-        e.preventDefault();
+      // Only stop propagation for filter-related interactions
+      // This prevents URL updates while still allowing normal clicking
+      if (e.target && 
+          ((e.target as HTMLElement).closest('input') || 
+           (e.target as HTMLElement).closest('select') || 
+           (e.target as HTMLElement).closest('[role="listbox"]') ||
+           (e.target as HTMLElement).closest('[role="option"]') ||
+           (e.target as HTMLElement).closest('.toggle-group-item'))) {
+        
+        // Completely prevent event bubbling to avoid URL updates
+        e.stopPropagation();
+        
+        // For click events, also prevent default to avoid any navigation
+        if (e.type === 'click') {
+          e.preventDefault();
+        }
       }
     };
     
