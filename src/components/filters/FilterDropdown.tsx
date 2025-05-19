@@ -31,9 +31,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         id={id}
         aria-label={ariaLabel}
         className={cn(
-          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white",
+          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white select-with-focus",
           isDefaultValue ? "text-gray-700" : "text-gray-700",
-          "select-with-focus", // Special class for styling focus only on select elements
           className
         )}
         value={value}

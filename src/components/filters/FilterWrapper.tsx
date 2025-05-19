@@ -48,6 +48,11 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
         setTimeout(() => {
           window.scrollTo(0, savedPosition);
         }, 0);
+        
+        // Add a second delay for more stubborn scenarios
+        setTimeout(() => {
+          window.scrollTo(0, savedPosition);
+        }, 100);
       };
       
       // Add typed event listener

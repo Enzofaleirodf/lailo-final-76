@@ -194,7 +194,8 @@ body.modal-open .mobile-nav-bar {
   background-color: #f3f4f6;
 }
 
-/* COMPLETELY DISABLED FOCUS STYLES - for all elements */
+/* FOCUS STYLES - Carefully controlled */
+/* First disable ALL focus styles */
 *:focus,
 *:focus-visible,
 *:focus-within {
@@ -203,11 +204,22 @@ body.modal-open .mobile-nav-bar {
   border-color: inherit !important;
 }
 
-/* EXCEPT for select elements with our special class - these get yellow focus ring */
+/* ONLY apply yellow focus ring to select elements with our special class */
 .select-with-focus:focus {
   outline: none !important;
   border-color: #FFD100 !important;
   box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.4) !important;
+}
+
+/* Ensure no focus styling for any other elements */
+input:focus,
+button:focus,
+a:focus,
+div:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
 }
 
 /* Direct styling for select elements only */
