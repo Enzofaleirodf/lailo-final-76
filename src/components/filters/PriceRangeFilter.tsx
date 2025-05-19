@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect } from 'react';
 import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
@@ -40,14 +41,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
   useEffect(() => {
     if ((!range.min || !range.max) && auctions && auctions.length > 0) {
       updateFilter('price', {
-        value: [0, 100], // Always ensure we have 2 values for the range slider
+        value: [minPrice, maxPrice],
         range: {
           min: range.min || String(minPrice),
           max: range.max || String(maxPrice)
         }
       });
     }
-  }, [auctions, minPrice, maxPrice, range.min, range.max, updateFilter, range]);
+  }, [auctions, minPrice, maxPrice, range.min, range.max, updateFilter]);
 
   // Convert slider values to price values
   const sliderToPriceValue = (sliderValue: number): number => {
@@ -77,7 +78,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         onFilterChange();
       }
     }
-  }, [updateFilter, onFilterChange, sliderToPriceValue]);
+  }, [updateFilter, onFilterChange]);
 
   const handleMinChange = useCallback((minValue: string) => {
     const numericValue = minValue === '' ? minPrice : Number(minValue);
@@ -118,7 +119,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
   // Ensure we always have two values for the slider
   const sliderValues = value.length === 2 
     ? value 
-    : [value[0] || 0, value[1] || 100]; // Explicitly set two values
+    : [value[0] || 0, value[0] === 100 ? 100 : (value[0] || 0) + 50];
 
   return (
     <div className="space-y-4">

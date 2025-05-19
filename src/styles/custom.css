@@ -195,90 +195,50 @@ body.modal-open .mobile-nav-bar {
   background-color: #f3f4f6;
 }
 
-/* FOCUS STYLES - Carefully controlled */
-/* First disable ALL focus styles */
-*:focus,
-*:focus-visible,
-*:focus-within {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: inherit !important;
+/* Standardize focus styles across all elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #FFD100 !important;
+  outline-offset: 2px !important;
 }
 
-/* ONLY apply yellow focus ring to select elements with our special class */
-.select-with-focus:focus {
-  outline: none !important;
-  border-color: #FFD100 !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.4) !important;
-}
-
-/* Apply yellow border to selected dropdown items that aren't default values */
-select.select-with-focus[value]:not([value="Todas"]):not([value="Todos"]):not([value=""]) {
-  border-color: #FFD100 !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.4) !important;
-}
-
-/* Ensure no focus styling for any other elements */
+/* Better focus styles for form controls */
 input:focus,
-button:focus,
-a:focus,
-div:focus,
+select:focus,
 textarea:focus {
+  border-color: #FFD100 !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
   outline: none !important;
-  border-color: inherit !important;
+}
+
+/* CORREÇÃO: Garantir que apenas o elemento select receba o foco e não seu contêiner */
+.filter-wrapper select:focus {
+  border-color: #FFD100 !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
+  outline: none !important;
+}
+
+.filter-wrapper div:focus,
+.filter-wrapper div:focus-within {
+  outline: none !important;
   box-shadow: none !important;
-}
-
-/* Direct styling for select elements only */
-.plain-select-element:focus {
-  outline: none !important;
   border-color: inherit !important;
-  box-shadow: none !important;
 }
 
-/* Dropdown menu radix consistent focus styles - DISABLED */
-[data-radix-collection-item]:focus {
-  outline: none !important;
-  background-color: rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Desabilitar scroll-behavior para evitar saltos automáticos */
+/* Preservação da posição de rolagem durante atualizações de filtro */
 html {
   scroll-behavior: auto !important;
-  /* Disable smooth scrolling completely */
-  overflow-anchor: none !important;
-  scroll-snap-type: none !important;
 }
 
-/* Reforço para prevenir scroll automático */
-.no-scroll-jump {
-  overflow-anchor: none !important;
-  scroll-behavior: auto !important;
-}
-
-/* Prevent ANY page scrolling on filter change by capturing and stopping events */
-body {
-  overscroll-behavior: none;
-}
-
-/* Eliminar qualquer comportamento de scroll automático do navegador */
-* {
-  scroll-behavior: auto !important;
-}
-
-/* Hack prevention for scroll to top issues */
-.prevent-scroll-restoration {
-  scroll-behavior: auto !important;
-  overflow-anchor: none !important;
-  scroll-snap-type: none !important;
-}
-
-/* Fix for mobile scrolling issues */
-@media (max-width: 768px) {
-  html, body {
-    scroll-behavior: auto !important;
-    overscroll-behavior: none;
-  }
+/* Override radix select focus styles */
+[data-radix-select-trigger]:focus-visible {
+  outline: 2px solid #FFD100 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
 }
 
 /* Improve dropdown visibility */
@@ -361,7 +321,23 @@ body {
   z-index: var(--z-sidebar) !important;
 }
 
-/* Remove no-focus-styles class since we're handling focus globally */
-.no-focus-styles {
-  /* This class is now empty as we control focus globally */
+/* Prevent page scrolling on filter change in desktop */
+.filter-toggle-item:focus, 
+.custom-toggle-item:focus {
+  outline-color: #FFD100 !important;
+}
+
+/* Dropdown menu radix consistent focus styles */
+[data-radix-collection-item]:focus {
+  outline-color: #FFD100 !important;
+  outline-width: 2px !important;
+  background-color: rgba(255, 209, 0, 0.1) !important;
+}
+
+/* Consistent focus state for all filter related components */
+.filter-focus-ring:focus,
+.filter-focus-ring:focus-within {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.7) !important;
+  border-color: #FFD100 !important;
 }
