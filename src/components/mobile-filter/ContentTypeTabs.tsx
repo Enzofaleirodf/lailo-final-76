@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ContentType } from '@/types/filters';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
+import { useNavigate } from 'react-router-dom';
 
 interface ContentTypeTabsProps {
   onTabChange?: (tab: ContentType) => void;
@@ -16,12 +17,22 @@ interface ContentTypeTabsProps {
  */
 const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
   const { filters, updateFilter } = useFilterStore();
-  const { getButtonSizeClass, getIconSize, isVerySmallScreen } = useScreenUtils();
+  const { getButtonSizeClass, getIconSize } = useScreenUtils();
+  const navigate = useNavigate(); // Add navigation hook
   
   // Alterar tipo de conteúdo (imóveis/veículos)
   const handleTabChange = useCallback((tab: ContentType) => {
     if (filters.contentType === tab) return;
+    
+    // Update the filter store
     updateFilter('contentType', tab);
+    
+    // Navigate to the appropriate page based on content type
+    if (tab === 'property') {
+      navigate('/buscador/imoveis');
+    } else {
+      navigate('/buscador/veiculos');
+    }
     
     // Anunciar a mudança para leitores de tela
     const announcement = tab === 'property' ? 'Filtro alterado para imóveis' : 'Filtro alterado para veículos';
@@ -29,7 +40,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
     
     // Callback opcional
     if (onTabChange) onTabChange(tab);
-  }, [filters.contentType, updateFilter, onTabChange]);
+  }, [filters.contentType, updateFilter, onTabChange, navigate]);
   
   // Definir atributos aria para acessibilidade
   const getTabAttributes = (type: ContentType) => {

@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
-  const { updateFilter, filters } = useFilterStore();
+  const { updateFilter, filters, lastUpdatedFilter } = useFilterStore();
   const { toast } = useToast();
   
   // Sincronizar URL com estado de filtros e ordenação
@@ -28,8 +28,10 @@ const BuscadorVeiculos = () => {
   
   // Definir o tipo de conteúdo para veículos quando esta página carregar
   useEffect(() => {
-    // Atualizar apenas se o tipo de conteúdo ainda não for 'vehicle'
-    if (filters.contentType !== 'vehicle') {
+    // Verificar se acabamos de navegar para esta página (não se já estávamos nela)
+    const needsUpdate = filters.contentType !== 'vehicle';
+    
+    if (needsUpdate) {
       console.log('BuscadorVeiculos: Setting content type to vehicle');
       updateFilter('contentType', 'vehicle');
       
@@ -42,7 +44,8 @@ const BuscadorVeiculos = () => {
         updateFilter('usefulArea', { min: '', max: '' });
       }
       
-      // Exibir toast informativo ao carregar a página
+      // Mostrar toast apenas na primeira carga ou quando realmente estamos mudando de tipo
+      // não quando a página é renderizada novamente por outras razões
       toast({
         title: "Modo de busca",
         description: "Visualizando veículos em leilão",
