@@ -21,7 +21,7 @@ export interface PropertyItem {
   };
   bidCount: number;
   format: 'Leilão' | 'Venda Direta';
-  origin: 'Judicial' | 'Extrajudicial';
+  origin: 'Judicial' | 'Extrajudicial' | 'Particular';
   place: 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
   isNew?: boolean;
   createdAt?: Date;
