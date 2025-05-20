@@ -55,7 +55,7 @@ const ResultHeader: React.FC = () => {
       <div className="flex flex-col w-full">
         <AuctionStatus />
         
-        <div className="flex items-center justify-between mt-2">
+        <div className="w-fit">
           <div className="w-fit">
             <div className="flex-grow">
               {/* Empty div to maintain spacing */}
