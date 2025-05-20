@@ -39,6 +39,21 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   inputPrefix,
   inputSuffix
 }) => {
+  // Format value with thousand separator
+  const formatDisplayValue = (value: string): string => {
+    if (!value) return '';
+    
+    // Parse the value as a number
+    const numValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+    if (isNaN(numValue)) return value;
+    
+    // Format with thousand separator
+    return numValue.toLocaleString('pt-BR', {
+      maximumFractionDigits: allowDecimals ? 2 : 0,
+      useGrouping: true
+    }).replace(',', '');
+  };
+
   // Use o hook de validação para tratar valores de intervalo
   const {
     handleMinChange,
@@ -64,21 +79,14 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
     >
       <div className={`flex gap-2 ${className}`}>
         <div className="relative flex-1">
-          {inputPrefix && (
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputPrefix}</span>
-            </div>
-          )}
           <Input 
             type="text" 
-            placeholder={minPlaceholder} 
+            placeholder={inputPrefix ? `${inputPrefix} ${minPlaceholder}` : minPlaceholder} 
             className={cn(
               "h-10 text-sm",
-              minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500",
-              inputPrefix ? "pl-8" : "",
-              inputSuffix ? "pr-8" : ""
+              minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
             )}
-            value={minValue}
+            value={formatDisplayValue(minValue)}
             onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMin}
             aria-invalid={!!minError}
@@ -90,21 +98,14 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
         </div>
         
         <div className="relative flex-1">
-          {inputPrefix && (
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputPrefix}</span>
-            </div>
-          )}
           <Input 
             type="text" 
-            placeholder={maxPlaceholder} 
+            placeholder={inputPrefix ? `${inputPrefix} ${maxPlaceholder}` : maxPlaceholder}
             className={cn(
               "h-10 text-sm",
-              maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500",
-              inputPrefix ? "pl-8" : "",
-              inputSuffix ? "pr-8" : ""
+              maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
             )}
-            value={maxValue}
+            value={formatDisplayValue(maxValue)}
             onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMax}
             aria-invalid={!!maxError}
