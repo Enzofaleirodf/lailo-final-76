@@ -47,6 +47,75 @@ export const VEHICLE_FILTER_KEYS = ['vehicleTypes', 'brand', 'model', 'color', '
 export const PROPERTY_FILTER_KEYS = ['propertyTypes', 'usefulArea'];
 export const COMMON_FILTER_KEYS = ['location', 'price', 'format', 'origin', 'place'];
 
+// Função para calcular filtros ativos
+const calculateActiveFilters = (filters: FilterState): number => {
+  let count = 0;
+  
+  // Count location if either state or city is set
+  if (filters.location.state || filters.location.city) count++;
+  
+  // Only count vehicle types if not empty and not containing default
+  if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) count++;
+  
+  // Only count property types if not empty and not containing default
+  if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) count++;
+  
+  // Only count brand if not default
+  if (filters.brand && filters.brand !== DEFAULT_FILTERS.brand) count++;
+  
+  // Only count model if not default
+  if (filters.model && filters.model !== DEFAULT_FILTERS.model) count++;
+  
+  // Only count color if not default
+  if (filters.color && filters.color !== DEFAULT_FILTERS.color) count++;
+  
+  // Year filter only counts if min or max are set
+  if (filters.year.min || filters.year.max) count++;
+  
+  // Useful area filter only counts if min or max are set
+  if (filters.usefulArea.min || filters.usefulArea.max) count++;
+  
+  // Price range filter only counts if min or max are set
+  if (filters.price.range.min || filters.price.range.max) count++;
+  
+  // Only count format if not default
+  if (filters.format !== DEFAULT_FILTERS.format) count++;
+  
+  // Only count origin if not default
+  if (filters.origin !== DEFAULT_FILTERS.origin) count++;
+  
+  // Only count place if not default
+  if (filters.place !== DEFAULT_FILTERS.place) count++;
+  
+  return count;
+};
+
+// Função para limpar filtros específicos de um tipo de conteúdo
+const cleanContentTypeFilters = (filters: FilterState, contentType: ContentType): FilterState => {
+  const updatedFilters = { ...filters };
+  
+  if (contentType === 'property') {
+    // When switching to properties, clear vehicle-specific filters
+    updatedFilters.vehicleTypes = [];
+    updatedFilters.brand = 'todas';
+    updatedFilters.model = 'todos';
+    updatedFilters.color = 'todas';
+    updatedFilters.year = { min: '', max: '' };
+  } else {
+    // When switching to vehicles, clear property-specific filters
+    updatedFilters.propertyTypes = [];
+    updatedFilters.usefulArea = { min: '', max: '' };
+  }
+  
+  // Reset the price for appropriate values
+  updatedFilters.price = {
+    value: [0, 100],
+    range: { min: '', max: '' }
+  };
+  
+  return updatedFilters;
+};
+
 interface FilterStore {
   // State
   filters: FilterState;
@@ -56,7 +125,7 @@ interface FilterStore {
   activeFilters: number;
   
   // Actions
-  setFilters: (filters: FilterState) => void;
+  setFilters: (filters: FilterState | Partial<FilterState>) => void;
   updateFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
   resetFilters: () => void;
   toggleSection: (section: string) => void;
@@ -83,50 +152,15 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
   
   // Computed values
   get activeFilters() {
-    const filters = get().filters;
-    let count = 0;
-    
-    // Count location if either state or city is set
-    if (filters.location.state || filters.location.city) count++;
-    
-    // Only count vehicle types if not empty and not containing default
-    if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) count++;
-    
-    // Only count property types if not empty and not containing default
-    if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) count++;
-    
-    // Only count brand if not default
-    if (filters.brand && filters.brand !== DEFAULT_FILTERS.brand) count++;
-    
-    // Only count model if not default
-    if (filters.model && filters.model !== DEFAULT_FILTERS.model) count++;
-    
-    // Only count color if not default
-    if (filters.color && filters.color !== DEFAULT_FILTERS.color) count++;
-    
-    // Year filter only counts if min or max are set
-    if (filters.year.min || filters.year.max) count++;
-    
-    // Useful area filter only counts if min or max are set
-    if (filters.usefulArea.min || filters.usefulArea.max) count++;
-    
-    // Price range filter only counts if min or max are set
-    if (filters.price.range.min || filters.price.range.max) count++;
-    
-    // Only count format if not default
-    if (filters.format !== DEFAULT_FILTERS.format) count++;
-    
-    // Only count origin if not default
-    if (filters.origin !== DEFAULT_FILTERS.origin) count++;
-    
-    // Only count place if not default
-    if (filters.place !== DEFAULT_FILTERS.place) count++;
-    
-    return count;
+    return calculateActiveFilters(get().filters);
   },
   
   // Actions
-  setFilters: (filters) => set({ filters }),
+  setFilters: (newFilters) => set((state) => {
+    // Se for um objeto parcial, mesclá-lo com o estado atual
+    const mergedFilters = { ...state.filters, ...newFilters };
+    return { filters: mergedFilters };
+  }),
   
   updateFilter: (key, value) => {
     set((state) => {
@@ -138,38 +172,13 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
         if (newContentType !== currentContentType) {
           console.log(`Content type changing from ${currentContentType} to ${newContentType}`);
           
-          // Return with updated contentType and cleaned filters based on the new type
-          const updatedFilters = { ...state.filters, [key]: value };
+          // Limpar filtros específicos do tipo anterior e atualizar para o novo tipo
+          const updatedFilters = cleanContentTypeFilters({ 
+            ...state.filters, 
+            [key]: value 
+          }, newContentType);
           
-          // Clean up content-specific filters
-          if (newContentType === 'property') {
-            // When switching to properties, clear vehicle-specific filters
-            updatedFilters.vehicleTypes = [];
-            updatedFilters.brand = 'todas';
-            updatedFilters.model = 'todos';
-            updatedFilters.color = 'todas';
-            updatedFilters.year = { min: '', max: '' };
-            
-            // Reset the price for property-appropriate values
-            updatedFilters.price = {
-              value: [0, 100],
-              range: { min: '', max: '' }
-            };
-          } else {
-            // When switching to vehicles, clear property-specific filters
-            updatedFilters.propertyTypes = [];
-            updatedFilters.usefulArea = { min: '', max: '' };
-            
-            // Reset the price for vehicle-appropriate values
-            updatedFilters.price = {
-              value: [0, 100],
-              range: { min: '', max: '' }
-            };
-          }
-          
-          return {
-            filters: updatedFilters
-          };
+          return { filters: updatedFilters };
         }
       }
       
@@ -220,20 +229,7 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
   cleanIrrelevantFilters: () => {
     set((state) => {
       const contentType = state.filters.contentType;
-      const updatedFilters = { ...state.filters };
-      
-      if (contentType === 'property') {
-        // If on property page, clear vehicle filters
-        updatedFilters.vehicleTypes = [];
-        updatedFilters.brand = 'todas';
-        updatedFilters.model = 'todos';
-        updatedFilters.color = 'todas';
-        updatedFilters.year = { min: '', max: '' };
-      } else {
-        // If on vehicle page, clear property filters
-        updatedFilters.propertyTypes = [];
-        updatedFilters.usefulArea = { min: '', max: '' };
-      }
+      const updatedFilters = cleanContentTypeFilters(state.filters, contentType);
       
       return { filters: updatedFilters };
     });

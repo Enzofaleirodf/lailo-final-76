@@ -11,22 +11,20 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useLocation } from 'react-router-dom';
 
 const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
   const { updateFilter, filters } = useFilterStore();
-  const location = useLocation();
   
-  // Set content type to property when this page loads, but only if it's not already set
+  // Definir o tipo de conteúdo para imóveis quando esta página carregar, mas apenas se ainda não estiver definido
   useEffect(() => {
-    // Only update if content type isn't already 'property'
+    // Atualizar apenas se o tipo de conteúdo ainda não for 'property'
     if (filters.contentType !== 'property') {
       console.log('BuscadorImoveis: Setting content type to property');
       updateFilter('contentType', 'property');
       
-      // Clean up any vehicle-specific filters
+      // Limpar quaisquer filtros específicos de veículos
       if (filters.vehicleTypes.length > 0 || 
           filters.brand !== 'todas' || 
           filters.model !== 'todos' || 
@@ -43,7 +41,7 @@ const BuscadorImoveis = () => {
     }
   }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brand, filters.model, filters.color, filters.year]);
   
-  // Sync URL with filters and sort state
+  // Sincronizar URL com estado de filtros e ordenação
   useUrlParams();
   
   const handleFilterClick = () => {
