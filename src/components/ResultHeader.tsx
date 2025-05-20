@@ -47,30 +47,34 @@ const ResultHeader: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center w-full">
-          <div className="flex-grow">
-            <AuctionStatus />
-          </div>
-          
-          {!isMobile && (
-            <div className="flex items-center ml-auto">
-              <p className="text-sm text-gray-500 mr-2 font-normal">
-                Ordenar por:
-              </p>
-              <button 
-                onClick={handleSortClick}
-                className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none"
-              >
-                <span className="font-medium text-gray-700">{currentSortOption.label}</span>
-              </button>
-              
-              <SortOptions 
-                open={sortDialogOpen} 
-                onOpenChange={setSortDialogOpen} 
-              />
+      <div className="flex flex-col w-full">
+        <AuctionStatus />
+        
+        <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center w-full">
+            <div className="flex-grow">
+              {/* Empty div to maintain spacing */}
             </div>
-          )}
+            
+            {!isMobile && (
+              <div className="flex items-center ml-auto">
+                <p className="text-sm text-gray-500 mr-2 font-normal">
+                  Ordenar por:
+                </p>
+                <button 
+                  onClick={handleSortClick}
+                  className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none"
+                >
+                  <span className="font-medium text-gray-700">{currentSortOption.label}</span>
+                </button>
+                
+                <SortOptions 
+                  open={sortDialogOpen} 
+                  onOpenChange={setSortDialogOpen} 
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
