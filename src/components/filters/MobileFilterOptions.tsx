@@ -52,7 +52,7 @@ const MobileFilterOptions: React.FC = () => {
     <div className="grid grid-cols-1 gap-0">
       <FilterSectionComponent 
         title="Formato" 
-        isExpanded={expandedSections.format || false} 
+        isExpanded={expandedSections.format} 
         onToggle={() => toggleSection('format')}
       >
         <FilterDropdown 
@@ -67,7 +67,7 @@ const MobileFilterOptions: React.FC = () => {
 
       <FilterSectionComponent 
         title="Origem" 
-        isExpanded={expandedSections.origin || false} 
+        isExpanded={expandedSections.origin} 
         onToggle={() => toggleSection('origin')}
       >
         <FilterDropdown 
@@ -82,7 +82,7 @@ const MobileFilterOptions: React.FC = () => {
 
       <FilterSectionComponent 
         title="Etapa" 
-        isExpanded={expandedSections.place || false} 
+        isExpanded={expandedSections.place} 
         onToggle={() => toggleSection('place')}
       >
         <FilterDropdown 
