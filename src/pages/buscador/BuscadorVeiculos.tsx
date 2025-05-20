@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -20,12 +20,16 @@ const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
   const { updateFilter, filters } = useFilterStore();
+  const initialSetupDone = useRef(false);
   
   // Sincronizar URL com estado de filtros e ordenação
   const { handlePageChange } = useUrlParams();
   
   // Definir o tipo de conteúdo para veículos quando esta página carregar
   useEffect(() => {
+    // Prevent duplicate initialization
+    if (initialSetupDone.current) return;
+    
     // Verificar se acabamos de navegar para esta página (não se já estávamos nela)
     const needsUpdate = filters.contentType !== 'vehicle';
     
@@ -42,6 +46,8 @@ const BuscadorVeiculos = () => {
         updateFilter('usefulArea', { min: '', max: '' });
       }
     }
+    
+    initialSetupDone.current = true;
   }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
   
   const handleFilterClick = () => {

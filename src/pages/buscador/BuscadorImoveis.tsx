@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -16,9 +16,16 @@ const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
   const { updateFilter, filters } = useFilterStore();
+  const initialSetupDone = useRef(false);
+  
+  // Sincronizar URL com estado de filtros e ordenação
+  useUrlParams();
   
   // Definir o tipo de conteúdo para imóveis quando esta página carregar, mas apenas se ainda não estiver definido
   useEffect(() => {
+    // Prevent duplicate initialization
+    if (initialSetupDone.current) return;
+    
     // Atualizar apenas se o tipo de conteúdo ainda não for 'property'
     if (filters.contentType !== 'property') {
       console.log('BuscadorImoveis: Setting content type to property');
@@ -39,10 +46,9 @@ const BuscadorImoveis = () => {
         updateFilter('year', { min: '', max: '' });
       }
     }
+    
+    initialSetupDone.current = true;
   }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brand, filters.model, filters.color, filters.year]);
-  
-  // Sincronizar URL com estado de filtros e ordenação
-  useUrlParams();
   
   const handleFilterClick = () => {
     setFiltersOpen(true);

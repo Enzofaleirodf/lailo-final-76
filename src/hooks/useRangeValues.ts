@@ -40,9 +40,21 @@ export function useRangeValues(options: UseRangeValuesOptions = {}) {
   // Campo em modo de edição (para evitar formatação durante digitação)
   const editingField = useRef<'min' | 'max' | null>(null);
   
+  // Store previous values to avoid unnecessary updates
+  const prevValuesRef = useRef<RangeValues>({ min: initialMin || '', max: initialMax || '' });
+  
   // Determinar se o filtro está ativo apenas se o usuário tiver interagido com ele
   // e os valores forem diferentes dos padrões
   useEffect(() => {
+    // Skip this effect if values haven't actually changed (prevents infinite loop)
+    if (values.min === prevValuesRef.current.min && 
+        values.max === prevValuesRef.current.max) {
+      return;
+    }
+    
+    // Update previous values reference
+    prevValuesRef.current = {...values};
+    
     const hasInteracted = userInteracted.current.min || userInteracted.current.max;
     
     if (hasInteracted) {
@@ -51,6 +63,7 @@ export function useRangeValues(options: UseRangeValuesOptions = {}) {
       const isMinDefault = !values.min || values.min === defaultMin;
       const isMaxDefault = !values.max || values.max === defaultMax;
       const active = !isMinDefault || !isMaxDefault;
+      
       setIsActive(active);
     }
   }, [values, defaultMin, defaultMax]);
@@ -58,9 +71,18 @@ export function useRangeValues(options: UseRangeValuesOptions = {}) {
   // Atualizar valores
   const updateValues = (newValues: Partial<RangeValues>) => {
     const updatedValues = { ...values, ...newValues };
+    
+    // Skip update if nothing changed (prevents update loops)
+    if (updatedValues.min === values.min && updatedValues.max === values.max) {
+      return;
+    }
+    
     setValues(updatedValues);
     
-    if (onChange) {
+    // Only trigger onChange if values actually changed
+    if (onChange && 
+        (updatedValues.min !== prevValuesRef.current.min || 
+         updatedValues.max !== prevValuesRef.current.max)) {
       onChange(updatedValues);
     }
   };
@@ -97,9 +119,17 @@ export function useRangeValues(options: UseRangeValuesOptions = {}) {
   // Resetar para valores padrão
   const resetValues = () => {
     if (defaultMin !== undefined && defaultMax !== undefined) {
+      // Skip if already at default values
+      if (values.min === defaultMin && values.max === defaultMax) {
+        return;
+      }
+      
       setValues({ min: defaultMin, max: defaultMax });
       userInteracted.current = { min: false, max: false };
       setIsActive(false);
+      
+      // Update previous values reference
+      prevValuesRef.current = { min: defaultMin, max: defaultMax };
       
       if (onChange) {
         onChange({ min: defaultMin, max: defaultMax });

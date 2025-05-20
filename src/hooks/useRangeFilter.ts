@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useRangeValues, RangeValues } from './useRangeValues';
 import { useRangeFormatting } from './useRangeFormatting';
 import { useRangeValidation } from './useRangeValidation';
@@ -35,6 +35,9 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     formatDisplay = true,
     useThousandSeparator = true,
   } = options;
+  
+  // Prevent initialization loops
+  const hasInitialized = useRef(false);
   
   // Usar hook especializado para gerenciar valores
   const {
@@ -114,9 +117,14 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   
   // Inicializar com valores padrão para exibição se os valores iniciais estiverem vazios
   useEffect(() => {
+    // Prevent initialization loops by only running once
+    if (hasInitialized.current) return;
+    
     if (!values.min && !values.max && defaultMin && defaultMax) {
       updateValues({ min: defaultMin, max: defaultMax });
     }
+    
+    hasInitialized.current = true;
   }, [defaultMin, defaultMax, values.min, values.max, updateValues]);
   
   return {
