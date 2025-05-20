@@ -221,7 +221,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid #FFD100 !important;
+  outline: 2px solid #202A44 !important;
   outline-offset: 2px !important;
 }
 
@@ -229,15 +229,15 @@ textarea:focus-visible,
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #FFD100 !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
+  border-color: #202A44 !important;
+  box-shadow: 0 0 0 2px rgba(32, 42, 68, 0.3) !important;
   outline: none !important;
 }
 
 /* CORREÇÃO: Garantir que apenas o elemento select receba o foco e não seu contêiner */
 .filter-wrapper select:focus {
-  border-color: #FFD100 !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
+  border-color: #202A44 !important;
+  box-shadow: 0 0 0 2px rgba(32, 42, 68, 0.3) !important;
   outline: none !important;
 }
 
@@ -255,9 +255,9 @@ html {
 
 /* Override radix select focus styles */
 [data-radix-select-trigger]:focus-visible {
-  outline: 2px solid #FFD100 !important;
+  outline: 2px solid #202A44 !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.3) !important;
+  box-shadow: 0 0 0 2px rgba(32, 42, 68, 0.3) !important;
 }
 
 /* Improve dropdown visibility */
@@ -348,22 +348,22 @@ html {
 /* Prevent page scrolling on filter change in desktop */
 .filter-toggle-item:focus, 
 .custom-toggle-item:focus {
-  outline-color: #FFD100 !important;
+  outline-color: #202A44 !important;
 }
 
 /* Dropdown menu radix consistent focus styles */
 [data-radix-collection-item]:focus {
-  outline-color: #FFD100 !important;
+  outline-color: #202A44 !important;
   outline-width: 2px !important;
-  background-color: rgba(255, 209, 0, 0.1) !important;
+  background-color: rgba(32, 42, 68, 0.1) !important;
 }
 
 /* Consistent focus state for all filter related components */
 .filter-focus-ring:focus,
 .filter-focus-ring:focus-within {
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.7) !important;
-  border-color: #FFD100 !important;
+  box-shadow: 0 0 0 2px rgba(32, 42, 68, 0.3) !important;
+  border-color: #202A44 !important;
 }
 
 /* Fix for drawer footer - ensure it's visible over mobile navigation */
