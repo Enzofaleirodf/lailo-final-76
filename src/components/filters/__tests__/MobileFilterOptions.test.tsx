@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -54,8 +55,9 @@ describe('MobileFilterOptions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Properly cast mock to correct type
-    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue(mockFilterStore);
+    // Properly cast mock to correct type using unknown as intermediary type
+    // This fixes the TypeScript error
+    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue(mockFilterStore);
   });
   
   test('renders all filter sections', () => {
@@ -119,8 +121,9 @@ describe('MobileFilterOptions', () => {
       }
     };
     
-    // Cast properly to jest.Mock
-    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue(expandedFormatMockStore);
+    // Cast properly to jest.Mock using unknown as intermediary type
+    // This fixes the TypeScript error
+    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue(expandedFormatMockStore);
 
     render(<MobileFilterOptions />);
     
