@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { ContentType } from '@/types/filters';
@@ -19,12 +19,8 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
   onSortClick
 }) => {
-  const { updateFilter } = useFilterStore();
-  
-  // Callback para quando o tipo de conteúdo muda
-  const handleContentTypeChange = useCallback((contentType: ContentType) => {
-    updateFilter('contentType', contentType);
-  }, [updateFilter]);
+  // Removido o callback handleContentTypeChange para não interferir 
+  // com a navegação implementada diretamente no ContentTypeTabs
   
   return (
     <div 
@@ -37,7 +33,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
         aria-label="Barra de filtros para dispositivos móveis"
       >
         {/* Abas de tipo de conteúdo (imóveis/veículos) */}
-        <ContentTypeTabs onTabChange={handleContentTypeChange} />
+        <ContentTypeTabs />
         
         {/* Botões de ação (filtrar/ordenar) */}
         <ActionButtons 

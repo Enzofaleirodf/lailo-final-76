@@ -1,7 +1,7 @@
-
 import React, { useCallback } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,10 +19,22 @@ import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils'
  */
 const TopFilters: React.FC = () => {
   const { filters, updateFilter } = useFilterStore();
+  const navigate = useNavigate();
 
   const handleContentTypeChange = useCallback((type: ContentType) => {
+    // Não fazer nada se já estivermos no tipo selecionado
+    if (filters.contentType === type) return;
+    
+    // Atualizar o filtro
     updateFilter('contentType', type);
-  }, [updateFilter]);
+    
+    // Navegar para a página apropriada
+    if (type === 'property') {
+      navigate('/buscador/imoveis');
+    } else {
+      navigate('/buscador/veiculos');
+    }
+  }, [updateFilter, navigate, filters.contentType]);
 
   const handleFilterChange = useCallback((filterType: 'format' | 'origin' | 'place', value: FilterFormat | FilterOrigin | FilterPlace) => {
     if (filterType === 'format') {

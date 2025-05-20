@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import FilterSection from '@/components/FilterSection';
