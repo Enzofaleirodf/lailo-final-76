@@ -59,7 +59,8 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         const basePadding = 12; // 3 * 4px (padrão do Tailwind)
         const charWidth = 8; // Largura média aproximada de um caractere
         
-        const calculatedPadding = basePadding + (prefixLength * charWidth);
+        // Aumentado o padding-left para dar mais espaço entre prefixo e valor
+        const calculatedPadding = basePadding + (prefixLength * charWidth) + 4;
         inputRef.current.style.paddingLeft = `${calculatedPadding}px`;
       }
       
@@ -69,7 +70,8 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         const basePadding = 12;
         const charWidth = 8;
         
-        const calculatedPadding = basePadding + (suffixLength * charWidth);
+        // Aumentado o padding-right para dar mais espaço entre sufixo e valor
+        const calculatedPadding = basePadding + (suffixLength * charWidth) + 4;
         inputRef.current.style.paddingRight = `${calculatedPadding}px`;
       }
     }

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -17,7 +18,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
   onSortClick
 }) => {
-  return <div role="navigation" aria-label="Opções de filtro e ordenação" className="sticky top-0 z-30 w-full pt-3 pb-2 mt-0 bg-transparent px-0">
+  return <div role="navigation" aria-label="Opções de filtro e ordenação" className="fixed top-0 z-50 w-full pt-3 pb-2 mt-0 bg-white shadow-md px-0">
       <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white" aria-label="Barra de filtros para dispositivos móveis">
         {/* Abas de tipo de conteúdo (imóveis/veículos) */}
         <ContentTypeTabs />

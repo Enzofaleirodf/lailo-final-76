@@ -71,7 +71,7 @@ const BuscadorVeiculos = () => {
         />
       )}
       
-      <div className="w-full flex flex-col lg:flex-row lg:gap-6 px-4 lg:px-6">
+      <div className={`w-full flex flex-col lg:flex-row lg:gap-6 px-4 lg:px-6 ${isMobile ? "mt-16" : ""}`}>
         {/* Sidebar filter section - desktop only */}
         {!isMobile && (
           <aside className="shrink-0 w-full lg:w-[448px]">
