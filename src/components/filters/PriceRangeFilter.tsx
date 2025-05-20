@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { toast } from '@/components/ui/use-toast';
+import { PriceRangeFilter as PriceRangeFilterType } from '@/types/filters';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
@@ -93,7 +94,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
           min: String(minPrice),
           max: String(maxPrice)
         }
-      });
+      } as PriceRangeFilterType);
       setHasAdjustedPrice(true);
     }
   }, [minPrice, maxPrice, range.min, range.max, updateFilter, hasAdjustedPrice, filters.contentType]);
@@ -119,7 +120,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
           min: String(Math.round(minPrice)),
           max: String(Math.round(maxPrice))
         }
-      });
+      } as PriceRangeFilterType);
       
       // Notify parent component that filter has changed
       if (onFilterChange) {
@@ -138,7 +139,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         ...filters.price.range,
         min: minValue
       }
-    });
+    } as PriceRangeFilterType);
     
     // Notify parent component that filter has changed
     if (onFilterChange) {
@@ -156,7 +157,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         ...filters.price.range,
         max: maxValue
       }
-    });
+    } as PriceRangeFilterType);
     
     // Notify parent component that filter has changed
     if (onFilterChange) {

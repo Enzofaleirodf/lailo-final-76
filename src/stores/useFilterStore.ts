@@ -8,16 +8,13 @@ import {
   ExpandedSectionsState,
   FilterFormat,
   FilterOrigin,
-  FilterPlace
+  FilterPlace,
+  FilterStoreState,
+  PriceRangeFilter
 } from '@/types/filters';
 
 // Define the shape of our store
-interface FilterStore {
-  filters: FilterState;
-  expandedSections: ExpandedSectionsState;
-  activeFilters: number;
-  lastUpdatedFilter: string | null;
-  
+interface FilterStore extends FilterStoreState {
   // Actions
   updateFilter: <K extends keyof FilterState>(
     key: K,

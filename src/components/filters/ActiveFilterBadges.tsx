@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -5,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { FilterState, PriceRangeFilter } from '@/types/filters';
 
 const ActiveFilterBadges: React.FC = () => {
   const { filters, updateFilter, resetFilters } = useFilterStore();
@@ -128,7 +130,7 @@ const ActiveFilterBadges: React.FC = () => {
       onRemove: () => updateFilter('price', { 
         value: [0, 100],
         range: { min: '', max: '' }
-      })
+      } as PriceRangeFilter)
     });
   }
   
