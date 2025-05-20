@@ -16,6 +16,7 @@ interface MobileFilterBarProps {
  * Barra de filtros móvel que fornece acesso a filtros e opções de classificação
  * Mantém consistência visual e comportamental entre diferentes tamanhos de tela
  * Otimizado para telas muito pequenas com detecção de tamanho aprimorada
+ * Melhorado para acessibilidade e compatibilidade com leitores de tela
  */
 const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
@@ -43,6 +44,10 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   const handleTabChange = useCallback((tab: ContentType) => {
     if (filters.contentType === tab) return;
     updateFilter('contentType', tab);
+    
+    // Anunciar a mudança para leitores de tela
+    const announcement = tab === 'property' ? 'Filtro alterado para imóveis' : 'Filtro alterado para veículos';
+    announceForScreenReader(announcement);
   }, [filters.contentType, updateFilter]);
   
   // Definir atributos aria para acessibilidade
@@ -65,6 +70,27 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
       action();
     }
   }, []);
+  
+  // Função de utilitário para anúncios de leitores de tela
+  const announceForScreenReader = (message: string) => {
+    let announcer = document.getElementById('mobile-filter-announcer');
+    if (!announcer) {
+      announcer = document.createElement('div');
+      announcer.id = 'mobile-filter-announcer';
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.setAttribute('aria-atomic', 'true');
+      announcer.style.position = 'absolute';
+      announcer.style.width = '1px';
+      announcer.style.height = '1px';
+      announcer.style.overflow = 'hidden';
+      announcer.style.clip = 'rect(0, 0, 0, 0)';
+      document.body.appendChild(announcer);
+    }
+    
+    setTimeout(() => {
+      if (announcer) announcer.textContent = message;
+    }, 100);
+  };
   
   // Classes dinamicamente calculadas com base no tamanho da tela
   const getButtonSizeClass = () => {
@@ -90,8 +116,15 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
       role="navigation"
       aria-label="Opções de filtro e ordenação"
     >
-      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
-        <div role="tablist" aria-label="Tipo de conteúdo" className="flex">
+      <div 
+        className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white"
+        aria-label="Barra de filtros para dispositivos móveis"
+      >
+        <div 
+          role="tablist" 
+          aria-label="Tipo de conteúdo" 
+          className="flex"
+        >
           <button 
             onClick={() => handleTabChange('property')} 
             onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
@@ -106,6 +139,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
             {...getTabAttributes('property')}
           >
             <Building2 size={getIconSize()} className="shrink-0" aria-hidden="true" />
+            <span className="sr-only">Imóveis</span>
           </button>
           <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
           <button 
@@ -122,6 +156,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
             {...getTabAttributes('vehicle')}
           >
             <Car size={getIconSize()} className="shrink-0" aria-hidden="true" />
+            <span className="sr-only">Veículos</span>
           </button>
         </div>
         <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
@@ -132,7 +167,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
             "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-colors relative",
             getButtonSizeClass()
           )}
-          aria-label="Abrir filtros"
+          aria-label={`Abrir filtros${activeFilters > 0 ? ` (${activeFilters} ativos)` : ''}`}
           aria-haspopup="dialog"
           aria-expanded="false"
         >
@@ -142,6 +177,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
             <span 
               className={getFilterBadgeClass()}
               aria-label={`${activeFilters} filtros ativos`}
+              aria-hidden="true" // Usamos aria-hidden porque já incluímos a contagem no aria-label do botão
             >
               {activeFilters}
             </span>

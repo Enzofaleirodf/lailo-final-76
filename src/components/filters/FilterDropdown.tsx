@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 interface FilterDropdownProps {
@@ -44,6 +44,59 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     });
   };
   
+  // Melhorar acessibilidade para eventos de teclado
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
+    // Garantir que a seleção via teclado não cause efeitos colaterais
+    if (e.key === 'Enter' || e.key === ' ') {
+      // Impedir comportamento padrão para evitar rolagem
+      e.preventDefault();
+      
+      // Abrir o dropdown nativo ao pressionar Enter ou espaço
+      if (selectRef.current) {
+        selectRef.current.click();
+      }
+    }
+  };
+  
+  // Melhorar foco no componente para leitores de tela
+  useEffect(() => {
+    const select = selectRef.current;
+    if (!select) return;
+    
+    // Adicionar anúncio para leitores de tela quando o foco muda
+    const handleFocus = () => {
+      const selectedOption = options.find(opt => opt.value === value);
+      const announcement = selectedOption ? 
+        `${ariaLabel || 'Filtro'}, valor atual: ${selectedOption.label}` : 
+        `${ariaLabel || 'Filtro'}, nenhuma opção selecionada`;
+      
+      // Criar elemento aria-live para anúncios
+      let announcer = document.getElementById('filter-announcer');
+      if (!announcer) {
+        announcer = document.createElement('div');
+        announcer.id = 'filter-announcer';
+        announcer.setAttribute('aria-live', 'polite');
+        announcer.setAttribute('aria-atomic', 'true');
+        announcer.style.position = 'absolute';
+        announcer.style.width = '1px';
+        announcer.style.height = '1px';
+        announcer.style.overflow = 'hidden';
+        announcer.style.clip = 'rect(0, 0, 0, 0)';
+        document.body.appendChild(announcer);
+      }
+      
+      // Fazer o anúncio
+      setTimeout(() => {
+        if (announcer) announcer.textContent = announcement;
+      }, 100);
+    };
+    
+    select.addEventListener('focus', handleFocus);
+    return () => {
+      select.removeEventListener('focus', handleFocus);
+    };
+  }, [ariaLabel, value, options]);
+  
   return (
     <div className="relative isolate">
       <select
@@ -57,17 +110,30 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
           ${className}`}
         value={value}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         style={{ height: '40px' }}
         disabled={disabled}
+        role="combobox"
+        aria-expanded="false"
+        aria-required="false"
+        aria-autocomplete="list"
       >
         {placeholder && <option value="" disabled className="text-gray-500 font-normal">{placeholder}</option>}
         {options.map((option) => (
-          <option key={option.value} value={option.value} className={`${option.value === value ? 'text-brand-700 font-medium' : 'text-gray-700 font-normal'}`}>
+          <option 
+            key={option.value} 
+            value={option.value} 
+            className={`${option.value === value ? 'text-brand-700 font-medium' : 'text-gray-700 font-normal'}`}
+          >
             {option.label}
           </option>
         ))}
       </select>
-      <ChevronDown size={16} className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${disabled ? 'text-gray-400' : 'text-gray-500'}`} />
+      <ChevronDown 
+        size={16} 
+        className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${disabled ? 'text-gray-400' : 'text-gray-500'}`} 
+        aria-hidden="true"
+      />
     </div>
   );
 };
