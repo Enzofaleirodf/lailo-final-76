@@ -64,7 +64,7 @@ const MobileFilterOptions: React.FC = () => {
     value: '3ª Praça',
     label: '3ª Praça'
   }];
-  return <div className="grid grid-cols-1 gap-0 mb-0">
+  return <div className="grid grid-cols-1 gap-0">
       <FilterSectionComponent title="Formato" isExpanded={expandedSections.format || false} onToggle={() => toggleSection('format')}>
         <FilterDropdown id="format-filter-mobile" aria-label="Selecionar formato" value={filters.format} onChange={handleFormatChange} options={formatOptions} className="border-gray-200 shadow-sm" />
       </FilterSectionComponent>
