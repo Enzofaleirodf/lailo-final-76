@@ -121,7 +121,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
           <ChevronDown size={16} className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 sm:w-80 p-4 bg-white shadow-md rounded-md" align="start">
+      <PopoverContent className="w-72 sm:w-80 p-4 bg-white shadow-md rounded-md z-[150]" align="start">
         <div className="flex flex-col gap-4">
           <div className="space-y-2">
             <label htmlFor="state-select" className="text-sm font-medium text-gray-700">

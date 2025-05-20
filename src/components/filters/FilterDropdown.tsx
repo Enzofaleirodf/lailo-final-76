@@ -118,7 +118,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     <div className="relative isolate">
       <select
         ref={selectRef}
-        id={id || `filter-dropdown-${ariaLabel?.toLowerCase().replace(/\s+/g, '-') || Math.random().toString(36).substring(2, 9)}`}
+        id={id || `filter-dropdown-${Math.random().toString(36).substring(2, 9)}`}
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none",
@@ -131,7 +131,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        style={{ height: '40px' }}
         disabled={disabled}
         role="combobox"
         aria-expanded="false"
@@ -139,10 +138,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
       >
-        {placeholder && <option value="" disabled className="text-gray-500 font-normal">{placeholder}</option>}
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option 
-            key={option.value} 
+            key={`${option.value}-${option.label}`}
             value={option.value} 
             className={`${option.value === value ? 'text-brand-700 font-medium' : 'text-gray-700 font-normal'}`}
           >
