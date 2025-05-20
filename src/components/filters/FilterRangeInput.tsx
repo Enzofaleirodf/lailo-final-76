@@ -74,6 +74,8 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
 
   // Calcular o padding-left necessário para acomodar o prefixo sem sobreposição
   const prefixPaddingClass = inputPrefix ? "pl-8" : "";
+  // Calcular o padding-right necessário para acomodar o sufixo sem sobreposição
+  const suffixPaddingClass = inputSuffix ? "pr-8" : "";
 
   return (
     <div 
@@ -89,8 +91,9 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             className={cn(
               "h-10 text-sm",
               prefixPaddingClass,
-              minError ? "border-red-300 focus:ring-red-500" : 
-              isFilterActive ? "border-brand-300 focus:ring-brand-500" : "border-gray-300 focus:ring-brand-500"
+              suffixPaddingClass,
+              minError ? "border-red-300 focus-visible:ring-red-500" : 
+              isFilterActive ? "border-brand-300 focus-visible:ring-brand-500" : "border-gray-300 focus-visible:ring-brand-500"
             )}
             value={formatDisplayValue(minValue)}
             onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
@@ -106,6 +109,12 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
               <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
             </div>
           )}
+          
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+            </div>
+          )}
         </div>
         
         <div className="relative flex-1">
@@ -115,8 +124,9 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             className={cn(
               "h-10 text-sm",
               prefixPaddingClass,
-              maxError ? "border-red-300 focus:ring-red-500" : 
-              isFilterActive ? "border-brand-300 focus:ring-brand-500" : "border-gray-300 focus:ring-brand-500"
+              suffixPaddingClass,
+              maxError ? "border-red-300 focus-visible:ring-red-500" : 
+              isFilterActive ? "border-brand-300 focus-visible:ring-brand-500" : "border-gray-300 focus-visible:ring-brand-500"
             )}
             value={formatDisplayValue(maxValue)}
             onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
@@ -130,6 +140,12 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
+            </div>
+          )}
+          
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
             </div>
           )}
         </div>

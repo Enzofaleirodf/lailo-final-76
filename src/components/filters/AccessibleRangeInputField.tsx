@@ -36,6 +36,8 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
 }) => {
   // Calcular o padding-left necessário para acomodar o prefixo sem sobreposição
   const prefixPaddingClass = inputPrefix ? "pl-8" : "";
+  // Calcular o padding-right necessário para acomodar o sufixo sem sobreposição
+  const suffixPaddingClass = inputSuffix ? "pr-8" : "";
   
   return (
     <div className="relative flex-1">
@@ -46,6 +48,7 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
         className={cn(
           "h-10 text-sm",
           prefixPaddingClass,
+          suffixPaddingClass,
           error ? "border-red-300 focus-visible:ring-red-500" : "border-gray-300 focus-visible:ring-brand-500"
         )}
         value={value}

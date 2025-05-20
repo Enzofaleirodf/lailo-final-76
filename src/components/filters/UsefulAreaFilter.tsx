@@ -51,6 +51,9 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [filters.usefulArea, updateFilter, handleFilterChange]);
 
+  // Verificar se os valores são diferentes dos valores iniciais para marcar o filtro como ativo
+  const isFilterActive = filters.usefulArea.min !== "30" || filters.usefulArea.max !== "500";
+
   return (
     <div className="space-y-3">
       <FilterRangeInput
@@ -65,6 +68,9 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
         allowDecimals={true} // Allow decimals for area measurements
         minAllowed={0} // Area cannot be negative
         inputSuffix="m²"
+        isFilterActive={isFilterActive}
+        defaultMin="30"
+        defaultMax="500"
       />
     </div>
   );
