@@ -18,8 +18,6 @@ interface FilterRangeInputProps {
   allowNegative?: boolean;
   minAllowed?: number;
   maxAllowed?: number;
-  displayMinValue?: string;
-  displayMaxValue?: string;
   inputPrefix?: string;
   inputSuffix?: string;
 }
@@ -38,8 +36,6 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   allowNegative = false,
   minAllowed,
   maxAllowed,
-  displayMinValue,
-  displayMaxValue,
   inputPrefix,
   inputSuffix
 }) => {
