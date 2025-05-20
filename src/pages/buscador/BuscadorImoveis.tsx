@@ -12,6 +12,7 @@ import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import PropertyCard from '@/components/PropertyCard';
 import { sampleProperties } from '@/data/sampleProperties';
+import AuctionStatus from '@/components/AuctionStatus';
 
 const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
