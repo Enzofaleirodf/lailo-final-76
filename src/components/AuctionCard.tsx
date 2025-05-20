@@ -118,10 +118,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             </div>
           )}
           
-          {/* Location info */}
-          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
-            <MapPin size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
-            <span className="line-clamp-1">{auction.location || 'Localização não disponível'}</span>
+          {/* Location info - sem ícone para veículos, apenas texto simples */}
+          <div className={`text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
+            {auction.location || 'Localização não disponível'}
           </div>
           
           {/* Price section */}
