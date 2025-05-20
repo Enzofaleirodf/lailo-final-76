@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
@@ -32,7 +32,7 @@ const FilterContent: React.FC = () => {
   });
 
   // Expandir todas as seções por padrão
-  React.useEffect(() => {
+  useEffect(() => {
     expandAllSections();
   }, [expandAllSections]);
 
@@ -45,7 +45,7 @@ const FilterContent: React.FC = () => {
   }, [resetFilters]);
 
   // Limpar recursos quando o componente é desmontado
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       cleanup();
     };

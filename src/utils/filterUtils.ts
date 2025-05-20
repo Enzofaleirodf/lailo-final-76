@@ -68,7 +68,7 @@ export const propertyTypeOptions = [
 export const isDefaultFilterValue = (key: keyof FilterState, value: any): boolean => {
   switch (key) {
     case 'format':
-      return value === 'Todos';
+      return value === 'Leilão'; // Alterado de 'Todos' para 'Leilão' para refletir o estado visual padrão
     case 'origin':
       return value === 'Todas';
     case 'place':

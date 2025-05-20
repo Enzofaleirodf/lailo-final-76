@@ -27,7 +27,7 @@ interface FilterStore extends FilterStoreState {
   expandAllSections: () => void;
 }
 
-// Define the initial state for filters
+// Define the initial state for filters with default values that match UI appearance
 const initialFilterState: FilterState = {
   contentType: 'property',
   location: {
@@ -54,7 +54,7 @@ const initialFilterState: FilterState = {
   brand: 'todas',
   model: 'todos',
   color: 'todas',
-  format: 'Todos',
+  format: 'Leilão', // Default visual option changed from 'Todos' to 'Leilão'
   origin: 'Todas',
   place: 'Todas'
 };
@@ -62,16 +62,16 @@ const initialFilterState: FilterState = {
 // Define which filter sections are expanded by default
 const initialExpandedSections: ExpandedSectionsState = {
   location: true,
-  vehicleType: false,
-  propertyType: false,
-  price: false,
-  year: false,
-  usefulArea: false,
-  model: false,
-  color: false,
-  format: false,
-  origin: false,
-  place: false
+  vehicleType: true,
+  propertyType: true,
+  price: true,
+  year: true,
+  usefulArea: true,
+  model: true,
+  color: true,
+  format: true,
+  origin: true,
+  place: true
 };
 
 // Count active filters to show in badge
@@ -101,8 +101,8 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.model !== 'todos') count++;
   if (filters.color !== 'todas') count++;
   
-  // Auction format, origin, place
-  if (filters.format !== 'Todos') count++;
+  // Auction format, origin, place - Only count them if they differ from visual defaults
+  if (filters.format !== 'Leilão') count++; // Modified to use 'Leilão' as the default
   if (filters.origin !== 'Todas') count++;
   if (filters.place !== 'Todas') count++;
   

@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
@@ -20,6 +20,20 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
   const { handleFilterChange } = useFilterConsistency({
     onChange: onFilterChange
   });
+
+  // Definir range total ao montar o componente
+  useEffect(() => {
+    // Aqui setaríamos valores do banco, mas como temos dados simulados,
+    // deixamos os campos vazios para representar o range total
+    // No futuro, quando estiver integrado com API real, substituir por:
+    // updateFilter('price', {
+    //   ...filters.price,
+    //   range: {
+    //     min: minValueFromDatabase,
+    //     max: maxValueFromDatabase
+    //   }
+    // });
+  }, []);
 
   const handleMinChange = useCallback((value: string) => {
     updateFilter('price', {

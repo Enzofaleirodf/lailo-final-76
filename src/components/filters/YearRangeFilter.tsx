@@ -2,8 +2,6 @@
 import React, { useCallback, useEffect } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useQuery } from '@tanstack/react-query';
-import { fetchSampleAuctions } from '@/data/sampleAuctions';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 
 interface YearRangeFilterProps {
@@ -12,111 +10,55 @@ interface YearRangeFilterProps {
 
 const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
-  const { year } = filters;
+  const { min, max } = filters.year;
   
-  // Use our new hook to ensure filter consistency
+  // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
     onChange: onFilterChange
   });
-  
-  // Fetch auction data to find min/max years
-  const { data: auctions, isLoading, error } = useQuery({
-    queryKey: ['auctions'],
-    queryFn: fetchSampleAuctions
-  });
-  
-  // Calculate min and max years from the auctions data
-  const { minYear, maxYear } = React.useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    
-    if (!auctions || auctions.length === 0) {
-      return { 
-        minYear: currentYear - 10, 
-        maxYear: currentYear 
-      };
-    }
-    
-    const years = auctions
-      .filter(auction => auction.vehicleInfo?.year) // Ensure year exists
-      .map(auction => auction.vehicleInfo.year);
-      
-    if (years.length === 0) {
-      return { 
-        minYear: currentYear - 10, 
-        maxYear: currentYear 
-      };
-    }
-    
-    return {
-      minYear: Math.min(...years),
-      maxYear: Math.max(...years)
-    };
-  }, [auctions]);
-  
-  // Initialize the filter with the min/max values if they're empty
+
+  // Definir range total ao montar o componente
   useEffect(() => {
-    if ((!year.min || !year.max) && auctions && auctions.length > 0) {
-      updateFilter('year', {
-        min: year.min || String(minYear),
-        max: year.max || String(maxYear)
-      });
-    }
-  }, [auctions, minYear, maxYear, year.min, year.max, updateFilter]);
-
-  const handleMinChange = useCallback((minValue: string) => {
-    updateFilter('year', {
-      ...year,
-      min: minValue
+    // Aqui setaríamos valores do banco, mas como temos dados simulados,
+    // deixamos os campos vazios para representar o range total
+    // No futuro, quando estiver integrado com API real, substituir por:
+    // updateFilter('year', {
+    //   min: minYearFromDatabase,
+    //   max: currentYear
+    // });
+  }, []);
+  
+  const handleMinChange = useCallback((value: string) => {
+    updateFilter('year', { 
+      ...filters.year,
+      min: value 
     });
     
-    // Notify parent component that filter has changed
     handleFilterChange();
-  }, [year, updateFilter, handleFilterChange]);
-
-  const handleMaxChange = useCallback((maxValue: string) => {
-    updateFilter('year', {
-      ...year,
-      max: maxValue
+  }, [filters.year, updateFilter, handleFilterChange]);
+  
+  const handleMaxChange = useCallback((value: string) => {
+    updateFilter('year', { 
+      ...filters.year,
+      max: value 
     });
     
-    // Notify parent component that filter has changed
     handleFilterChange();
-  }, [year, updateFilter, handleFilterChange]);
-
-  if (isLoading) {
-    return (
-      <div aria-live="polite" aria-busy="true" className="animate-pulse">
-        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div role="alert" className="text-sm text-red-500">
-        Erro ao carregar os dados. Tente novamente.
-      </div>
-    );
-  }
-
-  const minAllowed = minYear || (new Date().getFullYear() - 50);
-  const maxAllowed = maxYear || new Date().getFullYear();
-
+  }, [filters.year, updateFilter, handleFilterChange]);
+  
   return (
-    <div role="group" aria-label="Filtro de ano">
-      <FilterRangeInput
-        minValue={year.min}
-        maxValue={year.max}
+    <div className="space-y-3">
+      <FilterRangeInput 
+        minValue={min}
+        maxValue={max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder={String(minYear)}
-        maxPlaceholder={String(maxYear)}
+        minPlaceholder="Ano min."
+        maxPlaceholder="Ano máx."
         ariaLabelMin="Ano mínimo"
         ariaLabelMax="Ano máximo"
         allowDecimals={false}
-        allowNegative={false}
-        minAllowed={minAllowed}
-        maxAllowed={maxAllowed}
+        minAllowed={1900}
       />
     </div>
   );

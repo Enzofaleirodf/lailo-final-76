@@ -142,7 +142,7 @@ export const updateUrlParams = (
   }
   
   // Adicionar formato de leilão (apenas se diferente do padrão)
-  if (filters.format !== 'Todos') {
+  if (filters.format !== 'Leilão') { // Alterado para o novo padrão visual 'Leilão'
     params.set('format', filters.format);
   } else {
     params.delete('format');

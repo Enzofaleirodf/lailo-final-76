@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { formatUsefulArea } from '@/utils/auctionUtils';
@@ -16,6 +16,17 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
   const { handleFilterChange } = useFilterConsistency({
     onChange: onFilterChange
   });
+  
+  // Definir range total ao montar o componente
+  useEffect(() => {
+    // Aqui setaríamos valores do banco, mas como temos dados simulados,
+    // deixamos os campos vazios para representar o range total
+    // No futuro, quando estiver integrado com API real, substituir por:
+    // updateFilter('usefulArea', {
+    //   min: minValueFromDatabase,
+    //   max: maxValueFromDatabase
+    // });
+  }, []);
   
   const handleMinChange = useCallback((value: string) => {
     updateFilter('usefulArea', { 
