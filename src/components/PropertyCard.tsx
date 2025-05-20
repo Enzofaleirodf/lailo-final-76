@@ -55,6 +55,9 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
 
   const discount = calculateDiscount();
   
+  // Log that we're rendering this card
+  console.log(`Rendering property card: ${property.id}`);
+  
   return (
     <motion.div 
       whileHover={{

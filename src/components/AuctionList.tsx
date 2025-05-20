@@ -24,6 +24,7 @@ const AuctionList: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const [totalPages, setTotalPages] = useState(1);
+  const [filteredItemsCount, setFilteredItemsCount] = useState(0);
   const [itemsPerPage] = useState(ITEMS_PER_PAGE);
   const [isChangingPage, setIsChangingPage] = useState(false);
   const [lastContentType, setLastContentType] = useState<string | null>(null);
@@ -38,7 +39,6 @@ const AuctionList: React.FC = () => {
       
       // Check if content type changed since last fetch
       if (lastContentType !== null && lastContentType !== filters.contentType) {
-        // When content type changes, we should clear vehicle/property specific filters
         console.log(`Content type changed from ${lastContentType} to ${filters.contentType}`);
       }
       
@@ -52,72 +52,69 @@ const AuctionList: React.FC = () => {
       let filteredItems = [];
       
       if (contentType === 'property') {
-        console.log('Fetching property items with filters:', filters);
+        console.log('Fetching property items with filters:', JSON.stringify(filters, null, 2));
+        console.log('Available sample properties:', sampleProperties.length);
         
-        // For properties, limit the filters to only those that apply to properties
+        // For properties, apply property-specific filtering
         filteredItems = sampleProperties.filter(property => {
-          // Basic filtering for properties (can be expanded)
           let matches = true;
           
           // Apply price filter if set
           if (filters.price.range.min) {
-            matches = matches && property.currentBid >= parseInt(filters.price.range.min);
+            const minPrice = Number(filters.price.range.min);
+            matches = matches && property.currentBid >= minPrice;
+            if (!matches) console.log(`Property ${property.id} price ${property.currentBid} < min ${minPrice}`);
           }
+          
           if (filters.price.range.max) {
-            matches = matches && property.currentBid <= parseInt(filters.price.range.max);
+            const maxPrice = Number(filters.price.range.max);
+            matches = matches && property.currentBid <= maxPrice;
+            if (!matches) console.log(`Property ${property.id} price ${property.currentBid} > max ${maxPrice}`);
           }
           
           // Apply property type filter if set
           if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
-            // Make sure propertyInfo exists before checking the type
             if (property.propertyInfo && property.propertyInfo.type) {
-              matches = matches && filters.propertyTypes.includes(property.propertyInfo.type);
-            } else {
-              // If property has valid propertyInfo but no type specified, we'll include it by default
-              // This is a graceful fallback to avoid filtering out valid properties
-              if (!property.propertyInfo) {
-                console.warn(`Property ${property.id} is missing propertyInfo`);
-              } else if (!property.propertyInfo.type) {
-                console.warn(`Property ${property.id} is missing propertyInfo.type`);
-              }
+              matches = matches && filters.propertyTypes.includes(property.propertyInfo.type.toLowerCase());
+              if (!matches) console.log(`Property ${property.id} type ${property.propertyInfo.type} not in ${filters.propertyTypes}`);
             }
           }
           
           // Apply useful area filter if set
           if (filters.usefulArea.min && property.propertyInfo) {
-            matches = matches && property.propertyInfo.usefulAreaM2 >= parseInt(filters.usefulArea.min);
-          }
-          if (filters.usefulArea.max && property.propertyInfo) {
-            matches = matches && property.propertyInfo.usefulAreaM2 <= parseInt(filters.usefulArea.max);
+            const minArea = Number(filters.usefulArea.min);
+            matches = matches && property.propertyInfo.usefulAreaM2 >= minArea;
+            if (!matches) console.log(`Property ${property.id} area ${property.propertyInfo.usefulAreaM2} < min ${minArea}`);
           }
           
-          // Apply format filter if needed (and ignore vehicle-only filters)
+          if (filters.usefulArea.max && property.propertyInfo) {
+            const maxArea = Number(filters.usefulArea.max);
+            matches = matches && property.propertyInfo.usefulAreaM2 <= maxArea;
+            if (!matches) console.log(`Property ${property.id} area ${property.propertyInfo.usefulAreaM2} > max ${maxArea}`);
+          }
+          
+          // Apply format filter if needed
           if (filters.format !== 'Todos') {
             matches = matches && property.format === filters.format;
+            if (!matches) console.log(`Property ${property.id} format ${property.format} != ${filters.format}`);
           }
           
           // Apply origin filter if needed
           if (filters.origin !== 'Todas') {
             matches = matches && property.origin === filters.origin;
+            if (!matches) console.log(`Property ${property.id} origin ${property.origin} != ${filters.origin}`);
           }
           
           // Apply place filter if needed
           if (filters.place !== 'Todas') {
             matches = matches && property.place === filters.place;
+            if (!matches) console.log(`Property ${property.id} place ${property.place} != ${filters.place}`);
           }
           
           return matches;
         });
         
-        // Clear URL parameters that are not relevant for properties
-        const params = new URLSearchParams(searchParams);
-        ['types', 'brand', 'model', 'color', 'yearMin', 'yearMax'].forEach(param => {
-          if (params.has(param)) {
-            params.delete(param);
-          }
-        });
-        
-        // Sort properties (very basic for now)
+        // Sort properties based on the sort option
         if (sortOption === 'price-asc') {
           filteredItems.sort((a, b) => a.currentBid - b.currentBid);
         } else if (sortOption === 'price-desc') {
@@ -126,14 +123,6 @@ const AuctionList: React.FC = () => {
           filteredItems.sort((a, b) => {
             if (a.endDate && b.endDate) {
               return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
-            }
-            return 0;
-          });
-        } else {
-          // Default sorting (oldest first)
-          filteredItems.sort((a, b) => {
-            if (a.endDate && b.endDate) {
-              return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
             }
             return 0;
           });
@@ -147,15 +136,10 @@ const AuctionList: React.FC = () => {
         // For vehicles, use the existing filter and sort logic
         filteredItems = filterAuctions(sampleAuctions, filters);
         filteredItems = sortAuctions(filteredItems, sortOption);
-        
-        // Clear URL parameters that are not relevant for vehicles
-        const params = new URLSearchParams(searchParams);
-        ['propertyTypes', 'usefulArea.min', 'usefulArea.max'].forEach(param => {
-          if (params.has(param)) {
-            params.delete(param);
-          }
-        });
       }
+
+      // Store total filtered items count for stats display
+      setFilteredItemsCount(filteredItems.length);
       
       // Calculate total pages
       const total = Math.ceil(filteredItems.length / itemsPerPage);
@@ -343,6 +327,12 @@ const AuctionList: React.FC = () => {
     return items;
   }, [currentPage, handlePageChange, totalPages]);
   
+  // Expose the filtered items count to the parent component
+  useEffect(() => {
+    // Make the filtered items count available to other components
+    (window as any).filteredItemsCount = filteredItemsCount;
+  }, [filteredItemsCount]);
+  
   // Show skeleton during initial loading
   if (loading && !isChangingPage) {
     return (
@@ -397,15 +387,6 @@ const AuctionList: React.FC = () => {
             if (filters.contentType === 'property') {
               // Type guard to ensure this is a PropertyItem with required fields
               const property = item as PropertyItem;
-              
-              // Enhanced validation for property items
-              if (!property.id || property.currentBid === undefined) {
-                console.error('Invalid property data:', property);
-                return null;
-              }
-              
-              // Log property item for debugging
-              console.log(`Rendering property item: ${property.id}`);
               
               return (
                 <motion.div

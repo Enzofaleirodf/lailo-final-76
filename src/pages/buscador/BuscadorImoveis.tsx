@@ -16,13 +16,16 @@ import { useSearchParams } from 'react-router-dom';
 const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
-  const { updateFilter, resetFilters } = useFilterStore();
+  const { updateFilter, resetFilters, filters } = useFilterStore();
   const [searchParams] = useSearchParams();
   
   // Set content type to property when this page loads and clean vehicle-specific filters
   useEffect(() => {
-    // Set the content type for this page
-    updateFilter('contentType', 'property');
+    // Don't update if already on the correct content type to prevent navigation loops
+    if (filters.contentType !== 'property') {
+      console.log('BuscadorImoveis: Setting content type to property');
+      updateFilter('contentType', 'property');
+    }
     
     // Clean up any vehicle-specific filters that might be in the URL
     const urlParams = Object.fromEntries(searchParams.entries());
@@ -35,7 +38,7 @@ const BuscadorImoveis = () => {
     if (hasVehicleFilters) {
       console.log('Vehicle filters detected on property page, these will be ignored');
     }
-  }, [updateFilter, searchParams]);
+  }, [updateFilter, searchParams, filters.contentType]);
   
   // Sync URL with filters and sort state
   useUrlParams();
