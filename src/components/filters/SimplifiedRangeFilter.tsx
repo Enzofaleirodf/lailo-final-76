@@ -156,8 +156,6 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
         minErrorId={minErrorId}
         maxErrorId={maxErrorId}
       />
-      
-      {/* Removido o indicador de filtro ativo que dizia "Filtro personalizado aplicado" */}
     </div>
   );
 };

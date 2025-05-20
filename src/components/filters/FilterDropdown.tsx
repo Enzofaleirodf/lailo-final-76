@@ -123,7 +123,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none",
           isValueSelected ? "text-brand-700 font-medium" : "text-gray-700",
-          isTouched ? "border-brand-400" : "border-gray-300", 
+          "border-gray-300",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
