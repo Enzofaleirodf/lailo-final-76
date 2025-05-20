@@ -73,7 +73,7 @@ body.modal-open {
 }
 
 body.modal-open .mobile-nav-bar {
-  display: none;
+  display: none !important;
 }
 
 /* Fix mobile layout issues */
@@ -99,11 +99,11 @@ body {
 :root {
   --z-base: 1;
   --z-dropdown: 40;
-  --z-mobile-nav: 9999;
   --z-sidebar: 50;
-  --z-drawer: 100;
-  --z-modal: 200;
-  --z-toast: 300;
+  --z-mobile-nav: 100;
+  --z-drawer: 200;
+  --z-modal: 300;
+  --z-toast: 400;
 }
 
 /* Dropdown menu styling improvements */
@@ -364,4 +364,14 @@ html {
   outline: none !important;
   box-shadow: 0 0 0 2px rgba(255, 209, 0, 0.7) !important;
   border-color: #FFD100 !important;
+}
+
+/* Fix for drawer footer - ensure it's visible over mobile navigation */
+[vaul-drawer-content] .sticky,
+.drawer-footer,
+.drawer-content .sticky,
+[vaul-drawer] .sticky {
+  z-index: calc(var(--z-drawer) + 10) !important;
+  position: sticky !important;
+  background-color: white !important;
 }

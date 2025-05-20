@@ -40,7 +40,7 @@ const MobileNavBar: React.FC = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center z-[9999] shadow-md mobile-nav-bar">
+    <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center z-[100] shadow-md mobile-nav-bar">
       {navItems.map((item, index) => {
         const isActive = isActiveRoute(item.href);
         return (

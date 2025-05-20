@@ -82,7 +82,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
         Cancelar
       </Button>
       <FilterApplyButton 
-        onApply={() => handleOpenChange(false)}
+        onApply={handleApplyFilters}
         className="flex-1"
       />
     </div>
