@@ -129,22 +129,6 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
       </PopoverTrigger>
       <PopoverContent className="w-72 sm:w-80 p-4 bg-white shadow-md rounded-md z-[150]" align="start">
         <div className="flex flex-col gap-4">
-          {/* Search bar for location */}
-          <div className="relative w-full">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Procurar endereço"
-              className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-            />
-            <Search 
-              size={18} 
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
-              aria-hidden="true"
-            />
-          </div>
-          
           <div className="space-y-2">
             <label htmlFor="state-select" className="text-sm font-medium text-gray-700">
               Estado
@@ -185,6 +169,28 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
                 Selecione um estado
               </div>
             )}
+          </div>
+          
+          {/* Search bar for location - moved below city selection */}
+          <div className="space-y-2">
+            <label htmlFor="address-search" className="text-sm font-medium text-gray-700">
+              Endereço
+            </label>
+            <div className="relative w-full">
+              <input
+                id="address-search"
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Busque por rua ou bairro"
+                className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              />
+              <Search 
+                size={18} 
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+                aria-hidden="true"
+              />
+            </div>
           </div>
           
           <div className="flex gap-2 pt-2">
