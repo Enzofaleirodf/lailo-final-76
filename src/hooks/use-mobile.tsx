@@ -12,5 +12,5 @@ import { useMediaQuery } from "./useMediaQuery";
 export function useIsMobile() {
   // Usar o sistema unificado de media queries
   // Isso garante consistência com o resto da aplicação
-  return useMediaQuery("md");
+  return useMediaQuery("mobile");
 }
