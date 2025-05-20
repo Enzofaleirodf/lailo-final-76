@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -54,24 +53,20 @@ const BuscadorImoveis = () => {
     }
     initialSetupDone.current = true;
   }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brand, filters.model]);
-  
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
-  
   const handleSortClick = () => {
     setSortOpen(true);
   };
-  
-  return (
-    <>
+  return <>
       {/* Top filters bar - desktop only */}
       {!isMobile && <TopFilters />}
       
       {/* Mobile filter bar - mobile only */}
       {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
       
-      <div className="w-full flex flex-col lg:flex-row lg:gap-6 lg:px-6 px-0">
+      <div className="w-full flex flex-col lg:flex-row lg:gap-6 px-0">
         {/* Sidebar filter section - desktop only */}
         {!isMobile && <aside className="shrink-0 w-full lg:w-[448px]">
             <FilterSection />
@@ -90,8 +85,6 @@ const BuscadorImoveis = () => {
       
       {/* Sort options modal - mobile only */}
       {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} />}
-    </>
-  );
+    </>;
 };
-
 export default BuscadorImoveis;
