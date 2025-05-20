@@ -18,7 +18,7 @@ const ITEMS_PER_PAGE = 30;
 const SKELETON_COUNT = 6;
 
 // Generate multiple pages of mock data for testing pagination
-const generateMockItems = (contentType, count) => {
+const generateMockItems = (contentType: string, count: number) => {
   const items = [];
   
   for (let i = 0; i < count; i++) {
@@ -27,19 +27,21 @@ const generateMockItems = (contentType, count) => {
         id: `property-${i + 1}`,
         title: `Imóvel Teste ${i + 1}`,
         description: `Descrição do imóvel teste ${i + 1}`,
-        address: {
-          street: `Rua Teste ${i + 1}`,
-          city: `Cidade ${i % 10 + 1}`,
-          state: `Estado ${i % 5 + 1}`,
-          zipcode: `0000${i % 10}`
+        address: `Rua Teste ${i + 1}, Bairro ${i % 10 + 1}`,
+        location: `Cidade ${i % 10 + 1}, Estado ${i % 5 + 1}`,
+        currentBid: 100000 + (i * 10000),
+        originalPrice: i % 3 === 0 ? 130000 + (i * 15000) : undefined,
+        endDate: new Date(Date.now() + (86400000 * (i % 30 + 1))),
+        propertyInfo: {
+          type: i % 2 === 0 ? 'Apartamento' : 'Casa',
+          usefulAreaM2: 50 + (i * 5),
+          bedrooms: (i % 5) + 1,
+          bathrooms: (i % 3) + 1,
+          garageSpots: i % 4
         },
-        price: 100000 + (i * 10000),
-        area: 50 + (i * 5),
-        bedrooms: (i % 5) + 1,
-        bathrooms: (i % 3) + 1,
-        garageSpots: i % 4,
-        propertyType: i % 2 === 0 ? 'Apartamento' : 'Casa',
-        images: [`https://picsum.photos/id/${(i % 20) + 100}/400/300`]
+        images: [`https://picsum.photos/id/${(i % 20) + 100}/400/300`],
+        origin: i % 4 === 0 ? 'Judicial' : i % 4 === 1 ? 'Extrajudicial' : 'Banco',
+        place: i % 3 === 0 ? 'Rio de Janeiro' : i % 3 === 1 ? 'São Paulo' : 'Minas Gerais'
       });
     } else {
       items.push({

@@ -1,7 +1,13 @@
+
 import { AuctionItem } from '@/types/auction';
 import { FilterState } from '@/types/filters';
 
-export const formatPrice = (price: number): string => {
+export const formatPrice = (price: number | undefined): string => {
+  // Guard against undefined values
+  if (price === undefined || price === null) {
+    return 'R$0';
+  }
+  
   // Format as integer with dot as thousands separator and no decimal places
   return `R$${price.toLocaleString('pt-BR', {
     style: 'decimal',
@@ -15,8 +21,10 @@ export const formatPrice = (price: number): string => {
 export const formatCurrency = formatPrice;
 
 // Add new utility function to format useful area
-export const formatUsefulArea = (area: number): string => {
-  if (typeof area !== 'number') return '0m²';
+export const formatUsefulArea = (area: number | undefined): string => {
+  if (area === undefined || area === null || typeof area !== 'number') {
+    return '0m²';
+  }
   
   // Format as integer with dot as thousands separator and no decimal places
   return `${area.toLocaleString('pt-BR', {
