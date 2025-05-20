@@ -1,16 +1,13 @@
-
 import React from 'react';
 import { SlidersHorizontal, ArrowUpDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { ContentType } from '@/types/filters';
-
 interface MobileFilterBarProps {
   onFilterClick: () => void;
   onSortClick: () => void;
 }
-
 const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
   onSortClick
@@ -20,12 +17,10 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
     updateFilter,
     activeFilters
   } = useFilterStore();
-
   const handleTabChange = (tab: ContentType) => {
     updateFilter('contentType', tab);
   };
-
-  return <div className="sticky top-0 z-10 w-full pt-0 pb-6 mt-0 bg-transparent px-4">
+  return <div className="sticky top-0 z-10 w-full pt-0 pb-6 mt-0 bg-transparent px-0">
       <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white">
         <button onClick={() => handleTabChange('property')} className={cn("w-11 h-10 flex items-center justify-center text-sm font-medium transition-colors", filters.contentType === 'property' ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" : "bg-white text-gray-700 hover:bg-gray-50")} aria-label="Imóveis" aria-pressed={filters.contentType === 'property'}>
           <Building2 size={18} className="shrink-0" />
@@ -50,5 +45,4 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
       </div>
     </div>;
 };
-
 export default React.memo(MobileFilterBar);
