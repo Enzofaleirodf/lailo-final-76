@@ -116,10 +116,10 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     }
   }, [finishEditing, values, correctValue, updateValues]);
   
-  // Calcular valores de exibição formatados
+  // Calcular valores de exibição formatados - não adicionamos afixos durante edição
   const displayValues = {
-    min: editingField.current === 'min' ? values.min : addAffixes(formatValue(values.min, false)),
-    max: editingField.current === 'max' ? values.max : addAffixes(formatValue(values.max, false))
+    min: editingField.current === 'min' ? values.min : formatValue(values.min, false),
+    max: editingField.current === 'max' ? values.max : formatValue(values.max, false)
   };
   
   // Inicializar com valores padrão para exibição se os valores iniciais estiverem vazios

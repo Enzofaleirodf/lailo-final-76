@@ -157,12 +157,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
         maxErrorId={maxErrorId}
       />
       
-      {/* Indicador de filtro ativo */}
-      {isActive && (
-        <div className="text-xs text-brand-600 animate-fadeIn">
-          <p>Filtro personalizado aplicado</p>
-        </div>
-      )}
+      {/* Removido o indicador de filtro ativo que dizia "Filtro personalizado aplicado" */}
     </div>
   );
 };
