@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
@@ -25,7 +26,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
   // Calculate min and max prices from the auctions data
   const { minPrice, maxPrice, priceSteps } = React.useMemo(() => {
     if (!auctions || auctions.length === 0) {
-      return { minPrice: 0, maxPrice: 100000, priceSteps: 100 };
+      // Default fallback values if no data is available
+      // Higher default for properties, lower for vehicles
+      const defaultMaxPrice = filters.contentType === 'property' ? 1500000 : 100000;
+      return { 
+        minPrice: 0, 
+        maxPrice: defaultMaxPrice, 
+        priceSteps: 100 
+      };
     }
     
     let dataToUse = auctions;
@@ -37,14 +45,21 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         .map(auction => auction.currentBid);
       
       if (propertyPrices.length > 0) {
-        const min = Math.min(...propertyPrices);
-        const max = Math.max(...propertyPrices);
+        const min = Math.floor(Math.min(...propertyPrices) * 0.9); // Give a bit of buffer below
+        const max = Math.ceil(Math.max(...propertyPrices) * 1.1); // Give a bit of buffer above
         return {
           minPrice: min,
           maxPrice: max,
           priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
         };
       }
+
+      // If we don't have specific property data, use higher default values for properties
+      return {
+        minPrice: 0,
+        maxPrice: 1500000, // Higher default for properties
+        priceSteps: 1500 // More steps for higher range
+      };
     } else {
       // For vehicles, use the vehicle data
       const vehiclePrices = dataToUse
@@ -52,25 +67,22 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         .map(auction => auction.currentBid);
       
       if (vehiclePrices.length > 0) {
-        const min = Math.min(...vehiclePrices);
-        const max = Math.max(...vehiclePrices);
+        const min = Math.floor(Math.min(...vehiclePrices) * 0.9);
+        const max = Math.ceil(Math.max(...vehiclePrices) * 1.1);
         return {
           minPrice: min,
           maxPrice: max,
           priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
         };
       }
+
+      // Default fallback for vehicles
+      return {
+        minPrice: 0,
+        maxPrice: 100000, // Lower default for vehicles
+        priceSteps: 100
+      };
     }
-    
-    // Default fallback
-    const prices = dataToUse.map(auction => auction.currentBid);
-    const min = Math.min(...prices);
-    const max = Math.max(...prices);
-    return {
-      minPrice: min,
-      maxPrice: max,
-      priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
-    };
   }, [auctions, filters.contentType]);
   
   // Initialize the filter with the min/max values if they're empty

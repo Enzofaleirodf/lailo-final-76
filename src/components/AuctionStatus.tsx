@@ -13,21 +13,23 @@ export const calculateTotalSites = (auctions: AuctionItem[]): number => {
   // Since we're working with sample data and don't have website field,
   // we'll simulate websites based on location for demonstration purposes
   const uniqueLocations = new Set(auctions.map(auction => auction.location));
-  return uniqueLocations.size;
+  return uniqueLocations.size > 0 ? uniqueLocations.size : 1; // Always at least 1
 };
 
 export const calculateNewAuctions = (auctions: AuctionItem[]): number => {
   // For demonstration, we'll consider auctions from the current year as "new"
   const today = new Date();
   const currentYear = today.getFullYear();
-  return auctions.filter(auction => {
+  const newItems = auctions.filter(auction => {
     return auction.vehicleInfo && auction.vehicleInfo.year === currentYear;
   }).length;
+  
+  return newItems > 0 ? newItems : Math.ceil(auctions.length * 0.1); // At least 10% as new
 };
 
 export const calculateNewProperties = (properties: any[]): number => {
   // For properties, we'll consider 20% as "new" for demonstration
-  return Math.round(properties.length * 0.2);
+  return properties.length > 0 ? Math.round(properties.length * 0.2) : 0;
 };
 
 const AuctionStatus: React.FC = () => {
@@ -50,8 +52,9 @@ const AuctionStatus: React.FC = () => {
     
     // Check initially and also set an interval to keep checking
     checkFilteredCount();
-    const intervalId = setInterval(checkFilteredCount, 500);
+    const intervalId = setInterval(checkFilteredCount, 300); // Faster check interval
     
+    // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
@@ -59,13 +62,13 @@ const AuctionStatus: React.FC = () => {
     const contentType = filters.contentType;
     
     // Use the actual filtered count if available
-    if (actualFilteredCount > 0) {
+    if (actualFilteredCount >= 0) { // Changed to >= 0 to handle zero counts properly
       if (contentType === 'property') {
         // For properties
         const uniqueLocations = new Set(sampleProperties.map(property => property.location));
-        const totalSites = uniqueLocations.size;
+        const totalSites = uniqueLocations.size > 0 ? uniqueLocations.size : 1;
         // For properties, we'll consider 20% as "new" for demonstration
-        const newProperties = Math.round(actualFilteredCount * 0.2);
+        const newProperties = actualFilteredCount > 0 ? Math.round(actualFilteredCount * 0.2) : 0;
         
         return {
           totalItems: actualFilteredCount,
@@ -80,8 +83,8 @@ const AuctionStatus: React.FC = () => {
         
         return {
           totalItems: actualFilteredCount,
-          totalSites,
-          newItems: newAuctions
+          totalSites: totalSites > 0 ? totalSites : 1,
+          newItems: actualFilteredCount > 0 ? newAuctions : 0
         };
       }
     } else {
@@ -102,7 +105,7 @@ const AuctionStatus: React.FC = () => {
         }
         
         const uniqueLocations = new Set(filteredProperties.map(property => property.location));
-        const totalSites = uniqueLocations.size;
+        const totalSites = uniqueLocations.size > 0 ? uniqueLocations.size : 1;
         const newProperties = calculateNewProperties(filteredProperties);
         
         return {
@@ -126,9 +129,30 @@ const AuctionStatus: React.FC = () => {
     }
   }, [filters, actualFilteredCount]);
 
-  // Don't display if there are no items or we're still loading
-  if (stats.totalItems === 0 || isLoading) {
-    return null;
+  // Show a loading state while we wait for the count
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.5 }}
+        className="w-fit text-gray-400"
+      >
+        Carregando resultados...
+      </motion.div>
+    );
+  }
+
+  // Don't display if there are no items
+  if (stats.totalItems === 0) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="w-fit text-gray-500"
+      >
+        Nenhum resultado encontrado para os filtros selecionados
+      </motion.div>
+    );
   }
 
   // Text varies based on content type

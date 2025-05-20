@@ -11,19 +11,22 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 
 const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
   const { updateFilter, resetFilters, filters } = useFilterStore();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   
   // Set content type to property when this page loads and clean vehicle-specific filters
   useEffect(() => {
-    // Only update if filters.contentType is not already set to 'property'
-    // This prevents content type ping-pong between pages
-    if (filters.contentType !== 'property') {
+    // Check if we're on the property page (to avoid content type loops)
+    const isPropertyPage = location.pathname.includes('/buscador/imoveis');
+    
+    // Only update if we're on the property page and content type isn't already 'property'
+    if (isPropertyPage && filters.contentType !== 'property') {
       console.log('BuscadorImoveis: Setting content type to property');
       updateFilter('contentType', 'property');
       
@@ -35,7 +38,7 @@ const BuscadorImoveis = () => {
       cleanedFilters.color = 'todas';
       cleanedFilters.year = { min: '', max: '' };
     }
-  }, [updateFilter, filters.contentType, filters]);
+  }, [updateFilter, filters.contentType, filters, location.pathname]);
   
   // Sync URL with filters and sort state
   useUrlParams();

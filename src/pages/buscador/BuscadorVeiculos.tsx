@@ -11,17 +11,22 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { useLocation } from 'react-router-dom';
 
 const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
   const { updateFilter, filters } = useFilterStore();
+  const location = useLocation();
   
   // Set content type to vehicle when this page loads
   useEffect(() => {
-    // Only update if filters.contentType is not already set to 'vehicle'
-    // This prevents content type ping-pong between pages
-    if (filters.contentType !== 'vehicle') {
+    // Check if we're on the vehicles page (to avoid content type loops)
+    const isVehiclePage = location.pathname.includes('/buscador/veiculos');
+    
+    // Only update if we're on the vehicle page and content type isn't already 'vehicle'
+    if (isVehiclePage && filters.contentType !== 'vehicle') {
+      console.log('BuscadorVeiculos: Setting content type to vehicle');
       updateFilter('contentType', 'vehicle');
       
       // Clean up any property-specific filters directly
@@ -29,7 +34,7 @@ const BuscadorVeiculos = () => {
       cleanedFilters.propertyTypes = [];
       cleanedFilters.usefulArea = { min: '', max: '' };
     }
-  }, [updateFilter, filters.contentType, filters]);
+  }, [updateFilter, filters.contentType, filters, location.pathname]);
   
   // Sync URL with filters and sort state
   useUrlParams();
