@@ -33,7 +33,7 @@ const FilterContent: React.FC = () => {
   // Trigger filter application when filters change on desktop
   const handleFilterChange = () => {
     if (!isMobile) {
-      // No ambiente desktop, notificar que filtros foram alterados
+      // On desktop environment, notify that filters have changed
       console.log('Filter change detected on desktop');
     }
   };
@@ -42,7 +42,7 @@ const FilterContent: React.FC = () => {
   const handleResetFilters = () => {
     resetFilters();
 
-    // Mostrar toast quando filtros são resetados
+    // Show toast when filters are reset
     toast({
       title: "Filtros resetados",
       description: "Todos os filtros foram removidos",

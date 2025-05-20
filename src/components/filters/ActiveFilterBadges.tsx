@@ -5,9 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ActiveFilterBadges: React.FC = () => {
   const { filters, updateFilter, resetFilters } = useFilterStore();
+  const isMobile = useIsMobile();
   
   const badges = [];
   
@@ -163,13 +165,15 @@ const ActiveFilterBadges: React.FC = () => {
     return null;
   }
   
+  const badgeClasses = "flex items-center gap-1 px-2 py-1 bg-brand-50 border-brand-200 text-brand-800";
+  
   return (
     <div className="flex flex-wrap gap-2 mb-4 animate-fade-in">
       {badges.map(badge => (
         <Badge 
           key={badge.key}
           variant="outline"
-          className="flex items-center gap-1 px-2 py-1 bg-brand-50 border-brand-200 text-brand-800"
+          className={badgeClasses}
         >
           <span className="text-xs">{badge.label}</span>
           <Button

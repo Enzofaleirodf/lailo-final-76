@@ -59,20 +59,20 @@ const BuscadorImoveis = () => {
       {!isMobile && <TopFilters />}
       {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
       
-      <div className={`w-full ${isMobile ? 'flex flex-col space-y-2' : 'flex flex-row gap-6'}`}>
+      <div className="w-full flex flex-col lg:flex-row lg:gap-6">
         {!isMobile && 
           <aside className="shrink-0 w-full lg:w-[448px]">
             <FilterSection />
           </aside>
         }
-        <main className="flex-1 min-h-[80vh] w-full">
+        <main className="flex-1 min-h-[80vh] w-full mt-4 lg:mt-0">
           {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
           <ResultHeader />
           <AuctionList />
         </main>
       </div>
       
-      {/* Modal de ordenação para mobile */}
+      {/* Sort modal for mobile */}
       {isMobile && 
         <SortOptions 
           open={sortOpen} 
