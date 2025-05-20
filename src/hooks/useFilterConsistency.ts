@@ -4,37 +4,38 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useIsMobile } from './use-mobile';
 import { useToast } from './use-toast';
 import { FilterState } from '@/types/filters';
+import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
 
 interface FilterConsistencyOptions {
   /**
-   * Callback that runs when filter values change
+   * Callback que é executado quando os valores do filtro mudam
    */
   onChange?: () => void;
   
   /**
-   * Whether to show toasts when filters change
+   * Se deve mostrar toasts quando os filtros mudam
    * @default false
    */
   showToasts?: boolean;
   
   /**
-   * Whether to automatically trigger the filters:applied event
+   * Se deve acionar automaticamente o evento filters:applied
    * @default true
    */
   autoTriggerEvents?: boolean;
 }
 
 /**
- * A hook that ensures consistent behavior of filters 
- * between desktop and mobile views.
+ * Hook que garante comportamento consistente dos filtros
+ * entre as visualizações desktop e mobile.
  * 
- * @param options Configuration options
- * @returns A cleanup function
+ * @param options Opções de configuração
+ * @returns Uma função de limpeza
  */
 export const useFilterConsistency = (
   options?: FilterConsistencyOptions | (() => void)
 ) => {
-  // Handle the case where only a callback is provided instead of options
+  // Lidar com o caso em que apenas um callback é fornecido em vez de opções
   const normalizedOptions = typeof options === 'function' 
     ? { onChange: options } 
     : options || {};
@@ -49,25 +50,26 @@ export const useFilterConsistency = (
   const isMobile = useIsMobile();
   const { toast } = useToast();
   
-  // Keep track of whether we've shown a toast for this filter update
+  // Controlar se já mostramos um toast para esta atualização de filtro
   const hasShownToastRef = useRef(false);
+  // Registrar erros encontrados durante o processamento
+  const errorRef = useRef<Error | null>(null);
 
-  // Ensure consistent behavior by automatically triggering events
-  // for filter changes in both desktop and mobile views
+  // Garantir comportamento consistente acionando automaticamente eventos
+  // para alterações de filtro em visualizações desktop e mobile
   useEffect(() => {
     if (lastUpdatedFilter && lastUpdatedFilter !== 'initial' && !hasShownToastRef.current) {
-      // Mark that we've processed this update
+      // Marcar que processamos esta atualização
       hasShownToastRef.current = true;
       
-      // Run the onChange callback if provided
-      if (onChange) {
-        onChange();
-      }
-      
-      // Show toast notifications if enabled and if not on initial load
-      if (showToasts && lastUpdatedFilter !== 'bulk') {
-        // Import dynamically to avoid circular dependencies
-        import('@/utils/filterUtils').then(({ getFilterName, getFilterDescription }) => {
+      try {
+        // Executar o callback onChange se fornecido
+        if (onChange) {
+          onChange();
+        }
+        
+        // Mostrar notificações toast se habilitado e se não estiver na carga inicial
+        if (showToasts && lastUpdatedFilter !== 'bulk') {
           if (lastUpdatedFilter === 'reset') {
             toast({
               title: "Filtros resetados",
@@ -75,7 +77,7 @@ export const useFilterConsistency = (
               duration: 3000
             });
           } else {
-            // Use type assertion to handle the key
+            // Usar asserção de tipo para lidar com a chave
             const filterKey = lastUpdatedFilter as keyof FilterState;
             const filterName = getFilterName(filterKey);
             const filterValue = getFilterDescription(
@@ -92,23 +94,40 @@ export const useFilterConsistency = (
               });
             }
           }
-        });
-      }
-      
-      // Auto-trigger the filters:applied event if enabled
-      if (autoTriggerEvents) {
-        window.dispatchEvent(new CustomEvent('filters:applied'));
+        }
+        
+        // Auto-acionar o evento filters:applied se habilitado
+        if (autoTriggerEvents) {
+          window.dispatchEvent(new CustomEvent('filters:applied'));
+        }
+      } catch (error) {
+        // Registrar o erro para depuração
+        console.error('Erro ao processar alteração de filtro:', error);
+        errorRef.current = error instanceof Error ? error : new Error(String(error));
+        
+        // Ainda notificar usuário sobre erro, se toasts estiverem habilitados
+        if (showToasts) {
+          toast({
+            title: "Erro ao aplicar filtro",
+            description: "Não foi possível aplicar o filtro selecionado",
+            variant: "destructive",
+            duration: 5000
+          });
+        }
       }
     }
     
-    // Reset the flag when lastUpdatedFilter changes
+    // Resetar a flag quando lastUpdatedFilter muda
     return () => {
       hasShownToastRef.current = false;
     };
   }, [lastUpdatedFilter, filters, toast, onChange, showToasts, autoTriggerEvents, isMobile]);
 
-  // Return a cleanup function
-  return () => {
-    hasShownToastRef.current = false;
+  // Retornar uma função de limpeza e o último erro (se houver)
+  return {
+    cleanup: () => {
+      hasShownToastRef.current = false;
+    },
+    error: errorRef.current
   };
 };
