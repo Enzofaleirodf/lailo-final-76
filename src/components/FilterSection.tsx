@@ -60,6 +60,9 @@ const FilterSection: React.FC<FilterSectionProps> = ({
         duration: 2000
       });
     }
+    
+    // Dispatch filters:applied event to ensure filter application
+    window.dispatchEvent(new CustomEvent('filters:applied'));
   };
 
   // Create footer content for the drawer (mobile only)

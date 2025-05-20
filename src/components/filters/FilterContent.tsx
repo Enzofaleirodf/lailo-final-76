@@ -30,15 +30,19 @@ const FilterContent: React.FC = () => {
   // Determine if showing property or vehicle filters
   const isPropertyMode = filters.contentType === 'property';
 
-  // Trigger filter application when filters change on desktop
+  // Handle filter changes - now consistent between desktop and mobile
   const handleFilterChange = () => {
-    if (!isMobile) {
-      // On desktop environment, notify that filters have changed
-      console.log('Filter change detected on desktop');
+    // Create and dispatch the filters:applied event
+    window.dispatchEvent(new CustomEvent('filters:applied'));
+    
+    // On desktop we don't show a toast since changes are applied automatically
+    if (isMobile) {
+      // Only show toast on mobile when filters are applied via button
+      console.log('Filter change detected on mobile - toast will show when Apply button is clicked');
     }
   };
 
-  // Reset filters and notify
+  // Reset filters and notify - consistent behavior across devices
   const handleResetFilters = () => {
     resetFilters();
 
@@ -48,6 +52,9 @@ const FilterContent: React.FC = () => {
       description: "Todos os filtros foram removidos",
       duration: 2000
     });
+    
+    // Trigger filter application event
+    window.dispatchEvent(new CustomEvent('filters:applied'));
   };
 
   return (
@@ -134,11 +141,12 @@ const FilterContent: React.FC = () => {
       <div className="mt-4 flex flex-col gap-2">
         <Button 
           variant="outline" 
-          className="w-full h-10 text-sm font-normal border-gray-200 bg-white hover:bg-gray-50 hover:text-purple-700 transition-colors" 
+          className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-brand-700 transition-colors" 
           onClick={handleResetFilters} 
           aria-label="Resetar todos os filtros"
         >
           Resetar filtros
+          {activeFilters > 0 ? ` (${activeFilters})` : ''}
         </Button>
       </div>
     </div>
