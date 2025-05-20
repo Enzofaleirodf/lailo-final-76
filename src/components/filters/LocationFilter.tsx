@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { MapPin, X, ChevronDown } from 'lucide-react';
+import { MapPin, X, ChevronDown, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
   const [open, setOpen] = useState(false);
   const [localState, setLocalState] = useState(filters.location.state);
   const [localCity, setLocalCity] = useState(filters.location.city);
+  const [searchQuery, setSearchQuery] = useState('');
   const { states, loading: loadingStates } = useStates();
   const { cities, loading: loadingCities } = useCities(localState);
 
@@ -60,6 +61,11 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
   // Handle city change
   const handleCityChange = useCallback((value: string) => {
     setLocalCity(value);
+  }, []);
+
+  // Handle search input change
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   }, []);
 
   // Apply filter changes
@@ -123,6 +129,22 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
       </PopoverTrigger>
       <PopoverContent className="w-72 sm:w-80 p-4 bg-white shadow-md rounded-md z-[150]" align="start">
         <div className="flex flex-col gap-4">
+          {/* Search bar for location */}
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Procurar endereço"
+              className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+            />
+            <Search 
+              size={18} 
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+              aria-hidden="true"
+            />
+          </div>
+          
           <div className="space-y-2">
             <label htmlFor="state-select" className="text-sm font-medium text-gray-700">
               Estado

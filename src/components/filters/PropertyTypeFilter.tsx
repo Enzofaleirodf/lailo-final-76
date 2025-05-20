@@ -27,7 +27,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
     { value: 'casa', icon: Home, label: 'Casa' },
     { value: 'condominio', icon: Building2, label: 'Condomínio' },
     { value: 'edificio', icon: Building, label: 'Edifício' },
-    { value: 'flat', icon: Building2, label: 'Flat' },
+    // Removed flat option
     { value: 'galpao', icon: Warehouse, label: 'Galpão' },
     { value: 'garagem', icon: GalleryHorizontal, label: 'Garagem' },
     { value: 'loja', icon: Store, label: 'Loja' },
