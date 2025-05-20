@@ -32,9 +32,9 @@ const createAdditionalAuctions = (baseCount: number, total: number): AuctionItem
     Audi: ['A3', 'A4', 'Q3', 'Q5', 'A1']
   };
   const locations = ['São Paulo, SP', 'Rio de Janeiro, RJ', 'Belo Horizonte, MG', 'Brasília, DF', 'Curitiba, PR', 'Porto Alegre, RS', 'Salvador, BA', 'Recife, PE', 'Fortaleza, CE'];
-  const origins = ['Judicial', 'Extrajudicial', 'Bancário', 'Seguradoras'];
-  const places = ['1ª Praça', '2ª Praça', 'Venda Direta'];
-  const formats = ['Leilão', 'Venda Direta'];
+  const origins: ("Judicial" | "Extrajudicial")[] = ['Judicial', 'Extrajudicial'];
+  const places: ("Praça única" | "1ª Praça" | "2ª Praça" | "3ª Praça")[] = ['1ª Praça', '2ª Praça', 'Praça única'];
+  const formats: ("Leilão" | "Venda Direta")[] = ['Leilão', 'Venda Direta'];
   const years = [2018, 2019, 2020, 2021, 2022, 2023];
 
   for (let i = baseCount; i < total; i++) {
