@@ -8,6 +8,8 @@ import { updateUrlParams, loadFiltersFromUrl } from '@/utils/urlUtils';
 import { useScrollRestoration } from './useScrollRestoration';
 import { useUrlParamsValidator } from './useUrlParamsValidator';
 import { useToast } from './use-toast';
+import { FilterState } from '@/types/filters';
+import { isEqual } from 'lodash';
 
 /**
  * Hook personalizado para sincronizar estado de filtro e classificação com parâmetros de URL
@@ -115,21 +117,9 @@ export const useUrlParams = () => {
   const haveFiltersChanged = () => {
     if (!prevFiltersRef.current) return true;
     
-    // Deep comparison check for specific filter properties that matter
-    // This prevents unnecessary URL updates
-    if (filters.contentType !== prevFiltersRef.current.contentType) return true;
-    if (filters.state !== prevFiltersRef.current.state) return true;
-    if (filters.city !== prevFiltersRef.current.city) return true;
+    // Deep comparison using lodash's isEqual for better object comparison
+    if (!isEqual(filters, prevFiltersRef.current)) return true;
     if (sortOption !== prevSortOptionRef.current) return true;
-    
-    // Range comparisons
-    if (JSON.stringify(filters.price) !== JSON.stringify(prevFiltersRef.current.price)) return true;
-    if (JSON.stringify(filters.year) !== JSON.stringify(prevFiltersRef.current.year)) return true;
-    if (JSON.stringify(filters.usefulArea) !== JSON.stringify(prevFiltersRef.current.usefulArea)) return true;
-    
-    // Array comparisons
-    if (JSON.stringify(filters.propertyTypes) !== JSON.stringify(prevFiltersRef.current.propertyTypes)) return true;
-    if (JSON.stringify(filters.vehicleTypes) !== JSON.stringify(prevFiltersRef.current.vehicleTypes)) return true;
     
     return false;
   };
@@ -238,14 +228,21 @@ export const useUrlParams = () => {
       
       // Apenas atualizar filtros se mudanças foram detectadas
       if (newFilters) {
-        setFilters(newFilters);
+        // Create a complete FilterState object by merging with current filters
+        // to ensure all required properties are present
+        const completeFilters: FilterState = { 
+          ...filters, 
+          ...newFilters 
+        };
+        
+        setFilters(completeFilters);
       }
       
       // Resetar flag de erro
       hasErrorRef.current = false;
       
       // Save initial state to prevent loops
-      prevFiltersRef.current = newFilters || { ...filters };
+      prevFiltersRef.current = newFilters ? { ...filters, ...newFilters } : { ...filters };
       prevSortOptionRef.current = sort as any || sortOption;
     } catch (error) {
       console.error("Erro ao carregar filtros da URL:", error);
