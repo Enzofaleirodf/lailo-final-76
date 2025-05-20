@@ -1,15 +1,12 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import ActiveFilterBadges from '../ActiveFilterBadges';
 import { useFilterStore } from '@/stores/useFilterStore';
 
-// Mock the filter store
-jest.mock('@/stores/useFilterStore', () => ({
-  useFilterStore: jest.fn()
-}));
-
-// Mock the hooks/use-mobile
+// Mock the filter store and the hooks
+jest.mock('@/stores/useFilterStore');
 jest.mock('@/hooks/use-mobile', () => ({
   useIsMobile: jest.fn(() => false)
 }));

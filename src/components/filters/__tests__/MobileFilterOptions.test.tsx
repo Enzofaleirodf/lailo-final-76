@@ -1,13 +1,12 @@
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import MobileFilterOptions from '../MobileFilterOptions';
 import { useFilterStore } from '@/stores/useFilterStore';
 
 // Mock the dependencies
-jest.mock('@/stores/useFilterStore', () => ({
-  useFilterStore: jest.fn()
-}));
+jest.mock('@/stores/useFilterStore');
 
 describe('MobileFilterOptions', () => {
   const mockUpdateFilter = jest.fn();

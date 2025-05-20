@@ -1,24 +1,18 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import PriceRangeFilter from '../PriceRangeFilter';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
 
 // Mock the dependencies
-jest.mock('@/stores/useFilterStore', () => ({
-  useFilterStore: jest.fn()
-}));
-
-jest.mock('@/data/sampleAuctions', () => ({
-  fetchSampleAuctions: jest.fn()
-}));
-
+jest.mock('@/stores/useFilterStore');
+jest.mock('@/data/sampleAuctions');
 jest.mock('@/utils/auctionUtils', () => ({
   formatCurrency: jest.fn((value) => `R$${value}`)
 }));
-
 jest.mock('@/components/ui/use-toast', () => ({
   toast: jest.fn()
 }));
