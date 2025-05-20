@@ -14,6 +14,7 @@ interface AccessibleRangeInputFieldProps {
   ariaDescribedBy: string;
   isMin: boolean;
   inputSuffix?: string;
+  inputPrefix?: string;
 }
 
 /**
@@ -30,8 +31,12 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
   ariaLabel,
   ariaDescribedBy,
   isMin,
-  inputSuffix
+  inputSuffix,
+  inputPrefix
 }) => {
+  // Calcular o padding-left necessário para acomodar o prefixo sem sobreposição
+  const prefixPaddingClass = inputPrefix ? "pl-8" : "";
+  
   return (
     <div className="relative flex-1">
       <Input 
@@ -40,6 +45,7 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
         placeholder={placeholder}
         className={cn(
           "h-10 text-sm",
+          prefixPaddingClass,
           error ? "border-red-300 focus-visible:ring-red-500" : "border-gray-300 focus-visible:ring-brand-500"
         )}
         value={value}
@@ -52,6 +58,15 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
         pattern="[0-9]*[.,]?[0-9]*"
       />
       <label htmlFor={id} className="sr-only">{ariaLabel}</label>
+      
+      {/* Input prefix (e.g., currency symbol) */}
+      {inputPrefix && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
+        </div>
+      )}
+      
+      {/* Input suffix (e.g., unit) */}
       {inputSuffix && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <span className="text-gray-500 text-sm">{inputSuffix}</span>

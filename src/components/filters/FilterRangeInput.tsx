@@ -72,6 +72,9 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
     validationDelay: 300
   });
 
+  // Calcular o padding-left necessário para acomodar o prefixo sem sobreposição
+  const prefixPaddingClass = inputPrefix ? "pl-8" : "";
+
   return (
     <div 
       className="space-y-1"
@@ -85,6 +88,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             placeholder={inputPrefix ? `${inputPrefix} ${minPlaceholder}` : minPlaceholder} 
             className={cn(
               "h-10 text-sm",
+              prefixPaddingClass,
               minError ? "border-red-300 focus:ring-red-500" : 
               isFilterActive ? "border-brand-300 focus:ring-brand-500" : "border-gray-300 focus:ring-brand-500"
             )}
@@ -99,7 +103,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           />
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputPrefix}</span>
+              <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
             </div>
           )}
         </div>
@@ -110,6 +114,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             placeholder={inputPrefix ? `${inputPrefix} ${maxPlaceholder}` : maxPlaceholder}
             className={cn(
               "h-10 text-sm",
+              prefixPaddingClass,
               maxError ? "border-red-300 focus:ring-red-500" : 
               isFilterActive ? "border-brand-300 focus:ring-brand-500" : "border-gray-300 focus:ring-brand-500"
             )}
@@ -124,7 +129,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           />
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputPrefix}</span>
+              <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
             </div>
           )}
         </div>

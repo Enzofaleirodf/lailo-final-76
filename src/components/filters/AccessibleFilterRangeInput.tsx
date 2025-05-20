@@ -1,4 +1,3 @@
-
 import React, { useId, useEffect } from 'react';
 import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
 import { useRangeDisplayFormat } from '@/hooks/useRangeDisplayFormat';
@@ -151,6 +150,7 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
           ariaDescribedBy={`${descriptionId}${minError ? ` ${minErrorId}` : ''}`}
           isMin={true}
           inputSuffix={inputSuffix}
+          inputPrefix={inputPrefix}
         />
         
         <AccessibleRangeInputField
@@ -164,6 +164,7 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
           ariaDescribedBy={`${descriptionId}${maxError ? ` ${maxErrorId}` : ''}`}
           isMin={false}
           inputSuffix={inputSuffix}
+          inputPrefix={inputPrefix}
         />
       </div>
       
