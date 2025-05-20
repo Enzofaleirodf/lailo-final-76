@@ -71,45 +71,54 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
     });
   }
 
-  // Filter by vehicle types
-  if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) {
-    filteredAuctions = filteredAuctions.filter(auction =>
-      filters.vehicleTypes.includes(auction.vehicleInfo?.type || '')
-    );
+  // Apply content-specific filters based on filters.contentType
+  if (filters.contentType === 'vehicle') {
+    // Filter by vehicle types - only apply when content type is vehicle
+    if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) {
+      filteredAuctions = filteredAuctions.filter(auction =>
+        filters.vehicleTypes.includes(auction.vehicleInfo?.type || '')
+      );
+    }
+
+    // Filter by brand - only apply when content type is vehicle
+    if (filters.brand && filters.brand !== 'todas') {
+      filteredAuctions = filteredAuctions.filter(auction =>
+        (auction.vehicleInfo?.brand || '').toLowerCase().includes(filters.brand.toLowerCase())
+      );
+    }
+
+    // Filter by model - only apply when content type is vehicle
+    if (filters.model && filters.model !== 'todos') {
+      filteredAuctions = filteredAuctions.filter(auction =>
+        (auction.vehicleInfo?.model || '').toLowerCase().includes(filters.model.toLowerCase())
+      );
+    }
+
+    // Filter by color - only apply when content type is vehicle
+    if (filters.color && filters.color !== 'todas') {
+      filteredAuctions = filteredAuctions.filter(auction =>
+        (auction.vehicleInfo?.color || '').toLowerCase().includes(filters.color.toLowerCase())
+      );
+    }
+
+    // Filter by year range - only apply when content type is vehicle
+    if (filters.year.min) {
+      filteredAuctions = filteredAuctions.filter(auction =>
+        (auction.vehicleInfo?.year || 0) >= parseInt(filters.year.min)
+      );
+    }
+    if (filters.year.max) {
+      filteredAuctions = filteredAuctions.filter(auction =>
+        (auction.vehicleInfo?.year || 0) <= parseInt(filters.year.max)
+      );
+    }
+  }
+  else if (filters.contentType === 'property') {
+    // Only apply property-specific filters when on the property content type
+    // Property type filtering would go here if we add it
   }
 
-  // Filter by brand
-  if (filters.brand && filters.brand !== 'todas') {
-    filteredAuctions = filteredAuctions.filter(auction =>
-      (auction.vehicleInfo?.brand || '').toLowerCase().includes(filters.brand.toLowerCase())
-    );
-  }
-
-  // Filter by model
-  if (filters.model && filters.model !== 'todos') {
-    filteredAuctions = filteredAuctions.filter(auction =>
-      (auction.vehicleInfo?.model || '').toLowerCase().includes(filters.model.toLowerCase())
-    );
-  }
-
-  // Filter by color
-  if (filters.color && filters.color !== 'todas') {
-    filteredAuctions = filteredAuctions.filter(auction =>
-      (auction.vehicleInfo?.color || '').toLowerCase().includes(filters.color.toLowerCase())
-    );
-  }
-
-  // Filter by year range
-  if (filters.year.min) {
-    filteredAuctions = filteredAuctions.filter(auction =>
-      (auction.vehicleInfo?.year || 0) >= parseInt(filters.year.min)
-    );
-  }
-  if (filters.year.max) {
-    filteredAuctions = filteredAuctions.filter(auction =>
-      (auction.vehicleInfo?.year || 0) <= parseInt(filters.year.max)
-    );
-  }
+  // Common filters that apply to both vehicles and properties
 
   // Filter by price range
   if (filters.price.range.min) {
@@ -144,13 +153,24 @@ export const filterAuctions = (auctions: AuctionItem[], filters: FilterState): A
 export const sortAuctions = (auctions: AuctionItem[], sortBy: string): AuctionItem[] => {
   switch (sortBy) {
     case 'lowerPrice':
+    case 'price-asc':
       return [...auctions].sort((a, b) => a.currentBid - b.currentBid);
     case 'higherPrice':
+    case 'price-desc':
       return [...auctions].sort((a, b) => b.currentBid - a.currentBid);
     case 'newer':
-      return [...auctions].sort((a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime());
+    case 'newest':
+      return [...auctions].sort((a, b) => {
+        const dateA = a.endDate instanceof Date ? a.endDate : new Date(a.endDate);
+        const dateB = b.endDate instanceof Date ? b.endDate : new Date(b.endDate);
+        return dateB.getTime() - dateA.getTime();
+      });
     case 'older':
     default:
-      return [...auctions].sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+      return [...auctions].sort((a, b) => {
+        const dateA = a.endDate instanceof Date ? a.endDate : new Date(a.endDate);
+        const dateB = b.endDate instanceof Date ? b.endDate : new Date(b.endDate);
+        return dateA.getTime() - dateB.getTime();
+      });
   }
 };

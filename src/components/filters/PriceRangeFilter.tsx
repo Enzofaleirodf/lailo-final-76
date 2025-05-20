@@ -1,11 +1,12 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
 import { formatCurrency } from '@/utils/auctionUtils';
+import { toast } from '@/components/ui/sonner';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
@@ -14,6 +15,7 @@ interface PriceRangeFilterProps {
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { value, range } = filters.price;
+  const [hasAdjustedPrice, setHasAdjustedPrice] = useState(false);
   
   // Fetch auction data to find min/max prices
   const { data: auctions } = useQuery({
@@ -27,7 +29,42 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       return { minPrice: 0, maxPrice: 100000, priceSteps: 100 };
     }
     
-    const prices = auctions.map(auction => auction.currentBid);
+    let dataToUse = auctions;
+    
+    // If on properties view, adjust price range based on content type
+    if (filters.contentType === 'property') {
+      const propertyPrices = dataToUse
+        .filter(auction => !auction.vehicleInfo)
+        .map(auction => auction.currentBid);
+      
+      if (propertyPrices.length > 0) {
+        const min = Math.min(...propertyPrices);
+        const max = Math.max(...propertyPrices);
+        return {
+          minPrice: min,
+          maxPrice: max,
+          priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
+        };
+      }
+    } else {
+      // For vehicles, use the vehicle data
+      const vehiclePrices = dataToUse
+        .filter(auction => auction.vehicleInfo)
+        .map(auction => auction.currentBid);
+      
+      if (vehiclePrices.length > 0) {
+        const min = Math.min(...vehiclePrices);
+        const max = Math.max(...vehiclePrices);
+        return {
+          minPrice: min,
+          maxPrice: max,
+          priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
+        };
+      }
+    }
+    
+    // Default fallback
+    const prices = dataToUse.map(auction => auction.currentBid);
     const min = Math.min(...prices);
     const max = Math.max(...prices);
     return {
@@ -35,7 +72,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       maxPrice: max,
       priceSteps: Math.ceil((max - min) / 100) // 100 steps for the slider
     };
-  }, [auctions]);
+  }, [auctions, filters.contentType]);
   
   // Initialize the filter with the min/max values if they're empty
   useEffect(() => {
@@ -48,7 +85,32 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         }
       });
     }
-  }, [auctions, minPrice, maxPrice, range.min, range.max, updateFilter]);
+    
+    // Check if the current range is outside the available data range and adjust if needed
+    // Only do this once per content type change to avoid continuous adjustments
+    if (auctions && auctions.length > 0 && !hasAdjustedPrice && 
+        filters.price.range.max && Number(filters.price.range.max) > maxPrice * 1.5) {
+      
+      toast({
+        title: "Faixa de preço ajustada",
+        description: "Ajustamos a faixa de preço com base nos itens disponíveis."
+      });
+      
+      updateFilter('price', {
+        value: [minPrice, maxPrice],
+        range: {
+          min: String(minPrice),
+          max: String(maxPrice)
+        }
+      });
+      setHasAdjustedPrice(true);
+    }
+  }, [auctions, minPrice, maxPrice, range.min, range.max, updateFilter, filters.price.range.max, hasAdjustedPrice, filters.contentType]);
+
+  // Reset the adjustment flag when content type changes
+  useEffect(() => {
+    setHasAdjustedPrice(false);
+  }, [filters.contentType]);
 
   // Convert slider values to price values
   const sliderToPriceValue = (sliderValue: number): number => {
@@ -78,7 +140,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         onFilterChange();
       }
     }
-  }, [updateFilter, onFilterChange]);
+  }, [updateFilter, onFilterChange, sliderToPriceValue]);
 
   const handleMinChange = useCallback((minValue: string) => {
     const numericValue = minValue === '' ? minPrice : Number(minValue);

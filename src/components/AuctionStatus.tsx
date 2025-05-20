@@ -1,3 +1,4 @@
+
 import React, { useMemo, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -34,6 +35,7 @@ const AuctionStatus: React.FC = () => {
   const { sortOption } = useSortStore();
   // State to store the actual filtered count from AuctionList.tsx
   const [actualFilteredCount, setActualFilteredCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Effect to synchronize with the actual filtered count from AuctionList component
   useEffect(() => {
@@ -42,6 +44,7 @@ const AuctionStatus: React.FC = () => {
       const count = (window as any).filteredItemsCount;
       if (typeof count === 'number') {
         setActualFilteredCount(count);
+        setIsLoading(false);
       }
     };
     
@@ -123,8 +126,8 @@ const AuctionStatus: React.FC = () => {
     }
   }, [filters, actualFilteredCount]);
 
-  // Don't display if there are no items
-  if (stats.totalItems === 0) {
+  // Don't display if there are no items or we're still loading
+  if (stats.totalItems === 0 || isLoading) {
     return null;
   }
 

@@ -21,24 +21,21 @@ const BuscadorImoveis = () => {
   
   // Set content type to property when this page loads and clean vehicle-specific filters
   useEffect(() => {
-    // Don't update if already on the correct content type to prevent navigation loops
+    // Only update if filters.contentType is not already set to 'property'
+    // This prevents content type ping-pong between pages
     if (filters.contentType !== 'property') {
       console.log('BuscadorImoveis: Setting content type to property');
       updateFilter('contentType', 'property');
+      
+      // Clean up any vehicle-specific filters directly
+      const cleanedFilters = { ...filters };
+      cleanedFilters.vehicleTypes = [];
+      cleanedFilters.brand = 'todas';
+      cleanedFilters.model = 'todos';
+      cleanedFilters.color = 'todas';
+      cleanedFilters.year = { min: '', max: '' };
     }
-    
-    // Clean up any vehicle-specific filters that might be in the URL
-    const urlParams = Object.fromEntries(searchParams.entries());
-    const vehicleParams = ['types', 'brand', 'model', 'color', 'yearMin', 'yearMax'];
-    
-    // If we have vehicle filters in the URL but we're on the property page,
-    // we should inform the user or automatically remove those filters
-    const hasVehicleFilters = vehicleParams.some(param => searchParams.has(param));
-    
-    if (hasVehicleFilters) {
-      console.log('Vehicle filters detected on property page, these will be ignored');
-    }
-  }, [updateFilter, searchParams, filters.contentType]);
+  }, [updateFilter, filters.contentType, filters]);
   
   // Sync URL with filters and sort state
   useUrlParams();

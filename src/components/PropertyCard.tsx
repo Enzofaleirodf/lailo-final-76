@@ -39,13 +39,15 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   };
 
   // Format auction end date to show only last 2 digits of year
-  const formatAuctionDate = (date: Date | undefined): string => {
+  const formatAuctionDate = (date: Date | undefined | string): string => {
     if (!date) return 'Data não disponível';
     
     try {
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
+      const dateObject = typeof date === 'string' ? new Date(date) : date;
+      const day = dateObject.getDate().toString().padStart(2, '0');
+      const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+      const yearLastTwoDigits = dateObject.getFullYear().toString().slice(-2);
+      
       return `${day}/${month}/${yearLastTwoDigits}`;
     } catch (error) {
       console.error('Error formatting date:', error);
@@ -53,10 +55,17 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
     }
   };
 
+  const formatEndTime = (date: Date | undefined | string): string => {
+    if (!date) return '';
+    try {
+      const dateObject = typeof date === 'string' ? new Date(date) : date;
+      return `${dateObject.getHours()}h`;
+    } catch (error) {
+      return '';
+    }
+  };
+
   const discount = calculateDiscount();
-  
-  // Log that we're rendering this card
-  console.log(`Rendering property card: ${property.id}`);
   
   return (
     <motion.div 
@@ -117,7 +126,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
             </div>
             <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0`}>
               <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
-              {property.endDate ? `${formatAuctionDate(property.endDate)} às ${property.endDate.getHours()}h` : 'Data não disponível'}
+              {property.endDate ? `${formatAuctionDate(property.endDate)} às ${formatEndTime(property.endDate)}` : 'Data não disponível'}
             </div>
           </div>
         </div>

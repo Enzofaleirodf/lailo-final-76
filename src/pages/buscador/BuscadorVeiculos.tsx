@@ -15,12 +15,21 @@ import { useFilterStore } from '@/stores/useFilterStore';
 const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
-  const { updateFilter } = useFilterStore();
+  const { updateFilter, filters } = useFilterStore();
   
   // Set content type to vehicle when this page loads
   useEffect(() => {
-    updateFilter('contentType', 'vehicle');
-  }, [updateFilter]);
+    // Only update if filters.contentType is not already set to 'vehicle'
+    // This prevents content type ping-pong between pages
+    if (filters.contentType !== 'vehicle') {
+      updateFilter('contentType', 'vehicle');
+      
+      // Clean up any property-specific filters directly
+      const cleanedFilters = { ...filters };
+      cleanedFilters.propertyTypes = [];
+      cleanedFilters.usefulArea = { min: '', max: '' };
+    }
+  }, [updateFilter, filters.contentType, filters]);
   
   // Sync URL with filters and sort state
   useUrlParams();
