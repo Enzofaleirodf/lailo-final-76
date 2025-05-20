@@ -1,133 +1,103 @@
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useIsMobile } from './use-mobile';
-import { useToast } from './use-toast';
-import { FilterState } from '@/types/filters';
 import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
 
-interface FilterConsistencyOptions {
-  /**
-   * Callback que é executado quando os valores do filtro mudam
-   */
+interface UseFilterConsistencyProps {
   onChange?: () => void;
-  
-  /**
-   * Se deve mostrar toasts quando os filtros mudam
-   * @default false
-   */
   showToasts?: boolean;
-  
-  /**
-   * Se deve acionar automaticamente o evento filters:applied
-   * @default true
-   */
   autoTriggerEvents?: boolean;
 }
 
 /**
- * Hook que garante comportamento consistente dos filtros
- * entre as visualizações desktop e mobile.
- * 
- * @param options Opções de configuração
- * @returns Uma função de limpeza
+ * Hook that ensures filter behavior consistency between desktop and mobile
+ * Also provides notifications about filter changes
  */
-export const useFilterConsistency = (
-  options?: FilterConsistencyOptions | (() => void)
-) => {
-  // Lidar com o caso em que apenas um callback é fornecido em vez de opções
-  const normalizedOptions = typeof options === 'function' 
-    ? { onChange: options } 
-    : options || {};
-  
-  const {
-    onChange,
-    showToasts = false,
-    autoTriggerEvents = true
-  } = normalizedOptions;
-  
-  const { filters, lastUpdatedFilter } = useFilterStore();
-  const isMobile = useIsMobile();
+export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
+  const { 
+    onChange, 
+    showToasts = false, 
+    autoTriggerEvents = true 
+  } = props || {};
   const { toast } = useToast();
+  const { filters, lastUpdatedFilter } = useFilterStore();
+  const prevFilterState = useRef(filters);
   
-  // Controlar se já mostramos um toast para esta atualização de filtro
-  const hasShownToastRef = useRef(false);
-  // Registrar erros encontrados durante o processamento
-  const errorRef = useRef<Error | null>(null);
-
-  // Garantir comportamento consistente acionando automaticamente eventos
-  // para alterações de filtro em visualizações desktop e mobile
-  useEffect(() => {
-    if (lastUpdatedFilter && lastUpdatedFilter !== 'initial' && !hasShownToastRef.current) {
-      // Marcar que processamos esta atualização
-      hasShownToastRef.current = true;
-      
-      try {
-        // Executar o callback onChange se fornecido
-        if (onChange) {
-          onChange();
-        }
-        
-        // Mostrar notificações toast se habilitado e se não estiver na carga inicial
-        if (showToasts && lastUpdatedFilter !== 'bulk') {
-          if (lastUpdatedFilter === 'reset') {
-            toast({
-              title: "Filtros resetados",
-              description: "Todos os filtros foram removidos",
-              duration: 3000
-            });
-          } else {
-            // Usar asserção de tipo para lidar com a chave
-            const filterKey = lastUpdatedFilter as keyof FilterState;
-            const filterName = getFilterName(filterKey);
-            const filterValue = getFilterDescription(
-              filterKey,
-              filters[filterKey]
-            );
-            
-            if (filterName && filterValue && 
-                filterValue !== 'todos' && filterValue !== 'todas') {
-              toast({
-                title: `Filtro aplicado: ${filterName}`,
-                description: filterValue,
-                duration: 3000
-              });
-            }
-          }
-        }
-        
-        // Auto-acionar o evento filters:applied se habilitado
-        if (autoTriggerEvents) {
-          window.dispatchEvent(new CustomEvent('filters:applied'));
-        }
-      } catch (error) {
-        // Registrar o erro para depuração
-        console.error('Erro ao processar alteração de filtro:', error);
-        errorRef.current = error instanceof Error ? error : new Error(String(error));
-        
-        // Ainda notificar usuário sobre erro, se toasts estiverem habilitados
-        if (showToasts) {
-          toast({
-            title: "Erro ao aplicar filtro",
-            description: "Não foi possível aplicar o filtro selecionado",
-            variant: "destructive",
-            duration: 5000
-          });
-        }
-      }
+  // Track scroll position to prevent jumps
+  const scrollPositionRef = useRef(0);
+  
+  // Handle filter changes consistently
+  const handleFilterChange = useCallback(() => {
+    if (onChange) {
+      onChange();
     }
     
-    // Resetar a flag quando lastUpdatedFilter muda
-    return () => {
-      hasShownToastRef.current = false;
-    };
-  }, [lastUpdatedFilter, filters, toast, onChange, showToasts, autoTriggerEvents, isMobile]);
-
-  // Retornar uma função de limpeza e o último erro (se houver)
+    // Only trigger events automatically if option is enabled
+    if (autoTriggerEvents) {
+      // Store scroll position before sending event
+      scrollPositionRef.current = window.scrollY;
+      
+      // Create and dispatch the filters:applied event
+      const event = new CustomEvent('filters:applied', {
+        detail: { 
+          scrollPosition: scrollPositionRef.current,
+          timestamp: Date.now() 
+        }
+      });
+      
+      // Small delay to ensure scroll position is captured correctly
+      setTimeout(() => {
+        window.dispatchEvent(event);
+      }, 10);
+    }
+  }, [onChange, autoTriggerEvents]);
+  
+  // Show toast notifications for filter changes if enabled
+  useEffect(() => {
+    if (!showToasts || !lastUpdatedFilter || lastUpdatedFilter === 'initial') return;
+    
+    // Don't show for bulk updates from URL
+    if (lastUpdatedFilter === 'bulk') return;
+    
+    // Show reset notification
+    if (lastUpdatedFilter === 'reset') {
+      toast({
+        title: "Filtros resetados",
+        description: "Todos os filtros foram limpos",
+        duration: 2000
+      });
+      return;
+    }
+    
+    // Show filter change notification
+    const filterName = getFilterName(lastUpdatedFilter);
+    const filterValue = filters[lastUpdatedFilter];
+    const description = getFilterDescription(lastUpdatedFilter, filterValue);
+    
+    if (description) {
+      toast({
+        title: `Filtro ${filterName} atualizado`,
+        description: description,
+        duration: 2000
+      });
+    }
+    
+  }, [lastUpdatedFilter, filters, showToasts, toast]);
+  
+  // Store previous filter state for comparison
+  useEffect(() => {
+    prevFilterState.current = filters;
+  }, [filters]);
+  
+  // Cleanup function for any listeners
+  const cleanup = useCallback(() => {
+    // Add cleanup logic here if needed
+  }, []);
+  
+  // Return functions and values
   return {
-    cleanup: () => {
-      hasShownToastRef.current = false;
-    },
-    error: errorRef.current
+    handleFilterChange,
+    cleanup
   };
 };

@@ -1,6 +1,7 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FilterDropdownProps {
   value: string;
@@ -13,6 +14,10 @@ interface FilterDropdownProps {
   disabled?: boolean;
 }
 
+/**
+ * Componente de dropdown para filtros 
+ * Implementa comportamentos consistentes e acessíveis para desktop e mobile
+ */
 const FilterDropdown: React.FC<FilterDropdownProps> = ({
   value,
   onChange,
@@ -23,16 +28,20 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   "aria-label": ariaLabel,
   disabled = false
 }) => {
-  // Referência para o elemento select
+  // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
+  const [isTouched, setIsTouched] = useState(false);
   
   // Verificar se o valor não está vazio e não é um valor padrão como "Todas", "Todos"
-  const isValueSelected = value && value !== "Todas" && value !== "Todos";
+  const isValueSelected = value && value !== "todas" && value !== "Todas" && value !== "todos" && value !== "Todos";
   
   // Handler para mudança com prevenção de efeitos colaterais de rolagem
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // Capturar a posição de rolagem atual
     const scrollPosition = window.scrollY;
+    
+    // Marcar como tocado
+    setIsTouched(true);
     
     // Chamar o callback de onChange
     onChange(e.target.value);
@@ -40,8 +49,12 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     // Evitar que a mudança cause rolagem
     window.scrollTo({
       top: scrollPosition,
-      behavior: 'instant'
+      behavior: 'auto'
     });
+    
+    // Anunciar mudança para leitores de tela
+    const selectedOption = options.find(opt => opt.value === e.target.value);
+    announceChange(selectedOption?.label || e.target.value);
   };
   
   // Melhorar acessibilidade para eventos de teclado
@@ -58,6 +71,27 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     }
   };
   
+  // Anunciar mudanças para leitores de tela
+  const announceChange = (value: string) => {
+    const announcement = `${ariaLabel || 'Filtro'} alterado para ${value}`;
+    
+    // Usar região live existente ou criar uma nova
+    let liveRegion = document.getElementById('dropdown-announcer');
+    if (!liveRegion) {
+      liveRegion = document.createElement('div');
+      liveRegion.id = 'dropdown-announcer';
+      liveRegion.setAttribute('aria-live', 'polite');
+      liveRegion.setAttribute('aria-atomic', 'true');
+      liveRegion.className = 'sr-only';
+      document.body.appendChild(liveRegion);
+    }
+    
+    // Atualizar o texto após um curto delay para garantir que será lido
+    setTimeout(() => {
+      if (liveRegion) liveRegion.textContent = announcement;
+    }, 100);
+  };
+  
   // Melhorar foco no componente para leitores de tela
   useEffect(() => {
     const select = selectRef.current;
@@ -70,25 +104,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         `${ariaLabel || 'Filtro'}, valor atual: ${selectedOption.label}` : 
         `${ariaLabel || 'Filtro'}, nenhuma opção selecionada`;
       
-      // Criar elemento aria-live para anúncios
-      let announcer = document.getElementById('filter-announcer');
-      if (!announcer) {
-        announcer = document.createElement('div');
-        announcer.id = 'filter-announcer';
-        announcer.setAttribute('aria-live', 'polite');
-        announcer.setAttribute('aria-atomic', 'true');
-        announcer.style.position = 'absolute';
-        announcer.style.width = '1px';
-        announcer.style.height = '1px';
-        announcer.style.overflow = 'hidden';
-        announcer.style.clip = 'rect(0, 0, 0, 0)';
-        document.body.appendChild(announcer);
-      }
-      
-      // Fazer o anúncio
-      setTimeout(() => {
-        if (announcer) announcer.textContent = announcement;
-      }, 100);
+      // Anunciar para leitores de tela
+      announceChange(announcement);
     };
     
     select.addEventListener('focus', handleFocus);
@@ -101,13 +118,16 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     <div className="relative isolate">
       <select
         ref={selectRef}
-        id={id}
+        id={id || `filter-dropdown-${ariaLabel?.toLowerCase().replace(/\s+/g, '-') || Math.random().toString(36).substring(2, 9)}`}
         aria-label={ariaLabel}
-        className={`w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none bg-white 
-          ${isValueSelected ? 'text-brand-700 font-medium' : 'text-gray-700'} 
-          focus:outline-none focus:ring-2 focus:ring-accent2-500 focus:border-accent2-500
-          ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'cursor-pointer'}
-          ${className}`}
+        className={cn(
+          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none",
+          isValueSelected ? "text-brand-700 font-medium" : "text-gray-700",
+          isTouched ? "border-accent2-300" : "border-gray-300",
+          "focus:outline-none focus:ring-2 focus:ring-accent2-500 focus:border-accent2-500",
+          disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
+          className
+        )}
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -117,6 +137,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-expanded="false"
         aria-required="false"
         aria-autocomplete="list"
+        tabIndex={disabled ? -1 : 0}
       >
         {placeholder && <option value="" disabled className="text-gray-500 font-normal">{placeholder}</option>}
         {options.map((option) => (
@@ -131,11 +152,17 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       </select>
       <ChevronDown 
         size={16} 
-        className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${disabled ? 'text-gray-400' : 'text-gray-500'}`} 
+        className={cn(
+          "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none",
+          disabled ? "text-gray-400" : "text-gray-500"
+        )} 
         aria-hidden="true"
       />
+      <span className="sr-only" id={`${id}-description`}>
+        Pressione Enter ou barra de espaço para abrir as opções de seleção
+      </span>
     </div>
   );
 };
 
-export default FilterDropdown;
+export default React.memo(FilterDropdown);

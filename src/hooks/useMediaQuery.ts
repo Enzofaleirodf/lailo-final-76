@@ -1,70 +1,69 @@
 
 import { useState, useEffect } from 'react';
 
-// Define explicit screen breakpoints to standardize across the application
-export const breakpoints = {
-  xs: '(max-width: 375px)',
-  sm: '(max-width: 640px)',
-  md: '(max-width: 768px)',
-  lg: '(max-width: 1024px)',
-  xl: '(max-width: 1280px)',
-  '2xl': '(max-width: 1536px)',
-  // Custom device-oriented breakpoints
-  mobile: '(max-width: 768px)',
-  tablet: '(min-width: 769px) and (max-width: 1024px)',
-  desktop: '(min-width: 1025px)',
-  // Feature detection
-  dark: '(prefers-color-scheme: dark)',
-  light: '(prefers-color-scheme: light)',
-  motion: '(prefers-reduced-motion: no-preference)',
-  hover: '(hover: hover)',
-};
-
 /**
- * Custom hook to check if a media query matches
- * @param query The media query to check or a key from predefined breakpoints
- * @returns Whether the media query matches
+ * Custom hook that returns true if the given media query matches
+ * @param query - Media query string to match or predefined breakpoint
  */
-export function useMediaQuery(query: string | keyof typeof breakpoints): boolean {
-  // Get the actual query string if a key from breakpoints is provided
-  const queryString = query in breakpoints ? breakpoints[query as keyof typeof breakpoints] : query;
-  
-  // Initialize with false for SSR safety, will update on client side
-  const [matches, setMatches] = useState<boolean>(false);
-
-  useEffect(() => {
-    // Handle SSR case
-    if (typeof window !== 'undefined') {
-      // Initial check
-      const media = window.matchMedia(queryString);
-      setMatches(media.matches);
-
-      // Create event listener for changes
-      const listener = (e: MediaQueryListEvent) => {
-        setMatches(e.matches);
-      };
-
-      // Use modern addEventListener API if available, fallback to older APIs
-      if (media.addEventListener) {
-        media.addEventListener('change', listener);
-      } else {
-        // For older browser support
-        media.addListener(listener);
-      }
-
-      // Cleanup
-      return () => {
-        if (media.removeEventListener) {
-          media.removeEventListener('change', listener);
-        } else {
-          // For older browser support
-          media.removeListener(listener);
-        }
-      };
+export function useMediaQuery(query: string) {
+  // Handle predefined breakpoint names
+  const getQueryString = (q: string) => {
+    switch (q) {
+      case 'xs': return '(max-width: 639px)';
+      case 'sm': return '(min-width: 640px)';
+      case 'md': return '(min-width: 768px)';
+      case 'lg': return '(min-width: 1024px)';
+      case 'xl': return '(min-width: 1280px)';
+      case '2xl': return '(min-width: 1536px)';
+      default: return q; // Use the query as-is if not a predefined breakpoint
     }
+  };
+
+  const queryString = getQueryString(query);
+  
+  // State and listener for the media query match
+  const [matches, setMatches] = useState<boolean>(() => {
+    // Check on first render only on client-side
+    if (typeof window !== 'undefined') {
+      return window.matchMedia(queryString).matches;
+    }
+    // Default to false for SSR
+    return false;
+  });
+
+  // Effect to add and remove media query listener
+  useEffect(() => {
+    // Skip in SSR
+    if (typeof window === 'undefined') return;
+
+    const mediaQueryList = window.matchMedia(queryString);
+    
+    // Set initial state
+    setMatches(mediaQueryList.matches);
+
+    // Define handler
+    const handler = (event: MediaQueryListEvent) => {
+      setMatches(event.matches);
+    };
+
+    // Use newer addEventListener if available, fall back to addListener
+    if (mediaQueryList.addEventListener) {
+      mediaQueryList.addEventListener('change', handler);
+    } else {
+      // @ts-ignore - For older browsers
+      mediaQueryList.addListener(handler);
+    }
+
+    // Cleanup
+    return () => {
+      if (mediaQueryList.removeEventListener) {
+        mediaQueryList.removeEventListener('change', handler);
+      } else {
+        // @ts-ignore - For older browsers
+        mediaQueryList.removeListener(handler);
+      }
+    };
   }, [queryString]);
 
   return matches;
 }
-
-export default useMediaQuery;
