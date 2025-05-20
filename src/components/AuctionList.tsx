@@ -13,8 +13,8 @@ import { useUrlParams } from '@/hooks/useUrlParams';
 import AuctionPagination from './pagination/AuctionPagination';
 import EmptyStateMessage from './EmptyStateMessage';
 
-// Definimos 10 itens por página para fins de demonstração (em produção seria 30)
-const ITEMS_PER_PAGE = 10;
+// Definimos 30 itens por página conforme requisito
+const ITEMS_PER_PAGE = 30;
 const SKELETON_COUNT = 6;
 
 const AuctionList: React.FC = () => {

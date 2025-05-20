@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface RangeErrorMessagesProps {
   minError: string | null;
@@ -10,6 +10,7 @@ interface RangeErrorMessagesProps {
 
 /**
  * Componente para exibir mensagens de erro para campos de intervalo
+ * Não exibe mensagens de limite mínimo/máximo após o blur
  */
 const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({
   minError,
@@ -17,18 +18,22 @@ const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({
   minErrorId,
   maxErrorId
 }) => {
-  if (!minError && !maxError) return null;
+  // Filtra mensagens de erro para não mostrar limites após o blur
+  const filteredMinError = minError && !minError.startsWith('Mín:') ? minError : null;
+  const filteredMaxError = maxError && !maxError.startsWith('Máx:') ? maxError : null;
+  
+  if (!filteredMinError && !filteredMaxError) return null;
   
   return (
     <div className="flex justify-between text-xs">
-      {minError && (
+      {filteredMinError && (
         <p id={minErrorId} className="text-red-500" role="alert">
-          {minError}
+          {filteredMinError}
         </p>
       )}
-      {maxError && (
+      {filteredMaxError && (
         <p id={maxErrorId} className="text-red-500 ml-auto" role="alert">
-          {maxError}
+          {filteredMaxError}
         </p>
       )}
     </div>

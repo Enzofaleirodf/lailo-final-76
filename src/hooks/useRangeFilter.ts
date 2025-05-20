@@ -69,7 +69,7 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     max: formatDisplay ? formatValue(initialValues.max || '') : initialValues.max || ''
   });
   
-  // Estado de erro para validação
+  // Estado de erro para validação - será exibido apenas quando houver erros graves
   const [errors, setErrors] = useState<{min: string | null, max: string | null}>({min: null, max: null});
   
   // Referência para rastrear interações do usuário - crucial para não contar valores iniciais como filtros ativos
@@ -139,23 +139,16 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     
     let error: string | null = null;
     
-    // Aplicar limites e restrições
+    // Verificar apenas erros de relação entre mínimo e máximo
+    // Não exibir mensagens de limite mín/máx como erros permanentes
     if (isMin) {
       // Para campo de valor mínimo
-      if (minAllowed !== undefined && numValue < minAllowed) {
-        error = `Mín: ${minAllowed}`;
-      }
-      
       // Se o valor for maior que o máximo selecionado e o máximo não estiver vazio
       if (values.max && Number(values.max) < numValue) {
         error = 'Maior que máximo';
       }
     } else {
       // Para campo de valor máximo
-      if (maxAllowed !== undefined && numValue > maxAllowed) {
-        error = `Máx: ${maxAllowed}`;
-      }
-      
       // Se o valor for menor que o mínimo selecionado e o mínimo não estiver vazio
       if (values.min && Number(values.min) > numValue) {
         error = 'Menor que mínimo';
@@ -221,7 +214,7 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     const valueToValidate = values[fieldName];
     const { value, error } = validateValues(valueToValidate, isMin);
     
-    // Atualizar erros
+    // Atualizar erros - apenas erros significativos de relação entre valores
     setErrors(prev => ({
       ...prev,
       [fieldName]: error

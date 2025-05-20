@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import FilterSection from '@/components/FilterSection';
@@ -10,7 +11,6 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useToast } from '@/hooks/use-toast';
 
 /**
  * Página de busca e filtro de veículos em leilão
@@ -19,8 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
-  const { updateFilter, filters, lastUpdatedFilter } = useFilterStore();
-  const { toast } = useToast();
+  const { updateFilter, filters } = useFilterStore();
   
   // Sincronizar URL com estado de filtros e ordenação
   const { handlePageChange } = useUrlParams();
@@ -43,15 +42,9 @@ const BuscadorVeiculos = () => {
         updateFilter('usefulArea', { min: '', max: '' });
       }
       
-      // Mostrar toast apenas na primeira carga ou quando realmente estamos mudando de tipo
-      // não quando a página é renderizada novamente por outras razões
-      toast({
-        title: "Modo de busca",
-        description: "Visualizando veículos em leilão",
-        duration: 3000
-      });
+      // Toast removido conforme solicitado
     }
-  }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea, toast]);
+  }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
   
   const handleFilterClick = () => {
     setFiltersOpen(true);
