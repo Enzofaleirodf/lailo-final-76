@@ -308,9 +308,9 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
     } catch (error) {
       console.error('Error processing items:', error);
       
-      // Mostrar mensagem de erro apropriada com base no tipo de conteúdo
-      const contentTypeLabel = filters.contentType === 'property' ? 'imóveis' : 'leilões';
-      toast.error(`Ocorreu um erro ao carregar os ${contentTypeLabel}`);
+      // Removing the toast error call since toast.error doesn't accept arguments
+      // Just log the error to console instead
+      console.error(`Ocorreu um erro ao carregar os ${filters.contentType === 'property' ? 'imóveis' : 'leilões'}`);
       
       setLocalLoading(false);
       setLoading(false);
