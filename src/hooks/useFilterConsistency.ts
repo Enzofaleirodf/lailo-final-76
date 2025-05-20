@@ -1,6 +1,5 @@
 
 import { useCallback, useRef, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
 import { FilterState } from '@/types/filters';
@@ -21,7 +20,6 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
     showToasts = false, 
     autoTriggerEvents = true 
   } = props || {};
-  const { toast } = useToast();
   const { filters, lastUpdatedFilter } = useFilterStore();
   const prevFilterState = useRef(filters);
   
@@ -53,40 +51,6 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
       }, 10);
     }
   }, [onChange, autoTriggerEvents]);
-  
-  // Show toast notifications for filter changes if enabled
-  useEffect(() => {
-    if (!showToasts || !lastUpdatedFilter || lastUpdatedFilter === 'initial') return;
-    
-    // Don't show for bulk updates from URL
-    if (lastUpdatedFilter === 'bulk') return;
-    
-    // Show reset notification
-    if (lastUpdatedFilter === 'reset') {
-      toast({
-        title: "Filtros resetados",
-        description: "Todos os filtros foram limpos",
-        duration: 2000
-      });
-      return;
-    }
-    
-    // Show filter change notification
-    // Type assertion to ensure typesafety when accessing filter names
-    const filterKey = lastUpdatedFilter as keyof FilterState;
-    const filterName = getFilterName(filterKey);
-    const filterValue = filters[filterKey];
-    const description = getFilterDescription(filterKey, filterValue);
-    
-    if (description) {
-      toast({
-        title: `Filtro ${filterName} atualizado`,
-        description: description,
-        duration: 2000
-      });
-    }
-    
-  }, [lastUpdatedFilter, filters, showToasts, toast]);
   
   // Store previous filter state for comparison
   useEffect(() => {

@@ -7,7 +7,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import FilterContent from './filters/FilterContent';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useToast } from '@/hooks/use-toast';
 import FilterApplyButton from './filters/FilterApplyButton';
 
 interface FilterSectionProps {
@@ -31,7 +30,6 @@ const FilterSection: React.FC<FilterSectionProps> = ({
     activeFilters
   } = useFilterStore();
   const isMobile = useIsMobile();
-  const { toast } = useToast();
 
   // Sync local state with parent state if provided
   useEffect(() => {
@@ -47,24 +45,9 @@ const FilterSection: React.FC<FilterSectionProps> = ({
     }
   };
 
-  // Apply filters on mobile (shows toast)
+  // Apply filters on mobile (no toast now)
   const handleApplyFilters = () => {
     handleOpenChange(false);
-
-    // Show confirmation toast when filters are applied
-    if (activeFilters > 0) {
-      toast({
-        title: "Filtros aplicados",
-        description: `${activeFilters} ${activeFilters === 1 ? 'filtro ativo' : 'filtros ativos'}`,
-        duration: 2000
-      });
-    } else {
-      toast({
-        title: "Filtros aplicados",
-        description: "Nenhum filtro ativo",
-        duration: 2000
-      });
-    }
     
     // Dispatch filters:applied event to ensure filter application
     window.dispatchEvent(new CustomEvent('filters:applied'));

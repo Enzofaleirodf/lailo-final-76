@@ -1,15 +1,12 @@
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { FilterState, ContentType } from '@/types/filters';
-import { useToast } from './use-toast';
 
 /**
  * Valida e corrige parâmetros de URL inválidos
  */
 export const useUrlParamsValidator = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { toast } = useToast();
 
   // Validação e correção de parâmetros de URL inválidos
   useEffect(() => {
@@ -74,17 +71,10 @@ export const useUrlParamsValidator = () => {
       hasChanges = true;
     }
 
-    // Se houver parâmetros inválidos, exibir toast e corrigir os parâmetros
+    // Se houver parâmetros inválidos, corrigir os parâmetros silenciosamente (sem toast)
     if (hasChanges) {
-      toast({
-        title: 'Parâmetros inválidos detectados',
-        description: `Os seguintes parâmetros foram corrigidos: ${invalidParams.join(', ')}`,
-        variant: 'destructive',
-        duration: 5000
-      });
-      
       // Atualizar URL com parâmetros corrigidos
       setSearchParams(newParams, { replace: true });
     }
-  }, [searchParams, setSearchParams, toast]);
+  }, [searchParams, setSearchParams]);
 };
