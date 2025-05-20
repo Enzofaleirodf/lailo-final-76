@@ -38,10 +38,11 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
           )} 
           aria-label="Filtrar imóveis" 
           aria-pressed={filters.contentType === 'property'}
+          aria-controls="content-type-selector"
         >
-          <Building2 size={18} className="shrink-0" />
+          <Building2 size={18} className="shrink-0" aria-hidden="true" />
         </button>
-        <div className="w-[1px] bg-gray-200"></div>
+        <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
         <button 
           onClick={() => handleTabChange('vehicle')} 
           className={cn(
@@ -52,30 +53,35 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
           )} 
           aria-label="Filtrar veículos" 
           aria-pressed={filters.contentType === 'vehicle'}
+          aria-controls="content-type-selector"
         >
-          <Car size={18} className="shrink-0" />
+          <Car size={18} className="shrink-0" aria-hidden="true" />
         </button>
-        <div className="w-[1px] bg-gray-200"></div>
+        <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
         <button 
           onClick={onFilterClick} 
           className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 transition-colors relative" 
           aria-label="Abrir filtros"
+          aria-haspopup="dialog"
+          aria-expanded="false"
         >
-          <Filter size={16} className="shrink-0" />
+          <Filter size={16} className="shrink-0" aria-hidden="true" />
           <span>Filtrar</span>
           {activeFilters > 0 && (
-            <span className="absolute top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white">
+            <span className="absolute top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white" aria-label={`${activeFilters} filtros ativos`}>
               {activeFilters}
             </span>
           )}
         </button>
-        <div className="w-[1px] bg-gray-200"></div>
+        <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
         <button 
           onClick={onSortClick} 
           className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 transition-colors" 
           aria-label="Ordenar resultados"
+          aria-haspopup="dialog"
+          aria-expanded="false"
         >
-          <ArrowUpDown size={16} className="shrink-0" />
+          <ArrowUpDown size={16} className="shrink-0" aria-hidden="true" />
           <span>Ordenar</span>
         </button>
       </div>

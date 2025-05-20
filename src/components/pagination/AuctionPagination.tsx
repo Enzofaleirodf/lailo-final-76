@@ -26,6 +26,8 @@ const AuctionPagination: React.FC<AuctionPaginationProps> = ({
           isActive={currentPage === 1} 
           onClick={() => onPageChange(1)}
           className="transition-all duration-200 hover:scale-105"
+          aria-label="Ir para a página 1"
+          aria-current={currentPage === 1 ? "page" : undefined}
         >
           1
         </PaginationLink>
@@ -44,7 +46,7 @@ const AuctionPagination: React.FC<AuctionPaginationProps> = ({
     if (startPage > 2) {
       items.push(
         <PaginationItem key="ellipsis-start">
-          <PaginationEllipsis />
+          <PaginationEllipsis aria-hidden="true" />
         </PaginationItem>
       );
     }
@@ -57,6 +59,8 @@ const AuctionPagination: React.FC<AuctionPaginationProps> = ({
             isActive={currentPage === i} 
             onClick={() => onPageChange(i)}
             className="transition-all duration-200 hover:scale-105"
+            aria-label={`Ir para a página ${i}`}
+            aria-current={currentPage === i ? "page" : undefined}
           >
             {i}
           </PaginationLink>
@@ -68,7 +72,7 @@ const AuctionPagination: React.FC<AuctionPaginationProps> = ({
     if (endPage < totalPages - 1) {
       items.push(
         <PaginationItem key="ellipsis-end">
-          <PaginationEllipsis />
+          <PaginationEllipsis aria-hidden="true" />
         </PaginationItem>
       );
     }
@@ -81,6 +85,8 @@ const AuctionPagination: React.FC<AuctionPaginationProps> = ({
             isActive={currentPage === totalPages} 
             onClick={() => onPageChange(totalPages)}
             className="transition-all duration-200 hover:scale-105"
+            aria-label={`Ir para a página ${totalPages}`}
+            aria-current={currentPage === totalPages ? "page" : undefined}
           >
             {totalPages}
           </PaginationLink>
@@ -103,27 +109,31 @@ const AuctionPagination: React.FC<AuctionPaginationProps> = ({
       transition={{ delay: 0.2 }}
       className="py-4"
     >
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-              className={`${currentPage <= 1 ? 'pointer-events-none opacity-50' : 'hover:scale-105 transition-transform'}`}
-              aria-disabled={currentPage <= 1}
-            />
-          </PaginationItem>
-          
-          {renderPaginationItems()}
-          
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-              className={`${currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'hover:scale-105 transition-transform'}`}
-              aria-disabled={currentPage >= totalPages}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <nav aria-label="Navegação de paginação">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+                className={`${currentPage <= 1 ? 'pointer-events-none opacity-50' : 'hover:scale-105 transition-transform'}`}
+                aria-disabled={currentPage <= 1}
+                aria-label="Ir para a página anterior"
+              />
+            </PaginationItem>
+            
+            {renderPaginationItems()}
+            
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+                className={`${currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'hover:scale-105 transition-transform'}`}
+                aria-disabled={currentPage >= totalPages}
+                aria-label="Ir para a próxima página"
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </nav>
     </motion.div>
   );
 };

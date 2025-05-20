@@ -14,6 +14,7 @@ import AuctionPagination from './pagination/AuctionPagination';
 import EmptyStateMessage from './EmptyStateMessage';
 
 const ITEMS_PER_PAGE = 30;
+const SKELETON_COUNT = 6;
 
 const AuctionList: React.FC = () => {
   const { filters } = useFilterStore();
@@ -41,19 +42,23 @@ const AuctionList: React.FC = () => {
     }
   }, [totalPages, currentPage, searchParams, setSearchParams]);
 
+  // Renderizar lista de esqueletos durante o carregamento
+  const renderSkeletons = () => (
+    <div className="flex flex-col space-y-3" aria-label="Carregando conteúdo" role="status">
+      {[...Array(SKELETON_COUNT)].map((_, index) => (
+        <AuctionCardSkeleton key={index} />
+      ))}
+      <span className="sr-only">Carregando {filters.contentType === 'property' ? 'imóveis' : 'leilões'}</span>
+    </div>
+  );
+
   // Mostrar esqueleto durante o carregamento inicial
   if (loading && !isChangingPage) {
-    return (
-      <div className="flex flex-col space-y-3">
-        {[...Array(6)].map((_, index) => (
-          <AuctionCardSkeleton key={index} />
-        ))}
-      </div>
-    );
+    return renderSkeletons();
   }
 
   // Mostrar estado vazio quando nenhum item for encontrado
-  if (items.length === 0 && !isChangingPage) {
+  if (items.length === 0 && !loading) {
     return <EmptyStateMessage contentType={filters.contentType} />;
   }
 
@@ -62,59 +67,73 @@ const AuctionList: React.FC = () => {
     <div className="space-y-8">
       <AnimatePresence mode="wait">
         <motion.div
-          key={currentPage}
+          key={`page-${currentPage}`}
           initial={isChangingPage ? { opacity: 0, y: 20 } : false}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
           className="flex flex-col space-y-3"
+          aria-live="polite"
         >
-          {items.map((item) => {
-            if (!item) {
-              console.error('Null item found in items array');
-              return null;
-            }
-            
-            // Determinar qual componente de card usar com base no tipo de conteúdo
-            if (filters.contentType === 'property') {
-              // Type guard para garantir que este é um PropertyItem com os campos necessários
-              const property = item as PropertyItem;
-              
-              return (
-                <motion.div
-                  key={property.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
-                >
-                  <PropertyCard property={property} />
-                </motion.div>
-              );
-            } else {
-              // Para leilões de veículos, usar o AuctionCard existente
-              const auction = item as AuctionItem;
-              
-              return (
-                <motion.div
-                  key={auction.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
-                >
-                  <AuctionCard auction={auction} />
-                </motion.div>
-              );
-            }
-          })}
+          {/* Mostrar skeletons durante a mudança de página */}
+          {isChangingPage && renderSkeletons()}
+          
+          {/* Mostrar a lista de itens */}
+          {!isChangingPage && (
+            <>
+              <div className="sr-only" role="status">
+                {items.length} {filters.contentType === 'property' ? 'imóveis' : 'leilões'} encontrados
+              </div>
+              {items.map((item) => {
+                if (!item) {
+                  console.error('Null item found in items array');
+                  return null;
+                }
+                
+                // Determinar qual componente de card usar com base no tipo de conteúdo
+                if (filters.contentType === 'property') {
+                  // Type guard para garantir que este é um PropertyItem com os campos necessários
+                  const property = item as PropertyItem;
+                  
+                  return (
+                    <motion.div
+                      key={property.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
+                    >
+                      <PropertyCard property={property} />
+                    </motion.div>
+                  );
+                } else {
+                  // Para leilões de veículos, usar o AuctionCard existente
+                  const auction = item as AuctionItem;
+                  
+                  return (
+                    <motion.div
+                      key={auction.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
+                    >
+                      <AuctionCard auction={auction} />
+                    </motion.div>
+                  );
+                }
+              })}
+            </>
+          )}
         </motion.div>
       </AnimatePresence>
       
-      {/* Componente de paginação extraído */}
-      <AuctionPagination 
-        currentPage={currentPage} 
-        totalPages={totalPages} 
-        onPageChange={handlePageChange} 
-      />
+      {/* Componente de paginação extraído - só mostrar quando não estiver carregando */}
+      {!loading && (
+        <AuctionPagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          onPageChange={handlePageChange} 
+        />
+      )}
     </div>
   );
 };

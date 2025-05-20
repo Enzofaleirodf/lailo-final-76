@@ -36,6 +36,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
         onClick={handleToggle}
         aria-expanded={isExpanded}
         aria-controls={id}
+        type="button"
       >
         <h3 className="text-sm font-medium text-brand-900">{title}</h3>
         
@@ -51,11 +52,18 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
       </button>
       
       {/* Content - toggleable on both desktop and mobile for consistency */}
-      {isExpanded && (
-        <div className="p-3" id={id}>
+      <div 
+        className={cn("transition-all duration-300 overflow-hidden", 
+          isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        )}
+        id={id}
+        role="region"
+        aria-labelledby={`heading-${id}`}
+      >
+        <div className="p-3">
           {children}
         </div>
-      )}
+      </div>
     </div>
   );
 };
