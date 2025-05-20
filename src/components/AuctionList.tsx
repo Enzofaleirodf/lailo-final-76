@@ -101,7 +101,7 @@ const AuctionList: React.FC = () => {
               }} transition={{
                 duration: 0.3,
                 delay: Math.random() * 0.2
-              }} className="mt-0">
+              }} className="mt-0 pt-0">
                       <PropertyCard property={property} />
                     </motion.div>;
             } else {
