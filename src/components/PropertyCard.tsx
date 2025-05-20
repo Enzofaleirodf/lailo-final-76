@@ -1,14 +1,17 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Calendar, Building2, MapPin } from 'lucide-react';
+import { Heart, Calendar, MapPin } from 'lucide-react';
 import { PropertyItem } from '@/types/property';
-import { formatCurrency } from '@/utils/auctionUtils';
+import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
+
 interface PropertyCardProps {
   property: PropertyItem;
 }
+
 const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   property
 }) => {
@@ -31,6 +34,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
     const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
     return `${day}/${month}/${yearLastTwoDigits}`;
   };
+
   const discount = calculateDiscount();
   return <motion.div whileHover={{
     y: -4,
@@ -44,7 +48,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
           {/* Top row with property type and area */}
           <div className="flex justify-between items-start gap-2 mb-1 w-full">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
-              {property.propertyInfo.type} • {property.propertyInfo.usefulAreaM2}m²
+              {property.propertyInfo.type} • {formatUsefulArea(property.propertyInfo.usefulAreaM2)}
             </h3>
             <button onClick={() => setFavorited(!favorited)} aria-label={favorited ? "Remove from favorites" : "Add to favorites"} className="flex-shrink-0">
               <Heart size={isMobile ? 16 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
@@ -94,5 +98,6 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       </div>
     </motion.div>;
 });
+
 PropertyCard.displayName = 'PropertyCard';
 export default PropertyCard;

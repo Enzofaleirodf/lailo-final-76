@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { LocationFilter } from '@/types/filters';
+import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 
 const ActiveFilterBadges: React.FC = () => {
   const { filters, updateFilter, resetFilters } = useFilterStore();
@@ -41,6 +41,30 @@ const ActiveFilterBadges: React.FC = () => {
         });
       });
     }
+  }
+  
+  // Property type badge - only if not default
+  if (filters.propertyType && filters.propertyType !== 'Todos') {
+    badges.push({
+      key: 'propertyType',
+      label: `Tipo de imóvel: ${filters.propertyType}`,
+      onRemove: () => updateFilter('propertyType', 'Todos')
+    });
+  }
+  
+  // Useful area range badge - only if values are set
+  if (filters.usefulArea.min || filters.usefulArea.max) {
+    const minArea = filters.usefulArea.min ? parseInt(filters.usefulArea.min) : null;
+    const maxArea = filters.usefulArea.max ? parseInt(filters.usefulArea.max) : null;
+    
+    const minLabel = minArea !== null ? formatUsefulArea(minArea) : '-';
+    const maxLabel = maxArea !== null ? formatUsefulArea(maxArea) : '-';
+    
+    badges.push({
+      key: 'usefulArea',
+      label: `Área: ${minLabel} a ${maxLabel}`,
+      onRemove: () => updateFilter('usefulArea', { min: '', max: '' })
+    });
   }
   
   // Brand badge - only if not the default value
@@ -81,9 +105,15 @@ const ActiveFilterBadges: React.FC = () => {
   
   // Price range badge - only if values are set
   if (filters.price.range.min || filters.price.range.max) {
+    const minPrice = filters.price.range.min ? parseInt(filters.price.range.min) : null;
+    const maxPrice = filters.price.range.max ? parseInt(filters.price.range.max) : null;
+    
+    const minLabel = minPrice !== null ? formatCurrency(minPrice) : '-';
+    const maxLabel = maxPrice !== null ? formatCurrency(maxPrice) : '-';
+    
     badges.push({
       key: 'price',
-      label: `Preço: ${filters.price.range.min || '-'} a ${filters.price.range.max || '-'}`,
+      label: `Preço: ${minLabel} a ${maxLabel}`,
       onRemove: () => updateFilter('price', { 
         value: filters.price.value,
         range: { min: '', max: '' }

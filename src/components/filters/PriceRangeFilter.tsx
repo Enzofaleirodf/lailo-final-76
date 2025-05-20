@@ -121,6 +121,15 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     ? value 
     : [value[0] || 0, value[0] === 100 ? 100 : (value[0] || 0) + 50];
 
+  // Format min and max placeholders
+  const formatMinPlaceholder = () => {
+    return formatCurrency(minPrice).replace('R$', '');
+  };
+  
+  const formatMaxPlaceholder = () => {
+    return formatCurrency(maxPrice).replace('R$', '');
+  };
+
   return (
     <div className="space-y-4">
       <div className="mb-4">
@@ -144,8 +153,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
           maxValue={range.max}
           onMinChange={handleMinChange}
           onMaxChange={handleMaxChange}
-          minPlaceholder={formatCurrency(minPrice).replace('R$', '')}
-          maxPlaceholder={formatCurrency(maxPrice).replace('R$', '')}
+          minPlaceholder={formatMinPlaceholder()}
+          maxPlaceholder={formatMaxPlaceholder()}
           ariaLabelMin="Valor mínimo do lance"
           ariaLabelMax="Valor máximo do lance"
         />

@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { formatUsefulArea } from '@/utils/auctionUtils';
 
 interface UsefulAreaFilterProps {
   onFilterChange?: () => void;
@@ -31,6 +32,14 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
       onFilterChange();
     }
   }, [filters.usefulArea, updateFilter, onFilterChange]);
+
+  // Format the placeholder with the correct notation
+  const formatPlaceholder = (value: string, isMin: boolean) => {
+    if (!value) return isMin ? "Min m²" : "Max m²";
+    const numValue = parseInt(value, 10);
+    if (isNaN(numValue)) return isMin ? "Min m²" : "Max m²";
+    return formatUsefulArea(numValue).replace('m²', '') + ' m²';
+  };
 
   return (
     <div className="space-y-3">
