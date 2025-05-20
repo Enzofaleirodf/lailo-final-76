@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { SlidersHorizontal, ArrowUpDown, Building2, Car } from 'lucide-react';
+import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useUIStore } from '@/stores/useUIStore';
@@ -31,7 +32,6 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
         </button>
         <div className="w-[1px] bg-gray-200"></div>
         <button onClick={onFilterClick} className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 transition-colors relative" aria-label="Abrir filtros">
-          <SlidersHorizontal size={16} className="shrink-0 text-brand-500" />
           <span>Filtrar</span>
           {activeFilters > 0 && <span className="absolute top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white">
               {activeFilters}
@@ -39,7 +39,6 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
         </button>
         <div className="w-[1px] bg-gray-200"></div>
         <button onClick={onSortClick} className="flex-1 h-10 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 transition-colors" aria-label="Ordenar resultados">
-          <ArrowUpDown size={16} className="shrink-0 text-brand-500" />
           <span>Ordenar</span>
         </button>
       </div>
