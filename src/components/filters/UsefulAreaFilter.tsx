@@ -68,8 +68,8 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
         maxValue={filters.usefulArea.max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder="Min m²"
-        maxPlaceholder="Max m²"
+        minPlaceholder="Min"
+        maxPlaceholder="Max"
         ariaLabelMin="Área útil mínima"
         ariaLabelMax="Área útil máxima"
         allowDecimals={true} // Allow decimals for area measurements

@@ -72,7 +72,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     if (isNaN(numValue)) return value;
     
     // Format with R$ prefix and thousands separator
-    return formatCurrency(numValue).replace('R$', 'R$');
+    return formatCurrency(numValue);
   };
 
   return (
@@ -82,8 +82,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         maxValue={range.max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder="R$ Min"
-        maxPlaceholder="R$ Max"
+        minPlaceholder="Min"
+        maxPlaceholder="Max"
         ariaLabelMin="Preço mínimo"
         ariaLabelMax="Preço máximo"
         allowDecimals={true} 
