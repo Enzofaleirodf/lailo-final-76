@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
 import { useRangeDisplayFormat } from '@/hooks/useRangeDisplayFormat';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface FilterRangeInputProps {
   minValue: string;
@@ -21,6 +22,9 @@ interface FilterRangeInputProps {
   maxAllowed?: number;
   inputPrefix?: string;
   inputSuffix?: string;
+  isFilterActive?: boolean;
+  defaultMin?: string;
+  defaultMax?: string;
 }
 
 const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
@@ -38,7 +42,10 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   minAllowed,
   maxAllowed,
   inputPrefix,
-  inputSuffix
+  inputSuffix,
+  isFilterActive = false,
+  defaultMin,
+  defaultMax
 }) => {
   // Usar o novo hook de formatação
   const { formatDisplayValue } = useRangeDisplayFormat({ allowDecimals });
@@ -73,7 +80,8 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             placeholder={inputPrefix ? `${inputPrefix} ${minPlaceholder}` : minPlaceholder} 
             className={cn(
               "h-10 text-sm",
-              minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+              minError ? "border-red-300 focus:ring-red-500" : 
+              isFilterActive ? "border-brand-300 focus:ring-brand-500" : "border-gray-300 focus:ring-brand-500"
             )}
             value={formatDisplayValue(minValue)}
             onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
@@ -84,9 +92,9 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             inputMode="numeric"
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
-          {inputSuffix && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+          {inputPrefix && (
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputPrefix}</span>
             </div>
           )}
         </div>
@@ -97,7 +105,8 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             placeholder={inputPrefix ? `${inputPrefix} ${maxPlaceholder}` : maxPlaceholder}
             className={cn(
               "h-10 text-sm",
-              maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+              maxError ? "border-red-300 focus:ring-red-500" : 
+              isFilterActive ? "border-brand-300 focus:ring-brand-500" : "border-gray-300 focus:ring-brand-500"
             )}
             value={formatDisplayValue(maxValue)}
             onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
@@ -108,12 +117,22 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             inputMode="numeric"
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
-          {inputSuffix && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+          {inputPrefix && (
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputPrefix}</span>
             </div>
           )}
         </div>
+
+        {isFilterActive && (
+          <Badge 
+            variant="outline" 
+            className="bg-brand-50 text-brand-700 border-brand-200 h-10 flex items-center"
+            aria-label="Filtro ativo"
+          >
+            Ativo
+          </Badge>
+        )}
       </div>
       
       {/* Error messages with proper aria attributes */}
@@ -129,6 +148,17 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
               {maxError}
             </p>
           )}
+        </div>
+      )}
+
+      {/* Indicador visual de range ativo */}
+      {isFilterActive && defaultMin && defaultMax && (
+        <div className="text-xs text-brand-600 mt-1">
+          <p>
+            {minValue !== defaultMin || maxValue !== defaultMax ? 
+              "Filtro personalizado aplicado" : 
+              "Mostrando todos os itens"}
+          </p>
         </div>
       )}
     </div>

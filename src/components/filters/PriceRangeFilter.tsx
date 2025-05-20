@@ -1,9 +1,8 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import { formatCurrency } from '@/utils/auctionUtils';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
@@ -11,11 +10,14 @@ interface PriceRangeFilterProps {
 
 /**
  * Componente de filtro de intervalo de preços
- * Agora usando o hook de consistência para comportamento padronizado
+ * Implementa as regras para considerar o filtro como ativo apenas quando
+ * os valores estão diferentes dos limites padrão do banco de dados
  */
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { range } = filters.price;
+  const [defaultRange, setDefaultRange] = useState<{min: string, max: string}>({min: '', max: ''});
+  const [isFilterActive, setIsFilterActive] = useState(false);
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -29,6 +31,12 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     const minValueFromDatabase = "10000"; // R$ 10.000
     const maxValueFromDatabase = "1000000"; // R$ 1.000.000
     
+    // Armazenar os valores padrão para comparação posterior
+    setDefaultRange({
+      min: minValueFromDatabase,
+      max: maxValueFromDatabase
+    });
+    
     // Atualizar os valores no store apenas se estiverem vazios
     if (!range.min && !range.max) {
       updateFilter('price', {
@@ -38,7 +46,17 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
           max: maxValueFromDatabase
         }
       });
+    } else {
+      // Se já existirem valores, verificar se são diferentes dos padrão
+      checkIfFilterActive(range.min, range.max, minValueFromDatabase, maxValueFromDatabase);
     }
+  }, []);
+
+  // Verificar se o filtro está ativo (valores diferentes dos padrão)
+  const checkIfFilterActive = useCallback((min: string, max: string, defaultMin: string, defaultMax: string) => {
+    const isActive = min !== defaultMin || max !== defaultMax;
+    setIsFilterActive(isActive);
+    return isActive;
   }, []);
 
   const handleMinChange = useCallback((value: string) => {
@@ -50,8 +68,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       }
     });
     
-    handleFilterChange();
-  }, [filters.price, range, updateFilter, handleFilterChange]);
+    // Verificar se o filtro está ativo após a mudança
+    const isActive = checkIfFilterActive(value, range.max, defaultRange.min, defaultRange.max);
+    
+    // Se o filtro estiver ativo ou acabou de ser desativado, notificar mudança
+    if (isActive || isFilterActive) {
+      handleFilterChange();
+    }
+  }, [filters.price, range, updateFilter, handleFilterChange, defaultRange, checkIfFilterActive, isFilterActive]);
 
   const handleMaxChange = useCallback((value: string) => {
     updateFilter('price', {
@@ -62,8 +86,14 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       }
     });
     
-    handleFilterChange();
-  }, [filters.price, range, updateFilter, handleFilterChange]);
+    // Verificar se o filtro está ativo após a mudança
+    const isActive = checkIfFilterActive(range.min, value, defaultRange.min, defaultRange.max);
+    
+    // Se o filtro estiver ativo ou acabou de ser desativado, notificar mudança
+    if (isActive || isFilterActive) {
+      handleFilterChange();
+    }
+  }, [filters.price, range, updateFilter, handleFilterChange, defaultRange, checkIfFilterActive, isFilterActive]);
 
   return (
     <div className="space-y-3">
@@ -79,6 +109,9 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         allowDecimals={true} 
         minAllowed={0}
         inputPrefix="R$"
+        isFilterActive={isFilterActive}
+        defaultMin={defaultRange.min}
+        defaultMax={defaultRange.max}
       />
     </div>
   );
