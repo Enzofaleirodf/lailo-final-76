@@ -29,10 +29,11 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   };
   
   return (
-    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-accent2-500">
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
       {/* Title section - clickable for both desktop and mobile for consistent interaction */}
       <button 
-        className="w-full flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-3 cursor-pointer"
+        className="w-full flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-3 cursor-pointer
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
         onClick={handleToggle}
         aria-expanded={isExpanded}
         aria-controls={id}

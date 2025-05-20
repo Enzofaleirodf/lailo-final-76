@@ -37,11 +37,11 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   const getButtonStyle = () => {
     switch (variant) {
       case 'outline':
-        return 'bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-700 text-gray-700 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1';
+        return 'bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-700 text-gray-700';
       case 'secondary':
-        return 'bg-gray-100 border-gray-200 hover:bg-gray-200 text-gray-800 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-1';
+        return 'bg-gray-100 border-gray-200 hover:bg-gray-200 text-gray-800';
       default:
-        return 'bg-brand-600 hover:bg-brand-700 text-white focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-white';
+        return 'bg-brand-600 hover:bg-brand-700 text-white';
     }
   };
   
@@ -54,7 +54,7 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   
   return (
     <Button 
-      className={`h-10 ${getButtonStyle()} ${className}`}
+      className={`h-10 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ${getButtonStyle()} ${className}`}
       onClick={handleClick}
       aria-label={ariaLabel}
       data-testid="apply-filters-button"

@@ -40,7 +40,7 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
         placeholder={placeholder}
         className={cn(
           "h-10 text-sm",
-          error ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+          error ? "border-red-300 focus-visible:ring-red-500" : "border-gray-300 focus-visible:ring-brand-500"
         )}
         value={value}
         onChange={onChange}

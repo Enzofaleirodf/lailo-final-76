@@ -33,7 +33,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
         onClick={onFilterClick} 
         onKeyDown={(e) => handleKeyDown(e, onFilterClick)}
         className={cn(
-          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-colors relative",
+          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors relative",
           getButtonSizeClass()
         )}
         aria-label={`Abrir filtros${activeFilters > 0 ? ` (${activeFilters} ativos)` : ''}`}
@@ -57,7 +58,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
         onClick={onSortClick} 
         onKeyDown={(e) => handleKeyDown(e, onSortClick)}
         className={cn(
-          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-colors",
+          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors",
           getButtonSizeClass()
         )}
         aria-label="Ordenar resultados"

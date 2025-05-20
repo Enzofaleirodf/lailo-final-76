@@ -5,7 +5,6 @@ import { useFilterStore } from '@/stores/useFilterStore';
 
 interface FilterWrapperProps {
   children: ReactNode;
-  showFocusRing?: boolean;
 }
 
 /**
@@ -13,8 +12,7 @@ interface FilterWrapperProps {
  * between desktop and mobile views while preventing scroll jumps
  */
 const FilterWrapper: React.FC<FilterWrapperProps> = ({ 
-  children, 
-  showFocusRing = true 
+  children
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -78,8 +76,7 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({
   return (
     <div 
       ref={wrapperRef} 
-      className={`filter-wrapper ${showFocusRing ? 
-        'focus-within:ring-2 focus-within:ring-brand-400 focus-within:ring-opacity-75' : ''}`}
+      className="filter-wrapper"
       data-filter-interaction-zone="true"
       data-view-mode={isMobile ? 'mobile' : 'desktop'}
       role="group"
