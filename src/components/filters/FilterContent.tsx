@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
@@ -8,6 +8,7 @@ import FilterWrapper from './FilterWrapper';
 import { useToast } from '@/hooks/use-toast';
 import { CommonFilters, ContentTypeFilters } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
 
 /**
  * FilterContent - Main component that renders all filter sections
@@ -41,9 +42,7 @@ const FilterContent: React.FC = () => {
         return;
       }
       
-      // Import filter name and description utils
-      const { getFilterName, getFilterDescription } = require('@/utils/filterUtils');
-      
+      // Use previously imported filter utilities
       filterName = getFilterName(lastUpdatedFilter as keyof typeof filters);
       filterValue = getFilterDescription(lastUpdatedFilter as keyof typeof filters, 
         filters[lastUpdatedFilter as keyof typeof filters]);
