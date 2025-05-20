@@ -8,7 +8,7 @@ export const formatPrice = (price: number): string => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
     useGrouping: true,
-  }).replace(',', '')}`;
+  })}`;
 };
 
 // Add alias for formatCurrency to maintain compatibility
@@ -24,7 +24,7 @@ export const formatUsefulArea = (area: number): string => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
     useGrouping: true,
-  }).replace(',', '')}m²`;
+  })}m²`;
 };
 
 export const formatDate = (dateString: string): string => {
