@@ -17,6 +17,11 @@ const colorOptions = [
   { value: 'vermelho', label: 'Vermelho' }
 ];
 
+/**
+ * Componente de filtro de cor
+ * Permite ao usuário selecionar cores para filtragem
+ * Mantém consistência visual e comportamental entre desktop e mobile
+ */
 const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
@@ -33,7 +38,11 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
   }, [updateFilter, onFilterChange]);
 
   return (
-    <div role="group" aria-label="Filtro de cor">
+    <div 
+      role="group" 
+      aria-labelledby="color-filter-label"
+    >
+      <div id="color-filter-label" className="sr-only">Filtro de cor</div>
       <FilterDropdown
         id="color-filter"
         aria-label="Selecione a cor"
