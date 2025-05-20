@@ -27,6 +27,7 @@ describe('FilterContent', () => {
   const mockResetFilters = jest.fn();
   const mockDispatchEvent = jest.fn();
   const mockCleanup = jest.fn();
+  const mockHandleFilterChange = jest.fn();
   
   beforeEach(() => {
     jest.clearAllMocks();
@@ -60,8 +61,9 @@ describe('FilterContent', () => {
       expandAllSections: jest.fn()
     });
     
-    // Mock filter consistency hook
+    // Mock filter consistency hook - now including handleFilterChange
     mockUseFilterConsistency.mockReturnValue({
+      handleFilterChange: mockHandleFilterChange,
       cleanup: mockCleanup
     });
   });

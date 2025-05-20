@@ -3,6 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useFilterConsistency } from '../useFilterConsistency';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useToast } from '@/hooks/use-toast';
+import { FilterState } from '@/types/filters';
 
 // Mock dependencies
 jest.mock('@/stores/useFilterStore');
@@ -11,6 +12,13 @@ jest.mock('@/utils/filterUtils', () => ({
   getFilterName: jest.fn().mockReturnValue('Teste'),
   getFilterDescription: jest.fn().mockReturnValue('Descrição do filtro'),
 }));
+
+// Create types for the mocked stores
+type MockedFilterStore = {
+  filters: Partial<FilterState>;
+  lastUpdatedFilter?: string | null;
+  updateFilter?: jest.Mock;
+};
 
 describe('useFilterConsistency', () => {
   // Setup default mocks
@@ -23,7 +31,9 @@ describe('useFilterConsistency', () => {
     
     // Mock return values
     (useToast as jest.Mock).mockReturnValue({ toast: mockToast });
-    (useFilterStore as jest.Mock).mockReturnValue({
+    
+    // Use "as unknown as jest.Mock" to safely cast to a mock function
+    (useFilterStore as unknown as jest.Mock).mockReturnValue({
       filters: { test: 'value' },
       lastUpdatedFilter: 'test',
       updateFilter: mockUpdateFilter,
@@ -101,7 +111,7 @@ describe('useFilterConsistency', () => {
   
   it('should show reset notification when lastUpdatedFilter is reset', () => {
     // Override lastUpdatedFilter to be 'reset'
-    (useFilterStore as jest.Mock).mockReturnValue({
+    (useFilterStore as unknown as jest.Mock).mockReturnValue({
       filters: {},
       lastUpdatedFilter: 'reset',
     });
@@ -117,7 +127,7 @@ describe('useFilterConsistency', () => {
   
   it('should not show toast for bulk updates', () => {
     // Override lastUpdatedFilter to be 'bulk'
-    (useFilterStore as jest.Mock).mockReturnValue({
+    (useFilterStore as unknown as jest.Mock).mockReturnValue({
       filters: {},
       lastUpdatedFilter: 'bulk',
     });
