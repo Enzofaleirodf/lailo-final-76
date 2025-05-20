@@ -6,28 +6,41 @@ import FilterApplyButton from '../FilterApplyButton';
 import * as filterStoreModule from '@/stores/useFilterStore';
 import * as mobileHookModule from '@/hooks/use-mobile';
 
-// Mock das dependências
+// Mock the dependencies
 jest.mock('@/stores/useFilterStore');
 jest.mock('@/hooks/use-mobile');
 
+// Properly type the mock for TypeScript
+const mockUseFilterStore = filterStoreModule.useFilterStore as jest.MockedFunction<typeof filterStoreModule.useFilterStore>;
+const mockUseIsMobile = mobileHookModule.useIsMobile as jest.MockedFunction<typeof mobileHookModule.useIsMobile>;
+
 describe('FilterApplyButton', () => {
-  // Mock para o evento dispatch
+  // Mock for the event dispatch
   const mockDispatchEvent = jest.fn();
   window.dispatchEvent = mockDispatchEvent;
   
-  // Mock para onApply callback
+  // Mock for onApply callback
   const mockOnApply = jest.fn();
   
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Mock padrão para o store
-    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue({
-      activeFilters: 0
+    // Set default mock return values with proper typing
+    mockUseFilterStore.mockReturnValue({
+      activeFilters: 0,
+      filters: {} as any,
+      expandedSections: {} as any,
+      lastUpdatedFilter: null,
+      updateFilter: jest.fn(),
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
     });
     
-    // Mock padrão para hook de mobile (desktop)
-    (mobileHookModule.useIsMobile as jest.Mock).mockReturnValue(false);
+    // Default mock for mobile hook (desktop)
+    mockUseIsMobile.mockReturnValue(false);
   });
   
   test('renderiza corretamente na versão desktop', () => {
@@ -39,7 +52,7 @@ describe('FilterApplyButton', () => {
   
   test('renderiza corretamente na versão mobile', () => {
     // Alterar para modo mobile
-    (mobileHookModule.useIsMobile as jest.Mock).mockReturnValue(true);
+    mockUseIsMobile.mockReturnValue(true);
     
     render(<FilterApplyButton onApply={mockOnApply} />);
     
@@ -49,8 +62,17 @@ describe('FilterApplyButton', () => {
   
   test('exibe contador de filtros ativos', () => {
     // Configurar mock para ter filtros ativos
-    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue({
-      activeFilters: 3
+    mockUseFilterStore.mockReturnValue({
+      activeFilters: 3,
+      filters: {} as any,
+      expandedSections: {} as any,
+      lastUpdatedFilter: null,
+      updateFilter: jest.fn(),
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
     });
     
     render(<FilterApplyButton onApply={mockOnApply} />);
