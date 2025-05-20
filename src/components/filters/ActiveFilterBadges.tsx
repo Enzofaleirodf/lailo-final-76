@@ -43,13 +43,23 @@ const ActiveFilterBadges: React.FC = () => {
     }
   }
   
-  // Property type badge - only if not default
-  if (filters.propertyType && filters.propertyType !== 'Todos') {
-    badges.push({
-      key: 'propertyType',
-      label: `Tipo de imóvel: ${filters.propertyType}`,
-      onRemove: () => updateFilter('propertyType', 'Todos')
-    });
+  // Property type badges - don't show if it's "todos" or empty
+  if (filters.propertyTypes.length > 0) {
+    // Skip the "todos" option if present
+    const nonDefaultTypes = filters.propertyTypes.filter(type => type !== 'todos');
+    
+    if (nonDefaultTypes.length > 0) {
+      nonDefaultTypes.forEach(type => {
+        badges.push({
+          key: `property-${type}`,
+          label: `Tipo de imóvel: ${type}`,
+          onRemove: () => {
+            const updatedTypes = filters.propertyTypes.filter(t => t !== type);
+            updateFilter('propertyTypes', updatedTypes);
+          }
+        });
+      });
+    }
   }
   
   // Useful area range badge - only if values are set
