@@ -5,7 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
 import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
-import { CommonFilters, ContentTypeFilters } from './sections/FilterSections';
+import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 
 /**
@@ -15,7 +15,8 @@ import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 const FilterContent: React.FC = () => {
   const {
     resetFilters,
-    activeFilters
+    activeFilters,
+    expandAllSections
   } = useFilterStore();
   
   const isMobile = useIsMobile();
@@ -29,6 +30,11 @@ const FilterContent: React.FC = () => {
     showToasts: true,
     autoTriggerEvents: false // Não acionar eventos automaticamente, pois já fazemos isso manualmente
   });
+
+  // Expandir todas as seções por padrão
+  React.useEffect(() => {
+    expandAllSections();
+  }, [expandAllSections]);
 
   // Resetar filtros e notificar - comportamento consistente entre dispositivos
   const handleResetFilters = React.useCallback(() => {
@@ -55,11 +61,14 @@ const FilterContent: React.FC = () => {
       {isMobile && <MobileFilterOptions />}
 
       <FilterWrapper>
-        {/* Filtros comuns - sempre mostrados para ambos os tipos de conteúdo */}
-        <CommonFilters onFilterChange={() => {}} /> {/* Hook de consistência já trata as mudanças */}
+        {/* Filtros comuns - localização */}
+        <CommonFilters onFilterChange={() => {}} />
 
         {/* Filtros condicionais com base no tipo de conteúdo */}
-        <ContentTypeFilters onFilterChange={() => {}} /> {/* Hook de consistência já trata as mudanças */}
+        <ContentTypeFilters onFilterChange={() => {}} />
+        
+        {/* Filtro de preço sempre mostrado por último */}
+        <PriceFilter onFilterChange={() => {}} />
       </FilterWrapper>
 
       {/* Botão de resetar filtros - mesma aparência visual para desktop e mobile */}

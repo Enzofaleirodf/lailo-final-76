@@ -85,7 +85,8 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
  * CommonFilters - Renders filter sections common to all content types
  */
 export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { expandedSections, toggleSection } = useFilterStore();
+  const { expandedSections, toggleSection, filters } = useFilterStore();
+  const isPropertyMode = filters.contentType === 'property';
   
   return (
     <>
@@ -96,14 +97,24 @@ export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange })
       >
         <LocationFilter onFilterChange={onFilterChange} />
       </FilterSectionComponent>
-
-      <FilterSectionComponent 
-        title="Valor do lance" 
-        isExpanded={expandedSections.price} 
-        onToggle={() => toggleSection('price')}
-      >
-        <PriceRangeFilter onFilterChange={onFilterChange} />
-      </FilterSectionComponent>
     </>
+  );
+};
+
+/**
+ * PriceFilter - Renders the price filter section separately to position it at the end
+ * This ensures it appears as the last filter in both property and vehicle modes
+ */
+export const PriceFilter: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
+  const { expandedSections, toggleSection } = useFilterStore();
+  
+  return (
+    <FilterSectionComponent 
+      title="Valor do lance atual" 
+      isExpanded={expandedSections.price} 
+      onToggle={() => toggleSection('price')}
+    >
+      <PriceRangeFilter onFilterChange={onFilterChange} />
+    </FilterSectionComponent>
   );
 };
