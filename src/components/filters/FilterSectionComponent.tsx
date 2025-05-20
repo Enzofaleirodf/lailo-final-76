@@ -48,6 +48,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
             isExpanded ? "transform rotate-180" : ""
           )} 
           aria-hidden="true"
+          data-testid="chevron-icon"
         />
       </button>
       

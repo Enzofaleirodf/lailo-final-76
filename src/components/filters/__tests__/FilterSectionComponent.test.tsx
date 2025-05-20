@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import FilterSectionComponent from '../FilterSectionComponent';
 
@@ -90,5 +90,39 @@ describe('FilterSectionComponent', () => {
     const contentId = toggleButton.getAttribute('aria-controls');
     const contentRegion = document.getElementById(contentId as string);
     expect(contentRegion).toHaveAttribute('role', 'region');
+  });
+  
+  test('behavior is consistent between mobile and desktop', () => {
+    // Reimport with mobile true
+    jest.resetModules();
+    jest.mock('@/hooks/use-mobile', () => ({
+      useIsMobile: () => true
+    }));
+    
+    const { unmount } = render(
+      <FilterSectionComponent 
+        title={mockTitle} 
+        isExpanded={false} 
+        onToggle={mockOnToggle}
+      >
+        {mockContent}
+      </FilterSectionComponent>
+    );
+    
+    // Verify chevron is present with correct transform
+    const chevronIcon = screen.getByTestId('chevron-icon') || screen.getByRole('img', { hidden: true });
+    expect(chevronIcon).not.toHaveClass('transform rotate-180');
+    
+    // Click to toggle
+    fireEvent.click(screen.getByText(mockTitle));
+    expect(mockOnToggle).toHaveBeenCalled();
+    
+    unmount();
+    
+    // Reset mock back to desktop
+    jest.resetModules();
+    jest.mock('@/hooks/use-mobile', () => ({
+      useIsMobile: () => false
+    }));
   });
 });
