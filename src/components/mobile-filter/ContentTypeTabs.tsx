@@ -88,14 +88,14 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
     <div 
       role="tablist" 
       aria-label="Tipo de conteúdo" 
-      className="flex"
+      className="flex flex-1"
     >
       <button 
         onClick={() => handleTabChange('property')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
         className={cn(
           getButtonSizeClass(),
-          "flex items-center justify-center text-sm font-medium transition-colors",
+          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
           filters.contentType === 'property' 
             ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
             : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
@@ -112,7 +112,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('vehicle'))}
         className={cn(
           getButtonSizeClass(),
-          "flex items-center justify-center text-sm font-medium transition-colors",
+          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
           filters.contentType === 'vehicle' 
             ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
             : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
