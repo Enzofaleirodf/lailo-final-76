@@ -22,11 +22,13 @@ const queryClient = new QueryClient({
 const mockDispatchEvent = jest.fn();
 window.dispatchEvent = mockDispatchEvent;
 
-// Mock do useFilterStore
-const mockUseFilterStore = (filterStoreModule.useFilterStore as jest.Mock);
+// Properly mock the stores with jest.fn()
+jest.mock('@/stores/useFilterStore');
+jest.mock('@/stores/useUIStore');
 
-// Mock do useUIStore
-const mockUseUIStore = (uiStoreModule.useUIStore as jest.Mock);
+// Get the mocked stores with proper typing
+const mockUseFilterStore = filterStoreModule.useFilterStore as jest.MockedFunction<typeof filterStoreModule.useFilterStore>;
+const mockUseUIStore = uiStoreModule.useUIStore as jest.MockedFunction<typeof uiStoreModule.useUIStore>;
 
 // Mock dos hooks de acessibilidade
 jest.mock('@/hooks/use-mobile', () => ({
@@ -78,6 +80,8 @@ describe('Integração de Filtros', () => {
     sortOpen: false,
     setFiltersOpen: jest.fn(),
     setSortOpen: jest.fn(),
+    toggleFilters: jest.fn(),
+    toggleSort: jest.fn()
   };
 
   beforeEach(() => {
