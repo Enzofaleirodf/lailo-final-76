@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, Palette, Hourglass } from 'lucide-react';
@@ -58,7 +59,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
      auction.vehicleInfo.type === 'truck');
   
   return (
-    
     <motion.div 
       whileHover={{
         y: -4,

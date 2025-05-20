@@ -20,6 +20,8 @@ interface AccessibleFilterRangeInputProps {
   minAllowed?: number;
   maxAllowed?: number;
   fieldName?: string;
+  inputPrefix?: string;
+  inputSuffix?: string;
 }
 
 /**
@@ -41,7 +43,9 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
   allowNegative = false,
   minAllowed,
   maxAllowed,
-  fieldName = "valor"
+  fieldName = "valor",
+  inputPrefix,
+  inputSuffix
 }) => {
   // Gerar IDs únicos para acessibilidade
   const uniqueId = useId();
@@ -51,6 +55,21 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
   const descriptionId = `filter-range-description-${uniqueId}`;
   const minErrorId = `min-error-${uniqueId}`;
   const maxErrorId = `max-error-${uniqueId}`;
+  
+  // Format value with thousand separator
+  const formatDisplayValue = (value: string): string => {
+    if (!value) return '';
+    
+    // Parse the value as a number
+    const numValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+    if (isNaN(numValue)) return value;
+    
+    // Format with thousand separator
+    return numValue.toLocaleString('pt-BR', {
+      maximumFractionDigits: allowDecimals ? 2 : 0,
+      useGrouping: true
+    });
+  };
   
   // Use o hook de validação para tratar valores de intervalo
   const {
@@ -169,13 +188,13 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
           <Input 
             type="text" 
             id={minId}
-            placeholder={minPlaceholder} 
+            placeholder={inputPrefix ? `${inputPrefix} ${minPlaceholder}` : minPlaceholder}
             className={cn(
               "h-10 text-sm",
               minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
             )}
-            value={minValue}
-            onChange={(e) => handleMinChange(e.target.value)}
+            value={formatDisplayValue(minValue)}
+            onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             onKeyDown={(e) => handleKeyDown(e, true)}
             aria-label={ariaLabelMin}
             aria-invalid={!!minError}
@@ -184,19 +203,24 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
           <label htmlFor={minId} className="sr-only">{ariaLabelMin}</label>
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+            </div>
+          )}
         </div>
         
         <div className="relative flex-1">
           <Input 
             type="text" 
             id={maxId}
-            placeholder={maxPlaceholder} 
+            placeholder={inputPrefix ? `${inputPrefix} ${maxPlaceholder}` : maxPlaceholder}
             className={cn(
               "h-10 text-sm",
               maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
             )}
-            value={maxValue}
-            onChange={(e) => handleMaxChange(e.target.value)}
+            value={formatDisplayValue(maxValue)}
+            onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             onKeyDown={(e) => handleKeyDown(e, false)}
             aria-label={ariaLabelMax}
             aria-invalid={!!maxError}
@@ -205,6 +229,11 @@ const AccessibleFilterRangeInput: React.FC<AccessibleFilterRangeInputProps> = ({
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
           <label htmlFor={maxId} className="sr-only">{ariaLabelMax}</label>
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+            </div>
+          )}
         </div>
       </div>
       

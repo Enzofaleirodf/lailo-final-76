@@ -72,8 +72,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         maxValue={range.max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder="R$ Min"
-        maxPlaceholder="R$ Max"
+        minPlaceholder="Min"
+        maxPlaceholder="Max"
         ariaLabelMin="Preço mínimo"
         ariaLabelMax="Preço máximo"
         allowDecimals={true} 

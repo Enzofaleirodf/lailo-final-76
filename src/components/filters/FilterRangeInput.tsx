@@ -51,7 +51,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
     return numValue.toLocaleString('pt-BR', {
       maximumFractionDigits: allowDecimals ? 2 : 0,
       useGrouping: true
-    }).replace(',', '');
+    });
   };
 
   // Use o hook de validação para tratar valores de intervalo
@@ -95,6 +95,11 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             inputMode="numeric"
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+            </div>
+          )}
         </div>
         
         <div className="relative flex-1">
