@@ -56,29 +56,48 @@ const BuscadorImoveis = () => {
   
   return (
     <AppLayout>
+      {/* Top filters bar - desktop only */}
       {!isMobile && <TopFilters />}
-      {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
+      
+      {/* Mobile filter bar - mobile only */}
+      {isMobile && (
+        <MobileFilterBar 
+          onFilterClick={handleFilterClick} 
+          onSortClick={handleSortClick} 
+        />
+      )}
       
       <div className="w-full flex flex-col lg:flex-row lg:gap-6">
-        {!isMobile && 
+        {/* Sidebar filter section - desktop only */}
+        {!isMobile && (
           <aside className="shrink-0 w-full lg:w-[448px]">
             <FilterSection />
           </aside>
-        }
+        )}
+        
+        {/* Main content area */}
         <main className="flex-1 min-h-[80vh] w-full mt-4 lg:mt-0">
-          {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
+          {/* Mobile filter drawer - only rendered on mobile */}
+          {isMobile && (
+            <FilterSection 
+              isOpen={filtersOpen} 
+              onOpenChange={setFiltersOpen} 
+            />
+          )}
+          
+          {/* Result header and auction list - shown on both mobile and desktop */}
           <ResultHeader />
           <AuctionList />
         </main>
       </div>
       
-      {/* Sort modal for mobile */}
-      {isMobile && 
+      {/* Sort options modal - mobile only */}
+      {isMobile && (
         <SortOptions 
           open={sortOpen} 
           onOpenChange={setSortOpen} 
         />
-      }
+      )}
     </AppLayout>
   );
 };

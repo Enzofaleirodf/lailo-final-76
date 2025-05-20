@@ -8,8 +8,8 @@ interface FilterWrapperProps {
 }
 
 /**
- * A wrapper component for filter elements that prevents scroll jumps
- * by capturing events and selectively handling them based on context
+ * A wrapper component for filter elements that provides consistent behavior
+ * between desktop and mobile views while preventing scroll jumps
  */
 const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -20,18 +20,18 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
   // For desktop, implement automatic filter application
   useEffect(() => {
     if (!isMobile) {
-      // Armazenar a posição de rolagem antes de enviar o evento
+      // Store scroll position before sending event
       scrollPositionRef.current = window.scrollY;
       
-      // Criar e despachar o evento filters:applied com a posição de rolagem atual
+      // Create and dispatch the filters:applied event with current scroll position
       const event = new CustomEvent('filters:applied', {
         detail: { 
           scrollPosition: scrollPositionRef.current,
-          timestamp: Date.now() // Adicionar timestamp para tornar cada evento único
+          timestamp: Date.now() // Add timestamp to make each event unique
         }
       });
       
-      // Adicionar um atraso pequeno para garantir que a rolagem seja capturada corretamente
+      // Small delay to ensure scroll position is captured correctly
       setTimeout(() => {
         window.dispatchEvent(event);
       }, 10);
@@ -76,6 +76,7 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children }) => {
       ref={wrapperRef} 
       className="filter-wrapper"
       data-filter-interaction-zone="true"
+      data-mobile-view={isMobile ? 'true' : 'false'} /* Add view mode marker for debugging */
     >
       {children}
     </div>

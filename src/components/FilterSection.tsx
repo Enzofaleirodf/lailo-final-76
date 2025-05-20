@@ -64,16 +64,16 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 
   // Create footer content for the drawer (mobile only)
   const footerContent = (
-    <div className="flex gap-3">
+    <div className="flex gap-3 p-4 bg-white border-t border-gray-200">
       <Button 
         variant="outline" 
-        className="flex-1 h-10 bg-white border-gray-300" 
+        className="flex-1 h-10 bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-700" 
         onClick={() => handleOpenChange(false)}
       >
         Cancelar
       </Button>
       <Button 
-        className="flex-1 h-10 bg-brand-600 hover:bg-brand-700" 
+        className="flex-1 h-10 bg-brand-600 hover:bg-brand-700 text-white" 
         onClick={handleApplyFilters}
       >
         Aplicar {activeFilters > 0 ? `(${activeFilters})` : ''}
@@ -114,7 +114,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
             </Button>
           </div>
           
-          <div aria-labelledby="drawer-title" className="bg-gray-50 p-3 flex-1 overflow-y-auto mt-3">
+          <div aria-labelledby="drawer-title" className="bg-gray-50 p-3 flex-1 overflow-y-auto">
             <FilterContent />
           </div>
         </div>

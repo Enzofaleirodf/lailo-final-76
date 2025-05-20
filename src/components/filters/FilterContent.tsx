@@ -42,7 +42,7 @@ const FilterContent: React.FC = () => {
   const handleResetFilters = () => {
     resetFilters();
 
-    // Show toast when filters are reset
+    // Show toast when filters are reset - same behavior on mobile and desktop
     toast({
       title: "Filtros resetados",
       description: "Todos os filtros foram removidos",
@@ -52,9 +52,11 @@ const FilterContent: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-0">
+      {/* Mobile filter type selection - only shown on mobile */}
       {isMobile && <MobileFilterOptions />}
 
       <FilterWrapper>
+        {/* Location filter - always shown for both content types */}
         <FilterSectionComponent 
           title="Localização" 
           isExpanded={expandedSections.location} 
@@ -118,6 +120,7 @@ const FilterContent: React.FC = () => {
           </>
         )}
 
+        {/* Price filter - always shown for both content types */}
         <FilterSectionComponent 
           title="Valor do lance" 
           isExpanded={expandedSections.price} 
@@ -127,6 +130,7 @@ const FilterContent: React.FC = () => {
         </FilterSectionComponent>
       </FilterWrapper>
 
+      {/* Reset filters button - same visual appearance for desktop and mobile */}
       <div className="mt-4 flex flex-col gap-2">
         <Button 
           variant="outline" 
