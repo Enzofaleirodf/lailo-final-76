@@ -1,7 +1,10 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import AuctionCard from '@/components/AuctionCard';
+import PropertyCard from '@/components/PropertyCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
 import { sampleAuctions } from '@/data/sampleAuctions';
+import { sampleProperties } from '@/data/sampleProperties';
 import { sortAuctions, filterAuctions } from '@/utils/auctionUtils';
 import { toast } from '@/components/ui/sonner';
 import { useSearchParams } from 'react-router-dom';
@@ -9,6 +12,8 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
+import { AuctionItem } from '@/types/auction';
+import { PropertyItem } from '@/types/property';
 
 const ITEMS_PER_PAGE = 30;
 
@@ -16,43 +21,109 @@ const AuctionList: React.FC = () => {
   const { filters } = useFilterStore();
   const { sortOption } = useSortStore();
   const [loading, setLoading] = useState(true);
-  const [auctions, setAuctions] = useState([]);
+  const [items, setItems] = useState<AuctionItem[] | PropertyItem[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(ITEMS_PER_PAGE);
   const [isChangingPage, setIsChangingPage] = useState(false);
   
-  // Ref para controlar se estamos mudando de página (para evitar rolagem)
+  // Reference to track page changes
   const isPageChangeRef = useRef(false);
   
   // Use callback to prevent recreation on each render
-  const fetchAuctions = useCallback(async () => {
+  const fetchItems = useCallback(async () => {
     try {
       setIsChangingPage(true);
       
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // In a real app, this would be an API call with pagination
-      const filteredAuctions = filterAuctions(sampleAuctions, filters);
-      const sortedAuctions = sortAuctions(filteredAuctions, sortOption);
+      const contentType = filters.contentType;
+      let filteredItems = [];
+      
+      if (contentType === 'property') {
+        // For properties, we'll filter the sample properties data
+        // In a real app, this would use more sophisticated filtering
+        filteredItems = sampleProperties.filter(property => {
+          // Basic filtering for properties (can be expanded)
+          let matches = true;
+          
+          // Apply price filter if set
+          if (filters.price.range.min) {
+            matches = matches && property.currentBid >= parseInt(filters.price.range.min);
+          }
+          if (filters.price.range.max) {
+            matches = matches && property.currentBid <= parseInt(filters.price.range.max);
+          }
+          
+          // Apply property type filter if set
+          if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
+            matches = matches && filters.propertyTypes.includes(property.propertyInfo.type);
+          }
+          
+          // Apply useful area filter if set
+          if (filters.usefulArea.min) {
+            matches = matches && property.propertyInfo.usefulAreaM2 >= parseInt(filters.usefulArea.min);
+          }
+          if (filters.usefulArea.max) {
+            matches = matches && property.propertyInfo.usefulAreaM2 <= parseInt(filters.usefulArea.max);
+          }
+          
+          // Apply format filter if needed
+          if (filters.format !== 'Todos') {
+            matches = matches && property.format === filters.format;
+          }
+          
+          // Apply origin filter if needed
+          if (filters.origin !== 'Todas') {
+            matches = matches && property.origin === filters.origin;
+          }
+          
+          // Apply place filter if needed
+          if (filters.place !== 'Todas') {
+            matches = matches && property.place === filters.place;
+          }
+          
+          return matches;
+        });
+        
+        // Sort properties (very basic for now)
+        if (sortOption === 'price-asc') {
+          filteredItems.sort((a, b) => a.currentBid - b.currentBid);
+        } else if (sortOption === 'price-desc') {
+          filteredItems.sort((a, b) => b.currentBid - a.currentBid);
+        } else if (sortOption === 'newest') {
+          filteredItems.sort((a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime());
+        } else {
+          // Default sorting (oldest first)
+          filteredItems.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+        }
+      } else {
+        // For vehicles, use the existing filter and sort logic
+        filteredItems = filterAuctions(sampleAuctions, filters);
+        filteredItems = sortAuctions(filteredItems, sortOption);
+      }
       
       // Calculate total pages
-      const total = Math.ceil(sortedAuctions.length / itemsPerPage);
+      const total = Math.ceil(filteredItems.length / itemsPerPage);
       setTotalPages(total > 0 ? total : 1);
       
       // Apply pagination
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
-      const paginatedAuctions = sortedAuctions.slice(start, end);
+      const paginatedItems = filteredItems.slice(start, end);
       
-      setAuctions(paginatedAuctions);
+      setItems(paginatedItems);
       setLoading(false);
       setTimeout(() => setIsChangingPage(false), 300); // Small delay for smoother animation
     } catch (error) {
-      console.error('Error processing auctions:', error);
-      toast.error('Ocorreu um erro ao carregar os leilões');
+      console.error('Error processing items:', error);
+      
+      // Show appropriate error message based on content type
+      const contentTypeLabel = filters.contentType === 'property' ? 'imóveis' : 'leilões';
+      toast.error(`Ocorreu um erro ao carregar os ${contentTypeLabel}`);
+      
       setLoading(false);
       setIsChangingPage(false);
     }
@@ -67,37 +138,35 @@ const AuctionList: React.FC = () => {
     }
   }, [totalPages, currentPage, searchParams, setSearchParams]);
 
-  // Modificar o efeito para rolar para o topo apenas com mudanças de página,
-  // não com mudanças de filtro
+  // Effect to fetch data and handle scroll behavior on page changes
   useEffect(() => {
     setLoading(true);
-    fetchAuctions();
+    fetchItems();
     
-    // Rolar para o topo APENAS em mudanças de página explícitas,
-    // não em mudanças de filtro (que já têm seu próprio mecanismo)
+    // Scroll to top ONLY on explicit page changes
     if (isPageChangeRef.current) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       isPageChangeRef.current = false;
     }
-  }, [fetchAuctions]);
+  }, [fetchItems]);
 
   const handlePageChange = useCallback((page: number) => {
-    // Marcar que estamos mudando de página explicitamente
+    // Mark that we're changing pages explicitly
     isPageChangeRef.current = true;
     
-    // Capturar a posição atual de rolagem antes de mudar a página
+    // Capture current scroll position before changing page
     const currentScrollPosition = window.scrollY;
     
     const params = new URLSearchParams(searchParams);
     
-    // Se estamos indo para a mesma página, não faz nada
+    // If we're going to the same page, do nothing
     if (page.toString() === params.get('page')) {
       return;
     }
     
     params.set('page', page.toString());
     
-    // Criar e despachar um evento customizado antes de mudar a página
+    // Create and dispatch a custom event before changing page
     const event = new CustomEvent('page:changing', {
       detail: { 
         fromPage: currentPage,
@@ -107,10 +176,11 @@ const AuctionList: React.FC = () => {
     });
     window.dispatchEvent(event);
     
-    // Atualizar os parâmetros de busca para mudar a página
+    // Update search params to change page
     setSearchParams(params);
   }, [searchParams, setSearchParams, currentPage]);
 
+  // Render pagination items based on total pages and current page
   const renderPaginationItems = useCallback(() => {
     const items = [];
     const maxVisible = window.innerWidth < 640 ? 3 : 5; // Less numbers on mobile
@@ -187,6 +257,7 @@ const AuctionList: React.FC = () => {
     return items;
   }, [currentPage, handlePageChange, totalPages]);
   
+  // Show skeleton during initial loading
   if (loading && !isChangingPage) {
     return (
       <div className="flex flex-col space-y-3">
@@ -197,7 +268,10 @@ const AuctionList: React.FC = () => {
     );
   }
 
-  if (auctions.length === 0 && !isChangingPage) {
+  // Show empty state when no items are found
+  if (items.length === 0 && !isChangingPage) {
+    const contentTypeLabel = filters.contentType === 'property' ? 'imóveis' : 'leilões';
+    
     return (
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -209,12 +283,13 @@ const AuctionList: React.FC = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum item encontrado</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum {contentTypeLabel} encontrado</h3>
         <p className="text-gray-500 mb-4">Tente ajustar seus filtros para encontrar mais opções</p>
       </motion.div>
     );
   }
 
+  // Render the items list with pagination
   return (
     <div className="space-y-8">
       <AnimatePresence mode="wait">
@@ -226,16 +301,32 @@ const AuctionList: React.FC = () => {
           transition={{ duration: 0.3 }}
           className="flex flex-col space-y-3"
         >
-          {auctions.map((auction) => (
-            <motion.div
-              key={auction.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
-            >
-              <AuctionCard auction={auction} />
-            </motion.div>
-          ))}
+          {items.map((item) => {
+            // Determine which card component to use based on content type
+            if (filters.contentType === 'property') {
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
+                >
+                  <PropertyCard property={item as PropertyItem} />
+                </motion.div>
+              );
+            } else {
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
+                >
+                  <AuctionCard auction={item as AuctionItem} />
+                </motion.div>
+              );
+            }
+          })}
         </motion.div>
       </AnimatePresence>
       

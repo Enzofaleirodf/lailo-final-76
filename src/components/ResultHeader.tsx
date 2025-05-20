@@ -1,8 +1,6 @@
 
 import React, { useMemo, useState } from 'react';
 import AuctionStatus from './AuctionStatus';
-import { sampleAuctions } from '@/data/sampleAuctions';
-import { filterAuctions } from '@/utils/auctionUtils';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -12,15 +10,10 @@ import SortOptions from './filters/SortOptions';
 
 const ResultHeader: React.FC = () => {
   const { filters } = useFilterStore();
-  const { sortOption, setSortOption } = useSortStore();
+  const { sortOption } = useSortStore();
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
   const [sortDialogOpen, setSortDialogOpen] = useState(false);
-  
-  // Calculate filtered results count - memoized for performance
-  const filteredAuctions = useMemo(() => {
-    return filterAuctions(sampleAuctions, filters);
-  }, [filters]);
   
   // Get sort options without icons
   const sortOptions = useMemo(() => [
