@@ -73,7 +73,7 @@ const AuctionList: React.FC = () => {
         y: -20
       }} transition={{
         duration: 0.3
-      }} aria-live="polite" className="flex flex-col space-y-3 ">
+      }} aria-live="polite" className="flex flex-col space-y-0">
           {/* Mostrar skeletons durante a mudança de página */}
           {isChangingPage && renderSkeletons()}
           
