@@ -1,5 +1,5 @@
+
 import React, { useEffect, useRef } from 'react';
-import AppLayout from '@/components/layout/AppLayout';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import ResultHeader from '@/components/ResultHeader';
@@ -30,9 +30,7 @@ const BuscadorVeiculos = () => {
   const initialSetupDone = useRef(false);
 
   // Sincronizar URL com estado de filtros e ordenação
-  const {
-    handlePageChange
-  } = useUrlParams();
+  useUrlParams();
 
   // Definir o tipo de conteúdo para veículos quando esta página carregar
   useEffect(() => {
@@ -57,13 +55,17 @@ const BuscadorVeiculos = () => {
     }
     initialSetupDone.current = true;
   }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
+  
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
+  
   const handleSortClick = () => {
     setSortOpen(true);
   };
-  return <AppLayout>
+  
+  return (
+    <>
       {/* Top filters bar - desktop only */}
       {!isMobile && <TopFilters />}
       
@@ -89,6 +91,8 @@ const BuscadorVeiculos = () => {
       
       {/* Sort options modal - mobile only */}
       {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} />}
-    </AppLayout>;
+    </>
+  );
 };
+
 export default BuscadorVeiculos;

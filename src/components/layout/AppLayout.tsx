@@ -14,14 +14,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const isMobile = useIsMobile();
   const location = useLocation();
   
-  // Check if we're on an auth route
-  const isAuthRoute = location.pathname.startsWith('/auth/');
-  
-  // If on auth route, render only the content without layout
-  if (isAuthRoute) {
-    return <>{children}</>;
-  }
-
   // Get device type from boolean
   const deviceType: DeviceType = isMobile ? 'mobile' : 'desktop';
 
@@ -31,6 +23,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 overflow-x-hidden w-full">
       <div className="flex w-full relative">
+        {/* Sidebar is always rendered here, not in each page */}
         <Sidebar />
         <div className="flex-1 w-full overflow-x-hidden">
           <div className={`max-w-7xl mx-auto w-full ${paddingClasses}`}>

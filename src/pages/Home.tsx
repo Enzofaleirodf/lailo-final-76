@@ -1,57 +1,33 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+import { Building2, Car } from 'lucide-react';
 
 const Home = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-brand-900">Leilões Brasil</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Centralizando todos os leilões oficiais do Brasil em uma única plataforma.
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          <Card className="shadow-md hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle>Imóveis em Leilão</CardTitle>
-              <CardDescription>Encontre casas, apartamentos, terrenos e muito mais</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Acesse oportunidades em leilões de imóveis de todo o Brasil com filtros avançados.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={() => navigate('/buscador/imoveis')} className="w-full">
-                Ver Imóveis
-              </Button>
-            </CardFooter>
-          </Card>
-
-          <Card className="shadow-md hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle>Veículos em Leilão</CardTitle>
-              <CardDescription>Carros, motos, caminhões e outros veículos</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Encontre veículos em leilão com preços abaixo do mercado e filtros específicos.
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={() => navigate('/buscador/veiculos')} className="w-full">
-                Ver Veículos
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
+    <div className="flex flex-col items-center justify-center h-full py-8 px-4 text-center">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-6">
+        Bem-vindo ao Portal de Leilões
+      </h1>
+      <p className="text-lg text-gray-600 mb-8 max-w-lg">
+        Encontre as melhores oportunidades em leilões de imóveis e veículos.
+      </p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+        <Link to="/buscador/imoveis" className="w-full">
+          <Button variant="default" className="w-full p-8 flex flex-col h-auto gap-4" size="lg">
+            <Building2 className="h-12 w-12" />
+            <span className="text-xl">Leilões de Imóveis</span>
+          </Button>
+        </Link>
+        
+        <Link to="/buscador/veiculos" className="w-full">
+          <Button variant="default" className="w-full p-8 flex flex-col h-auto gap-4" size="lg">
+            <Car className="h-12 w-12" />
+            <span className="text-xl">Leilões de Veículos</span>
+          </Button>
+        </Link>
       </div>
     </div>
   );

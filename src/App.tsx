@@ -3,8 +3,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import React from "react";
+import AppLayout from "./components/layout/AppLayout";
 import Home from "./pages/Home";
 import BuscadorImoveis from "./pages/buscador/BuscadorImoveis";
 import BuscadorVeiculos from "./pages/buscador/BuscadorVeiculos";
@@ -27,6 +28,15 @@ const queryClient = new QueryClient({
   },
 });
 
+// Layout wrapper for the main application
+const MainLayout = () => {
+  return (
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
+  );
+};
+
 const App = () => {
   return (
     <React.StrictMode>
@@ -36,30 +46,33 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              {/* Páginas Principais */}
-              <Route path="/" element={<Home />} />
-              
-              {/* Redirecionamento de Buscador */}
-              <Route path="/buscador" element={<Navigate to="/buscador/imoveis" replace />} />
-              <Route path="/buscador/imoveis" element={<BuscadorImoveis />} />
-              <Route path="/buscador/veiculos" element={<BuscadorVeiculos />} />
-              
-              {/* Redirecionamento de Favoritos */}
-              <Route path="/favoritos" element={<Navigate to="/favoritos/imoveis" replace />} />
-              <Route path="/favoritos/imoveis" element={<FavoritosImoveis />} />
-              <Route path="/favoritos/veiculos" element={<FavoritosVeiculos />} />
-              
-              {/* Leiloeiros e Perfil */}
-              <Route path="/leiloeiros" element={<Leiloeiros />} />
-              <Route path="/perfil" element={<Perfil />} />
-              
-              {/* Páginas de Autenticação */}
+              {/* Auth Routes - No Layout */}
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/sign-up" element={<SignUp />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               
-              {/* Rota para página não encontrada */}
-              <Route path="*" element={<NotFound />} />
+              {/* Main Application Routes - With AppLayout */}
+              <Route element={<MainLayout />}>
+                {/* Páginas Principais */}
+                <Route path="/" element={<Home />} />
+                
+                {/* Buscador Routes */}
+                <Route path="/buscador" element={<Navigate to="/buscador/imoveis" replace />} />
+                <Route path="/buscador/imoveis" element={<BuscadorImoveis />} />
+                <Route path="/buscador/veiculos" element={<BuscadorVeiculos />} />
+                
+                {/* Favoritos Routes */}
+                <Route path="/favoritos" element={<Navigate to="/favoritos/imoveis" replace />} />
+                <Route path="/favoritos/imoveis" element={<FavoritosImoveis />} />
+                <Route path="/favoritos/veiculos" element={<FavoritosVeiculos />} />
+                
+                {/* Leiloeiros e Perfil */}
+                <Route path="/leiloeiros" element={<Leiloeiros />} />
+                <Route path="/perfil" element={<Perfil />} />
+                
+                {/* Not Found */}
+                <Route path="*" element={<NotFound />} />
+              </Route>
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
