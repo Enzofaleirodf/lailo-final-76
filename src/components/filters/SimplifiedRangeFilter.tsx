@@ -20,7 +20,6 @@ export interface RangeFilterProps {
   inputPrefix?: string;
   inputSuffix?: string;
   className?: string;
-  showActiveBadge?: boolean;
   formatterOptions?: {
     useThousandSeparator?: boolean;
     formatDisplay?: boolean;

@@ -1,6 +1,6 @@
 
 import React, { useCallback, useEffect } from 'react';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
@@ -18,11 +18,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   });
   
   // Define default values (mocado - normalmente viria do banco)
-  const currentYear = new Date().getFullYear();
-  const defaultValues = {
-    min: "2000",
-    max: currentYear.toString()
-  };
+  const defaultValues = defaultRangeValues.year;
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
@@ -48,8 +44,8 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         ariaLabelMin="Ano mínimo"
         ariaLabelMax="Ano máximo"
         allowDecimals={false}
-        minAllowed={1900}
-        maxAllowed={currentYear}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={Number(defaultValues.max)}
         formatterOptions={{
           useThousandSeparator: false,
           formatDisplay: true

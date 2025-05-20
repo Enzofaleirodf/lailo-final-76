@@ -36,13 +36,28 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   } = options;
   
   // Estado do filtro
-  const [values, setValues] = useState<RangeValues>(initialValues);
+  const [values, setValues] = useState<RangeValues>({
+    min: initialValues.min || (defaultMin || ''),
+    max: initialValues.max || (defaultMax || '')
+  });
   const [errors, setErrors] = useState<{min: string | null, max: string | null}>({min: null, max: null});
   
   // Referências para rastrear interações do usuário
   const userHasInteracted = useRef<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   
+  // Efeito para garantir que os valores iniciais sejam sempre exibidos
+  useEffect(() => {
+    // Se os valores iniciais estiverem vazios mas temos valores padrão, use os valores padrão 
+    // apenas para exibição, sem marcar como interação de usuário
+    if ((!values.min && defaultMin) || (!values.max && defaultMax)) {
+      setValues({
+        min: values.min || defaultMin || '',
+        max: values.max || defaultMax || ''
+      });
+    }
+  }, [values.min, values.max, defaultMin, defaultMax]);
+
   // Determinar se o filtro está ativo apenas se o usuário tiver interagido com ele
   // e os valores forem diferentes dos padrões
   useEffect(() => {
@@ -251,6 +266,7 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     handleMaxChange,
     handleBlur,
     resetValues,
-    formatValue
+    formatValue,
+    userHasInteracted: userHasInteracted.current
   };
 }

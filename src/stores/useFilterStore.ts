@@ -74,7 +74,23 @@ const initialExpandedSections: ExpandedSectionsState = {
   place: true
 };
 
-// Count active filters to show in badge
+// Valores padrão para os filtros de intervalo (simulando o que viria do banco)
+const defaultRangeValues = {
+  price: {
+    min: "10000",
+    max: "1000000"
+  },
+  year: {
+    min: "2000",
+    max: new Date().getFullYear().toString()
+  },
+  usefulArea: {
+    min: "30",
+    max: "500"
+  }
+};
+
+// Count active filters to show in badge - modificado para não contar valores padrão
 const countActiveFilters = (filters: FilterState): number => {
   let count = 0;
   
@@ -87,14 +103,23 @@ const countActiveFilters = (filters: FilterState): number => {
   // Property types
   if (filters.propertyTypes.length > 0) count++;
   
-  // Price range
-  if (filters.price.range.min || filters.price.range.max) count++;
+  // Price range - não contar se for igual aos valores padrão
+  const isPriceDefault = 
+    (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
+    (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
+  if (!isPriceDefault && (filters.price.range.min || filters.price.range.max)) count++;
   
-  // Year range
-  if (filters.year.min || filters.year.max) count++;
+  // Year range - não contar se for igual aos valores padrão
+  const isYearDefault = 
+    (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
+    (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
+  if (!isYearDefault && (filters.year.min || filters.year.max)) count++;
   
-  // Useful area range
-  if (filters.usefulArea.min || filters.usefulArea.max) count++;
+  // Useful area range - não contar se for igual aos valores padrão
+  const isAreaDefault = 
+    (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
+    (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
+  if (!isAreaDefault && (filters.usefulArea.min || filters.usefulArea.max)) count++;
   
   // Brand, model, color
   if (filters.brand !== 'todas') count++;
@@ -189,3 +214,6 @@ export const useFilterStore = create<FilterStore>()(
     { name: 'filter-store' }
   )
 );
+
+// Exportar os valores padrão para uso em outros componentes
+export { defaultRangeValues };
