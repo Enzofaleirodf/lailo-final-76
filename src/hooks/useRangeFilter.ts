@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useRangeValues, RangeValues } from './useRangeValues';
 import { useRangeFormatting } from './useRangeFormatting';
 import { useRangeValidation } from './useRangeValidation';
+import { throttle } from '@/utils/performanceUtils';
 
 export type { RangeValues } from './useRangeValues';
 
@@ -23,12 +24,12 @@ export interface RangeFilterOptions {
 /**
  * Hook unificado para gerenciar filtros de intervalo
  * Combina formatação, validação e gerenciamento de estado
- * Refatorado para garantir consistência visual e comportamental entre desktop e mobile
+ * Otimizado para desempenho com grandes conjuntos de dados
  */
 export function useRangeFilter(initialValues: RangeValues, options: RangeFilterOptions = {}) {
   const {
-    defaultMin,
-    defaultMax,
+    defaultMin = '',
+    defaultMax = '',
     allowDecimals = false,
     allowNegative = false,
     minAllowed,
@@ -79,19 +80,19 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     values
   });
   
-  // Processar mudança no valor mínimo
-  const handleMinChange = useCallback((newValue: string) => {
+  // Processar mudança no valor mínimo - otimizado com throttle para melhor desempenho
+  const handleMinChange = useCallback(throttle((newValue: string) => {
     // Sanitizar o valor antes de atualizar
     const sanitizedValue = sanitizeInput(newValue, allowNegative);
     setMinValue(sanitizedValue);
-  }, [sanitizeInput, setMinValue, allowNegative]);
+  }, 16), [sanitizeInput, setMinValue, allowNegative]);
   
-  // Processar mudança no valor máximo
-  const handleMaxChange = useCallback((newValue: string) => {
+  // Processar mudança no valor máximo - otimizado com throttle para melhor desempenho
+  const handleMaxChange = useCallback(throttle((newValue: string) => {
     // Sanitizar o valor antes de atualizar
     const sanitizedValue = sanitizeInput(newValue, allowNegative);
     setMaxValue(sanitizedValue);
-  }, [sanitizeInput, setMaxValue, allowNegative]);
+  }, 16), [sanitizeInput, setMaxValue, allowNegative]);
   
   // Validar e corrigir valores ao sair do campo
   const handleBlur = useCallback((isMin: boolean) => {

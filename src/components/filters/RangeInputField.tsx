@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { measurePerformance } from '@/utils/performanceUtils';
 
 interface RangeInputFieldProps {
   id: string;
@@ -23,6 +24,7 @@ interface RangeInputFieldProps {
 /**
  * Componente de campo de entrada para filtros de intervalo
  * Refatorado para garantir consistência visual entre desktop e mobile
+ * Otimizado para desempenho com grandes conjuntos de dados
  */
 const RangeInputField: React.FC<RangeInputFieldProps> = ({
   id,
@@ -43,22 +45,55 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   
+  // Performance tracking for padding calculation
+  const paddingPerf = process.env.NODE_ENV === 'development' ? 
+    measurePerformance('RangeInputField-padding') : null;
+  
   // Calcular tamanho adequado do campo para acomodar prefixo e sufixo
   const handleInputPadding = () => {
     if (inputRef.current) {
       if (inputPrefix) {
-        inputRef.current.style.paddingLeft = `${inputPrefix.length * 0.75 + 1}em`;
+        // Calcular padding dinâmico baseado no comprimento do prefixo
+        // Garantir consistência entre tamanhos de tela
+        const prefixLength = inputPrefix.length;
+        const basePadding = 12; // 3 * 4px (padrão do Tailwind)
+        const charWidth = 8; // Largura média aproximada de um caractere
+        
+        const calculatedPadding = basePadding + (prefixLength * charWidth);
+        inputRef.current.style.paddingLeft = `${calculatedPadding}px`;
       }
       
       if (inputSuffix) {
-        inputRef.current.style.paddingRight = `${inputSuffix.length * 0.75 + 1}em`;
+        // Calcular padding dinâmico baseado no comprimento do sufixo
+        const suffixLength = inputSuffix.length;
+        const basePadding = 12;
+        const charWidth = 8;
+        
+        const calculatedPadding = basePadding + (suffixLength * charWidth);
+        inputRef.current.style.paddingRight = `${calculatedPadding}px`;
       }
+    }
+    
+    // Registrar desempenho
+    if (paddingPerf) {
+      paddingPerf.end();
     }
   };
   
   // Aplicar padding quando o componente monta e quando prefixo/sufixo muda
   useEffect(() => {
     handleInputPadding();
+    
+    // Reaplicar em resize para garantir consistência entre tamanhos de tela
+    const handleResize = () => {
+      handleInputPadding();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [inputPrefix, inputSuffix]);
   
   // Definir estilos condicionais
@@ -69,11 +104,17 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
   };
   
   return (
-    <div className={cn("relative", className)} data-testid={dataTestId || 'range-input-field'}>
+    <div 
+      className={cn("relative", className)} 
+      data-testid={dataTestId || 'range-input-field'}
+    >
       {/* Prefixo */}
       {inputPrefix && (
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <span className="text-gray-500">{inputPrefix}</span>
+        <div 
+          className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          aria-hidden="true"
+        >
+          <span className="text-gray-500 select-none">{inputPrefix}</span>
         </div>
       )}
       
@@ -103,8 +144,11 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       
       {/* Sufixo */}
       {inputSuffix && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <span className="text-gray-500">{inputSuffix}</span>
+        <div 
+          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+          aria-hidden="true"
+        >
+          <span className="text-gray-500 select-none">{inputSuffix}</span>
         </div>
       )}
     </div>
