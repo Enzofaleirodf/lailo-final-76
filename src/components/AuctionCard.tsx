@@ -109,19 +109,22 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                 )}
                 
                 {auction.vehicleInfo.year && (
-                  <div className="flex items-center ml-2">
-                    <Hourglass size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
-                    <span>{auction.vehicleInfo.year}</span>
-                  </div>
+                  <>
+                    <div className="flex items-center ml-2">
+                      <Hourglass size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
+                      <span>{auction.vehicleInfo.year}</span>
+                    </div>
+                    
+                    {/* Divider between year and location */}
+                    <div className="mx-2 h-3 w-[1px] bg-gray-300"></div>
+                    
+                    {/* Location next to year with divider between them */}
+                    <span>{auction.location || 'Localização não disponível'}</span>
+                  </>
                 )}
               </div>
             </div>
           )}
-          
-          {/* Location info - sem ícone para veículos, apenas texto simples */}
-          <div className={`text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
-            {auction.location || 'Localização não disponível'}
-          </div>
           
           {/* Price section */}
           <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
