@@ -65,16 +65,6 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [filters.price, range, updateFilter, handleFilterChange]);
 
-  // Format the display values for the input fields
-  const formatDisplayValue = (value: string): string => {
-    if (!value) return '';
-    const numValue = parseInt(value, 10);
-    if (isNaN(numValue)) return value;
-    
-    // Format with R$ prefix and thousands separator
-    return formatCurrency(numValue);
-  };
-
   return (
     <div className="space-y-3">
       <FilterRangeInput
@@ -82,14 +72,12 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         maxValue={range.max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder="Min"
-        maxPlaceholder="Max"
+        minPlaceholder="R$ Min"
+        maxPlaceholder="R$ Max"
         ariaLabelMin="Preço mínimo"
         ariaLabelMax="Preço máximo"
         allowDecimals={true} 
         minAllowed={0}
-        displayMinValue={formatDisplayValue(range.min)}
-        displayMaxValue={formatDisplayValue(range.max)}
         inputPrefix="R$"
       />
     </div>

@@ -51,16 +51,6 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [filters.usefulArea, updateFilter, handleFilterChange]);
 
-  // Format the display values for the input fields
-  const formatDisplayValue = (value: string): string => {
-    if (!value) return '';
-    const numValue = parseInt(value, 10);
-    if (isNaN(numValue)) return value;
-    
-    // Format with "m²" suffix
-    return `${numValue} m²`;
-  };
-
   return (
     <div className="space-y-3">
       <FilterRangeInput
@@ -68,14 +58,12 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
         maxValue={filters.usefulArea.max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder="Min"
-        maxPlaceholder="Max"
+        minPlaceholder="Min m²"
+        maxPlaceholder="Max m²"
         ariaLabelMin="Área útil mínima"
         ariaLabelMax="Área útil máxima"
         allowDecimals={true} // Allow decimals for area measurements
         minAllowed={0} // Area cannot be negative
-        displayMinValue={formatDisplayValue(filters.usefulArea.min)}
-        displayMaxValue={formatDisplayValue(filters.usefulArea.max)}
         inputSuffix="m²"
       />
     </div>

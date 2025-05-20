@@ -59,14 +59,12 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         maxValue={max}
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
-        minPlaceholder="Min"
-        maxPlaceholder="Max"
+        minPlaceholder="Ano min."
+        maxPlaceholder="Ano máx."
         ariaLabelMin="Ano mínimo"
         ariaLabelMax="Ano máximo"
         allowDecimals={false}
         minAllowed={1900}
-        displayMinValue={min}
-        displayMaxValue={max}
       />
     </div>
   );

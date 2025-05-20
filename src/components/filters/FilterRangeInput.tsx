@@ -60,10 +60,6 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
     validationDelay: 300
   });
 
-  // Use the displayValue props if provided, otherwise use the actual values
-  const minDisplayValue = displayMinValue !== undefined ? displayMinValue : minValue;
-  const maxDisplayValue = displayMaxValue !== undefined ? displayMaxValue : maxValue;
-
   return (
     <div 
       className="space-y-1"
@@ -86,7 +82,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
               inputPrefix ? "pl-8" : "",
               inputSuffix ? "pr-8" : ""
             )}
-            value={minDisplayValue}
+            value={minValue}
             onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMin}
             aria-invalid={!!minError}
@@ -95,11 +91,6 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             inputMode="numeric"
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
-          {inputSuffix && (
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputSuffix}</span>
-            </div>
-          )}
         </div>
         
         <div className="relative flex-1">
@@ -117,7 +108,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
               inputPrefix ? "pl-8" : "",
               inputSuffix ? "pr-8" : ""
             )}
-            value={maxDisplayValue}
+            value={maxValue}
             onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMax}
             aria-invalid={!!maxError}
