@@ -1,5 +1,5 @@
 
-import { FilterState } from '@/stores/useFilterStore';
+import { FilterState } from '@/types/filters';
 import { SortOption } from '@/stores/useSortStore';
 
 /**

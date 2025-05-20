@@ -1,7 +1,15 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { ContentType, FilterState, LocationFilter, ExpandedSectionsState } from '@/types/filters';
+import { 
+  ContentType, 
+  FilterState, 
+  LocationFilter, 
+  ExpandedSectionsState,
+  FilterFormat,
+  FilterOrigin,
+  FilterPlace
+} from '@/types/filters';
 
 // Define the shape of our store
 interface FilterStore {
@@ -32,6 +40,7 @@ const initialFilterState: FilterState = {
   vehicleTypes: [],
   propertyTypes: [],
   price: {
+    value: [0, 100],
     range: {
       min: '',
       max: ''
@@ -63,6 +72,9 @@ const initialExpandedSections: ExpandedSectionsState = {
   usefulArea: false,
   model: false,
   color: false,
+  format: false,
+  origin: false,
+  place: false
 };
 
 // Count active filters to show in badge

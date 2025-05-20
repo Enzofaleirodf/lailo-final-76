@@ -1,6 +1,5 @@
-
 import { AuctionItem } from '@/types/auction';
-import { FilterState } from '@/stores/useFilterStore';
+import { FilterState } from '@/types/filters';
 
 export const formatPrice = (price: number): string => {
   // Format as integer with dot as thousands separator and no decimal places

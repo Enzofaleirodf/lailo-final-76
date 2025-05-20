@@ -1,4 +1,9 @@
+
 export type ContentType = 'property' | 'vehicle';
+
+export type FilterFormat = 'Todos' | 'Alienação Particular' | 'Leilão' | 'Venda Direta';
+export type FilterOrigin = 'Todas' | 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
+export type FilterPlace = 'Todas' | 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
 
 export interface LocationFilter {
   state: string;
@@ -6,6 +11,7 @@ export interface LocationFilter {
 }
 
 export interface PriceRangeFilter {
+  value: number[];
   range: {
     min: string;
     max: string;
@@ -33,9 +39,9 @@ export interface FilterState {
   brand: string;
   model: string;
   color: string;
-  format: 'Todos' | 'Alienação Particular' | 'Leilão' | 'Venda Direta';
-  origin: 'Todas' | 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
-  place: 'Todas' | 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
+  format: FilterFormat;
+  origin: FilterOrigin;
+  place: FilterPlace;
 }
 
 export interface ExpandedSectionsState {
@@ -47,9 +53,12 @@ export interface ExpandedSectionsState {
   usefulArea: boolean;
   model: boolean;
   color: boolean;
+  format: boolean;
+  origin: boolean;
+  place: boolean;
 }
 
-// Add to your existing FilterStore interface or create it if it doesn't exist
+// Interface para o estado do filtro store
 export interface FilterStoreState {
   filters: FilterState;
   expandedSections: ExpandedSectionsState;

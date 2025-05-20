@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -127,7 +126,7 @@ const ActiveFilterBadges: React.FC = () => {
       key: 'price',
       label: `Preço: ${minLabel} a ${maxLabel}`,
       onRemove: () => updateFilter('price', { 
-        value: filters.price.value,
+        value: [0, 100],
         range: { min: '', max: '' }
       })
     });
