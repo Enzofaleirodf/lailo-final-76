@@ -8,6 +8,7 @@ interface RangeInputFieldProps {
   value: string;
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   ariaLabel: string;
   ariaInvalid?: boolean;
@@ -28,6 +29,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
   value,
   placeholder,
   onChange,
+  onBlur,
   onKeyDown,
   ariaLabel,
   ariaInvalid,
@@ -54,12 +56,11 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           suffixPaddingClass,
           isError 
             ? "border-red-300 focus-visible:ring-red-500" 
-            : isActive 
-              ? "border-brand-300 focus-visible:ring-brand-500" 
-              : "border-gray-300 focus-visible:ring-brand-500"
+            : "border-gray-300 focus-visible:ring-brand-500"
         )}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         onKeyDown={onKeyDown}
         aria-label={ariaLabel}
         aria-invalid={ariaInvalid}

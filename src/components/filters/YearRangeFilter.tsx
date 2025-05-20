@@ -17,7 +17,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     onChange: onFilterChange
   });
   
-  // Define default values
+  // Define default values (mocado - normalmente viria do banco)
   const currentYear = new Date().getFullYear();
   const defaultValues = {
     min: "2000",
@@ -49,7 +49,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         ariaLabelMax="Ano máximo"
         allowDecimals={false}
         minAllowed={1900}
-        showActiveBadge={true}
+        maxAllowed={currentYear}
         formatterOptions={{
           useThousandSeparator: false,
           formatDisplay: true

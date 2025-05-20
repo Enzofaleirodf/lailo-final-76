@@ -17,7 +17,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
     onChange: onFilterChange
   });
   
-  // Define default values
+  // Define default values (mocado - normalmente viria do banco)
   const defaultValues = {
     min: "30",
     max: "500"
@@ -47,9 +47,9 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
         ariaLabelMin="Área útil mínima"
         ariaLabelMax="Área útil máxima"
         allowDecimals={true}
-        minAllowed={0}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={Number(defaultValues.max)}
         inputSuffix="m²"
-        showActiveBadge={true}
       />
     </div>
   );

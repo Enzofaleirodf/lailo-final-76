@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
 import RangeInputField from './RangeInputField';
 import { useRangeFilter, RangeValues } from '@/hooks/useRangeFilter';
 import { cn } from '@/lib/utils';
+import RangeErrorMessages from './RangeErrorMessages';
 
 export interface RangeFilterProps {
   initialValues: RangeValues;
@@ -46,16 +46,15 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   inputPrefix,
   inputSuffix,
   className = "",
-  showActiveBadge = true,
   formatterOptions = {}
 }) => {
-  // Usar nosso novo hook para gerenciar estado e validação
+  // Usar nosso hook atualizado para gerenciar estado e validação
   const {
     values,
     errors,
-    isActive,
     handleMinChange,
     handleMaxChange,
+    handleBlur,
     formatValue
   } = useRangeFilter(initialValues, {
     defaultMin: defaultValues.min,
@@ -81,11 +80,11 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
           value={formatValue(values.min)}
           placeholder={minPlaceholder}
           onChange={(e) => handleMinChange(e.target.value)}
+          onBlur={() => handleBlur(true)}
           ariaLabel={ariaLabelMin}
           ariaInvalid={!!errors.min}
           ariaDescribedBy={errors.min ? minErrorId : undefined}
           isError={!!errors.min}
-          isActive={isActive}
           inputPrefix={inputPrefix}
           inputSuffix={inputSuffix}
           className="flex-1"
@@ -96,49 +95,24 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
           value={formatValue(values.max)}
           placeholder={maxPlaceholder}
           onChange={(e) => handleMaxChange(e.target.value)}
+          onBlur={() => handleBlur(false)}
           ariaLabel={ariaLabelMax}
           ariaInvalid={!!errors.max}
           ariaDescribedBy={errors.max ? maxErrorId : undefined}
           isError={!!errors.max}
-          isActive={isActive}
           inputPrefix={inputPrefix}
           inputSuffix={inputSuffix}
           className="flex-1"
         />
-        
-        {showActiveBadge && isActive && (
-          <Badge 
-            variant="outline" 
-            className="bg-brand-50 text-brand-700 border-brand-200 h-10 flex items-center"
-            aria-label="Filtro ativo"
-          >
-            Ativo
-          </Badge>
-        )}
       </div>
       
       {/* Mensagens de erro */}
-      {(errors.min || errors.max) && (
-        <div className="flex justify-between text-xs">
-          {errors.min && (
-            <p id={minErrorId} className="text-red-500" role="alert">
-              {errors.min}
-            </p>
-          )}
-          {errors.max && (
-            <p id={maxErrorId} className="text-red-500 ml-auto" role="alert">
-              {errors.max}
-            </p>
-          )}
-        </div>
-      )}
-      
-      {/* Indicador visual de filtro ativo */}
-      {isActive && defaultValues.min && defaultValues.max && (
-        <div className="text-xs text-brand-600 mt-1">
-          <p>Filtro personalizado aplicado</p>
-        </div>
-      )}
+      <RangeErrorMessages 
+        minError={errors.min}
+        maxError={errors.max}
+        minErrorId={minErrorId}
+        maxErrorId={maxErrorId}
+      />
     </div>
   );
 };

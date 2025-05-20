@@ -17,7 +17,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     onChange: onFilterChange
   });
   
-  // Define default values
+  // Define default values (mocado - normalmente viria do banco)
   const defaultValues = {
     min: "10000",
     max: "1000000"
@@ -53,9 +53,9 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         ariaLabelMin="Preço mínimo"
         ariaLabelMax="Preço máximo"
         allowDecimals={true}
-        minAllowed={0}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={Number(defaultValues.max)}
         inputPrefix="R$"
-        showActiveBadge={true}
         formatterOptions={{
           useThousandSeparator: true,
           formatDisplay: true
