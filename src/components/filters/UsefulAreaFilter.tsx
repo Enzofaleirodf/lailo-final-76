@@ -26,7 +26,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [updateFilter, handleFilterChange]);
   
-  // Initialize with default values if empty
+  // Initialize with default values if empty - only on first mount
   useEffect(() => {
     if (!filters.usefulArea.min && !filters.usefulArea.max) {
       updateFilter('usefulArea', defaultValues);
@@ -47,6 +47,10 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
         minAllowed={Number(defaultValues.min)}
         maxAllowed={Number(defaultValues.max)}
         inputSuffix="m²"
+        formatterOptions={{
+          useThousandSeparator: true,
+          formatDisplay: true
+        }}
       />
     </div>
   );

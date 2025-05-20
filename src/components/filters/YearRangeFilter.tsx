@@ -26,7 +26,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     handleFilterChange();
   }, [updateFilter, handleFilterChange]);
   
-  // Initialize with default values if empty
+  // Initialize with default values if empty - only on first mount
   useEffect(() => {
     if (!filters.year.min && !filters.year.max) {
       updateFilter('year', defaultValues);

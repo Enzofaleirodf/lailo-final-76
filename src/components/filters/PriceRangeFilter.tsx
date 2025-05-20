@@ -29,7 +29,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [filters.price, updateFilter, handleFilterChange]);
   
-  // Initialize with default values if empty
+  // Initialize with default values if empty - only on first mount
   useEffect(() => {
     if (!filters.price.range.min && !filters.price.range.max) {
       updateFilter('price', {

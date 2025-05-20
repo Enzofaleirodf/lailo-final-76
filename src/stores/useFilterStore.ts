@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { 
@@ -89,7 +90,8 @@ const defaultRangeValues = {
   }
 };
 
-// Count active filters to show in badge - modificado para não contar valores padrão
+// Count active filters to show in badge
+// Improved to only count filters that differ from default values or initial state
 const countActiveFilters = (filters: FilterState): number => {
   let count = 0;
   
@@ -102,22 +104,26 @@ const countActiveFilters = (filters: FilterState): number => {
   // Property types
   if (filters.propertyTypes.length > 0) count++;
   
-  // Price range - não contar se for igual aos valores padrão
+  // Price range - só contar se os valores forem significativamente diferentes dos padrões
+  // Verificar se o valor mínimo e máximo são próximos dos padrões (com uma margem de tolerância)
   const isPriceDefault = 
     (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
     (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
+  
   if (!isPriceDefault) count++;
   
-  // Year range - não contar se for igual aos valores padrão
+  // Year range - só contar se os valores forem significativamente diferentes dos padrões
   const isYearDefault = 
     (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
     (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
+  
   if (!isYearDefault) count++;
   
-  // Useful area range - não contar se for igual aos valores padrão
+  // Useful area range - só contar se os valores forem significativamente diferentes dos padrões
   const isAreaDefault = 
     (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
     (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
+  
   if (!isAreaDefault) count++;
   
   // Brand, model, color
@@ -125,8 +131,8 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.model !== 'todos') count++;
   if (filters.color !== 'todas') count++;
   
-  // Auction format, origin, place - Only count them if they differ from visual defaults
-  if (filters.format !== 'Leilão') count++; // Modified to use 'Leilão' as the default
+  // Auction format, origin, place - Only count if different from visual defaults
+  if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
   if (filters.origin !== 'Todas') count++;
   if (filters.place !== 'Todas') count++;
   

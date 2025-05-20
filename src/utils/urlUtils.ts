@@ -5,15 +5,18 @@
 
 import { FilterState } from '@/types/filters';
 import { SortOption } from '@/stores/useSortStore';
+import { defaultRangeValues } from '@/stores/useFilterStore';
 
 /**
- * Verifica se os filtros atuais diferem dos parâmetros da URL
+ * Verifica se os filtros atuais diferem dos parâmetros da URL de forma significativa
+ * Ignora pequenas variações e valores padrão
  * 
  * @param currentFilters - Estado atual dos filtros na aplicação
  * @param params - Parâmetros da URL atual
  * @returns true se os filtros foram alterados em relação à URL
  */
 export const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
+  // Verificar mudanças na localização
   if ((params.get('state') || '') !== currentFilters.location.state) return true;
   if ((params.get('city') || '') !== currentFilters.location.city) return true;
   
@@ -30,23 +33,78 @@ export const hasFilterChanged = (currentFilters: FilterState, params: URLSearchP
   if ((params.get('model') || 'todos') !== currentFilters.model) return true;
   if ((params.get('color') || 'todas') !== currentFilters.color) return true;
   
-  // Comparações de intervalos (year, price)
-  if ((params.get('yearMin') || '') !== currentFilters.year.min) return true;
-  if ((params.get('yearMax') || '') !== currentFilters.year.max) return true;
-  if ((params.get('priceMin') || '') !== currentFilters.price.range.min) return true;
-  if ((params.get('priceMax') || '') !== currentFilters.price.range.max) return true;
+  // Verificação mais precisa para intervalos numéricos, considerando valores default
+  // Ano
+  const yearMinParam = params.get('yearMin') || '';
+  const yearMaxParam = params.get('yearMax') || '';
+  const isDefaultYear = 
+    (!yearMinParam || yearMinParam === defaultRangeValues.year.min) && 
+    (!yearMaxParam || yearMaxParam === defaultRangeValues.year.max);
+  const isCurrentDefaultYear = 
+    (!currentFilters.year.min || currentFilters.year.min === defaultRangeValues.year.min) && 
+    (!currentFilters.year.max || currentFilters.year.max === defaultRangeValues.year.max);
+  
+  // Se um é default e o outro não, há mudança
+  if (isDefaultYear !== isCurrentDefaultYear) return true;
+  
+  // Se nenhum é default, comparar valores específicos
+  if (!isDefaultYear && !isCurrentDefaultYear) {
+    if (yearMinParam !== currentFilters.year.min) return true;
+    if (yearMaxParam !== currentFilters.year.max) return true;
+  }
+  
+  // Preço
+  const priceMinParam = params.get('priceMin') || '';
+  const priceMaxParam = params.get('priceMax') || '';
+  const isDefaultPrice = 
+    (!priceMinParam || priceMinParam === defaultRangeValues.price.min) && 
+    (!priceMaxParam || priceMaxParam === defaultRangeValues.price.max);
+  const isCurrentDefaultPrice = 
+    (!currentFilters.price.range.min || currentFilters.price.range.min === defaultRangeValues.price.min) && 
+    (!currentFilters.price.range.max || currentFilters.price.range.max === defaultRangeValues.price.max);
+  
+  // Se um é default e o outro não, há mudança
+  if (isDefaultPrice !== isCurrentDefaultPrice) return true;
+  
+  // Se nenhum é default, comparar valores específicos
+  if (!isDefaultPrice && !isCurrentDefaultPrice) {
+    if (priceMinParam !== currentFilters.price.range.min) return true;
+    if (priceMaxParam !== currentFilters.price.range.max) return true;
+  }
+  
+  // Área útil
+  const areaMinParam = params.get('usefulAreaMin') || '';
+  const areaMaxParam = params.get('usefulAreaMax') || '';
+  const isDefaultArea = 
+    (!areaMinParam || areaMinParam === defaultRangeValues.usefulArea.min) && 
+    (!areaMaxParam || areaMaxParam === defaultRangeValues.usefulArea.max);
+  const isCurrentDefaultArea = 
+    (!currentFilters.usefulArea.min || currentFilters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
+    (!currentFilters.usefulArea.max || currentFilters.usefulArea.max === defaultRangeValues.usefulArea.max);
+  
+  // Se um é default e o outro não, há mudança
+  if (isDefaultArea !== isCurrentDefaultArea) return true;
+  
+  // Se nenhum é default, comparar valores específicos
+  if (!isDefaultArea && !isCurrentDefaultArea) {
+    if (areaMinParam !== currentFilters.usefulArea.min) return true;
+    if (areaMaxParam !== currentFilters.usefulArea.max) return true;
+  }
   
   // Filtros de leilão
-  if ((params.get('format') || 'Todos') !== currentFilters.format) return true;
+  const formatParam = params.get('format') || 'Leilão'; // Default é Leilão agora
+  if (formatParam !== currentFilters.format) return true;
+  
   if ((params.get('origin') || 'Todas') !== currentFilters.origin) return true;
   if ((params.get('place') || 'Todas') !== currentFilters.place) return true;
   
-  // Se chegamos aqui, não houve mudanças
+  // Se chegamos aqui, não houve mudanças significativas
   return false;
 };
 
 /**
  * Atualiza os parâmetros da URL com base no estado atual de filtros e ordenação
+ * Evita adicionar parâmetros que estejam com valores padrão
  * 
  * @param filters - Estado atual dos filtros
  * @param sortOption - Opção de ordenação selecionada
@@ -115,30 +173,73 @@ export const updateUrlParams = (
     params.delete('color');
   }
   
-  // Adicionar intervalo de ano (apenas se não estiver vazio)
-  if (filters.year.min) {
-    params.set('yearMin', filters.year.min);
-  } else {
-    params.delete('yearMin');
-  }
+  // Adicionar intervalo de ano (apenas se diferente do padrão)
+  const isYearDefault = 
+    (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
+    (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
   
-  if (filters.year.max) {
-    params.set('yearMax', filters.year.max);
+  if (!isYearDefault) {
+    if (filters.year.min && filters.year.min !== defaultRangeValues.year.min) {
+      params.set('yearMin', filters.year.min);
+    } else {
+      params.delete('yearMin');
+    }
+    
+    if (filters.year.max && filters.year.max !== defaultRangeValues.year.max) {
+      params.set('yearMax', filters.year.max);
+    } else {
+      params.delete('yearMax');
+    }
   } else {
+    // Se ambos são default, remover dos parâmetros
+    params.delete('yearMin');
     params.delete('yearMax');
   }
   
-  // Adicionar intervalo de preço (apenas se não estiver vazio)
-  if (filters.price.range.min) {
-    params.set('priceMin', filters.price.range.min);
+  // Adicionar intervalo de preço (apenas se diferente do padrão)
+  const isPriceDefault = 
+    (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
+    (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
+  
+  if (!isPriceDefault) {
+    if (filters.price.range.min && filters.price.range.min !== defaultRangeValues.price.min) {
+      params.set('priceMin', filters.price.range.min);
+    } else {
+      params.delete('priceMin');
+    }
+    
+    if (filters.price.range.max && filters.price.range.max !== defaultRangeValues.price.max) {
+      params.set('priceMax', filters.price.range.max);
+    } else {
+      params.delete('priceMax');
+    }
   } else {
+    // Se ambos são default, remover dos parâmetros
     params.delete('priceMin');
+    params.delete('priceMax');
   }
   
-  if (filters.price.range.max) {
-    params.set('priceMax', filters.price.range.max);
+  // Adicionar intervalo de área útil (apenas se diferente do padrão)
+  const isAreaDefault = 
+    (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
+    (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
+  
+  if (!isAreaDefault) {
+    if (filters.usefulArea.min && filters.usefulArea.min !== defaultRangeValues.usefulArea.min) {
+      params.set('usefulAreaMin', filters.usefulArea.min);
+    } else {
+      params.delete('usefulAreaMin');
+    }
+    
+    if (filters.usefulArea.max && filters.usefulArea.max !== defaultRangeValues.usefulArea.max) {
+      params.set('usefulAreaMax', filters.usefulArea.max);
+    } else {
+      params.delete('usefulAreaMax');
+    }
   } else {
-    params.delete('priceMax');
+    // Se ambos são default, remover dos parâmetros
+    params.delete('usefulAreaMin');
+    params.delete('usefulAreaMax');
   }
   
   // Adicionar formato de leilão (apenas se diferente do padrão)
@@ -214,6 +315,7 @@ const isValidPlace = (place: string | null): place is ValidPlace => {
 
 /**
  * Carrega os valores dos filtros a partir da URL
+ * Comportamento melhorado para lidar com valores padrão
  * 
  * @param searchParams - Parâmetros da URL atual
  * @param filters - Estado atual dos filtros
@@ -246,7 +348,7 @@ export const loadFiltersFromUrl = (
         state: legacyLocation,
         city: ''
       };
-    } else {
+    } else if (legacyLocation !== 'todos') {
       // Provavelmente é uma cidade ou outro tipo de localização
       newFilters.location = {
         state: '',
@@ -259,45 +361,68 @@ export const loadFiltersFromUrl = (
   // Tipos de veículos
   if (searchParams.has('types')) {
     const types = searchParams.get('types')?.split(',') || [];
-    newFilters.vehicleTypes = types;
-    hasChanges = true;
+    if (types.length > 0 && types[0] !== '') {
+      newFilters.vehicleTypes = types;
+      hasChanges = true;
+    }
   }
   
   // Marca do veículo
-  if (searchParams.has('brand')) {
+  if (searchParams.has('brand') && searchParams.get('brand') !== 'todas') {
     newFilters.brand = searchParams.get('brand') || 'todas';
     hasChanges = true;
   }
   
   // Modelo do veículo
-  if (searchParams.has('model')) {
+  if (searchParams.has('model') && searchParams.get('model') !== 'todos') {
     newFilters.model = searchParams.get('model') || 'todos';
     hasChanges = true;
   }
   
   // Cor do veículo
-  if (searchParams.has('color')) {
+  if (searchParams.has('color') && searchParams.get('color') !== 'todas') {
     newFilters.color = searchParams.get('color') || '';
     hasChanges = true;
   }
   
-  // Intervalo de anos
-  if (searchParams.has('yearMin') || searchParams.has('yearMax')) {
+  // Intervalo de anos - verificar se é diferente dos padrões
+  const yearMinParam = searchParams.get('yearMin');
+  const yearMaxParam = searchParams.get('yearMax');
+  
+  if ((yearMinParam && yearMinParam !== defaultRangeValues.year.min) || 
+      (yearMaxParam && yearMaxParam !== defaultRangeValues.year.max)) {
     newFilters.year = {
-      min: searchParams.get('yearMin') || '',
-      max: searchParams.get('yearMax') || ''
+      min: yearMinParam || defaultRangeValues.year.min,
+      max: yearMaxParam || defaultRangeValues.year.max
     };
     hasChanges = true;
   }
   
-  // Intervalo de preços
-  if (searchParams.has('priceMin') || searchParams.has('priceMax')) {
+  // Intervalo de preços - verificar se é diferente dos padrões
+  const priceMinParam = searchParams.get('priceMin');
+  const priceMaxParam = searchParams.get('priceMax');
+  
+  if ((priceMinParam && priceMinParam !== defaultRangeValues.price.min) || 
+      (priceMaxParam && priceMaxParam !== defaultRangeValues.price.max)) {
     newFilters.price = {
       ...newFilters.price,
       range: {
-        min: searchParams.get('priceMin') || '',
-        max: searchParams.get('priceMax') || ''
+        min: priceMinParam || defaultRangeValues.price.min,
+        max: priceMaxParam || defaultRangeValues.price.max
       }
+    };
+    hasChanges = true;
+  }
+  
+  // Área útil - verificar se é diferente dos padrões
+  const areaMinParam = searchParams.get('usefulAreaMin');
+  const areaMaxParam = searchParams.get('usefulAreaMax');
+  
+  if ((areaMinParam && areaMinParam !== defaultRangeValues.usefulArea.min) || 
+      (areaMaxParam && areaMaxParam !== defaultRangeValues.usefulArea.max)) {
+    newFilters.usefulArea = {
+      min: areaMinParam || defaultRangeValues.usefulArea.min,
+      max: areaMaxParam || defaultRangeValues.usefulArea.max
     };
     hasChanges = true;
   }
@@ -305,7 +430,7 @@ export const loadFiltersFromUrl = (
   // Formato do leilão
   if (searchParams.has('format')) {
     const format = searchParams.get('format');
-    if (isValidFormat(format)) {
+    if (isValidFormat(format) && format !== 'Leilão') {
       newFilters.format = format;
       hasChanges = true;
     }
@@ -314,7 +439,7 @@ export const loadFiltersFromUrl = (
   // Origem do leilão
   if (searchParams.has('origin')) {
     const origin = searchParams.get('origin');
-    if (isValidOrigin(origin)) {
+    if (isValidOrigin(origin) && origin !== 'Todas') {
       newFilters.origin = origin;
       hasChanges = true;
     }
@@ -323,7 +448,7 @@ export const loadFiltersFromUrl = (
   // Etapa do leilão
   if (searchParams.has('place')) {
     const place = searchParams.get('place');
-    if (isValidPlace(place)) {
+    if (isValidPlace(place) && place !== 'Todas') {
       newFilters.place = place;
       hasChanges = true;
     }

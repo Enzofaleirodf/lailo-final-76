@@ -35,7 +35,7 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     useThousandSeparator = true,
   } = options;
   
-  // Estado do filtro
+  // Estado do filtro - valores reais (sem formatação)
   const [values, setValues] = useState<RangeValues>({
     min: initialValues.min || '',
     max: initialValues.max || ''
@@ -43,45 +43,81 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   
   // Estado de exibição para permitir formatação diferente do valor real
   const [displayValues, setDisplayValues] = useState<RangeValues>({
-    min: initialValues.min || '',
-    max: initialValues.max || ''
+    min: formatDisplay ? formatValue(initialValues.min || '') : initialValues.min || '',
+    max: formatDisplay ? formatValue(initialValues.max || '') : initialValues.max || ''
   });
   
+  // Estado de erro para validação
   const [errors, setErrors] = useState<{min: string | null, max: string | null}>({min: null, max: null});
   
-  // Referência para rastrear interações do usuário
-  const userHasInteracted = useRef<boolean>(false);
+  // Referência para rastrear interações do usuário - crucial para não contar valores iniciais como filtros ativos
+  const userHasInteracted = useRef<{min: boolean, max: boolean}>({min: false, max: false});
   const [isActive, setIsActive] = useState<boolean>(false);
   
-  // Efeito para garantir que os valores padrão sejam exibidos
-  useEffect(() => {
-    if (defaultMin || defaultMax) {
-      // Mostrar valores padrão apenas para exibição, sem marcar como filtro ativo
-      setDisplayValues(prev => ({
-        min: prev.min || defaultMin || '',
-        max: prev.max || defaultMax || ''
-      }));
-      
-      // Se os valores reais estiverem vazios, mas temos valores padrão
-      if (!values.min && !values.max) {
-        setValues({
-          min: defaultMin || '',
-          max: defaultMax || ''
-        });
-      }
+  // Campo em modo de edição (para evitar formatação durante digitação)
+  const editingField = useRef<'min' | 'max' | null>(null);
+  
+  // Função para formatar valor para exibição
+  function formatValue(value: string): string {
+    if (!value || !formatDisplay) return value;
+    
+    // Se estiver em modo de edição, não formate
+    if ((editingField.current === 'min' && value === values.min) || 
+        (editingField.current === 'max' && value === values.max)) {
+      return value;
     }
-  }, [defaultMin, defaultMax]);
-
+    
+    const numValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+    if (isNaN(numValue)) return value;
+    
+    return numValue.toLocaleString('pt-BR', {
+      maximumFractionDigits: allowDecimals ? 2 : 0,
+      useGrouping: useThousandSeparator
+    });
+  }
+  
   // Determinar se o filtro está ativo apenas se o usuário tiver interagido com ele
   // e os valores forem diferentes dos padrões
   useEffect(() => {
-    if (!userHasInteracted.current) return;
+    const hasInteracted = userHasInteracted.current.min || userHasInteracted.current.max;
     
-    if (defaultMin !== undefined && defaultMax !== undefined) {
+    if (defaultMin !== undefined && defaultMax !== undefined && hasInteracted) {
       const active = values.min !== defaultMin || values.max !== defaultMax;
       setIsActive(active);
     }
   }, [values, defaultMin, defaultMax]);
+  
+  // Limpar input - remove formatação e caracteres não numéricos
+  const sanitizeInput = useCallback((value: string): string => {
+    let sanitizedValue = value;
+    
+    // Permitir números, vírgulas e pontos
+    if (!allowDecimals) {
+      sanitizedValue = sanitizedValue.replace(/[^\d-]/g, '');
+    } else {
+      // Permitir decimais, manter vírgulas e pontos
+      sanitizedValue = sanitizedValue.replace(/[^\d.,-]/g, '');
+      
+      // Converter vírgulas para pontos para cálculos
+      sanitizedValue = sanitizedValue.replace(/,/g, '.');
+      
+      // Garantir apenas um ponto decimal
+      const parts = sanitizedValue.split('.');
+      if (parts.length > 2) {
+        sanitizedValue = `${parts[0]}.${parts.slice(1).join('')}`;
+      }
+    }
+    
+    // Tratar números negativos
+    if (allowNegative && sanitizedValue.startsWith('-')) {
+      // Manter o sinal negativo apenas no início
+      sanitizedValue = `-${sanitizedValue.substring(1).replace(/-/g, '')}`;
+    } else if (!allowNegative) {
+      sanitizedValue = sanitizedValue.replace(/-/g, '');
+    }
+    
+    return sanitizedValue;
+  }, [allowDecimals, allowNegative]);
   
   // Validar valores após edição completa (saída do campo)
   const validateValues = useCallback((value: string, isMin: boolean): {
@@ -130,151 +166,173 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     return { value, error };
   }, [values.min, values.max, minAllowed, maxAllowed]);
   
-  // Formatar valor para exibição
-  const formatValue = useCallback((value: string): string => {
-    if (!value || !formatDisplay) return value;
-    
-    const numValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
-    if (isNaN(numValue)) return value;
-    
-    return numValue.toLocaleString('pt-BR', {
-      maximumFractionDigits: allowDecimals ? 2 : 0,
-      useGrouping: useThousandSeparator
-    });
-  }, [allowDecimals, formatDisplay, useThousandSeparator]);
-  
   // Processar mudança no valor mínimo
   const handleMinChange = useCallback((newValue: string) => {
-    // Marcar que o usuário interagiu com o filtro
-    userHasInteracted.current = true;
+    // Marcar campo como em edição
+    editingField.current = 'min';
     
-    // Atualizar o valor de exibição imediatamente para feedback do usuário
+    // Marcar que o usuário interagiu com este campo específico
+    userHasInteracted.current = { ...userHasInteracted.current, min: true };
+    
+    // Durante a digitação, mostrar o valor exato que o usuário está digitando
     setDisplayValues(prev => ({ ...prev, min: newValue }));
     
-    // Para o valor real, vamos sanitizar de forma menos agressiva
-    let cleanValue = newValue;
-    if (!allowDecimals) {
-      cleanValue = cleanValue.replace(/[^\d-]/g, '');
-    } else if (allowDecimals) {
-      // Permitir números e um ponto decimal
-      cleanValue = cleanValue.replace(/[^\d.-]/g, '');
-      
-      // Garantir apenas um ponto decimal
-      const parts = cleanValue.split('.');
-      if (parts.length > 2) {
-        cleanValue = `${parts[0]}.${parts.slice(1).join('')}`;
-      }
-    }
-    
-    if (allowNegative && cleanValue.startsWith('-')) {
-      // Manter o sinal negativo apenas no início
-      cleanValue = `-${cleanValue.substring(1).replace(/-/g, '')}`;
-    } else if (!allowNegative) {
-      cleanValue = cleanValue.replace(/-/g, '');
-    }
+    // Para o valor real, sanitizar sem formatação
+    const sanitizedValue = sanitizeInput(newValue);
     
     // Atualizar o valor real
-    const newValues = { ...values, min: cleanValue };
-    setValues(newValues);
+    setValues(prev => ({ ...prev, min: sanitizedValue }));
     
-    // Notificar mudança mesmo durante digitação
+    // Notificar mudança
     if (onChange) {
-      onChange(newValues);
+      onChange({ ...values, min: sanitizedValue });
     }
-  }, [values, onChange, allowDecimals, allowNegative]);
+  }, [values, onChange, sanitizeInput]);
   
   // Processar mudança no valor máximo
   const handleMaxChange = useCallback((newValue: string) => {
-    // Marcar que o usuário interagiu com o filtro
-    userHasInteracted.current = true;
+    // Marcar campo como em edição
+    editingField.current = 'max';
     
-    // Atualizar o valor de exibição imediatamente para feedback do usuário
+    // Marcar que o usuário interagiu com este campo específico
+    userHasInteracted.current = { ...userHasInteracted.current, max: true };
+    
+    // Durante a digitação, mostrar o valor exato que o usuário está digitando
     setDisplayValues(prev => ({ ...prev, max: newValue }));
     
-    // Para o valor real, vamos sanitizar de forma menos agressiva
-    let cleanValue = newValue;
-    if (!allowDecimals) {
-      cleanValue = cleanValue.replace(/[^\d-]/g, '');
-    } else if (allowDecimals) {
-      // Permitir números e um ponto decimal
-      cleanValue = cleanValue.replace(/[^\d.-]/g, '');
-      
-      // Garantir apenas um ponto decimal
-      const parts = cleanValue.split('.');
-      if (parts.length > 2) {
-        cleanValue = `${parts[0]}.${parts.slice(1).join('')}`;
-      }
-    }
-    
-    if (allowNegative && cleanValue.startsWith('-')) {
-      // Manter o sinal negativo apenas no início
-      cleanValue = `-${cleanValue.substring(1).replace(/-/g, '')}`;
-    } else if (!allowNegative) {
-      cleanValue = cleanValue.replace(/-/g, '');
-    }
+    // Para o valor real, sanitizar sem formatação
+    const sanitizedValue = sanitizeInput(newValue);
     
     // Atualizar o valor real
-    const newValues = { ...values, max: cleanValue };
-    setValues(newValues);
+    setValues(prev => ({ ...prev, max: sanitizedValue }));
     
-    // Notificar mudança mesmo durante digitação
+    // Notificar mudança
     if (onChange) {
-      onChange(newValues);
+      onChange({ ...values, max: sanitizedValue });
     }
-  }, [values, onChange, allowDecimals, allowNegative]);
+  }, [values, onChange, sanitizeInput]);
   
   // Validar valor quando o usuário termina a edição
   const handleBlur = useCallback((isMin: boolean) => {
-    const valueToValidate = isMin ? values.min : values.max;
+    // Limpar indicador de campo em edição
+    editingField.current = null;
+    
+    const fieldName = isMin ? 'min' : 'max';
+    const valueToValidate = values[fieldName];
     const { value, error } = validateValues(valueToValidate, isMin);
     
     // Atualizar erros
     setErrors(prev => ({
       ...prev,
-      [isMin ? 'min' : 'max']: error
+      [fieldName]: error
     }));
     
     // Se o campo estiver vazio após a edição, restaurar para o valor padrão
     if (!valueToValidate) {
       const defaultValue = isMin ? defaultMin : defaultMax;
       if (defaultValue) {
-        if (isMin) {
-          handleMinChange(defaultValue);
-          setDisplayValues(prev => ({ ...prev, min: defaultValue }));
-        } else {
-          handleMaxChange(defaultValue);
-          setDisplayValues(prev => ({ ...prev, max: defaultValue }));
+        // Atualizar valores
+        setValues(prev => ({ ...prev, [fieldName]: defaultValue }));
+        
+        // Aplicar formatação para exibição
+        const formattedValue = formatDisplay ? formatValue(defaultValue) : defaultValue;
+        setDisplayValues(prev => ({ ...prev, [fieldName]: formattedValue }));
+        
+        // Notificar mudança
+        if (onChange) {
+          onChange({ ...values, [fieldName]: defaultValue });
         }
       }
-    }
-    
-    // Se houver erro de validação, corrigir o valor quando apropriado
-    if (error) {
-      if (isMin && minAllowed !== undefined && Number(valueToValidate) < minAllowed) {
-        handleMinChange(String(minAllowed));
-        setDisplayValues(prev => ({ ...prev, min: String(minAllowed) }));
-      } else if (!isMin && maxAllowed !== undefined && Number(valueToValidate) > maxAllowed) {
-        handleMaxChange(String(maxAllowed));
-        setDisplayValues(prev => ({ ...prev, max: String(maxAllowed) }));
+    } else if (error) {
+      // Se houver erro de validação, corrigir o valor quando apropriado
+      let correctedValue = valueToValidate;
+      
+      if (isMin) {
+        // Ajustar valor mínimo se estiver fora dos limites
+        if (minAllowed !== undefined && Number(valueToValidate) < minAllowed) {
+          correctedValue = String(minAllowed);
+        }
+        // Se for maior que o máximo, corrigir para o valor máximo
+        else if (values.max && Number(valueToValidate) > Number(values.max)) {
+          correctedValue = values.max;
+        }
+      } else {
+        // Ajustar valor máximo se estiver fora dos limites
+        if (maxAllowed !== undefined && Number(valueToValidate) > maxAllowed) {
+          correctedValue = String(maxAllowed);
+        }
+        // Se for menor que o mínimo, corrigir para o valor mínimo
+        else if (values.min && Number(valueToValidate) < Number(values.min)) {
+          correctedValue = values.min;
+        }
       }
+      
+      // Atualizar valores se houve correção
+      if (correctedValue !== valueToValidate) {
+        setValues(prev => ({ ...prev, [fieldName]: correctedValue }));
+        
+        // Aplicar formatação para exibição
+        const formattedValue = formatDisplay ? formatValue(correctedValue) : correctedValue;
+        setDisplayValues(prev => ({ ...prev, [fieldName]: formattedValue }));
+        
+        // Limpar o erro após a correção
+        setErrors(prev => ({ ...prev, [fieldName]: null }));
+        
+        // Notificar mudança
+        if (onChange) {
+          onChange({ ...values, [fieldName]: correctedValue });
+        }
+      }
+    } else {
+      // Sem erro, apenas aplicar formatação para exibição após sair do campo
+      const formattedValue = formatDisplay ? formatValue(valueToValidate) : valueToValidate;
+      setDisplayValues(prev => ({ ...prev, [fieldName]: formattedValue }));
     }
-  }, [values, validateValues, defaultMin, defaultMax, handleMinChange, handleMaxChange, minAllowed, maxAllowed]);
+  }, [values, validateValues, defaultMin, defaultMax, onChange, formatDisplay, minAllowed, maxAllowed]);
   
   // Resetar para valores padrão
   const resetValues = useCallback(() => {
     if (defaultMin !== undefined && defaultMax !== undefined) {
       const defaultValues = { min: defaultMin, max: defaultMax };
       setValues(defaultValues);
-      setDisplayValues(defaultValues);
+      
+      // Aplicar formatação para valores de exibição
+      setDisplayValues({
+        min: formatDisplay ? formatValue(defaultMin) : defaultMin,
+        max: formatDisplay ? formatValue(defaultMax) : defaultMax
+      });
+      
       setErrors({ min: null, max: null });
-      userHasInteracted.current = false;
+      userHasInteracted.current = { min: false, max: false };
       setIsActive(false);
       
       if (onChange) {
         onChange(defaultValues);
       }
     }
-  }, [defaultMin, defaultMax, onChange]);
+  }, [defaultMin, defaultMax, onChange, formatDisplay]);
+  
+  // Atualizar valores de exibição quando os valores reais mudam externamente
+  useEffect(() => {
+    if (!editingField.current) {
+      setDisplayValues({
+        min: formatDisplay ? formatValue(values.min) : values.min,
+        max: formatDisplay ? formatValue(values.max) : values.max
+      });
+    }
+  }, [values, formatDisplay]);
+  
+  // Inicializar com valores padrão para exibição se os valores iniciais estiverem vazios
+  useEffect(() => {
+    if (!values.min && !values.max && defaultMin && defaultMax) {
+      setValues({ min: defaultMin, max: defaultMax });
+      
+      setDisplayValues({
+        min: formatDisplay ? formatValue(defaultMin) : defaultMin,
+        max: formatDisplay ? formatValue(defaultMax) : defaultMax
+      });
+    }
+  }, [defaultMin, defaultMax, formatDisplay]);
   
   return {
     values,
@@ -286,6 +344,6 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     handleBlur,
     resetValues,
     formatValue,
-    userHasInteracted: userHasInteracted.current
+    userHasInteracted: userHasInteracted.current.min || userHasInteracted.current.max
   };
 }

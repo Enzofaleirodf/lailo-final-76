@@ -55,7 +55,6 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
     handleMinChange,
     handleMaxChange,
     handleBlur,
-    formatValue,
   } = useRangeFilter(initialValues, {
     defaultMin: defaultValues.min,
     defaultMax: defaultValues.max,
