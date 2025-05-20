@@ -1,33 +1,57 @@
 
+/**
+ * @fileoverview Utilitários para manipulação de URLs e sincronização com o estado dos filtros
+ */
+
 import { FilterState } from '@/types/filters';
 import { SortOption } from '@/stores/useSortStore';
 
 /**
  * Verifica se os filtros atuais diferem dos parâmetros da URL
+ * 
+ * @param currentFilters - Estado atual dos filtros na aplicação
+ * @param params - Parâmetros da URL atual
+ * @returns true se os filtros foram alterados em relação à URL
  */
 export const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
   if ((params.get('state') || '') !== currentFilters.location.state) return true;
   if ((params.get('city') || '') !== currentFilters.location.city) return true;
+  
   // Checar também o parâmetro legado 'location'
   const oldLocation = params.get('location');
   if (oldLocation && oldLocation !== 'todos' && !currentFilters.location.state && !currentFilters.location.city) return true;
   
-  if ((params.get('types')?.split(',') || []).join(',') !== currentFilters.vehicleTypes.join(',')) return true;
+  // Comparação de arrays (tipos de veículos)
+  const typesParam = params.get('types')?.split(',') || [];
+  if (typesParam.join(',') !== currentFilters.vehicleTypes.join(',')) return true;
+  
+  // Comparações de valores simples com valores padrão
   if ((params.get('brand') || 'todas') !== currentFilters.brand) return true;
   if ((params.get('model') || 'todos') !== currentFilters.model) return true;
   if ((params.get('color') || 'todas') !== currentFilters.color) return true;
+  
+  // Comparações de intervalos (year, price)
   if ((params.get('yearMin') || '') !== currentFilters.year.min) return true;
   if ((params.get('yearMax') || '') !== currentFilters.year.max) return true;
   if ((params.get('priceMin') || '') !== currentFilters.price.range.min) return true;
   if ((params.get('priceMax') || '') !== currentFilters.price.range.max) return true;
+  
+  // Filtros de leilão
   if ((params.get('format') || 'Todos') !== currentFilters.format) return true;
   if ((params.get('origin') || 'Todas') !== currentFilters.origin) return true;
   if ((params.get('place') || 'Todas') !== currentFilters.place) return true;
+  
+  // Se chegamos aqui, não houve mudanças
   return false;
 };
 
 /**
  * Atualiza os parâmetros da URL com base no estado atual de filtros e ordenação
+ * 
+ * @param filters - Estado atual dos filtros
+ * @param sortOption - Opção de ordenação selecionada
+ * @param searchParams - Parâmetros atuais da URL
+ * @param setSearchParams - Função para atualizar os parâmetros da URL
  */
 export const updateUrlParams = (
   filters: FilterState, 
@@ -47,7 +71,7 @@ export const updateUrlParams = (
     params.delete('sort');
   }
   
-  // Adicionar filtro de localização à URL (agora usando state e city)
+  // Adicionar filtro de localização à URL (state e city)
   if (filters.location.state) {
     params.set('state', filters.location.state);
   } else {
@@ -60,33 +84,38 @@ export const updateUrlParams = (
     params.delete('city');
   }
   
-  // Para compatibilidade com a versão anterior do parâmetro 'location'
+  // Remover parâmetro legado 'location' para evitar conflitos
   params.delete('location');
   
+  // Adicionar tipos de veículos (apenas se não estiver vazio)
   if (filters.vehicleTypes.length > 0) {
     params.set('types', filters.vehicleTypes.join(','));
   } else {
     params.delete('types');
   }
   
+  // Adicionar marca (apenas se diferente do padrão)
   if (filters.brand !== 'todas') {
     params.set('brand', filters.brand);
   } else {
     params.delete('brand');
   }
   
+  // Adicionar modelo (apenas se diferente do padrão)
   if (filters.model !== 'todos') {
     params.set('model', filters.model);
   } else {
     params.delete('model');
   }
   
+  // Adicionar cor (apenas se diferente do padrão)
   if (filters.color && filters.color !== 'todas') {
     params.set('color', filters.color);
   } else {
     params.delete('color');
   }
   
+  // Adicionar intervalo de ano (apenas se não estiver vazio)
   if (filters.year.min) {
     params.set('yearMin', filters.year.min);
   } else {
@@ -99,6 +128,7 @@ export const updateUrlParams = (
     params.delete('yearMax');
   }
   
+  // Adicionar intervalo de preço (apenas se não estiver vazio)
   if (filters.price.range.min) {
     params.set('priceMin', filters.price.range.min);
   } else {
@@ -111,18 +141,21 @@ export const updateUrlParams = (
     params.delete('priceMax');
   }
   
+  // Adicionar formato de leilão (apenas se diferente do padrão)
   if (filters.format !== 'Todos') {
     params.set('format', filters.format);
   } else {
     params.delete('format');
   }
   
+  // Adicionar origem de leilão (apenas se diferente do padrão)
   if (filters.origin !== 'Todas') {
     params.set('origin', filters.origin);
   } else {
     params.delete('origin');
   }
   
+  // Adicionar etapa de leilão (apenas se diferente do padrão)
   if (filters.place !== 'Todas') {
     params.set('place', filters.place);
   } else {
@@ -141,12 +174,55 @@ export const updateUrlParams = (
 };
 
 /**
+ * Tipos válidos para filtros de formato
+ */
+type ValidFormat = 'Todos' | 'Alienação Particular' | 'Leilão' | 'Venda Direta';
+
+/**
+ * Tipos válidos para filtros de origem
+ */
+type ValidOrigin = 'Todas' | 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
+
+/**
+ * Tipos válidos para filtros de etapa
+ */
+type ValidPlace = 'Todas' | 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
+
+/**
+ * Verifica se um valor é um formato válido
+ */
+const isValidFormat = (format: string | null): format is ValidFormat => {
+  if (!format) return false;
+  return ['Todos', 'Alienação Particular', 'Leilão', 'Venda Direta'].includes(format);
+};
+
+/**
+ * Verifica se um valor é uma origem válida
+ */
+const isValidOrigin = (origin: string | null): origin is ValidOrigin => {
+  if (!origin) return false;
+  return ['Todas', 'Extrajudicial', 'Judicial', 'Particular', 'Público'].includes(origin);
+};
+
+/**
+ * Verifica se um valor é uma etapa válida
+ */
+const isValidPlace = (place: string | null): place is ValidPlace => {
+  if (!place) return false;
+  return ['Todas', 'Praça única', '1ª Praça', '2ª Praça', '3ª Praça'].includes(place);
+};
+
+/**
  * Carrega os valores dos filtros a partir da URL
+ * 
+ * @param searchParams - Parâmetros da URL atual
+ * @param filters - Estado atual dos filtros
+ * @returns Novos filtros baseados na URL ou null se não houver alterações
  */
 export const loadFiltersFromUrl = (
   searchParams: URLSearchParams,
   filters: FilterState
-): Partial<FilterState> => {
+): Partial<FilterState> | null => {
   const newFilters = { ...filters };
   let hasChanges = false;
   
@@ -180,27 +256,32 @@ export const loadFiltersFromUrl = (
     hasChanges = true;
   }
   
+  // Tipos de veículos
   if (searchParams.has('types')) {
     const types = searchParams.get('types')?.split(',') || [];
     newFilters.vehicleTypes = types;
     hasChanges = true;
   }
   
+  // Marca do veículo
   if (searchParams.has('brand')) {
     newFilters.brand = searchParams.get('brand') || 'todas';
     hasChanges = true;
   }
   
+  // Modelo do veículo
   if (searchParams.has('model')) {
     newFilters.model = searchParams.get('model') || 'todos';
     hasChanges = true;
   }
   
+  // Cor do veículo
   if (searchParams.has('color')) {
     newFilters.color = searchParams.get('color') || '';
     hasChanges = true;
   }
   
+  // Intervalo de anos
   if (searchParams.has('yearMin') || searchParams.has('yearMax')) {
     newFilters.year = {
       min: searchParams.get('yearMin') || '',
@@ -209,6 +290,7 @@ export const loadFiltersFromUrl = (
     hasChanges = true;
   }
   
+  // Intervalo de preços
   if (searchParams.has('priceMin') || searchParams.has('priceMax')) {
     newFilters.price = {
       ...newFilters.price,
@@ -220,28 +302,29 @@ export const loadFiltersFromUrl = (
     hasChanges = true;
   }
   
+  // Formato do leilão
   if (searchParams.has('format')) {
     const format = searchParams.get('format');
-    if (format && (format === 'Todos' || format === 'Alienação Particular' || format === 'Leilão' || format === 'Venda Direta')) {
-      newFilters.format = format as any;
+    if (isValidFormat(format)) {
+      newFilters.format = format;
       hasChanges = true;
     }
   }
   
+  // Origem do leilão
   if (searchParams.has('origin')) {
     const origin = searchParams.get('origin');
-    if (origin && (origin === 'Todas' || origin === 'Extrajudicial' || origin === 'Judicial' || 
-        origin === 'Particular' || origin === 'Público')) {
-      newFilters.origin = origin as any;
+    if (isValidOrigin(origin)) {
+      newFilters.origin = origin;
       hasChanges = true;
     }
   }
   
+  // Etapa do leilão
   if (searchParams.has('place')) {
     const place = searchParams.get('place');
-    if (place && (place === 'Todas' || place === 'Praça única' || place === '1ª Praça' || 
-        place === '2ª Praça' || place === '3ª Praça')) {
-      newFilters.place = place as any;
+    if (isValidPlace(place)) {
+      newFilters.place = place;
       hasChanges = true;
     }
   }

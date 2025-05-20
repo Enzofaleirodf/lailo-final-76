@@ -4,6 +4,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import MobileFilterOptions from '../MobileFilterOptions';
 import * as filterStoreModule from '@/stores/useFilterStore';
+import { FilterState, ExpandedSectionsState } from '@/types/filters';
+
+// Mock do useFilterStore
+jest.mock('@/stores/useFilterStore', () => ({
+  useFilterStore: jest.fn()
+}));
 
 describe('MobileFilterOptions', () => {
   const mockUpdateFilter = jest.fn();
@@ -12,13 +18,13 @@ describe('MobileFilterOptions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Mock the useFilterStore hook
-    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
+    // Configurar o mock do useFilterStore
+    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue({
       filters: {
         format: 'Todos',
         origin: 'Todas',
         place: 'Todas',
-        // Add other required filter properties
+        // Adicionar outras propriedades necessárias
         contentType: 'property',
         location: { state: '', city: '' },
         vehicleTypes: [],
@@ -29,13 +35,13 @@ describe('MobileFilterOptions', () => {
         brand: 'todas',
         model: 'todos',
         color: 'todas'
-      },
+      } as FilterState,
       updateFilter: mockUpdateFilter,
       expandedSections: {
         format: true,
         origin: false,
         place: false,
-        // Add other required section properties
+        // Adicionar outras seções necessárias
         location: false,
         vehicleType: false,
         propertyType: false,
@@ -44,7 +50,7 @@ describe('MobileFilterOptions', () => {
         usefulArea: false,
         model: false,
         color: false
-      },
+      } as ExpandedSectionsState,
       toggleSection: mockToggleSection,
       resetFilters: jest.fn(),
       activeFilters: 0,
@@ -104,5 +110,86 @@ describe('MobileFilterOptions', () => {
     
     // Check if updateFilter was called with the correct parameters
     expect(mockUpdateFilter).toHaveBeenCalledWith('place', '1ª Praça');
+  });
+  
+  test('starts with format section expanded based on expandedSections state', () => {
+    // Re-mock com a seção formato expandida
+    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue({
+      filters: {
+        format: 'Todos',
+        origin: 'Todas',
+        place: 'Todas',
+        contentType: 'property',
+        location: { state: '', city: '' },
+        vehicleTypes: [],
+        propertyTypes: [],
+        price: { value: [0, 100], range: { min: '', max: '' } },
+        year: { min: '', max: '' },
+        usefulArea: { min: '', max: '' },
+        brand: 'todas',
+        model: 'todos',
+        color: 'todas'
+      } as FilterState,
+      updateFilter: mockUpdateFilter,
+      expandedSections: {
+        format: true,  // Expandido
+        origin: false,
+        place: false,
+        location: false,
+        vehicleType: false,
+        propertyType: false,
+        price: false,
+        year: false,
+        usefulArea: false,
+        model: false,
+        color: false
+      },
+      toggleSection: mockToggleSection,
+      resetFilters: jest.fn(),
+      activeFilters: 0,
+      lastUpdatedFilter: null,
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
+    });
+
+    render(<MobileFilterOptions />);
+    
+    // Verifica se o dropdown de formato está visível (expandido)
+    expect(screen.getByLabelText('Selecionar formato')).toBeVisible();
+    
+    // Os outros devem estar colapsados e não visíveis
+    expect(screen.queryByLabelText('Selecionar origem')).not.toBeVisible();
+    expect(screen.queryByLabelText('Selecionar etapa')).not.toBeVisible();
+  });
+  
+  test('applies all filter options correctly', () => {
+    render(<MobileFilterOptions />);
+    
+    // Alterar formato
+    fireEvent.change(screen.getByLabelText('Selecionar formato'), { 
+      target: { value: 'Alienação Particular' } 
+    });
+    
+    // Abrir e alterar origem
+    fireEvent.click(screen.getByText('Origem'));
+    fireEvent.change(screen.getByLabelText('Selecionar origem'), { 
+      target: { value: 'Extrajudicial' } 
+    });
+    
+    // Abrir e alterar etapa
+    fireEvent.click(screen.getByText('Etapa'));
+    fireEvent.change(screen.getByLabelText('Selecionar etapa'), { 
+      target: { value: 'Praça única' } 
+    });
+    
+    // Verificar se todas as chamadas foram feitas corretamente
+    expect(mockUpdateFilter).toHaveBeenCalledWith('format', 'Alienação Particular');
+    expect(mockUpdateFilter).toHaveBeenCalledWith('origin', 'Extrajudicial');
+    expect(mockUpdateFilter).toHaveBeenCalledWith('place', 'Praça única');
+    
+    // Verificar se toggleSection foi chamado para cada seção
+    expect(mockToggleSection).toHaveBeenCalledWith('origin');
+    expect(mockToggleSection).toHaveBeenCalledWith('place');
   });
 });

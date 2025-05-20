@@ -1,10 +1,18 @@
 
-import React from 'react';
+/**
+ * @fileoverview Componente de opções de filtros para dispositivos móveis
+ * Renderiza as seções de filtros específicas para o modo mobile
+ */
+import React, { memo, useCallback } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
 import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
 
+/**
+ * MobileFilterOptions - Exibe as opções de filtro em formato móvel
+ * Implementa os filtros de formato, origem e etapa do leilão
+ */
 const MobileFilterOptions: React.FC = () => {
   const {
     filters,
@@ -13,18 +21,20 @@ const MobileFilterOptions: React.FC = () => {
     toggleSection
   } = useFilterStore();
 
-  const handleFormatChange = (value: string) => {
+  // Handlers memoizados para evitar renderizações desnecessárias
+  const handleFormatChange = useCallback((value: string) => {
     updateFilter('format', value as FilterFormat);
-  };
+  }, [updateFilter]);
 
-  const handleOriginChange = (value: string) => {
+  const handleOriginChange = useCallback((value: string) => {
     updateFilter('origin', value as FilterOrigin);
-  };
+  }, [updateFilter]);
 
-  const handlePlaceChange = (value: string) => {
+  const handlePlaceChange = useCallback((value: string) => {
     updateFilter('place', value as FilterPlace);
-  };
+  }, [updateFilter]);
 
+  // Opções para os dropdowns
   const formatOptions = [
     { value: 'Todos', label: 'Todos' },
     { value: 'Alienação Particular', label: 'Alienação Particular' },
@@ -48,12 +58,17 @@ const MobileFilterOptions: React.FC = () => {
     { value: '3ª Praça', label: '3ª Praça' }
   ];
 
+  // Usando React.memo em conjunto com useCallback para otimizar renderizações
+  const handleToggleFormat = useCallback(() => toggleSection('format'), [toggleSection]);
+  const handleToggleOrigin = useCallback(() => toggleSection('origin'), [toggleSection]);
+  const handleTogglePlace = useCallback(() => toggleSection('place'), [toggleSection]);
+
   return (
     <div className="grid grid-cols-1 gap-0">
       <FilterSectionComponent 
         title="Formato" 
         isExpanded={expandedSections.format} 
-        onToggle={() => toggleSection('format')}
+        onToggle={handleToggleFormat}
       >
         <FilterDropdown 
           id="format-filter-mobile" 
@@ -68,7 +83,7 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Origem" 
         isExpanded={expandedSections.origin} 
-        onToggle={() => toggleSection('origin')}
+        onToggle={handleToggleOrigin}
       >
         <FilterDropdown 
           id="origin-filter-mobile" 
@@ -83,7 +98,7 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Etapa" 
         isExpanded={expandedSections.place} 
-        onToggle={() => toggleSection('place')}
+        onToggle={handleTogglePlace}
       >
         <FilterDropdown 
           id="place-filter-mobile" 
@@ -98,4 +113,5 @@ const MobileFilterOptions: React.FC = () => {
   );
 };
 
-export default React.memo(MobileFilterOptions);
+// Usar memo para evitar renderizações desnecessárias quando o componente pai re-renderiza
+export default memo(MobileFilterOptions);
