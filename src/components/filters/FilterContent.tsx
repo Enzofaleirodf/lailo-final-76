@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import FilterSectionComponent from './FilterSectionComponent';
@@ -22,7 +22,8 @@ const FilterContent: React.FC = () => {
     toggleSection,
     resetFilters,
     activeFilters,
-    filters
+    filters,
+    lastUpdatedFilter
   } = useFilterStore();
   const isMobile = useIsMobile();
   const { toast } = useToast();
@@ -30,14 +31,95 @@ const FilterContent: React.FC = () => {
   // Determine if showing property or vehicle filters
   const isPropertyMode = filters.contentType === 'property';
 
+  // Show toast when filters are applied - using the lastUpdatedFilter from store
+  useEffect(() => {
+    if (lastUpdatedFilter && lastUpdatedFilter !== 'initial') {
+      // Don't show toast on initial load
+      let filterName = '';
+      let filterValue = '';
+      
+      // Map filter names to user-friendly descriptions
+      switch (lastUpdatedFilter) {
+        case 'location':
+          if (filters.location.state && filters.location.city) {
+            filterName = 'Localização';
+            filterValue = `${filters.location.city}, ${filters.location.state}`;
+          } else if (filters.location.state) {
+            filterName = 'Estado';
+            filterValue = filters.location.state;
+          } else if (filters.location.city) {
+            filterName = 'Cidade';
+            filterValue = filters.location.city;
+          }
+          break;
+        case 'propertyType':
+          filterName = 'Tipo de imóvel';
+          filterValue = filters.propertyTypes.join(', ');
+          break;
+        case 'vehicleType':
+          filterName = 'Tipo de veículo';
+          filterValue = filters.vehicleTypes.join(', ');
+          break;
+        case 'price':
+          filterName = 'Faixa de preço';
+          const min = filters.price.range.min ? `R$ ${filters.price.range.min}` : 'mínimo';
+          const max = filters.price.range.max ? `R$ ${filters.price.range.max}` : 'máximo';
+          filterValue = `${min} até ${max}`;
+          break;
+        case 'year':
+          filterName = 'Ano';
+          filterValue = `${filters.year.min || 'mínimo'} até ${filters.year.max || 'máximo'}`;
+          break;
+        case 'usefulArea':
+          filterName = 'Área útil';
+          filterValue = `${filters.usefulArea.min || 'mínimo'} até ${filters.usefulArea.max || 'máximo'} m²`;
+          break;
+        case 'brand':
+          filterName = 'Marca';
+          filterValue = filters.brand;
+          break;
+        case 'model':
+          filterName = 'Modelo';
+          filterValue = filters.model;
+          break;
+        case 'color':
+          filterName = 'Cor';
+          filterValue = filters.color;
+          break;
+        case 'reset':
+          // Special case for reset - handled separately
+          break;
+        default:
+          filterName = lastUpdatedFilter;
+          filterValue = 'atualizado';
+      }
+      
+      // Show specific toast for reset action
+      if (lastUpdatedFilter === 'reset') {
+        toast({
+          title: "Filtros resetados",
+          description: "Todos os filtros foram removidos",
+          duration: 3000
+        });
+      } 
+      // Only show toast for specific filter changes if it has a meaningful value
+      else if (filterName && filterValue && filterValue !== 'todos' && filterValue !== 'todas') {
+        toast({
+          title: `Filtro aplicado: ${filterName}`,
+          description: filterValue,
+          duration: 3000
+        });
+      }
+    }
+  }, [lastUpdatedFilter, filters, toast]);
+
   // Handle filter changes - now consistent between desktop and mobile
   const handleFilterChange = () => {
     // Create and dispatch the filters:applied event
     window.dispatchEvent(new CustomEvent('filters:applied'));
     
-    // On desktop we don't show a toast since changes are applied automatically
+    // On desktop we don't need to manually trigger toast since useEffect will handle it
     if (isMobile) {
-      // Only show toast on mobile when filters are applied via button
       console.log('Filter change detected on mobile - toast will show when Apply button is clicked');
     }
   };
@@ -45,13 +127,6 @@ const FilterContent: React.FC = () => {
   // Reset filters and notify - consistent behavior across devices
   const handleResetFilters = () => {
     resetFilters();
-
-    // Show toast when filters are reset - same behavior on mobile and desktop
-    toast({
-      title: "Filtros resetados",
-      description: "Todos os filtros foram removidos",
-      duration: 2000
-    });
     
     // Trigger filter application event
     window.dispatchEvent(new CustomEvent('filters:applied'));

@@ -1,244 +1,182 @@
 
 import { create } from 'zustand';
-import { ContentType, FilterFormat, FilterOrigin, FilterPlace, YearRange, PriceRange, LocationFilter, UsefulAreaRange } from '@/types/filters';
+import { devtools } from 'zustand/middleware';
+import { ContentType, FilterState, LocationFilter, ExpandedSectionsState } from '@/types/filters';
 
-// Define the filter state interface
-export interface FilterState {
-  contentType: ContentType;
-  location: LocationFilter;
-  vehicleTypes: string[];
-  propertyTypes: string[];
-  brand: string;
-  model: string;
-  color: string;
-  year: YearRange;
-  usefulArea: UsefulAreaRange;
-  price: {
-    value: number[];
-    range: PriceRange;
-  };
-  format: FilterFormat;
-  origin: FilterOrigin;
-  place: FilterPlace;
+// Define the shape of our store
+interface FilterStore {
+  filters: FilterState;
+  expandedSections: ExpandedSectionsState;
+  activeFilters: number;
+  lastUpdatedFilter: string | null;
+  
+  // Actions
+  updateFilter: <K extends keyof FilterState>(
+    key: K,
+    value: FilterState[K]
+  ) => void;
+  resetFilters: () => void;
+  setFilters: (filters: Partial<FilterState>) => void;
+  toggleSection: (section: keyof ExpandedSectionsState) => void;
+  collapseAllSections: () => void;
+  expandAllSections: () => void;
 }
 
-// Default filter values
-export const DEFAULT_FILTERS: FilterState = {
-  contentType: 'vehicle',
-  location: { state: '', city: '' },
+// Define the initial state for filters
+const initialFilterState: FilterState = {
+  contentType: 'property',
+  location: {
+    state: '',
+    city: ''
+  },
   vehicleTypes: [],
   propertyTypes: [],
+  price: {
+    range: {
+      min: '',
+      max: ''
+    }
+  },
+  year: {
+    min: '',
+    max: ''
+  },
+  usefulArea: {
+    min: '',
+    max: ''
+  },
   brand: 'todas',
   model: 'todos',
   color: 'todas',
-  year: { min: '', max: '' },
-  usefulArea: { min: '', max: '' },
-  price: {
-    value: [0, 100],
-    range: { min: '', max: '' }
-  },
   format: 'Todos',
   origin: 'Todas',
   place: 'Todas'
 };
 
-// Filter groups by content type
-export const VEHICLE_FILTER_KEYS = ['vehicleTypes', 'brand', 'model', 'color', 'year'];
-export const PROPERTY_FILTER_KEYS = ['propertyTypes', 'usefulArea'];
-export const COMMON_FILTER_KEYS = ['location', 'price', 'format', 'origin', 'place'];
+// Define which filter sections are expanded by default
+const initialExpandedSections: ExpandedSectionsState = {
+  location: true,
+  vehicleType: false,
+  propertyType: false,
+  price: false,
+  year: false,
+  usefulArea: false,
+  model: false,
+  color: false,
+};
 
-// Função para calcular filtros ativos
-const calculateActiveFilters = (filters: FilterState): number => {
+// Count active filters to show in badge
+const countActiveFilters = (filters: FilterState): number => {
   let count = 0;
   
-  // Count location if either state or city is set
+  // Location filters (state or city)
   if (filters.location.state || filters.location.city) count++;
   
-  // Only count vehicle types if not empty and not containing default
-  if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) count++;
+  // Vehicle types
+  if (filters.vehicleTypes.length > 0) count++;
   
-  // Only count property types if not empty and not containing default
-  if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) count++;
+  // Property types
+  if (filters.propertyTypes.length > 0) count++;
   
-  // Only count brand if not default
-  if (filters.brand && filters.brand !== DEFAULT_FILTERS.brand) count++;
-  
-  // Only count model if not default
-  if (filters.model && filters.model !== DEFAULT_FILTERS.model) count++;
-  
-  // Only count color if not default
-  if (filters.color && filters.color !== DEFAULT_FILTERS.color) count++;
-  
-  // Year filter only counts if min or max are set
-  if (filters.year.min || filters.year.max) count++;
-  
-  // Useful area filter only counts if min or max are set
-  if (filters.usefulArea.min || filters.usefulArea.max) count++;
-  
-  // Price range filter only counts if min or max are set
+  // Price range
   if (filters.price.range.min || filters.price.range.max) count++;
   
-  // Only count format if not default
-  if (filters.format !== DEFAULT_FILTERS.format) count++;
+  // Year range
+  if (filters.year.min || filters.year.max) count++;
   
-  // Only count origin if not default
-  if (filters.origin !== DEFAULT_FILTERS.origin) count++;
+  // Useful area range
+  if (filters.usefulArea.min || filters.usefulArea.max) count++;
   
-  // Only count place if not default
-  if (filters.place !== DEFAULT_FILTERS.place) count++;
+  // Brand, model, color
+  if (filters.brand !== 'todas') count++;
+  if (filters.model !== 'todos') count++;
+  if (filters.color !== 'todas') count++;
+  
+  // Auction format, origin, place
+  if (filters.format !== 'Todos') count++;
+  if (filters.origin !== 'Todas') count++;
+  if (filters.place !== 'Todas') count++;
   
   return count;
 };
 
-// Função para limpar filtros específicos de um tipo de conteúdo
-const cleanContentTypeFilters = (filters: FilterState, contentType: ContentType): FilterState => {
-  const updatedFilters = { ...filters };
-  
-  if (contentType === 'property') {
-    // When switching to properties, clear vehicle-specific filters
-    updatedFilters.vehicleTypes = [];
-    updatedFilters.brand = 'todas';
-    updatedFilters.model = 'todos';
-    updatedFilters.color = 'todas';
-    updatedFilters.year = { min: '', max: '' };
-  } else {
-    // When switching to vehicles, clear property-specific filters
-    updatedFilters.propertyTypes = [];
-    updatedFilters.usefulArea = { min: '', max: '' };
-  }
-  
-  // Reset the price for appropriate values
-  updatedFilters.price = {
-    value: [0, 100],
-    range: { min: '', max: '' }
-  };
-  
-  return updatedFilters;
-};
-
-interface FilterStore {
-  // State
-  filters: FilterState;
-  expandedSections: Record<string, boolean>;
-  
-  // Computed
-  activeFilters: number;
-  
-  // Actions
-  setFilters: (filters: FilterState | Partial<FilterState>) => void;
-  updateFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
-  resetFilters: () => void;
-  toggleSection: (section: string) => void;
-  cleanIrrelevantFilters: () => void;
-  resetFilterGroup: (contentType: ContentType) => void;
-}
-
-export const useFilterStore = create<FilterStore>((set, get) => ({
-  // State
-  filters: DEFAULT_FILTERS,
-  expandedSections: {
-    location: true,
-    vehicleType: true,
-    propertyType: true,
-    usefulArea: true,
-    model: true,
-    color: true,
-    year: true,
-    price: true,
-    format: true,
-    origin: true,
-    place: true
-  },
-  
-  // Computed values
-  get activeFilters() {
-    return calculateActiveFilters(get().filters);
-  },
-  
-  // Actions
-  setFilters: (newFilters) => set((state) => {
-    // Se for um objeto parcial, mesclá-lo com o estado atual
-    const mergedFilters = { ...state.filters, ...newFilters };
-    return { filters: mergedFilters };
-  }),
-  
-  updateFilter: (key, value) => {
-    set((state) => {
-      // Special handling for contentType changes
-      if (key === 'contentType') {
-        const newContentType = value as ContentType;
-        const currentContentType = state.filters.contentType;
-        
-        if (newContentType !== currentContentType) {
-          console.log(`Content type changing from ${currentContentType} to ${newContentType}`);
-          
-          // Limpar filtros específicos do tipo anterior e atualizar para o novo tipo
-          const updatedFilters = cleanContentTypeFilters({ 
+// Create the store with Zustand
+export const useFilterStore = create<FilterStore>()(
+  devtools(
+    (set, get) => ({
+      filters: initialFilterState,
+      expandedSections: initialExpandedSections,
+      activeFilters: 0,
+      lastUpdatedFilter: 'initial',
+      
+      // Update a specific filter value
+      updateFilter: (key, value) => {
+        set((state) => {
+          const newFilters = { 
             ...state.filters, 
             [key]: value 
-          }, newContentType);
-          
-          return { filters: updatedFilters };
-        }
-      }
-      
-      // Regular update for other filter keys
-      return {
-        filters: {
-          ...state.filters,
-          [key]: value
-        }
-      };
-    });
-  },
-  
-  resetFilters: () => {
-    const currentContentType = get().filters.contentType;
-    set({
-      filters: {
-        ...DEFAULT_FILTERS,
-        contentType: currentContentType, // Preserve the content type when resetting
-      }
-    });
-  },
-  
-  resetFilterGroup: (contentType: ContentType) => {
-    set((state) => {
-      const updatedFilters = { ...state.filters };
-      
-      // Reset filters based on content type
-      if (contentType === 'property') {
-        PROPERTY_FILTER_KEYS.forEach(key => {
-          updatedFilters[key] = DEFAULT_FILTERS[key];
+          };
+          return { 
+            filters: newFilters, 
+            activeFilters: countActiveFilters(newFilters),
+            lastUpdatedFilter: key
+          };
         });
-      } else {
-        VEHICLE_FILTER_KEYS.forEach(key => {
-          updatedFilters[key] = DEFAULT_FILTERS[key];
+      },
+      
+      // Reset all filters to initial state
+      resetFilters: () => {
+        set((state) => ({ 
+          filters: { 
+            ...initialFilterState,
+            // Preserve content type when resetting
+            contentType: state.filters.contentType
+          }, 
+          activeFilters: 0,
+          lastUpdatedFilter: 'reset'
+        }));
+      },
+      
+      // Set multiple filters at once (used for URL sync)
+      setFilters: (newFilters) => {
+        set((state) => {
+          const updatedFilters = { ...state.filters, ...newFilters };
+          return { 
+            filters: updatedFilters, 
+            activeFilters: countActiveFilters(updatedFilters),
+            lastUpdatedFilter: 'bulk'
+          };
         });
+      },
+      
+      // Toggle expanded/collapsed state of filter sections
+      toggleSection: (section) => {
+        set((state) => ({
+          expandedSections: {
+            ...state.expandedSections,
+            [section]: !state.expandedSections[section]
+          }
+        }));
+      },
+      
+      // Collapse all filter sections
+      collapseAllSections: () => {
+        const sections = { ...initialExpandedSections };
+        Object.keys(sections).forEach((key) => {
+          sections[key as keyof ExpandedSectionsState] = false;
+        });
+        set({ expandedSections: sections });
+      },
+      
+      // Expand all filter sections
+      expandAllSections: () => {
+        const sections = { ...initialExpandedSections };
+        Object.keys(sections).forEach((key) => {
+          sections[key as keyof ExpandedSectionsState] = true;
+        });
+        set({ expandedSections: sections });
       }
-      
-      // Always reset common filters
-      COMMON_FILTER_KEYS.forEach(key => {
-        updatedFilters[key] = DEFAULT_FILTERS[key];
-      });
-      
-      return { filters: updatedFilters };
-    });
-  },
-  
-  cleanIrrelevantFilters: () => {
-    set((state) => {
-      const contentType = state.filters.contentType;
-      const updatedFilters = cleanContentTypeFilters(state.filters, contentType);
-      
-      return { filters: updatedFilters };
-    });
-  },
-  
-  toggleSection: (section) => set((state) => ({
-    expandedSections: {
-      ...state.expandedSections,
-      [section]: !state.expandedSections[section]
-    }
-  }))
-}));
+    }),
+    { name: 'filter-store' }
+  )
+);
