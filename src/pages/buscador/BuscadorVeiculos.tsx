@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -60,7 +61,7 @@ const BuscadorVeiculos = () => {
   const handleSortClick = () => {
     setSortOpen(true);
   };
-  return <>
+  return <div className={`${isMobile ? 'pt-16' : ''}`}>
       {/* Top filters bar - desktop only */}
       {!isMobile && <TopFilters />}
       
@@ -86,6 +87,6 @@ const BuscadorVeiculos = () => {
       
       {/* Sort options modal - mobile only */}
       {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} />}
-    </>;
+    </div>;
 };
 export default BuscadorVeiculos;
