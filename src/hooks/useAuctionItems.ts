@@ -25,6 +25,39 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
   const [isChangingPage, setIsChangingPage] = useState(false);
   const [lastContentType, setLastContentType] = useState<string | null>(null);
   
+  // Valores máximos e mínimos para os filtros de range
+  // Em uma implementação real, estes viriam da API
+  const defaultRangeValues = {
+    price: {
+      min: "10000",
+      max: "1000000"
+    },
+    year: {
+      min: "2000",
+      max: new Date().getFullYear().toString()
+    },
+    usefulArea: {
+      min: "30",
+      max: "500"
+    }
+  };
+  
+  // Verificar se um valor de range está usando os valores padrão
+  const isDefaultRangeValue = (filterKey: string, value: string, isMin: boolean) => {
+    if (!value) return true;
+    
+    // @ts-ignore
+    if (!defaultRangeValues[filterKey]) return false;
+    
+    const defaultValue = isMin 
+      // @ts-ignore
+      ? defaultRangeValues[filterKey].min 
+      // @ts-ignore
+      : defaultRangeValues[filterKey].max;
+    
+    return value === defaultValue;
+  };
+  
   // Use callback to prevent recreation on each render
   const fetchItems = useCallback(async () => {
     try {
@@ -54,13 +87,13 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
         
         // Só aplicar filtros que não estão com valores padrão
         
-        // Aplicar filtro de preço, se definido
-        if (filters.price.range.min) {
+        // Aplicar filtro de preço, se definido e não for valor padrão
+        if (filters.price.range.min && !isDefaultRangeValue('price', filters.price.range.min, true)) {
           const minPrice = Number(filters.price.range.min);
           filteredItems = filteredItems.filter(property => property.currentBid >= minPrice);
         }
         
-        if (filters.price.range.max) {
+        if (filters.price.range.max && !isDefaultRangeValue('price', filters.price.range.max, false)) {
           const maxPrice = Number(filters.price.range.max);
           filteredItems = filteredItems.filter(property => property.currentBid <= maxPrice);
         }
@@ -75,15 +108,15 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
           });
         }
         
-        // Aplicar filtro de área útil, se definido
-        if (filters.usefulArea.min && filters.usefulArea.min.trim() !== '') {
+        // Aplicar filtro de área útil, se definido e não for valor padrão
+        if (filters.usefulArea.min && !isDefaultRangeValue('usefulArea', filters.usefulArea.min, true)) {
           const minArea = Number(filters.usefulArea.min);
           filteredItems = filteredItems.filter(property => {
             return property.propertyInfo && property.propertyInfo.usefulAreaM2 >= minArea;
           });
         }
         
-        if (filters.usefulArea.max && filters.usefulArea.max.trim() !== '') {
+        if (filters.usefulArea.max && !isDefaultRangeValue('usefulArea', filters.usefulArea.max, false)) {
           const maxArea = Number(filters.usefulArea.max);
           filteredItems = filteredItems.filter(property => {
             return property.propertyInfo && property.propertyInfo.usefulAreaM2 <= maxArea;
@@ -140,13 +173,13 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
         // Começar com todos os itens
         filteredItems = [...sampleAuctions];
         
-        // Aplicar filtro de preço, se definido
-        if (filters.price.range.min) {
+        // Aplicar filtro de preço, se definido e não for valor padrão
+        if (filters.price.range.min && !isDefaultRangeValue('price', filters.price.range.min, true)) {
           const minPrice = Number(filters.price.range.min);
           filteredItems = filteredItems.filter(auction => auction.currentBid >= minPrice);
         }
         
-        if (filters.price.range.max) {
+        if (filters.price.range.max && !isDefaultRangeValue('price', filters.price.range.max, false)) {
           const maxPrice = Number(filters.price.range.max);
           filteredItems = filteredItems.filter(auction => auction.currentBid <= maxPrice);
         }
@@ -183,8 +216,8 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
           });
         }
         
-        // Aplicar filtro de ano, se definido
-        if (filters.year.min) {
+        // Aplicar filtro de ano, se definido e não for valor padrão
+        if (filters.year.min && !isDefaultRangeValue('year', filters.year.min, true)) {
           const minYear = Number(filters.year.min);
           filteredItems = filteredItems.filter(auction => {
             if (!auction.vehicleInfo || !auction.vehicleInfo.year) return false;
@@ -192,7 +225,7 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
           });
         }
         
-        if (filters.year.max) {
+        if (filters.year.max && !isDefaultRangeValue('year', filters.year.max, false)) {
           const maxYear = Number(filters.year.max);
           filteredItems = filteredItems.filter(auction => {
             if (!auction.vehicleInfo || !auction.vehicleInfo.year) return false;

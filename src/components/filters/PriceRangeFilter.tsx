@@ -23,16 +23,21 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
 
   // Definir range total ao montar o componente
   useEffect(() => {
-    // Aqui setaríamos valores do banco, mas como temos dados simulados,
-    // deixamos os campos vazios para representar o range total
-    // No futuro, quando estiver integrado com API real, substituir por:
-    // updateFilter('price', {
-    //   ...filters.price,
-    //   range: {
-    //     min: minValueFromDatabase,
-    //     max: maxValueFromDatabase
-    //   }
-    // });
+    // Simular valores mínimos e máximos do banco
+    // Em uma implementação real, isso viria de uma chamada API
+    const minValueFromDatabase = "10000"; // R$ 10.000
+    const maxValueFromDatabase = "1000000"; // R$ 1.000.000
+    
+    // Atualizar os valores no store apenas se estiverem vazios
+    if (!range.min && !range.max) {
+      updateFilter('price', {
+        ...filters.price,
+        range: {
+          min: minValueFromDatabase,
+          max: maxValueFromDatabase
+        }
+      });
+    }
   }, []);
 
   const handleMinChange = useCallback((value: string) => {

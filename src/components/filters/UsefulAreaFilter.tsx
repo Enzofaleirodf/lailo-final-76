@@ -19,13 +19,18 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
   
   // Definir range total ao montar o componente
   useEffect(() => {
-    // Aqui setaríamos valores do banco, mas como temos dados simulados,
-    // deixamos os campos vazios para representar o range total
-    // No futuro, quando estiver integrado com API real, substituir por:
-    // updateFilter('usefulArea', {
-    //   min: minValueFromDatabase,
-    //   max: maxValueFromDatabase
-    // });
+    // Simular valores mínimos e máximos do banco
+    // Em uma implementação real, isso viria de uma chamada API
+    const minValueFromDatabase = "30"; // 30m²
+    const maxValueFromDatabase = "500"; // 500m²
+    
+    // Atualizar os valores no store apenas se estiverem vazios
+    if (!filters.usefulArea.min && !filters.usefulArea.max) {
+      updateFilter('usefulArea', {
+        min: minValueFromDatabase,
+        max: maxValueFromDatabase
+      });
+    }
   }, []);
   
   const handleMinChange = useCallback((value: string) => {

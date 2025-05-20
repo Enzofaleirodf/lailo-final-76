@@ -19,13 +19,19 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
 
   // Definir range total ao montar o componente
   useEffect(() => {
-    // Aqui setaríamos valores do banco, mas como temos dados simulados,
-    // deixamos os campos vazios para representar o range total
-    // No futuro, quando estiver integrado com API real, substituir por:
-    // updateFilter('year', {
-    //   min: minYearFromDatabase,
-    //   max: currentYear
-    // });
+    // Simular valores mínimos e máximos do banco
+    // Em uma implementação real, isso viria de uma chamada API
+    const currentYear = new Date().getFullYear();
+    const minYearFromDatabase = "2000"; // Ano mais antigo na base
+    const maxYearFromDatabase = currentYear.toString(); // Ano atual
+    
+    // Atualizar os valores no store apenas se estiverem vazios
+    if (!min && !max) {
+      updateFilter('year', {
+        min: minYearFromDatabase,
+        max: maxYearFromDatabase
+      });
+    }
   }, []);
   
   const handleMinChange = useCallback((value: string) => {
