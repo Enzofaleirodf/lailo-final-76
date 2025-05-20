@@ -11,6 +11,7 @@ interface RangeErrorMessagesProps {
 /**
  * Componente para exibir mensagens de erro para campos de intervalo
  * Melhorado para filtrar mensagens de limite mínimo/máximo temporárias
+ * e para manter consistência visual entre dispositivos
  */
 const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({
   minError,
@@ -27,14 +28,14 @@ const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({
   if (!filteredMinError && !filteredMaxError) return null;
   
   return (
-    <div className="flex justify-between text-xs mt-1">
+    <div className="flex justify-between text-xs mt-1 w-full">
       {filteredMinError && (
-        <p id={minErrorId} className="text-red-500" role="alert">
+        <p id={minErrorId} className="text-red-500 max-w-[48%]" role="alert">
           {filteredMinError}
         </p>
       )}
       {filteredMaxError && (
-        <p id={maxErrorId} className="text-red-500 ml-auto" role="alert">
+        <p id={maxErrorId} className="text-red-500 ml-auto max-w-[48%]" role="alert">
           {filteredMaxError}
         </p>
       )}

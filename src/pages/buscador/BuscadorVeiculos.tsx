@@ -41,8 +41,6 @@ const BuscadorVeiculos = () => {
         updateFilter('propertyTypes', []);
         updateFilter('usefulArea', { min: '', max: '' });
       }
-      
-      // Toast removido conforme solicitado
     }
   }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
   
@@ -67,7 +65,7 @@ const BuscadorVeiculos = () => {
         />
       )}
       
-      <div className="w-full flex flex-col lg:flex-row lg:gap-6">
+      <div className="w-full flex flex-col lg:flex-row lg:gap-6 px-4 lg:px-6">
         {/* Sidebar filter section - desktop only */}
         {!isMobile && (
           <aside className="shrink-0 w-full lg:w-[448px]">

@@ -33,6 +33,11 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     }
   }, []);
   
+  // Verificar se o filtro está ativo (não está usando valores padrão)
+  const isFilterActive = 
+    filters.year.min !== defaultValues.min || 
+    filters.year.max !== defaultValues.max;
+  
   return (
     <div className="space-y-3">
       <SimplifiedRangeFilter
@@ -46,6 +51,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         allowDecimals={false}
         minAllowed={Number(defaultValues.min)}
         maxAllowed={Number(defaultValues.max)}
+        isActive={isFilterActive}
         formatterOptions={{
           useThousandSeparator: false,
           formatDisplay: false

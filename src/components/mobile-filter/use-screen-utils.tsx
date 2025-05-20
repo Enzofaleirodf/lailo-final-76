@@ -34,8 +34,12 @@ export function useScreenUtils() {
   const getFilterBadgeClass = () => {
     return cn(
       "absolute flex items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white",
-      isVerySmallScreen ? "h-3 w-3 top-1 right-1" : "h-4 w-4 top-1 right-2"
+      isVerySmallScreen ? "h-4 w-4 top-0 right-0" : "h-4 w-4 top-0 right-0"
     );
+  };
+  
+  const getTextSizeClass = () => {
+    return isVerySmallScreen ? "text-xs" : "text-sm";
   };
   
   return {
@@ -44,6 +48,7 @@ export function useScreenUtils() {
     showLabels,
     getButtonSizeClass,
     getIconSize,
-    getFilterBadgeClass
+    getFilterBadgeClass,
+    getTextSizeClass
   };
 }

@@ -62,17 +62,17 @@ const AccessibleRangeInputField: React.FC<AccessibleRangeInputFieldProps> = ({
       />
       <label htmlFor={id} className="sr-only">{ariaLabel}</label>
       
-      {/* Input prefix (e.g., currency symbol) */}
+      {/* Input prefix (e.g., currency symbol) com melhor contraste */}
       {inputPrefix && (
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
+          <span className="text-gray-600 text-sm font-medium select-none">{inputPrefix}</span>
         </div>
       )}
       
-      {/* Input suffix (e.g., unit) */}
+      {/* Input suffix (e.g., unit) com melhor contraste */}
       {inputSuffix && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <span className="text-gray-500 text-sm">{inputSuffix}</span>
+          <span className="text-gray-600 text-sm font-normal select-none">{inputSuffix}</span>
         </div>
       )}
     </div>

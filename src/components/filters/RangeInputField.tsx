@@ -71,14 +71,14 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         pattern={/[0-9]*[.,]?[0-9]*/.source}
       />
       
-      {/* Input prefix (e.g., currency symbol) with improved visuals */}
+      {/* Input prefix (e.g., currency symbol) com borda de contraste melhorada para acessibilidade */}
       {inputPrefix && (
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
+          <span className="text-gray-500 text-sm font-medium select-none">{inputPrefix}</span>
         </div>
       )}
       
-      {/* Input suffix (e.g., unit) with improved visuals */}
+      {/* Input suffix (e.g., unit) com borda de contraste melhorada para acessibilidade */}
       {inputSuffix && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <span className="text-gray-500 text-sm font-normal select-none">

@@ -39,6 +39,11 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     }
   }, []);
   
+  // Verificar se o filtro está ativo (não está usando valores padrão)
+  const isFilterActive = 
+    filters.price.range.min !== defaultValues.min || 
+    filters.price.range.max !== defaultValues.max;
+  
   return (
     <div className="space-y-3">
       <SimplifiedRangeFilter
@@ -53,6 +58,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         minAllowed={Number(defaultValues.min)}
         maxAllowed={Number(defaultValues.max)}
         inputPrefix="R$"
+        isActive={isFilterActive}
         formatterOptions={{
           useThousandSeparator: true,
           formatDisplay: true

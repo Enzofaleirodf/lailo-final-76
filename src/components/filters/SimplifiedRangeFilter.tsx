@@ -20,6 +20,7 @@ export interface RangeFilterProps {
   inputPrefix?: string;
   inputSuffix?: string;
   className?: string;
+  isActive?: boolean;
   formatterOptions?: {
     useThousandSeparator?: boolean;
     formatDisplay?: boolean;
@@ -46,6 +47,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   inputPrefix,
   inputSuffix,
   className = "",
+  isActive = false,
   formatterOptions = {}
 }) => {
   // Usar nosso hook atualizado para gerenciar estado e validação
@@ -53,7 +55,6 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
     values,
     displayValues,
     errors,
-    isActive,
     handleMinChange,
     handleMaxChange,
     handleBlur,
