@@ -1,0 +1,119 @@
+
+import React, { useCallback } from 'react';
+import { Building2, Car } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ContentType } from '@/types/filters';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useScreenUtils } from './use-screen-utils';
+
+interface ContentTypeTabsProps {
+  onTabChange?: (tab: ContentType) => void;
+}
+
+/**
+ * Componente de abas para alternar entre tipos de conteúdo (imóveis/veículos)
+ * Mantém consistência visual e comportamental entre desktop e mobile
+ */
+const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
+  const { filters, updateFilter } = useFilterStore();
+  const { getButtonSizeClass, getIconSize, isVerySmallScreen } = useScreenUtils();
+  
+  // Alterar tipo de conteúdo (imóveis/veículos)
+  const handleTabChange = useCallback((tab: ContentType) => {
+    if (filters.contentType === tab) return;
+    updateFilter('contentType', tab);
+    
+    // Anunciar a mudança para leitores de tela
+    const announcement = tab === 'property' ? 'Filtro alterado para imóveis' : 'Filtro alterado para veículos';
+    announceForScreenReader(announcement);
+    
+    // Callback opcional
+    if (onTabChange) onTabChange(tab);
+  }, [filters.contentType, updateFilter, onTabChange]);
+  
+  // Definir atributos aria para acessibilidade
+  const getTabAttributes = (type: ContentType) => {
+    const isSelected = filters.contentType === type;
+    
+    return {
+      role: "tab",
+      "aria-selected": isSelected,
+      "aria-controls": "content-type-selector",
+      tabIndex: isSelected ? 0 : -1,
+      "data-state": isSelected ? "active" : "inactive"
+    };
+  };
+  
+  // Manipuladores de eventos de teclado para acessibilidade
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  }, []);
+  
+  // Função de utilitário para anúncios de leitores de tela
+  const announceForScreenReader = (message: string) => {
+    let announcer = document.getElementById('mobile-filter-announcer');
+    if (!announcer) {
+      announcer = document.createElement('div');
+      announcer.id = 'mobile-filter-announcer';
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.setAttribute('aria-atomic', 'true');
+      announcer.style.position = 'absolute';
+      announcer.style.width = '1px';
+      announcer.style.height = '1px';
+      announcer.style.overflow = 'hidden';
+      announcer.style.clip = 'rect(0, 0, 0, 0)';
+      document.body.appendChild(announcer);
+    }
+    
+    setTimeout(() => {
+      if (announcer) announcer.textContent = message;
+    }, 100);
+  };
+  
+  return (
+    <div 
+      role="tablist" 
+      aria-label="Tipo de conteúdo" 
+      className="flex"
+    >
+      <button 
+        onClick={() => handleTabChange('property')} 
+        onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
+        className={cn(
+          getButtonSizeClass(),
+          "flex items-center justify-center text-sm font-medium transition-colors",
+          filters.contentType === 'property' 
+            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
+            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+        )} 
+        aria-label="Filtrar imóveis" 
+        {...getTabAttributes('property')}
+      >
+        <Building2 size={getIconSize()} className="shrink-0" aria-hidden="true" />
+        <span className="sr-only">Imóveis</span>
+      </button>
+      <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
+      <button 
+        onClick={() => handleTabChange('vehicle')} 
+        onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('vehicle'))}
+        className={cn(
+          getButtonSizeClass(),
+          "flex items-center justify-center text-sm font-medium transition-colors",
+          filters.contentType === 'vehicle' 
+            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
+            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+        )} 
+        aria-label="Filtrar veículos" 
+        {...getTabAttributes('vehicle')}
+      >
+        <Car size={getIconSize()} className="shrink-0" aria-hidden="true" />
+        <span className="sr-only">Veículos</span>
+      </button>
+    </div>
+  );
+};
+
+export default React.memo(ContentTypeTabs);
