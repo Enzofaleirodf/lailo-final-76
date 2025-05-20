@@ -48,16 +48,14 @@ const mockFilterStore = {
 };
 
 // Mock the entire useFilterStore module
-jest.mock('@/stores/useFilterStore', () => ({
-  useFilterStore: jest.fn()
-}));
+jest.mock('@/stores/useFilterStore');
 
 describe('MobileFilterOptions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Cast the mock to the appropriate type using "as unknown as jest.Mock"
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue(mockFilterStore);
+    // Properly cast mock to correct type
+    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue(mockFilterStore);
   });
   
   test('renders all filter sections', () => {
@@ -122,7 +120,7 @@ describe('MobileFilterOptions', () => {
     };
     
     // Cast properly to jest.Mock
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue(expandedFormatMockStore);
+    (filterStoreModule.useFilterStore as jest.Mock).mockReturnValue(expandedFormatMockStore);
 
     render(<MobileFilterOptions />);
     

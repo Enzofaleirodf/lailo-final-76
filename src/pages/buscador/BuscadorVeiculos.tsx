@@ -11,13 +11,22 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { useToast } from '@/hooks/use-toast';
 
+/**
+ * Página de busca e filtro de veículos em leilão
+ * Mantém consistência visual e comportamental entre os breakpoints desktop e mobile
+ */
 const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
   const { updateFilter, filters } = useFilterStore();
+  const { toast } = useToast();
   
-  // Definir o tipo de conteúdo para veículos quando esta página carregar, mas apenas se ainda não estiver definido
+  // Sincronizar URL com estado de filtros e ordenação
+  const { handlePageChange } = useUrlParams();
+  
+  // Definir o tipo de conteúdo para veículos quando esta página carregar
   useEffect(() => {
     // Atualizar apenas se o tipo de conteúdo ainda não for 'vehicle'
     if (filters.contentType !== 'vehicle') {
@@ -32,11 +41,15 @@ const BuscadorVeiculos = () => {
         updateFilter('propertyTypes', []);
         updateFilter('usefulArea', { min: '', max: '' });
       }
+      
+      // Exibir toast informativo ao carregar a página
+      toast({
+        title: "Modo de busca",
+        description: "Visualizando veículos em leilão",
+        duration: 3000
+      });
     }
-  }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
-  
-  // Sincronizar URL com estado de filtros e ordenação
-  useUrlParams();
+  }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea, toast]);
   
   const handleFilterClick = () => {
     setFiltersOpen(true);

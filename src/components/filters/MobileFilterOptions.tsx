@@ -1,17 +1,24 @@
 
 /**
  * @fileoverview Componente de opções de filtros para dispositivos móveis
- * Renderiza as seções de filtros específicas para o modo mobile
+ * Renderiza as seções de filtros específicas para o modo mobile,
+ * garantindo consistência visual e comportamental com a versão desktop
  */
 import React, { memo, useCallback } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
 import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
+import { 
+  formatOptions, 
+  originOptions, 
+  placeOptions 
+} from '@/utils/filterUtils';
 
 /**
  * MobileFilterOptions - Exibe as opções de filtro em formato móvel
- * Implementa os filtros de formato, origem e etapa do leilão
+ * Implementa os filtros de formato, origem e etapa do leilão com
+ * aparência e comportamento consistentes com a versão desktop
  */
 const MobileFilterOptions: React.FC = () => {
   const {
@@ -34,37 +41,17 @@ const MobileFilterOptions: React.FC = () => {
     updateFilter('place', value as FilterPlace);
   }, [updateFilter]);
 
-  // Opções para os dropdowns
-  const formatOptions = [
-    { value: 'Todos', label: 'Todos' },
-    { value: 'Alienação Particular', label: 'Alienação Particular' },
-    { value: 'Leilão', label: 'Leilão' },
-    { value: 'Venda Direta', label: 'Venda Direta' }
-  ];
-
-  const originOptions = [
-    { value: 'Todas', label: 'Todas' },
-    { value: 'Extrajudicial', label: 'Extrajudicial' },
-    { value: 'Judicial', label: 'Judicial' },
-    { value: 'Particular', label: 'Particular' },
-    { value: 'Público', label: 'Público' }
-  ];
-
-  const placeOptions = [
-    { value: 'Todas', label: 'Todas' },
-    { value: 'Praça única', label: 'Praça única' },
-    { value: '1ª Praça', label: '1ª Praça' },
-    { value: '2ª Praça', label: '2ª Praça' },
-    { value: '3ª Praça', label: '3ª Praça' }
-  ];
-
   // Usando React.memo em conjunto com useCallback para otimizar renderizações
   const handleToggleFormat = useCallback(() => toggleSection('format'), [toggleSection]);
   const handleToggleOrigin = useCallback(() => toggleSection('origin'), [toggleSection]);
   const handleTogglePlace = useCallback(() => toggleSection('place'), [toggleSection]);
 
   return (
-    <div className="grid grid-cols-1 gap-0">
+    <div 
+      className="grid grid-cols-1 gap-0" 
+      role="region" 
+      aria-label="Filtros básicos"
+    >
       <FilterSectionComponent 
         title="Formato" 
         isExpanded={expandedSections.format} 

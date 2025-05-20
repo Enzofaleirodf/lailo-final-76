@@ -78,9 +78,10 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({
   return (
     <div 
       ref={wrapperRef} 
-      className={`filter-wrapper ${showFocusRing ? 'focus-within:ring-2 focus-within:ring-brand-400' : ''}`}
+      className={`filter-wrapper ${showFocusRing ? 
+        'focus-within:ring-2 focus-within:ring-brand-400 focus-within:ring-opacity-75' : ''}`}
       data-filter-interaction-zone="true"
-      data-mobile-view={isMobile ? 'true' : 'false'} /* Add view mode marker for debugging */
+      data-view-mode={isMobile ? 'mobile' : 'desktop'}
       role="group"
       aria-label="Opções de filtro"
     >

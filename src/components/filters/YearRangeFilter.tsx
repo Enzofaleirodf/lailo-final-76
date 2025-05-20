@@ -2,9 +2,9 @@
 import React, { useCallback, useEffect } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { AuctionItem } from '@/types/auction';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
+import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 
 interface YearRangeFilterProps {
   onFilterChange?: () => void;
@@ -14,8 +14,11 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   const { filters, updateFilter } = useFilterStore();
   const { year } = filters;
   
+  // Use our new hook to ensure filter consistency
+  useFilterConsistency(onFilterChange);
+  
   // Fetch auction data to find min/max years
-  const { data: auctions } = useQuery({
+  const { data: auctions, isLoading, error } = useQuery({
     queryKey: ['auctions'],
     queryFn: fetchSampleAuctions
   });
@@ -67,17 +70,35 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     }
   }, [year, updateFilter, onFilterChange]);
 
+  if (isLoading) {
+    return (
+      <div aria-live="polite" aria-busy="true" className="animate-pulse">
+        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div role="alert" className="text-sm text-red-500">
+        Erro ao carregar os dados. Tente novamente.
+      </div>
+    );
+  }
+
   return (
-    <FilterRangeInput
-      minValue={year.min}
-      maxValue={year.max}
-      onMinChange={handleMinChange}
-      onMaxChange={handleMaxChange}
-      minPlaceholder={String(minYear)}
-      maxPlaceholder={String(maxYear)}
-      ariaLabelMin="Ano mínimo"
-      ariaLabelMax="Ano máximo"
-    />
+    <div role="group" aria-label="Filtro de ano">
+      <FilterRangeInput
+        minValue={year.min}
+        maxValue={year.max}
+        onMinChange={handleMinChange}
+        onMaxChange={handleMaxChange}
+        minPlaceholder={String(minYear)}
+        maxPlaceholder={String(maxYear)}
+        ariaLabelMin="Ano mínimo"
+        ariaLabelMax="Ano máximo"
+      />
+    </div>
   );
 };
 

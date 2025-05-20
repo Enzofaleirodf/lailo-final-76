@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 
 interface ColorFilterProps {
   onFilterChange?: () => void;
@@ -19,6 +20,9 @@ const colorOptions = [
 const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
+  // Use our new hook to ensure filter consistency
+  useFilterConsistency(onFilterChange);
+  
   const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);
     
@@ -29,14 +33,17 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
   }, [updateFilter, onFilterChange]);
 
   return (
-    <FilterDropdown
-      id="color-filter"
-      aria-label="Selecione a cor"
-      value={filters.color || 'todas'}
-      onChange={handleColorChange}
-      options={colorOptions}
-      placeholder="Selecione"
-    />
+    <div role="group" aria-label="Filtro de cor">
+      <FilterDropdown
+        id="color-filter"
+        aria-label="Selecione a cor"
+        value={filters.color || 'todas'}
+        onChange={handleColorChange}
+        options={colorOptions}
+        placeholder="Selecione"
+        className="border-gray-200 shadow-sm bg-white"
+      />
+    </div>
   );
 };
 

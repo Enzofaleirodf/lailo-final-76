@@ -10,7 +10,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
+import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
 
+/**
+ * TopFilters - Barra de filtros rápidos para a versão desktop
+ * Implementa filtros de tipo de conteúdo, formato, origem e etapa
+ * com visual e comportamento consistentes com a versão mobile
+ */
 const TopFilters: React.FC = () => {
   const { filters, updateFilter } = useFilterStore();
 
@@ -28,10 +34,26 @@ const TopFilters: React.FC = () => {
     }
   }, [updateFilter]);
 
+  // Set aria attributes for accessibility
+  const getTabAttributes = (type: ContentType) => {
+    const isSelected = filters.contentType === type;
+    
+    return {
+      role: "tab",
+      "aria-selected": isSelected,
+      "aria-controls": "content-type-selector",
+      tabIndex: isSelected ? 0 : -1
+    };
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div 
+      className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" 
+      role="navigation" 
+      aria-label="Filtros rápidos"
+    >
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <div className="flex h-10">
+        <div className="flex h-10" role="tablist" aria-label="Tipo de conteúdo">
           <button 
             onClick={() => handleContentTypeChange('property')}
             className={cn(
@@ -39,16 +61,16 @@ const TopFilters: React.FC = () => {
               filters.contentType === 'property' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
-              "focus:outline-none focus:ring-2 focus:ring-accent2-500"
+              "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
             )}
             aria-label="Filtrar imóveis"
-            aria-pressed={filters.contentType === 'property'}
+            {...getTabAttributes('property')}
             style={{ height: '40px' }}
           >
-            <Building2 size={18} className="shrink-0" />
+            <Building2 size={18} className="shrink-0" aria-hidden="true" />
             <span>Imóveis</span>
           </button>
-          <div className="w-[1px] bg-gray-200"></div>
+          <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
           <button 
             onClick={() => handleContentTypeChange('vehicle')}
             className={cn(
@@ -56,13 +78,13 @@ const TopFilters: React.FC = () => {
               filters.contentType === 'vehicle' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
-              "focus:outline-none focus:ring-2 focus:ring-accent2-500"
+              "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
             )}
             aria-label="Filtrar veículos"
-            aria-pressed={filters.contentType === 'vehicle'}
+            {...getTabAttributes('vehicle')}
             style={{ height: '40px' }}
           >
-            <Car size={18} className="shrink-0" />
+            <Car size={18} className="shrink-0" aria-hidden="true" />
             <span>Veículos</span>
           </button>
         </div>
@@ -72,8 +94,10 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent2-500"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
             aria-label="Selecionar formato"
+            aria-haspopup="listbox"
+            aria-expanded="false"
             style={{ height: '40px' }}  
           >
             <span className="text-sm font-normal text-gray-700">
@@ -81,22 +105,19 @@ const TopFilters: React.FC = () => {
                 {filters.format}
               </span>
             </span>
-            <ChevronDown size={16} className="text-brand-500" />
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Todos')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Todos
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Alienação Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Alienação Particular
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Leilão')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Leilão
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('format', 'Venda Direta')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Venda Direta
-          </DropdownMenuItem>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50">
+          {formatOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('format', option.value as FilterFormat)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -104,8 +125,10 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent2-500"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
             aria-label="Selecionar origem"
+            aria-haspopup="listbox"
+            aria-expanded="false"
             style={{ height: '40px' }}  
           >
             <span className="text-sm font-normal text-gray-700">
@@ -113,25 +136,19 @@ const TopFilters: React.FC = () => {
                 {filters.origin}
               </span>
             </span>
-            <ChevronDown size={16} className="text-brand-500" />
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Todas
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Extrajudicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Extrajudicial
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Judicial')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Judicial
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Particular')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Particular
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('origin', 'Público')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Público
-          </DropdownMenuItem>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50">
+          {originOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('origin', option.value as FilterOrigin)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -139,8 +156,10 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent2-500"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
             aria-label="Selecionar etapa"
+            aria-haspopup="listbox"
+            aria-expanded="false"
             style={{ height: '40px' }}
           >
             <span className="text-sm font-normal text-gray-700">
@@ -148,25 +167,19 @@ const TopFilters: React.FC = () => {
                 {filters.place}
               </span>
             </span>
-            <ChevronDown size={16} className="text-brand-500" />
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md">
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Todas')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Todas
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', 'Praça única')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            Praça única
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', '1ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            1ª Praça
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', '2ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            2ª Praça
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleFilterChange('place', '3ª Praça')} className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal">
-            3ª Praça
-          </DropdownMenuItem>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50">
+          {placeOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -8,12 +8,17 @@ import FilterContent from './filters/FilterContent';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useToast } from '@/hooks/use-toast';
+import FilterApplyButton from './filters/FilterApplyButton';
 
 interface FilterSectionProps {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
+/**
+ * Componente de seção de filtros que se adapta entre desktop e mobile
+ * mantendo a consistência visual e de comportamento
+ */
 const FilterSection: React.FC<FilterSectionProps> = ({
   isOpen,
   onOpenChange
@@ -72,22 +77,25 @@ const FilterSection: React.FC<FilterSectionProps> = ({
         variant="outline" 
         className="flex-1 h-10 bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-700" 
         onClick={() => handleOpenChange(false)}
+        aria-label="Cancelar e fechar filtros"
       >
         Cancelar
       </Button>
-      <Button 
-        className="flex-1 h-10 bg-brand-600 hover:bg-brand-700 text-white" 
-        onClick={handleApplyFilters}
-      >
-        Aplicar {activeFilters > 0 ? `(${activeFilters})` : ''}
-      </Button>
+      <FilterApplyButton 
+        onApply={() => handleOpenChange(false)}
+        className="flex-1"
+      />
     </div>
   );
 
   // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
     return (
-      <div className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10">
+      <div 
+        className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10"
+        role="region"
+        aria-label="Filtros de busca"
+      >
         <FilterContent />
       </div>
     );
@@ -117,7 +125,11 @@ const FilterSection: React.FC<FilterSectionProps> = ({
             </Button>
           </div>
           
-          <div aria-labelledby="drawer-title" className="bg-gray-50 p-3 flex-1 overflow-y-auto">
+          <div 
+            aria-labelledby="drawer-title" 
+            className="bg-gray-50 p-3 flex-1 overflow-y-auto"
+            role="region"
+          >
             <FilterContent />
           </div>
         </div>
