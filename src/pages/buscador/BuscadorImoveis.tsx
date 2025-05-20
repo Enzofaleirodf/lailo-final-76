@@ -44,16 +44,16 @@ const BuscadorImoveis = () => {
       updateFilter('contentType', 'property');
 
       // Limpar quaisquer filtros específicos de veículos
-      if (filters.vehicleTypes.length > 0 || filters.brands.length > 0 || filters.models.length > 0) {
+      if (filters.vehicleTypes.length > 0 || filters.brand !== 'todas' || filters.model !== 'todos') {
         console.log('Cleaning vehicle-specific filters');
         updateFilter('vehicleTypes', []);
-        updateFilter('brands', []);
-        updateFilter('models', []);
-        updateFilter('colors', []);
+        updateFilter('brand', 'todas');
+        updateFilter('model', 'todos');
+        updateFilter('color', 'todas');
       }
     }
     initialSetupDone.current = true;
-  }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brands, filters.models]);
+  }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brand, filters.model]);
   
   const handleFilterClick = () => {
     setFiltersOpen(true);
