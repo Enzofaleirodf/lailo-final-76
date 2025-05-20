@@ -50,7 +50,7 @@ export const useUrlParams = () => {
   const hasErrorRef = useRef(false);
   
   // Ref to store previous filters to compare changes
-  const prevFiltersRef = useRef(filters);
+  const prevFiltersRef = useRef<FilterState>(filters);
   const prevSortOptionRef = useRef(sortOption);
   
   // Manipular o evento de aplicação de filtros explícito (para desktop)

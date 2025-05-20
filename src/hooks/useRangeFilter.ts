@@ -16,12 +16,14 @@ export interface RangeFilterOptions {
   onChange?: (values: RangeValues) => void;
   formatDisplay?: boolean;
   useThousandSeparator?: boolean;
+  prefix?: string;
+  suffix?: string;
 }
 
 /**
  * Hook unificado para gerenciar filtros de intervalo
  * Combina formatação, validação e gerenciamento de estado
- * Agora refatorado para usar hooks especializados
+ * Refatorado para garantir consistência visual e comportamental entre desktop e mobile
  */
 export function useRangeFilter(initialValues: RangeValues, options: RangeFilterOptions = {}) {
   const {
@@ -34,6 +36,8 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     onChange,
     formatDisplay = true,
     useThousandSeparator = true,
+    prefix = '',
+    suffix = '',
   } = options;
   
   // Prevent initialization loops
@@ -60,10 +64,12 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   });
   
   // Usar hook especializado para formatação
-  const { formatValue, sanitizeInput } = useRangeFormatting({
+  const { formatValue, sanitizeInput, addAffixes, removeAffixes } = useRangeFormatting({
     allowDecimals,
     useThousandSeparator,
-    formatDisplay
+    formatDisplay,
+    prefix,
+    suffix
   });
   
   // Usar hook especializado para validação
@@ -111,8 +117,8 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   
   // Calcular valores de exibição formatados
   const displayValues = {
-    min: formatValue(values.min, editingField.current === 'min'),
-    max: formatValue(values.max, editingField.current === 'max')
+    min: editingField.current === 'min' ? values.min : addAffixes(formatValue(values.min, false)),
+    max: editingField.current === 'max' ? values.max : addAffixes(formatValue(values.max, false))
   };
   
   // Inicializar com valores padrão para exibição se os valores iniciais estiverem vazios
@@ -136,6 +142,11 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     handleMaxChange,
     handleBlur,
     resetValues,
-    userHasInteracted: hasInteracted
+    userHasInteracted: hasInteracted,
+    // Expor métodos de formatação para uso externo se necessário
+    formatValue,
+    sanitizeInput,
+    addAffixes,
+    removeAffixes
   };
 }

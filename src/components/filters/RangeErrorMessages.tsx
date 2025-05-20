@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RangeErrorMessagesProps {
   minError: string | null;
@@ -9,34 +10,43 @@ interface RangeErrorMessagesProps {
 }
 
 /**
- * Componente para exibir mensagens de erro para campos de intervalo
- * Melhorado para filtrar mensagens de limite mínimo/máximo temporárias
- * e para manter consistência visual entre dispositivos
+ * Componente para exibir mensagens de erro de filtro de intervalo
+ * Garante consistência visual entre desktop e mobile
  */
-const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({
-  minError,
-  maxError,
-  minErrorId,
-  maxErrorId
+const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({ 
+  minError, 
+  maxError, 
+  minErrorId, 
+  maxErrorId 
 }) => {
-  // Filtra mensagens de erro para não mostrar limites após o blur
-  // Melhorado para ser mais específico e consistente
-  const filteredMinError = minError && !minError.startsWith('Mín:') ? minError : null;
-  const filteredMaxError = maxError && !maxError.startsWith('Máx:') ? maxError : null;
+  const isMobile = useIsMobile();
   
-  // Não renderizar nada se não houver mensagens de erro
-  if (!filteredMinError && !filteredMaxError) return null;
+  // Se não houver erros, não renderizar nada
+  if (!minError && !maxError) {
+    return null;
+  }
+  
+  // Classes para garantir consistência visual entre dispositivos
+  const errorClasses = "text-xs text-red-600 animate-fadeIn";
   
   return (
-    <div className="flex justify-between text-xs mt-1 w-full">
-      {filteredMinError && (
-        <p id={minErrorId} className="text-red-500 max-w-[48%]" role="alert">
-          {filteredMinError}
+    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+      {minError && (
+        <p 
+          id={minErrorId} 
+          className={errorClasses}
+          role="alert"
+        >
+          <span aria-hidden="true">⚠️ </span>{minError}
         </p>
       )}
-      {filteredMaxError && (
-        <p id={maxErrorId} className="text-red-500 ml-auto max-w-[48%]" role="alert">
-          {filteredMaxError}
+      {maxError && (
+        <p 
+          id={maxErrorId} 
+          className={errorClasses}
+          role="alert"
+        >
+          <span aria-hidden="true">⚠️ </span>{maxError}
         </p>
       )}
     </div>

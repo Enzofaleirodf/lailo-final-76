@@ -30,7 +30,7 @@ export interface RangeFilterProps {
 /**
  * Componente simplificado para filtros de intervalo
  * Unifica o comportamento visual e funcional dos filtros de intervalo
- * Atualizado para usar os novos hooks e melhorar tratamento de sufixos/prefixos
+ * Atualizado para garantir consistência visual e comportamental entre desktop e mobile
  */
 const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   initialValues,
@@ -66,6 +66,8 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
     minAllowed, 
     maxAllowed,
     onChange,
+    prefix: inputPrefix,
+    suffix: inputSuffix,
     ...formatterOptions
   });
   
@@ -75,7 +77,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   const maxErrorId = `max-error-${filterGroupId}`;
   
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" data-testid="range-filter">
       <div className={cn("flex gap-2 items-center", className)}>
         <RangeInputField
           id={`min-${filterGroupId}`}

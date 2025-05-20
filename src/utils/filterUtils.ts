@@ -1,6 +1,6 @@
-
 import { FilterState, ContentType } from '@/types/filters';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+import { defaultRangeValues } from '@/stores/useFilterStore';
 
 /**
  * Format options for filter dropdowns
@@ -63,31 +63,60 @@ export const propertyTypeOptions = [
  * 
  * @param key The filter key
  * @param value The filter value
+ * @param defaultValues Valores padrão de referência
  * @returns boolean indicating if the filter is set to its default value
  */
-export const isDefaultFilterValue = (key: keyof FilterState, value: any): boolean => {
+export const isDefaultFilterValue = (
+  key: keyof FilterState, 
+  value: any, 
+  defaultValues: any = defaultRangeValues
+): boolean => {
   switch (key) {
     case 'format':
-      return value === 'Leilão'; // Alterado de 'Todos' para 'Leilão' para refletir o estado visual padrão
+      return value === 'Leilão'; // Visual default is now 'Leilão' not 'Todos'
+      
     case 'origin':
-      return value === 'Todas';
     case 'place':
       return value === 'Todas';
+      
     case 'brand':
     case 'color':
       return value === 'todas';
+      
     case 'model':
       return value === 'todos';
+      
     case 'vehicleTypes':
     case 'propertyTypes':
-      return Array.isArray(value) && value.length === 0;
+      return !value || (Array.isArray(value) && value.length === 0);
+      
     case 'location':
-      return !value.state && !value.city;
+      return !value || (!value.state && !value.city);
+      
     case 'price':
-      return !value.range.min && !value.range.max;
+      if (!value || !value.range) return true;
+      
+      // Checar se os valores são iguais aos padrões, tratando vazios como padrão
+      const isPriceMinDefault = !value.range.min || value.range.min === defaultValues.price.min;
+      const isPriceMaxDefault = !value.range.max || value.range.max === defaultValues.price.max;
+      return isPriceMinDefault && isPriceMaxDefault;
+      
     case 'year':
+      if (!value) return true;
+      
+      // Checar se os valores são iguais aos padrões, tratando vazios como padrão
+      const isYearMinDefault = !value.min || value.min === defaultValues.year.min;
+      const isYearMaxDefault = !value.max || value.max === defaultValues.year.max;
+      return isYearMinDefault && isYearMaxDefault;
+      
     case 'usefulArea':
-      return !value.min && !value.max;
+      if (!value) return true;
+      
+      // Checar se os valores são iguais aos padrões, tratando vazios como padrão
+      const isAreaMinDefault = !value.min || value.min === defaultValues.usefulArea.min;
+      const isAreaMaxDefault = !value.max || value.max === defaultValues.usefulArea.max;
+      return isAreaMinDefault && isAreaMaxDefault;
+      
     default:
       return false;
   }
@@ -271,4 +300,90 @@ export const getFiltersForContentType = (contentType: ContentType) => {
   return contentType === 'property'
     ? [...commonFilters, ...propertyFilters]
     : [...commonFilters, ...vehicleFilters];
+};
+
+/**
+ * Valida se os valores estão dentro dos limites permitidos
+ * Garante consistência entre diferentes dispositivos e tamanhos de tela
+ * 
+ * @param key A chave do filtro
+ * @param value O valor a ser validado
+ * @returns O valor corrigido se necessário
+ */
+export const validateFilterValue = (key: keyof FilterState, value: any): any => {
+  switch (key) {
+    case 'year':
+      if (!value) return value;
+      
+      const currentYear = new Date().getFullYear();
+      const minYear = 1900;
+      
+      let result = { ...value };
+      
+      if (result.min) {
+        const minValue = parseInt(result.min);
+        if (!isNaN(minValue)) {
+          result.min = Math.max(minYear, Math.min(currentYear, minValue)).toString();
+        }
+      }
+      
+      if (result.max) {
+        const maxValue = parseInt(result.max);
+        if (!isNaN(maxValue)) {
+          result.max = Math.max(minYear, Math.min(currentYear, maxValue)).toString();
+        }
+      }
+      
+      // Garantir que min <= max
+      if (result.min && result.max) {
+        const minValue = parseInt(result.min);
+        const maxValue = parseInt(result.max);
+        if (!isNaN(minValue) && !isNaN(maxValue) && minValue > maxValue) {
+          result.min = result.max;
+        }
+      }
+      
+      return result;
+      
+    // Similar validations could be added for price and usefulArea
+    
+    default:
+      return value;
+  }
+};
+
+/**
+ * Detecta tamanho de tela e retorna valores de padding adequados
+ * Garante consistência visual entre diferentes dispositivos
+ * 
+ * @param isMobile Indica se está em tela móvel
+ * @param isExtraSmall Indica se é uma tela muito pequena
+ * @returns Objeto com valores de padding adequados para o tamanho da tela
+ */
+export const getResponsivePadding = (isMobile: boolean, isExtraSmall: boolean = false): {
+  paddingX: string;
+  paddingY: string;
+  gapSize: string;
+} => {
+  if (isExtraSmall) {
+    return {
+      paddingX: "px-2",
+      paddingY: "py-1",
+      gapSize: "gap-1"
+    };
+  }
+  
+  if (isMobile) {
+    return {
+      paddingX: "px-3",
+      paddingY: "py-2",
+      gapSize: "gap-2"
+    };
+  }
+  
+  return {
+    paddingX: "px-4",
+    paddingY: "py-2",
+    gapSize: "gap-3"
+  };
 };
