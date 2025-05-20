@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -10,10 +10,17 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 const BuscadorVeiculos = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
+  const { updateFilter } = useFilterStore();
+  
+  // Set content type to vehicle when this page loads
+  useEffect(() => {
+    updateFilter('contentType', 'vehicle');
+  }, [updateFilter]);
   
   // Sync URL with filters and sort state
   useUrlParams();

@@ -1,0 +1,126 @@
+
+import React, { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Heart, Calendar, Building2, MapPin } from 'lucide-react';
+import { PropertyItem } from '@/types/property';
+import { formatCurrency } from '@/utils/auctionUtils';
+import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Separator } from "@/components/ui/separator";
+
+interface PropertyCardProps {
+  property: PropertyItem;
+}
+
+const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
+  property
+}) => {
+  const [favorited, setFavorited] = useState(false);
+  const isMobile = useIsMobile();
+
+  // Calculate discount if original price exists
+  const calculateDiscount = () => {
+    if (property.originalPrice && property.originalPrice > property.currentBid) {
+      const discount = Math.round((property.originalPrice - property.currentBid) / property.originalPrice * 100);
+      return discount;
+    }
+    return null;
+  };
+
+  // Format auction end date to show only last 2 digits of year
+  const formatAuctionDate = (date: Date): string => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
+    return `${day}/${month}/${yearLastTwoDigits}`;
+  };
+  
+  const discount = calculateDiscount();
+
+  return (
+    <motion.div 
+      whileHover={{
+        y: -4,
+        transition: { duration: 0.2 }
+      }} 
+      className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
+    >
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
+        {/* Content (right side) */}
+        <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
+          {/* Top row with property type and area */}
+          <div className="flex justify-between items-start gap-2 mb-1 w-full">
+            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
+              {property.propertyInfo.type} • {property.propertyInfo.usefulAreaM2}m²
+            </h3>
+            <button 
+              onClick={() => setFavorited(!favorited)} 
+              aria-label={favorited ? "Remove from favorites" : "Add to favorites"} 
+              className="flex-shrink-0"
+            >
+              <Heart 
+                size={isMobile ? 16 : 20} 
+                className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} 
+              />
+            </button>
+          </div>
+          
+          {/* Price section */}
+          <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
+            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none`}>
+              {formatCurrency(property.currentBid)}
+            </span>
+            {property.originalPrice && (
+              <div className="flex items-center gap-2">
+                {discount && (
+                  <span className="bg-accent2-50 text-accent2-700 px-2 py-0.5 rounded-md text-xs font-medium">
+                    {discount}% OFF
+                  </span>
+                )}
+                <span className="text-gray-500 line-through text-xs">
+                  {formatCurrency(property.originalPrice)}
+                </span>
+              </div>
+            )}
+          </div>
+          
+          {/* Address row */}
+          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
+            <MapPin size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
+            <span className="line-clamp-1">{property.address} - {property.location}</span>
+          </div>
+          
+          {/* Subtle divider with precisely 12px margin below */}
+          <Separator className={`${isMobile ? 'mb-2 mt-1' : 'mb-3 mt-1'} bg-gray-100`} />
+          
+          {/* Bottom row with consistent 12px spacing from separator */}
+          <div className="flex justify-between items-center w-full">
+            <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
+              <Badge 
+                variant="outline" 
+                className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}
+              >
+                {property.origin}
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}
+              >
+                {property.place}
+              </Badge>
+            </div>
+            <div 
+              className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0`}
+            >
+              <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
+              {formatAuctionDate(property.endDate)} às {property.endDate.getHours()}h
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
+PropertyCard.displayName = 'PropertyCard';
+export default PropertyCard;

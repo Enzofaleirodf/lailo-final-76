@@ -1,16 +1,18 @@
 
 import { create } from 'zustand';
-import { ContentType, FilterFormat, FilterOrigin, FilterPlace, YearRange, PriceRange, LocationFilter } from '@/types/filters';
+import { ContentType, FilterFormat, FilterOrigin, FilterPlace, YearRange, PriceRange, LocationFilter, UsefulAreaRange } from '@/types/filters';
 
 // Define the filter state interface
 export interface FilterState {
   contentType: ContentType;
   location: LocationFilter;
   vehicleTypes: string[];
+  propertyTypes: string[];
   brand: string;
   model: string;
   color: string;
   year: YearRange;
+  usefulArea: UsefulAreaRange;
   price: {
     value: number[];
     range: PriceRange;
@@ -25,10 +27,12 @@ export const DEFAULT_FILTERS: FilterState = {
   contentType: 'vehicle',
   location: { state: '', city: '' },
   vehicleTypes: [],
+  propertyTypes: [],
   brand: 'todas',
   model: 'todos',
   color: 'todas',
   year: { min: '', max: '' },
+  usefulArea: { min: '', max: '' },
   price: {
     value: [0, 100],
     range: { min: '', max: '' }
@@ -59,6 +63,8 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
   expandedSections: {
     location: true,
     vehicleType: true,
+    propertyType: true,
+    usefulArea: true,
     model: true,
     color: true,
     year: true,
@@ -79,6 +85,9 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
     // Only count vehicle types if not empty and not containing default
     if (filters.vehicleTypes.length > 0 && !filters.vehicleTypes.includes('todos')) count++;
     
+    // Only count property types if not empty and not containing default
+    if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) count++;
+    
     // Only count brand if not default
     if (filters.brand && filters.brand !== DEFAULT_FILTERS.brand) count++;
     
@@ -90,6 +99,9 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
     
     // Year filter only counts if min or max are set
     if (filters.year.min || filters.year.max) count++;
+    
+    // Useful area filter only counts if min or max are set
+    if (filters.usefulArea.min || filters.usefulArea.max) count++;
     
     // Price range filter only counts if min or max are set
     if (filters.price.range.min || filters.price.range.max) count++;
