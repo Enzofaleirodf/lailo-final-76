@@ -55,7 +55,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       if (inputPrefix) {
         // Aumentar padding para evitar sobreposição do prefixo
         const prefixLength = inputPrefix.length;
-        const basePadding = 14; // Aumentado de 12 para 14px
+        const basePadding = 18; // Aumentado de 14 para 18px
         const charWidth = 8; // Largura média aproximada de um caractere
         
         const calculatedPadding = basePadding + (prefixLength * charWidth);
@@ -65,7 +65,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       if (inputSuffix) {
         // Aumentar padding para evitar sobreposição do sufixo
         const suffixLength = inputSuffix.length;
-        const basePadding = 14; // Aumentado de 12 para 14px
+        const basePadding = 18; // Aumentado de 14 para 18px
         const charWidth = 8;
         
         const calculatedPadding = basePadding + (suffixLength * charWidth);
@@ -113,7 +113,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none mr-1">{inputPrefix}</span>
+          <span className="text-gray-500 select-none mr-3">{inputPrefix}</span>
         </div>
       )}
       
@@ -147,7 +147,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none ml-1">{inputSuffix}</span>
+          <span className="text-gray-500 select-none ml-3">{inputSuffix}</span>
         </div>
       )}
     </div>

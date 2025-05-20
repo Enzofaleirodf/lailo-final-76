@@ -73,9 +73,9 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   });
 
   // Calcular o padding-left necessário para acomodar o prefixo sem sobreposição
-  const prefixPaddingClass = inputPrefix ? "pl-9" : "";
+  const prefixPaddingClass = inputPrefix ? "pl-12" : "";
   // Calcular o padding-right necessário para acomodar o sufixo sem sobreposição
-  const suffixPaddingClass = inputSuffix ? "pr-9" : "";
+  const suffixPaddingClass = inputSuffix ? "pr-12" : "";
 
   return (
     <div 
@@ -106,13 +106,13 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           />
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
+              <span className="text-gray-500 text-sm font-medium mr-2">{inputPrefix}</span>
             </div>
           )}
           
           {inputSuffix && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+              <span className="text-gray-500 text-sm ml-3">{inputSuffix}</span>
             </div>
           )}
         </div>
@@ -139,13 +139,13 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           />
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
+              <span className="text-gray-500 text-sm font-medium mr-2">{inputPrefix}</span>
             </div>
           )}
           
           {inputSuffix && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+              <span className="text-gray-500 text-sm ml-3">{inputSuffix}</span>
             </div>
           )}
         </div>
