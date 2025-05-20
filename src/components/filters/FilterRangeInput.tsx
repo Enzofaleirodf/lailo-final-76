@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
+import { useRangeDisplayFormat } from '@/hooks/useRangeDisplayFormat';
 import { cn } from '@/lib/utils';
 
 interface FilterRangeInputProps {
@@ -39,20 +40,8 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   inputPrefix,
   inputSuffix
 }) => {
-  // Format value with thousand separator
-  const formatDisplayValue = (value: string): string => {
-    if (!value) return '';
-    
-    // Parse the value as a number
-    const numValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
-    if (isNaN(numValue)) return value;
-    
-    // Format with thousand separator
-    return numValue.toLocaleString('pt-BR', {
-      maximumFractionDigits: allowDecimals ? 2 : 0,
-      useGrouping: true
-    });
-  };
+  // Usar o novo hook de formatação
+  const { formatDisplayValue } = useRangeDisplayFormat({ allowDecimals });
 
   // Use o hook de validação para tratar valores de intervalo
   const {
