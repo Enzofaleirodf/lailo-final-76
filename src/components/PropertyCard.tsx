@@ -57,7 +57,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
               {formatCurrency(property.currentBid)}
             </span>
             {property.originalPrice && <div className="flex items-center gap-2">
-                {discount && <span className="bg-accent2-50 text-accent2-950 px-2 py-0.5 rounded-md text-xs font-medium">
+                {discount && <span className="bg-accent2-50 text-accent2-900 px-2 py-0.5 rounded-md text-xs font-medium">
                     {discount}% OFF
                   </span>}
                 <span className="text-gray-500 line-through text-xs">
