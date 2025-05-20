@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { 
@@ -107,19 +106,19 @@ const countActiveFilters = (filters: FilterState): number => {
   const isPriceDefault = 
     (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
     (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
-  if (!isPriceDefault && (filters.price.range.min || filters.price.range.max)) count++;
+  if (!isPriceDefault) count++;
   
   // Year range - não contar se for igual aos valores padrão
   const isYearDefault = 
     (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
     (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
-  if (!isYearDefault && (filters.year.min || filters.year.max)) count++;
+  if (!isYearDefault) count++;
   
   // Useful area range - não contar se for igual aos valores padrão
   const isAreaDefault = 
     (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
     (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
-  if (!isAreaDefault && (filters.usefulArea.min || filters.usefulArea.max)) count++;
+  if (!isAreaDefault) count++;
   
   // Brand, model, color
   if (filters.brand !== 'todas') count++;

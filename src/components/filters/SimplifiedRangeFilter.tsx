@@ -50,11 +50,12 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   // Usar nosso hook atualizado para gerenciar estado e validação
   const {
     values,
+    displayValues,
     errors,
     handleMinChange,
     handleMaxChange,
     handleBlur,
-    formatValue
+    formatValue,
   } = useRangeFilter(initialValues, {
     defaultMin: defaultValues.min,
     defaultMax: defaultValues.max,
@@ -76,7 +77,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
       <div className={cn("flex gap-2 items-center", className)}>
         <RangeInputField
           id={`min-${filterGroupId}`}
-          value={formatValue(values.min)}
+          value={displayValues.min}
           placeholder={minPlaceholder}
           onChange={(e) => handleMinChange(e.target.value)}
           onBlur={() => handleBlur(true)}
@@ -91,7 +92,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
         
         <RangeInputField
           id={`max-${filterGroupId}`}
-          value={formatValue(values.max)}
+          value={displayValues.max}
           placeholder={maxPlaceholder}
           onChange={(e) => handleMaxChange(e.target.value)}
           onBlur={() => handleBlur(false)}

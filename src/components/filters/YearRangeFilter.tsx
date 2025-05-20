@@ -48,7 +48,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         maxAllowed={Number(defaultValues.max)}
         formatterOptions={{
           useThousandSeparator: false,
-          formatDisplay: true
+          formatDisplay: false
         }}
       />
     </div>

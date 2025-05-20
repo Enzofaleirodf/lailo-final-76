@@ -37,26 +37,40 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   
   // Estado do filtro
   const [values, setValues] = useState<RangeValues>({
-    min: initialValues.min || (defaultMin || ''),
-    max: initialValues.max || (defaultMax || '')
+    min: initialValues.min || '',
+    max: initialValues.max || ''
   });
+  
+  // Estado de exibição para permitir formatação diferente do valor real
+  const [displayValues, setDisplayValues] = useState<RangeValues>({
+    min: initialValues.min || '',
+    max: initialValues.max || ''
+  });
+  
   const [errors, setErrors] = useState<{min: string | null, max: string | null}>({min: null, max: null});
   
-  // Referências para rastrear interações do usuário
+  // Referência para rastrear interações do usuário
   const userHasInteracted = useRef<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   
-  // Efeito para garantir que os valores iniciais sejam sempre exibidos
+  // Efeito para garantir que os valores padrão sejam exibidos
   useEffect(() => {
-    // Se os valores iniciais estiverem vazios mas temos valores padrão, use os valores padrão 
-    // apenas para exibição, sem marcar como interação de usuário
-    if ((!values.min && defaultMin) || (!values.max && defaultMax)) {
-      setValues({
-        min: values.min || defaultMin || '',
-        max: values.max || defaultMax || ''
-      });
+    if (defaultMin || defaultMax) {
+      // Mostrar valores padrão apenas para exibição, sem marcar como filtro ativo
+      setDisplayValues(prev => ({
+        min: prev.min || defaultMin || '',
+        max: prev.max || defaultMax || ''
+      }));
+      
+      // Se os valores reais estiverem vazios, mas temos valores padrão
+      if (!values.min && !values.max) {
+        setValues({
+          min: defaultMin || '',
+          max: defaultMax || ''
+        });
+      }
     }
-  }, [values.min, values.max, defaultMin, defaultMax]);
+  }, [defaultMin, defaultMax]);
 
   // Determinar se o filtro está ativo apenas se o usuário tiver interagido com ele
   // e os valores forem diferentes dos padrões
@@ -69,8 +83,8 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     }
   }, [values, defaultMin, defaultMax]);
   
-  // Validar valores de entrada e aplicar limites
-  const validateAndConstrainValue = useCallback((value: string, isMin: boolean): {
+  // Validar valores após edição completa (saída do campo)
+  const validateValues = useCallback((value: string, isMin: boolean): {
     value: string,
     error: string | null
   } => {
@@ -87,38 +101,33 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
       return { value, error: 'Valor inválido' };
     }
     
-    let newValue = value;
     let error: string | null = null;
     
     // Aplicar limites e restrições
     if (isMin) {
       // Para campo de valor mínimo
       if (minAllowed !== undefined && numValue < minAllowed) {
-        numValue = minAllowed;
-        newValue = String(minAllowed);
-        error = null; // Não mostramos erro, apenas corrigimos
+        error = `Mín: ${minAllowed}`;
       }
       
-      // Se o valor for maior que o máximo selecionado
+      // Se o valor for maior que o máximo selecionado e o máximo não estiver vazio
       if (values.max && Number(values.max) < numValue) {
-        return { value, error: 'Maior que máximo' };
+        error = 'Maior que máximo';
       }
     } else {
       // Para campo de valor máximo
       if (maxAllowed !== undefined && numValue > maxAllowed) {
-        numValue = maxAllowed;
-        newValue = String(maxAllowed);
-        error = null; // Não mostramos erro, apenas corrigimos
+        error = `Máx: ${maxAllowed}`;
       }
       
-      // Se o valor for menor que o mínimo selecionado
+      // Se o valor for menor que o mínimo selecionado e o mínimo não estiver vazio
       if (values.min && Number(values.min) > numValue) {
-        return { value, error: 'Menor que mínimo' };
+        error = 'Menor que mínimo';
       }
     }
     
-    // Retornar valor possivelmente corrigido e mensagem de erro
-    return { value: newValue, error };
+    // Retornar valor e possível erro
+    return { value, error };
   }, [values.min, values.max, minAllowed, maxAllowed]);
   
   // Formatar valor para exibição
@@ -139,115 +148,124 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     // Marcar que o usuário interagiu com o filtro
     userHasInteracted.current = true;
     
-    // Sanitizar entrada
-    let cleanValue = newValue;
+    // Atualizar o valor de exibição imediatamente para feedback do usuário
+    setDisplayValues(prev => ({ ...prev, min: newValue }));
     
-    if (allowDecimals) {
-      const regex = allowNegative ? /[^\d.-]/g : /[^\d.]/g;
-      cleanValue = cleanValue.replace(regex, '');
+    // Para o valor real, vamos sanitizar de forma menos agressiva
+    let cleanValue = newValue;
+    if (!allowDecimals) {
+      cleanValue = cleanValue.replace(/[^\d-]/g, '');
+    } else if (allowDecimals) {
+      // Permitir números e um ponto decimal
+      cleanValue = cleanValue.replace(/[^\d.-]/g, '');
       
+      // Garantir apenas um ponto decimal
       const parts = cleanValue.split('.');
       if (parts.length > 2) {
         cleanValue = `${parts[0]}.${parts.slice(1).join('')}`;
       }
-      
-      if (allowNegative && cleanValue.includes('-')) {
-        cleanValue = `-${cleanValue.replace(/-/g, '')}`;
-      }
-    } else {
-      const regex = allowNegative ? /[^\d-]/g : /\D/g;
-      cleanValue = cleanValue.replace(regex, '');
-      
-      if (allowNegative && cleanValue.includes('-')) {
-        cleanValue = `-${cleanValue.replace(/-/g, '')}`;
-      }
     }
     
-    // Validar e restringir o valor
-    const { value: constrainedValue, error } = validateAndConstrainValue(cleanValue, true);
+    if (allowNegative && cleanValue.startsWith('-')) {
+      // Manter o sinal negativo apenas no início
+      cleanValue = `-${cleanValue.substring(1).replace(/-/g, '')}`;
+    } else if (!allowNegative) {
+      cleanValue = cleanValue.replace(/-/g, '');
+    }
     
-    // Atualizar estado
-    const newValues = { ...values, min: constrainedValue };
+    // Atualizar o valor real
+    const newValues = { ...values, min: cleanValue };
     setValues(newValues);
     
-    // Atualizar erros
-    setErrors(prev => ({ ...prev, min: error }));
-    
-    // Notificar mudança
+    // Notificar mudança mesmo durante digitação
     if (onChange) {
       onChange(newValues);
     }
-  }, [values, onChange, validateAndConstrainValue, allowDecimals, allowNegative]);
+  }, [values, onChange, allowDecimals, allowNegative]);
   
   // Processar mudança no valor máximo
   const handleMaxChange = useCallback((newValue: string) => {
     // Marcar que o usuário interagiu com o filtro
     userHasInteracted.current = true;
     
-    // Sanitizar entrada
-    let cleanValue = newValue;
+    // Atualizar o valor de exibição imediatamente para feedback do usuário
+    setDisplayValues(prev => ({ ...prev, max: newValue }));
     
-    if (allowDecimals) {
-      const regex = allowNegative ? /[^\d.-]/g : /[^\d.]/g;
-      cleanValue = cleanValue.replace(regex, '');
+    // Para o valor real, vamos sanitizar de forma menos agressiva
+    let cleanValue = newValue;
+    if (!allowDecimals) {
+      cleanValue = cleanValue.replace(/[^\d-]/g, '');
+    } else if (allowDecimals) {
+      // Permitir números e um ponto decimal
+      cleanValue = cleanValue.replace(/[^\d.-]/g, '');
       
+      // Garantir apenas um ponto decimal
       const parts = cleanValue.split('.');
       if (parts.length > 2) {
         cleanValue = `${parts[0]}.${parts.slice(1).join('')}`;
       }
-      
-      if (allowNegative && cleanValue.includes('-')) {
-        cleanValue = `-${cleanValue.replace(/-/g, '')}`;
-      }
-    } else {
-      const regex = allowNegative ? /[^\d-]/g : /\D/g;
-      cleanValue = cleanValue.replace(regex, '');
-      
-      if (allowNegative && cleanValue.includes('-')) {
-        cleanValue = `-${cleanValue.replace(/-/g, '')}`;
-      }
     }
     
-    // Validar e restringir o valor
-    const { value: constrainedValue, error } = validateAndConstrainValue(cleanValue, false);
+    if (allowNegative && cleanValue.startsWith('-')) {
+      // Manter o sinal negativo apenas no início
+      cleanValue = `-${cleanValue.substring(1).replace(/-/g, '')}`;
+    } else if (!allowNegative) {
+      cleanValue = cleanValue.replace(/-/g, '');
+    }
     
-    // Atualizar estado
-    const newValues = { ...values, max: constrainedValue };
+    // Atualizar o valor real
+    const newValues = { ...values, max: cleanValue };
     setValues(newValues);
     
-    // Atualizar erros
-    setErrors(prev => ({ ...prev, max: error }));
-    
-    // Notificar mudança
+    // Notificar mudança mesmo durante digitação
     if (onChange) {
       onChange(newValues);
     }
-  }, [values, onChange, validateAndConstrainValue, allowDecimals, allowNegative]);
+  }, [values, onChange, allowDecimals, allowNegative]);
   
-  // Lidar com o caso do campo ficar vazio e o usuário sair do campo
+  // Validar valor quando o usuário termina a edição
   const handleBlur = useCallback((isMin: boolean) => {
-    if (isMin && !values.min) {
-      // Se o campo mínimo estiver vazio, restaurar para o mínimo permitido
-      if (minAllowed !== undefined) {
-        handleMinChange(String(minAllowed));
-      } else if (defaultMin) {
-        handleMinChange(defaultMin);
-      }
-    } else if (!isMin && !values.max) {
-      // Se o campo máximo estiver vazio, restaurar para o máximo permitido
-      if (maxAllowed !== undefined) {
-        handleMaxChange(String(maxAllowed));
-      } else if (defaultMax) {
-        handleMaxChange(defaultMax);
+    const valueToValidate = isMin ? values.min : values.max;
+    const { value, error } = validateValues(valueToValidate, isMin);
+    
+    // Atualizar erros
+    setErrors(prev => ({
+      ...prev,
+      [isMin ? 'min' : 'max']: error
+    }));
+    
+    // Se o campo estiver vazio após a edição, restaurar para o valor padrão
+    if (!valueToValidate) {
+      const defaultValue = isMin ? defaultMin : defaultMax;
+      if (defaultValue) {
+        if (isMin) {
+          handleMinChange(defaultValue);
+          setDisplayValues(prev => ({ ...prev, min: defaultValue }));
+        } else {
+          handleMaxChange(defaultValue);
+          setDisplayValues(prev => ({ ...prev, max: defaultValue }));
+        }
       }
     }
-  }, [values.min, values.max, minAllowed, maxAllowed, defaultMin, defaultMax, handleMinChange, handleMaxChange]);
+    
+    // Se houver erro de validação, corrigir o valor quando apropriado
+    if (error) {
+      if (isMin && minAllowed !== undefined && Number(valueToValidate) < minAllowed) {
+        handleMinChange(String(minAllowed));
+        setDisplayValues(prev => ({ ...prev, min: String(minAllowed) }));
+      } else if (!isMin && maxAllowed !== undefined && Number(valueToValidate) > maxAllowed) {
+        handleMaxChange(String(maxAllowed));
+        setDisplayValues(prev => ({ ...prev, max: String(maxAllowed) }));
+      }
+    }
+  }, [values, validateValues, defaultMin, defaultMax, handleMinChange, handleMaxChange, minAllowed, maxAllowed]);
   
   // Resetar para valores padrão
   const resetValues = useCallback(() => {
     if (defaultMin !== undefined && defaultMax !== undefined) {
       const defaultValues = { min: defaultMin, max: defaultMax };
       setValues(defaultValues);
+      setDisplayValues(defaultValues);
       setErrors({ min: null, max: null });
       userHasInteracted.current = false;
       setIsActive(false);
@@ -260,6 +278,7 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
   
   return {
     values,
+    displayValues,
     errors,
     isActive,
     handleMinChange,
