@@ -22,7 +22,7 @@ interface RangeInputFieldProps {
 
 /**
  * Componente base para campos de entrada de filtros de intervalo
- * Simplificação dos componentes anteriores com foco em consistência visual
+ * Melhorado para tratamento consistente de prefixos e sufixos
  */
 const RangeInputField: React.FC<RangeInputFieldProps> = ({
   id,
@@ -56,7 +56,9 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           suffixPaddingClass,
           isError 
             ? "border-red-300 focus-visible:ring-red-500" 
-            : "border-gray-300 focus-visible:ring-brand-500"
+            : isActive
+              ? "border-brand-300 focus-visible:ring-brand-500"
+              : "border-gray-300 focus-visible:ring-brand-500"
         )}
         value={value}
         onChange={onChange}
@@ -69,17 +71,19 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         pattern={/[0-9]*[.,]?[0-9]*/.source}
       />
       
-      {/* Input prefix (e.g., currency symbol) */}
+      {/* Input prefix (e.g., currency symbol) with improved visuals */}
       {inputPrefix && (
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <span className="text-gray-500 text-sm font-medium">{inputPrefix}</span>
         </div>
       )}
       
-      {/* Input suffix (e.g., unit) */}
+      {/* Input suffix (e.g., unit) with improved visuals */}
       {inputSuffix && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <span className="text-gray-500 text-sm">{inputSuffix}</span>
+          <span className="text-gray-500 text-sm font-normal select-none">
+            {inputSuffix}
+          </span>
         </div>
       )}
     </div>

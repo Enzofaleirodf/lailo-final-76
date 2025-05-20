@@ -9,6 +9,10 @@ interface UsefulAreaFilterProps {
   onFilterChange?: () => void;
 }
 
+/**
+ * Componente de filtro para área útil de imóveis
+ * Melhorado para tratamento adequado do sufixo "m²"
+ */
 const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   

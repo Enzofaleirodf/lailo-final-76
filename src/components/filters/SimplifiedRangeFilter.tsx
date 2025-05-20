@@ -29,6 +29,7 @@ export interface RangeFilterProps {
 /**
  * Componente simplificado para filtros de intervalo
  * Unifica o comportamento visual e funcional dos filtros de intervalo
+ * Atualizado para usar os novos hooks e melhorar tratamento de sufixos/prefixos
  */
 const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   initialValues,
@@ -52,6 +53,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
     values,
     displayValues,
     errors,
+    isActive,
     handleMinChange,
     handleMaxChange,
     handleBlur,
@@ -84,6 +86,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
           ariaInvalid={!!errors.min}
           ariaDescribedBy={errors.min ? minErrorId : undefined}
           isError={!!errors.min}
+          isActive={isActive}
           inputPrefix={inputPrefix}
           inputSuffix={inputSuffix}
           className="flex-1"
@@ -99,6 +102,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
           ariaInvalid={!!errors.max}
           ariaDescribedBy={errors.max ? maxErrorId : undefined}
           isError={!!errors.max}
+          isActive={isActive}
           inputPrefix={inputPrefix}
           inputSuffix={inputSuffix}
           className="flex-1"
@@ -112,6 +116,13 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
         minErrorId={minErrorId}
         maxErrorId={maxErrorId}
       />
+      
+      {/* Indicador de filtro ativo */}
+      {isActive && (
+        <div className="text-xs text-brand-600">
+          <p>Filtro personalizado aplicado</p>
+        </div>
+      )}
     </div>
   );
 };
