@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
 import FilterRangeInput from './FilterRangeInput';
@@ -6,7 +5,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
 import { formatCurrency } from '@/utils/auctionUtils';
-import { toast } from '@/components/ui/sonner';
+import { toast } from '@/components/ui/use-toast';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
@@ -92,7 +91,6 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         filters.price.range.max && Number(filters.price.range.max) > maxPrice * 1.5) {
       
       toast({
-        title: "Faixa de preço ajustada",
         description: "Ajustamos a faixa de preço com base nos itens disponíveis."
       });
       
