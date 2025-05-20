@@ -1,6 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
+import { cn } from '@/lib/utils';
 
 interface FilterRangeInputProps {
   minValue: string;
@@ -12,6 +14,10 @@ interface FilterRangeInputProps {
   className?: string;
   ariaLabelMin?: string;
   ariaLabelMax?: string;
+  allowDecimals?: boolean;
+  allowNegative?: boolean;
+  minAllowed?: number;
+  maxAllowed?: number;
 }
 
 const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
@@ -23,77 +29,90 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   maxPlaceholder = "Max",
   className = "",
   ariaLabelMin = "Valor mínimo",
-  ariaLabelMax = "Valor máximo"
+  ariaLabelMax = "Valor máximo",
+  allowDecimals = false,
+  allowNegative = false,
+  minAllowed,
+  maxAllowed
 }) => {
-  // Handle negative or invalid number inputs
-  const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    
-    // Allow empty values for clearing the filter
-    if (value === '') {
-      onMinChange('');
-      return;
-    }
-    
-    // Only accept numeric values 
-    if (/^\d*$/.test(value)) {
-      onMinChange(value);
-      
-      // If min is greater than max and max is not empty, update max to min
-      if (maxValue && parseInt(value) > parseInt(maxValue)) {
-        onMaxChange(value);
-      }
-    }
-  };
-  
-  const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    
-    // Allow empty values for clearing the filter
-    if (value === '') {
-      onMaxChange('');
-      return;
-    }
-    
-    // Only accept numeric values
-    if (/^\d*$/.test(value)) {
-      onMaxChange(value);
-      
-      // If max is less than min and min is not empty, update min to max
-      if (minValue && parseInt(value) < parseInt(minValue)) {
-        onMinChange(value);
-      }
-    }
-  };
+  // Use o hook de validação para tratar valores de intervalo
+  const {
+    handleMinChange,
+    handleMaxChange,
+    minError,
+    maxError
+  } = useFilterRangeValidator(minValue, maxValue, {
+    onMinChange,
+    onMaxChange,
+    allowDecimals,
+    allowNegative,
+    minAllowed,
+    maxAllowed,
+    autoValidate: true,
+    validationDelay: 300
+  });
 
   return (
     <div 
-      className={`flex gap-2 ${className}`}
+      className="space-y-1"
       role="group"
       aria-label="Intervalo de valores"
     >
-      <Input 
-        type="text" 
-        placeholder={minPlaceholder} 
-        className="h-10 text-sm" 
-        value={minValue}
-        onChange={handleMinInputChange}
-        aria-label={ariaLabelMin}
-        id="filter-range-min"
-        inputMode="numeric"
-        pattern="\d*"
-      />
-      <Input 
-        type="text" 
-        placeholder={maxPlaceholder} 
-        className="h-10 text-sm" 
-        value={maxValue}
-        onChange={handleMaxInputChange}
-        aria-label={ariaLabelMax}
-        id="filter-range-max"
-        inputMode="numeric"
-        pattern="\d*"
-      />
+      <div className={`flex gap-2 ${className}`}>
+        <div className="relative flex-1">
+          <Input 
+            type="text" 
+            placeholder={minPlaceholder} 
+            className={cn(
+              "h-10 text-sm",
+              minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+            )}
+            value={minValue}
+            onChange={(e) => handleMinChange(e.target.value)}
+            aria-label={ariaLabelMin}
+            aria-invalid={!!minError}
+            aria-describedby={minError ? "min-error" : undefined}
+            id="filter-range-min"
+            inputMode="numeric"
+            pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
+          />
+        </div>
+        
+        <div className="relative flex-1">
+          <Input 
+            type="text" 
+            placeholder={maxPlaceholder} 
+            className={cn(
+              "h-10 text-sm",
+              maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+            )}
+            value={maxValue}
+            onChange={(e) => handleMaxChange(e.target.value)}
+            aria-label={ariaLabelMax}
+            aria-invalid={!!maxError}
+            aria-describedby={maxError ? "max-error" : undefined}
+            id="filter-range-max"
+            inputMode="numeric"
+            pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
+          />
+        </div>
+      </div>
+      
+      {/* Error messages with proper aria attributes */}
+      {(minError || maxError) && (
+        <div className="flex justify-between text-xs">
+          {minError && (
+            <p id="min-error" className="text-red-500" role="alert">
+              {minError}
+            </p>
+          )}
+          {maxError && (
+            <p id="max-error" className="text-red-500 ml-auto" role="alert">
+              {maxError}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

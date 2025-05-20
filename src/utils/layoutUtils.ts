@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for layout and responsive design
  * Otimizado para todos os tamanhos de tela
@@ -13,10 +12,17 @@ export type DeviceType = 'mobile' | 'tablet' | 'desktop' | 'largeDesktop';
 
 /**
  * Determina o tipo de dispositivo com base na largura da tela
- * @param width Largura da janela
+ * @param width Largura da janela ou boolean indicando mobile
  * @returns Tipo de dispositivo
  */
-export const getDeviceType = (width: number): DeviceType => {
+export const getDeviceType = (widthOrIsMobile: number | boolean): DeviceType => {
+  // Handle boolean input (for backward compatibility)
+  if (typeof widthOrIsMobile === 'boolean') {
+    return widthOrIsMobile ? 'mobile' : 'desktop';
+  }
+  
+  // Handle numeric width input
+  const width = widthOrIsMobile;
   if (width < 640) return 'mobile';
   if (width < 1024) return 'tablet';
   if (width < 1440) return 'desktop';
@@ -104,8 +110,8 @@ export const mediaQueries = {
   ...breakpoints,
   // Alias para compatibilidade com código existente
   isMobile: breakpoints.md,
-  isTablet: '(min-width: 769px) and (max-width: 1024px)',
-  isDesktop: '(min-width: 1025px)',
+  isTablet: breakpoints.tablet,
+  isDesktop: breakpoints.desktop,
 };
 
 /**

@@ -25,11 +25,26 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   
   // Calculate min and max years from the auctions data
   const { minYear, maxYear } = React.useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    
     if (!auctions || auctions.length === 0) {
-      return { minYear: new Date().getFullYear() - 10, maxYear: new Date().getFullYear() };
+      return { 
+        minYear: currentYear - 10, 
+        maxYear: currentYear 
+      };
     }
     
-    const years = auctions.map(auction => auction.vehicleInfo.year);
+    const years = auctions
+      .filter(auction => auction.vehicleInfo?.year) // Ensure year exists
+      .map(auction => auction.vehicleInfo.year);
+      
+    if (years.length === 0) {
+      return { 
+        minYear: currentYear - 10, 
+        maxYear: currentYear 
+      };
+    }
+    
     return {
       minYear: Math.min(...years),
       maxYear: Math.max(...years)
@@ -86,6 +101,9 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     );
   }
 
+  const minAllowed = minYear || (new Date().getFullYear() - 50);
+  const maxAllowed = maxYear || new Date().getFullYear();
+
   return (
     <div role="group" aria-label="Filtro de ano">
       <FilterRangeInput
@@ -97,6 +115,10 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         maxPlaceholder={String(maxYear)}
         ariaLabelMin="Ano mínimo"
         ariaLabelMax="Ano máximo"
+        allowDecimals={false}
+        allowNegative={false}
+        minAllowed={minAllowed}
+        maxAllowed={maxAllowed}
       />
     </div>
   );

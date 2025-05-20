@@ -1,180 +1,70 @@
 
-import { useState, useEffect, useDebugValue } from 'react';
+import { useState, useEffect } from 'react';
 
-/**
- * Breakpoints padrão comuns usados no sistema
- */
+// Define explicit screen breakpoints to standardize across the application
 export const breakpoints = {
-  xs: '(max-width: 360px)',
+  xs: '(max-width: 375px)',
   sm: '(max-width: 640px)',
   md: '(max-width: 768px)',
   lg: '(max-width: 1024px)',
   xl: '(max-width: 1280px)',
   '2xl': '(max-width: 1536px)',
-  landscape: '(orientation: landscape)',
-  portrait: '(orientation: portrait)',
-  prefersDark: '(prefers-color-scheme: dark)',
-  prefersLight: '(prefers-color-scheme: light)',
-  prefersReducedMotion: '(prefers-reduced-motion: reduce)',
-  touch: '(hover: none) and (pointer: coarse)',
-  stylus: '(hover: none) and (pointer: fine)',
-  pointer: '(hover: hover) and (pointer: fine)',
-  highContrast: '(forced-colors: active)',
+  // Custom device-oriented breakpoints
+  mobile: '(max-width: 768px)',
+  tablet: '(min-width: 769px) and (max-width: 1024px)',
+  desktop: '(min-width: 1025px)',
+  // Feature detection
+  dark: '(prefers-color-scheme: dark)',
+  light: '(prefers-color-scheme: light)',
+  motion: '(prefers-reduced-motion: no-preference)',
+  hover: '(hover: hover)',
 };
 
 /**
- * Hook personalizado para verificar consultas de mídia
- * 
- * @param query String de consulta de mídia (por exemplo, '(max-width: 768px)')
- *              ou um dos breakpoints pré-definidos como 'sm', 'md', etc.
- * @returns Booleano indicando se a consulta de mídia corresponde
+ * Custom hook to check if a media query matches
+ * @param query The media query to check or a key from predefined breakpoints
+ * @returns Whether the media query matches
  */
-export const useMediaQuery = (query: string): boolean => {
-  // Resolver string de breakpoint para consulta real
-  const mediaQuery = breakpoints[query as keyof typeof breakpoints] || query;
+export function useMediaQuery(query: string | keyof typeof breakpoints): boolean {
+  // Get the actual query string if a key from breakpoints is provided
+  const queryString = query in breakpoints ? breakpoints[query as keyof typeof breakpoints] : query;
   
-  // Verificar se estamos no lado do cliente
-  const getMatches = (): boolean => {
-    // Em SSR, sempre retorne false inicialmente
-    if (typeof window === 'undefined') {
-      return false;
-    }
-    return window.matchMedia(mediaQuery).matches;
-  };
-
-  const [matches, setMatches] = useState<boolean>(getMatches());
-
-  // Adicionar valor de depuração para ferramentas React DevTools
-  useDebugValue(`${mediaQuery} => ${matches}`);
+  // Initialize with false for SSR safety, will update on client side
+  const [matches, setMatches] = useState<boolean>(false);
 
   useEffect(() => {
-    // Verificar se estamos no lado do cliente
-    if (typeof window === 'undefined') return;
-    
-    // Obter objeto MediaQueryList
-    const mediaQueryList = window.matchMedia(mediaQuery);
-    
-    // Definir o valor atual
-    setMatches(mediaQueryList.matches);
+    // Handle SSR case
+    if (typeof window !== 'undefined') {
+      // Initial check
+      const media = window.matchMedia(queryString);
+      setMatches(media.matches);
 
-    // Criar um callback para lidar com alterações
-    const handleChange = (event: MediaQueryListEvent) => {
-      setMatches(event.matches);
-    };
+      // Create event listener for changes
+      const listener = (e: MediaQueryListEvent) => {
+        setMatches(e.matches);
+      };
 
-    // Adicionar o listener usando a API moderna
-    if (mediaQueryList.addEventListener) {
-      mediaQueryList.addEventListener('change', handleChange);
-    } else {
-      // @ts-ignore - Compatibilidade com navegadores mais antigos
-      mediaQueryList.addListener(handleChange);
-    }
-
-    // Também verificar em eventos de redimensionamento
-    const handleResize = () => {
-      setMatches(window.matchMedia(mediaQuery).matches);
-    };
-    
-    window.addEventListener('resize', handleResize);
-
-    // Remover listener na limpeza
-    return () => {
-      if (mediaQueryList.removeEventListener) {
-        mediaQueryList.removeEventListener('change', handleChange);
+      // Use modern addEventListener API if available, fallback to older APIs
+      if (media.addEventListener) {
+        media.addEventListener('change', listener);
       } else {
-        // @ts-ignore - Compatibilidade com navegadores mais antigos
-        mediaQueryList.removeListener(handleChange);
+        // For older browser support
+        media.addListener(listener);
       }
-      
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [mediaQuery]); // Re-executar efeito se a consulta mudar
+
+      // Cleanup
+      return () => {
+        if (media.removeEventListener) {
+          media.removeEventListener('change', listener);
+        } else {
+          // For older browser support
+          media.removeListener(listener);
+        }
+      };
+    }
+  }, [queryString]);
 
   return matches;
-};
+}
 
-/**
- * Versão com retorno de array similar ao useState para uso desestruturado
- * @param query String de consulta de mídia ou nome de breakpoint
- * @returns [matches, setMatches] onde matches é um booleano
- */
-export const useResponsive = (query: string): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
-  const mediaQuery = breakpoints[query as keyof typeof breakpoints] || query;
-  
-  const getMatches = (): boolean => {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-    return window.matchMedia(mediaQuery).matches;
-  };
-
-  const [matches, setMatches] = useState<boolean>(getMatches());
-  
-  useDebugValue(`${mediaQuery} => ${matches}`);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const mediaQueryList = window.matchMedia(mediaQuery);
-    setMatches(mediaQueryList.matches);
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      setMatches(event.matches);
-    };
-
-    if (mediaQueryList.addEventListener) {
-      mediaQueryList.addEventListener('change', handleChange);
-    } else {
-      // @ts-ignore
-      mediaQueryList.addListener(handleChange);
-    }
-
-    return () => {
-      if (mediaQueryList.removeEventListener) {
-        mediaQueryList.removeEventListener('change', handleChange);
-      } else {
-        // @ts-ignore
-        mediaQueryList.removeListener(handleChange);
-      }
-    };
-  }, [mediaQuery]);
-
-  return [matches, setMatches];
-};
-
-/**
- * Hook para detectar dispositivos por tamanho
- * @returns Objeto com flags para diferentes tamanhos de dispositivo
- */
-export const useDeviceDetect = () => {
-  const isXs = useMediaQuery('xs');
-  const isSm = useMediaQuery('sm');
-  const isMd = useMediaQuery('md');
-  const isLg = useMediaQuery('lg');
-  const isXl = useMediaQuery('xl');
-  const is2xl = useMediaQuery('2xl');
-  const isLandscape = useMediaQuery('landscape');
-  const isPortrait = useMediaQuery('portrait');
-  const isTouch = useMediaQuery('touch');
-  const isPointer = useMediaQuery('pointer');
-  const prefersReducedMotion = useMediaQuery('prefersReducedMotion');
-  
-  return {
-    isXs,
-    isSm,
-    isMd,
-    isLg,
-    isXl,
-    is2xl,
-    isLandscape,
-    isPortrait,
-    isTouch,
-    isPointer,
-    prefersReducedMotion,
-    
-    // Helpers compostos
-    isMobile: isXs || isSm || isMd,
-    isTablet: isLg && !isMd && !isSm && !isXs,
-    isDesktop: !isLg || is2xl,
-  };
-};
+export default useMediaQuery;

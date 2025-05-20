@@ -41,9 +41,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   
   // Alterar tipo de conteúdo (imóveis/veículos)
   const handleTabChange = useCallback((tab: ContentType) => {
-    // Não fazer nada se já estivermos nesse tipo
     if (filters.contentType === tab) return;
-    
     updateFilter('contentType', tab);
   }, [filters.contentType, updateFilter]);
   
@@ -79,6 +77,13 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
     return isVerySmallScreen ? 16 : 18;
   };
   
+  const getFilterBadgeClass = () => {
+    return cn(
+      "absolute flex items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white",
+      isVerySmallScreen ? "h-3 w-3 top-1 right-1" : "h-4 w-4 top-1 right-2"
+    );
+  };
+  
   return (
     <div 
       className="sticky top-0 z-30 w-full pt-0 pb-6 mt-0 bg-transparent px-0"
@@ -95,7 +100,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
               "flex items-center justify-center text-sm font-medium transition-colors",
               filters.contentType === 'property' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
             )} 
             aria-label="Filtrar imóveis" 
             {...getTabAttributes('property')}
@@ -111,7 +116,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
               "flex items-center justify-center text-sm font-medium transition-colors",
               filters.contentType === 'vehicle' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
             )} 
             aria-label="Filtrar veículos" 
             {...getTabAttributes('vehicle')}
@@ -124,7 +129,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
           onClick={onFilterClick} 
           onKeyDown={(e) => handleKeyDown(e, onFilterClick)}
           className={cn(
-            "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 transition-colors relative",
+            "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-colors relative",
             getButtonSizeClass()
           )}
           aria-label="Abrir filtros"
@@ -135,10 +140,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
           {showLabels && <span className="transition-opacity">Filtrar</span>}
           {activeFilters > 0 && (
             <span 
-              className={cn(
-                "absolute flex items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white",
-                isVerySmallScreen ? "h-3 w-3 top-1 right-1" : "h-4 w-4 top-1 right-2"
-              )}
+              className={getFilterBadgeClass()}
               aria-label={`${activeFilters} filtros ativos`}
             >
               {activeFilters}
@@ -150,7 +152,7 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
           onClick={onSortClick} 
           onKeyDown={(e) => handleKeyDown(e, onSortClick)}
           className={cn(
-            "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 transition-colors",
+            "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-colors",
             getButtonSizeClass()
           )}
           aria-label="Ordenar resultados"

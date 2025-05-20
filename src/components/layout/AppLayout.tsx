@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Sidebar from '@/components/Sidebar';
 import MobileNavBar from '@/components/MobileNavBar';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getPaddingClasses, getDeviceType } from '@/utils/layoutUtils';
+import { getPaddingClasses, getDeviceType, DeviceType } from '@/utils/layoutUtils';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -23,7 +23,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   }
 
   // Get device type from boolean
-  const deviceType = isMobile ? 'mobile' : 'desktop';
+  const deviceType: DeviceType = isMobile ? 'mobile' : 'desktop';
 
   // Get responsive padding classes
   const paddingClasses = getPaddingClasses(deviceType);
