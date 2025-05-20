@@ -23,16 +23,14 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   
   const vehicleTypes = [
     { value: 'todos', icon: List, label: 'Todos' },
-    { value: 'aereos', icon: Plane, label: 'Aéreos' },
-    { value: 'carros', icon: Car, label: 'Carros' },
-    { value: 'caminhoes', icon: Truck, label: 'Caminhões' },
-    { value: 'maquinas', icon: Tractor, label: 'Maquinas' },
+    { value: 'aereos', icon: Plane, label: 'Aéreo' },
+    { value: 'carros', icon: Car, label: 'Carro' },
+    { value: 'caminhoes', icon: Truck, label: 'Caminhão' },
+    { value: 'maquinas', icon: Tractor, label: 'Máquina' },
     { value: 'micromobilidade', icon: Car, label: 'Micromobilidade' },
-    { value: 'motos', icon: Bike, label: 'Motos' },
-    { value: 'nauticos', icon: Ship, label: 'Naúticos' },
-    { value: 'onibus', icon: Bus, label: 'Ônibus' },
-    { value: 'reboques', icon: Truck, label: 'Reboques' },
-    { value: 'tratores', icon: Tractor, label: 'Tratores' }
+    { value: 'motos', icon: Bike, label: 'Moto' },
+    { value: 'nauticos', icon: Ship, label: 'Naútico' },
+    { value: 'onibus', icon: Bus, label: 'Ônibus' }
   ];
 
   // Get the current single value from the array

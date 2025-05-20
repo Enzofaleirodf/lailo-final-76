@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { Building, Home, Building2, Warehouse, ParkingSquare, Store, Map } from 'lucide-react';
+import { CircleDashed, Building, Home, Building2, Warehouse, GalleryHorizontal, Store, Mountain, Fence, Hotel, DoorOpen } from 'lucide-react';
 
 interface PropertyTypeFilterProps {
   onFilterChange?: () => void;
@@ -22,18 +22,18 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   }, [updateFilter, onFilterChange]);
   
   const propertyTypes = [
-    { value: 'todos', icon: Building, label: 'Todos' },
-    { value: 'apartamento', icon: Building2, label: 'Apartamento' },
+    { value: 'todos', icon: CircleDashed, label: 'Todos' },
+    { value: 'apartamento', icon: Hotel, label: 'Apartamento' },
     { value: 'casa', icon: Home, label: 'Casa' },
     { value: 'condominio', icon: Building2, label: 'Condomínio' },
     { value: 'edificio', icon: Building, label: 'Edifício' },
     { value: 'flat', icon: Building2, label: 'Flat' },
     { value: 'galpao', icon: Warehouse, label: 'Galpão' },
-    { value: 'garagem', icon: ParkingSquare, label: 'Garagem' },
+    { value: 'garagem', icon: GalleryHorizontal, label: 'Garagem' },
     { value: 'loja', icon: Store, label: 'Loja' },
-    { value: 'sala', icon: Building2, label: 'Sala' },
-    { value: 'rural', icon: Map, label: 'Rural' },
-    { value: 'terreno', icon: Map, label: 'Terreno' }
+    { value: 'sala', icon: DoorOpen, label: 'Sala' },
+    { value: 'rural', icon: Fence, label: 'Rural' },
+    { value: 'terreno', icon: Mountain, label: 'Terreno' }
   ];
 
   // Get the current single value from the array
