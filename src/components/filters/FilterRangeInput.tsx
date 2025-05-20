@@ -25,6 +25,7 @@ interface FilterRangeInputProps {
   isFilterActive?: boolean;
   defaultMin?: string;
   defaultMax?: string;
+  useThousandSeparator?: boolean;
 }
 
 const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
@@ -45,10 +46,14 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   inputSuffix,
   isFilterActive = false,
   defaultMin,
-  defaultMax
+  defaultMax,
+  useThousandSeparator = true
 }) => {
   // Usar o novo hook de formatação
-  const { formatDisplayValue } = useRangeDisplayFormat({ allowDecimals });
+  const { formatDisplayValue } = useRangeDisplayFormat({ 
+    allowDecimals, 
+    useThousandSeparator 
+  });
 
   // Use o hook de validação para tratar valores de intervalo
   const {

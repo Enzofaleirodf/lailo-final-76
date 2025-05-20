@@ -98,6 +98,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         isFilterActive={isFilterActive}
         defaultMin={defaultRange.min}
         defaultMax={defaultRange.max}
+        useThousandSeparator={false}
       />
     </div>
   );
