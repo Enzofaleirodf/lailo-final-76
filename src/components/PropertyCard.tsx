@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, Building2, MapPin } from 'lucide-react';
@@ -7,11 +6,9 @@ import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
-
 interface PropertyCardProps {
   property: PropertyItem;
 }
-
 const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   property
 }) => {
@@ -34,17 +31,13 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
     const yearLastTwoDigits = date.getFullYear().toString().slice(-2);
     return `${day}/${month}/${yearLastTwoDigits}`;
   };
-  
   const discount = calculateDiscount();
-
-  return (
-    <motion.div 
-      whileHover={{
-        y: -4,
-        transition: { duration: 0.2 }
-      }} 
-      className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
-    >
+  return <motion.div whileHover={{
+    y: -4,
+    transition: {
+      duration: 0.2
+    }
+  }} className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
         {/* Content (right side) */}
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
@@ -53,15 +46,8 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
               {property.propertyInfo.type} • {property.propertyInfo.usefulAreaM2}m²
             </h3>
-            <button 
-              onClick={() => setFavorited(!favorited)} 
-              aria-label={favorited ? "Remove from favorites" : "Add to favorites"} 
-              className="flex-shrink-0"
-            >
-              <Heart 
-                size={isMobile ? 16 : 20} 
-                className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} 
-              />
+            <button onClick={() => setFavorited(!favorited)} aria-label={favorited ? "Remove from favorites" : "Add to favorites"} className="flex-shrink-0">
+              <Heart size={isMobile ? 16 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
             </button>
           </div>
           
@@ -70,18 +56,14 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
             <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none`}>
               {formatCurrency(property.currentBid)}
             </span>
-            {property.originalPrice && (
-              <div className="flex items-center gap-2">
-                {discount && (
-                  <span className="bg-accent2-50 text-accent2-700 px-2 py-0.5 rounded-md text-xs font-medium">
+            {property.originalPrice && <div className="flex items-center gap-2">
+                {discount && <span className="bg-accent2-50 text-accent2-950 px-2 py-0.5 rounded-md text-xs font-medium">
                     {discount}% OFF
-                  </span>
-                )}
+                  </span>}
                 <span className="text-gray-500 line-through text-xs">
                   {formatCurrency(property.originalPrice)}
                 </span>
-              </div>
-            )}
+              </div>}
           </div>
           
           {/* Address row */}
@@ -96,31 +78,21 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
           {/* Bottom row with consistent 12px spacing from separator */}
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
-              <Badge 
-                variant="outline" 
-                className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}
-              >
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}>
                 {property.origin}
               </Badge>
-              <Badge 
-                variant="outline" 
-                className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}
-              >
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded`}>
                 {property.place}
               </Badge>
             </div>
-            <div 
-              className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0`}
-            >
+            <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0`}>
               <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
               {formatAuctionDate(property.endDate)} às {property.endDate.getHours()}h
             </div>
           </div>
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>;
 });
-
 PropertyCard.displayName = 'PropertyCard';
 export default PropertyCard;
