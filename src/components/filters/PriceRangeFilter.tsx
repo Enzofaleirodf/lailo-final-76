@@ -3,6 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import { formatCurrency } from '@/utils/auctionUtils';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
@@ -64,6 +65,16 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [filters.price, range, updateFilter, handleFilterChange]);
 
+  // Format the display values for the input fields
+  const formatDisplayValue = (value: string): string => {
+    if (!value) return '';
+    const numValue = parseInt(value, 10);
+    if (isNaN(numValue)) return value;
+    
+    // Format with R$ prefix and thousands separator
+    return formatCurrency(numValue).replace('R$', 'R$');
+  };
+
   return (
     <div className="space-y-3">
       <FilterRangeInput
@@ -77,6 +88,9 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
         ariaLabelMax="Preço máximo"
         allowDecimals={true} 
         minAllowed={0}
+        displayMinValue={formatDisplayValue(range.min)}
+        displayMaxValue={formatDisplayValue(range.max)}
+        inputPrefix="R$"
       />
     </div>
   );

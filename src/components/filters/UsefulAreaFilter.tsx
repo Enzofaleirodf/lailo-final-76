@@ -51,12 +51,14 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
     handleFilterChange();
   }, [filters.usefulArea, updateFilter, handleFilterChange]);
 
-  // Format the placeholder with the correct notation
-  const formatPlaceholder = (value: string, isMin: boolean) => {
-    if (!value) return isMin ? "Min m²" : "Max m²";
+  // Format the display values for the input fields
+  const formatDisplayValue = (value: string): string => {
+    if (!value) return '';
     const numValue = parseInt(value, 10);
-    if (isNaN(numValue)) return isMin ? "Min m²" : "Max m²";
-    return formatUsefulArea(numValue).replace('m²', '') + ' m²';
+    if (isNaN(numValue)) return value;
+    
+    // Format with "m²" suffix
+    return `${numValue} m²`;
   };
 
   return (
@@ -72,6 +74,9 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
         ariaLabelMax="Área útil máxima"
         allowDecimals={true} // Allow decimals for area measurements
         minAllowed={0} // Area cannot be negative
+        displayMinValue={formatDisplayValue(filters.usefulArea.min)}
+        displayMaxValue={formatDisplayValue(filters.usefulArea.max)}
+        inputSuffix="m²"
       />
     </div>
   );

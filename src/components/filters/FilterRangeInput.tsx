@@ -18,6 +18,10 @@ interface FilterRangeInputProps {
   allowNegative?: boolean;
   minAllowed?: number;
   maxAllowed?: number;
+  displayMinValue?: string;
+  displayMaxValue?: string;
+  inputPrefix?: string;
+  inputSuffix?: string;
 }
 
 const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
@@ -33,7 +37,11 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   allowDecimals = false,
   allowNegative = false,
   minAllowed,
-  maxAllowed
+  maxAllowed,
+  displayMinValue,
+  displayMaxValue,
+  inputPrefix,
+  inputSuffix
 }) => {
   // Use o hook de validação para tratar valores de intervalo
   const {
@@ -52,6 +60,10 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
     validationDelay: 300
   });
 
+  // Use the displayValue props if provided, otherwise use the actual values
+  const minDisplayValue = displayMinValue !== undefined ? displayMinValue : minValue;
+  const maxDisplayValue = displayMaxValue !== undefined ? displayMaxValue : maxValue;
+
   return (
     <div 
       className="space-y-1"
@@ -60,15 +72,22 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
     >
       <div className={`flex gap-2 ${className}`}>
         <div className="relative flex-1">
+          {inputPrefix && (
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputPrefix}</span>
+            </div>
+          )}
           <Input 
             type="text" 
             placeholder={minPlaceholder} 
             className={cn(
               "h-10 text-sm",
-              minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+              minError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500",
+              inputPrefix ? "pl-8" : "",
+              inputSuffix ? "pr-8" : ""
             )}
-            value={minValue}
-            onChange={(e) => handleMinChange(e.target.value)}
+            value={minDisplayValue}
+            onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMin}
             aria-invalid={!!minError}
             aria-describedby={minError ? "min-error" : undefined}
@@ -76,18 +95,30 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             inputMode="numeric"
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+            </div>
+          )}
         </div>
         
         <div className="relative flex-1">
+          {inputPrefix && (
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputPrefix}</span>
+            </div>
+          )}
           <Input 
             type="text" 
             placeholder={maxPlaceholder} 
             className={cn(
               "h-10 text-sm",
-              maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
+              maxError ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500",
+              inputPrefix ? "pl-8" : "",
+              inputSuffix ? "pr-8" : ""
             )}
-            value={maxValue}
-            onChange={(e) => handleMaxChange(e.target.value)}
+            value={maxDisplayValue}
+            onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMax}
             aria-invalid={!!maxError}
             aria-describedby={maxError ? "max-error" : undefined}
@@ -95,6 +126,11 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             inputMode="numeric"
             pattern={allowDecimals ? "[0-9]*[.,]?[0-9]*" : "\\d*"}
           />
+          {inputSuffix && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <span className="text-gray-500 text-sm">{inputSuffix}</span>
+            </div>
+          )}
         </div>
       </div>
       
