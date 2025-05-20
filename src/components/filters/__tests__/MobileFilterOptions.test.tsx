@@ -3,10 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import MobileFilterOptions from '../MobileFilterOptions';
-import { useFilterStore } from '@/stores/useFilterStore';
-
-// Mock the dependencies
-jest.mock('@/stores/useFilterStore');
+import * as filterStoreModule from '@/stores/useFilterStore';
 
 describe('MobileFilterOptions', () => {
   const mockUpdateFilter = jest.fn();
@@ -15,20 +12,46 @@ describe('MobileFilterOptions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Default store state
-    (useFilterStore as jest.Mock).mockReturnValue({
+    // Mock the useFilterStore hook
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         format: 'Todos',
         origin: 'Todas',
-        place: 'Todas'
+        place: 'Todas',
+        // Add other required filter properties
+        contentType: 'property',
+        location: { state: '', city: '' },
+        vehicleTypes: [],
+        propertyTypes: [],
+        price: { value: [0, 100], range: { min: '', max: '' } },
+        year: { min: '', max: '' },
+        usefulArea: { min: '', max: '' },
+        brand: 'todas',
+        model: 'todos',
+        color: 'todas'
       },
       updateFilter: mockUpdateFilter,
       expandedSections: {
         format: true,
         origin: false,
-        place: false
+        place: false,
+        // Add other required section properties
+        location: false,
+        vehicleType: false,
+        propertyType: false,
+        price: false,
+        year: false,
+        usefulArea: false,
+        model: false,
+        color: false
       },
-      toggleSection: mockToggleSection
+      toggleSection: mockToggleSection,
+      resetFilters: jest.fn(),
+      activeFilters: 0,
+      lastUpdatedFilter: null,
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
   });
   

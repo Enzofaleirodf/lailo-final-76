@@ -4,11 +4,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import PriceRangeFilter from '../PriceRangeFilter';
-import { useFilterStore } from '@/stores/useFilterStore';
+import * as filterStoreModule from '@/stores/useFilterStore';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
 
 // Mock the dependencies
-jest.mock('@/stores/useFilterStore');
 jest.mock('@/data/sampleAuctions');
 jest.mock('@/utils/auctionUtils', () => ({
   formatCurrency: jest.fn((value) => `R$${value}`)
@@ -40,16 +39,36 @@ describe('PriceRangeFilter', () => {
       { id: 3, currentBid: 300000 }
     ]);
     
-    // Default store state
-    (useFilterStore as jest.Mock).mockReturnValue({
+    // Mock the useFilterStore hook
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         contentType: 'property',
         price: { 
           value: [0, 100], 
           range: { min: '', max: '' } 
-        }
+        },
+        // Add other required filter properties
+        location: { state: '', city: '' },
+        vehicleTypes: [],
+        propertyTypes: [],
+        year: { min: '', max: '' },
+        usefulArea: { min: '', max: '' },
+        brand: 'todas',
+        model: 'todos',
+        color: 'todas',
+        format: 'Todos',
+        origin: 'Todas',
+        place: 'Todas'
       },
-      updateFilter: mockUpdateFilter
+      updateFilter: mockUpdateFilter,
+      resetFilters: jest.fn(),
+      expandedSections: {},
+      activeFilters: 0,
+      lastUpdatedFilter: null,
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
   });
   

@@ -3,10 +3,9 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ActiveFilterBadges from '../ActiveFilterBadges';
-import { useFilterStore } from '@/stores/useFilterStore';
+import * as filterStoreModule from '@/stores/useFilterStore';
 
 // Mock the filter store and the hooks
-jest.mock('@/stores/useFilterStore');
 jest.mock('@/hooks/use-mobile', () => ({
   useIsMobile: jest.fn(() => false)
 }));
@@ -24,8 +23,8 @@ describe('ActiveFilterBadges', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Default store state with no active filters
-    (useFilterStore as jest.Mock).mockReturnValue({
+    // Mock the useFilterStore hook instead of the module itself
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         contentType: 'property',
         location: { state: '', city: '' },
@@ -42,7 +41,14 @@ describe('ActiveFilterBadges', () => {
         place: 'Todas'
       },
       updateFilter: mockUpdateFilter,
-      resetFilters: mockResetFilters
+      resetFilters: mockResetFilters,
+      expandedSections: {},
+      activeFilters: 0,
+      lastUpdatedFilter: null,
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
   });
   
@@ -52,7 +58,7 @@ describe('ActiveFilterBadges', () => {
   });
   
   test('should render location filter badge when location is set', () => {
-    (useFilterStore as jest.Mock).mockReturnValue({
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         contentType: 'property',
         location: { state: 'SP', city: 'São Paulo' },
@@ -69,7 +75,14 @@ describe('ActiveFilterBadges', () => {
         place: 'Todas'
       },
       updateFilter: mockUpdateFilter,
-      resetFilters: mockResetFilters
+      resetFilters: mockResetFilters,
+      expandedSections: {},
+      activeFilters: 1,
+      lastUpdatedFilter: 'location',
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
     
     render(<ActiveFilterBadges />);
@@ -78,7 +91,7 @@ describe('ActiveFilterBadges', () => {
   });
   
   test('should render price range filter badge when price range is set', () => {
-    (useFilterStore as jest.Mock).mockReturnValue({
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         contentType: 'property',
         location: { state: '', city: '' },
@@ -98,7 +111,14 @@ describe('ActiveFilterBadges', () => {
         place: 'Todas'
       },
       updateFilter: mockUpdateFilter,
-      resetFilters: mockResetFilters
+      resetFilters: mockResetFilters,
+      expandedSections: {},
+      activeFilters: 1,
+      lastUpdatedFilter: 'price',
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
     
     render(<ActiveFilterBadges />);
@@ -107,7 +127,7 @@ describe('ActiveFilterBadges', () => {
   });
   
   test('should render format filter badge when format is set', () => {
-    (useFilterStore as jest.Mock).mockReturnValue({
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         contentType: 'property',
         location: { state: '', city: '' },
@@ -124,7 +144,14 @@ describe('ActiveFilterBadges', () => {
         place: 'Todas'
       },
       updateFilter: mockUpdateFilter,
-      resetFilters: mockResetFilters
+      resetFilters: mockResetFilters,
+      expandedSections: {},
+      activeFilters: 1,
+      lastUpdatedFilter: 'format',
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
     
     render(<ActiveFilterBadges />);
@@ -133,7 +160,7 @@ describe('ActiveFilterBadges', () => {
   });
   
   test('should call resetFilters when "Limpar todos" button is clicked', () => {
-    (useFilterStore as jest.Mock).mockReturnValue({
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
       filters: {
         contentType: 'property',
         location: { state: 'SP', city: '' },
@@ -150,7 +177,14 @@ describe('ActiveFilterBadges', () => {
         place: 'Todas'
       },
       updateFilter: mockUpdateFilter,
-      resetFilters: mockResetFilters
+      resetFilters: mockResetFilters,
+      expandedSections: {},
+      activeFilters: 2,
+      lastUpdatedFilter: 'bulk',
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn(),
+      setFilters: jest.fn()
     });
     
     render(<ActiveFilterBadges />);
