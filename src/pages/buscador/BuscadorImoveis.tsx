@@ -21,23 +21,19 @@ const BuscadorImoveis = () => {
   
   // Set content type to property when this page loads and clean vehicle-specific filters
   useEffect(() => {
-    console.log('BuscadorImoveis: Setting content type to property');
     // Set the content type for this page
     updateFilter('contentType', 'property');
     
-    // Process URL parameters for price if they exist
-    const priceMin = searchParams.get('priceMin');
-    const priceMax = searchParams.get('priceMax');
+    // Clean up any vehicle-specific filters that might be in the URL
+    const urlParams = Object.fromEntries(searchParams.entries());
+    const vehicleParams = ['types', 'brand', 'model', 'color', 'yearMin', 'yearMax'];
     
-    if (priceMin || priceMax) {
-      console.log(`Setting price range from URL: min=${priceMin}, max=${priceMax}`);
-      updateFilter('price', {
-        value: [0, 100], // Will be recalculated based on the actual price range
-        range: {
-          min: priceMin || '',
-          max: priceMax || ''
-        }
-      });
+    // If we have vehicle filters in the URL but we're on the property page,
+    // we should inform the user or automatically remove those filters
+    const hasVehicleFilters = vehicleParams.some(param => searchParams.has(param));
+    
+    if (hasVehicleFilters) {
+      console.log('Vehicle filters detected on property page, these will be ignored');
     }
   }, [updateFilter, searchParams]);
   
