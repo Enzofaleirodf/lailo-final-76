@@ -73,9 +73,9 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   });
 
   // Calcular o padding-left necessário para acomodar o prefixo sem sobreposição
-  const prefixPaddingClass = inputPrefix ? "pl-8" : "";
+  const prefixPaddingClass = inputPrefix ? "pl-9" : "";
   // Calcular o padding-right necessário para acomodar o sufixo sem sobreposição
-  const suffixPaddingClass = inputSuffix ? "pr-8" : "";
+  const suffixPaddingClass = inputSuffix ? "pr-9" : "";
 
   return (
     <div 

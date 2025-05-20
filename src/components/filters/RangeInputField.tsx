@@ -53,10 +53,9 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
   const handleInputPadding = () => {
     if (inputRef.current) {
       if (inputPrefix) {
-        // Calcular padding dinâmico baseado no comprimento do prefixo
-        // Garantir consistência entre tamanhos de tela
+        // Aumentar padding para evitar sobreposição do prefixo
         const prefixLength = inputPrefix.length;
-        const basePadding = 12; // 3 * 4px (padrão do Tailwind)
+        const basePadding = 14; // Aumentado de 12 para 14px
         const charWidth = 8; // Largura média aproximada de um caractere
         
         const calculatedPadding = basePadding + (prefixLength * charWidth);
@@ -64,9 +63,9 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       }
       
       if (inputSuffix) {
-        // Calcular padding dinâmico baseado no comprimento do sufixo
+        // Aumentar padding para evitar sobreposição do sufixo
         const suffixLength = inputSuffix.length;
-        const basePadding = 12;
+        const basePadding = 14; // Aumentado de 12 para 14px
         const charWidth = 8;
         
         const calculatedPadding = basePadding + (suffixLength * charWidth);
@@ -108,13 +107,13 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       className={cn("relative", className)} 
       data-testid={dataTestId || 'range-input-field'}
     >
-      {/* Prefixo */}
+      {/* Prefixo com espaçamento adequado */}
       {inputPrefix && (
         <div 
           className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none">{inputPrefix}</span>
+          <span className="text-gray-500 select-none mr-1">{inputPrefix}</span>
         </div>
       )}
       
@@ -142,13 +141,13 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         )}
       />
       
-      {/* Sufixo */}
+      {/* Sufixo com espaçamento adequado */}
       {inputSuffix && (
         <div 
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none">{inputSuffix}</span>
+          <span className="text-gray-500 select-none ml-1">{inputSuffix}</span>
         </div>
       )}
     </div>
