@@ -51,35 +51,45 @@ const AuctionList: React.FC = () => {
       const contentType = filters.contentType;
       let filteredItems = [];
       
+      // Check for URL parameters that might override filter state
+      const priceMin = searchParams.get('priceMin');
+      const priceMax = searchParams.get('priceMax');
+      
+      // If URL has price parameters but filter doesn't, update the filter
+      if ((priceMin || priceMax) && (!filters.price.range.min || !filters.price.range.max)) {
+        console.log(`Updating price filter from URL: min=${priceMin}, max=${priceMax}`);
+        updateFilter('price', {
+          ...filters.price,
+          range: {
+            min: priceMin || filters.price.range.min,
+            max: priceMax || filters.price.range.max
+          }
+        });
+      }
+      
       if (contentType === 'property') {
         console.log('Fetching property items with filters:', filters);
         
-        // For properties, limit the filters to only those that apply to properties
+        // For properties, we'll work with the sample properties data
         filteredItems = sampleProperties.filter(property => {
-          // Basic filtering for properties (can be expanded)
+          // Basic filtering for properties
           let matches = true;
           
           // Apply price filter if set
-          if (filters.price.range.min) {
-            matches = matches && property.currentBid >= parseInt(filters.price.range.min);
+          if (filters.price.range.min || priceMin) {
+            const minPrice = parseInt(filters.price.range.min || priceMin || '0');
+            matches = matches && property.currentBid >= minPrice;
           }
-          if (filters.price.range.max) {
-            matches = matches && property.currentBid <= parseInt(filters.price.range.max);
+          
+          if (filters.price.range.max || priceMax) {
+            const maxPrice = parseInt(filters.price.range.max || priceMax || '999999999');
+            matches = matches && property.currentBid <= maxPrice;
           }
           
           // Apply property type filter if set
           if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
-            // Make sure propertyInfo exists before checking the type
             if (property.propertyInfo && property.propertyInfo.type) {
               matches = matches && filters.propertyTypes.includes(property.propertyInfo.type);
-            } else {
-              // If property has valid propertyInfo but no type specified, we'll include it by default
-              // This is a graceful fallback to avoid filtering out valid properties
-              if (!property.propertyInfo) {
-                console.warn(`Property ${property.id} is missing propertyInfo`);
-              } else if (!property.propertyInfo.type) {
-                console.warn(`Property ${property.id} is missing propertyInfo.type`);
-              }
             }
           }
           
@@ -91,7 +101,7 @@ const AuctionList: React.FC = () => {
             matches = matches && property.propertyInfo.usefulAreaM2 <= parseInt(filters.usefulArea.max);
           }
           
-          // Apply format filter if needed (and ignore vehicle-only filters)
+          // Apply format filter if needed
           if (filters.format !== 'Todos') {
             matches = matches && property.format === filters.format;
           }
@@ -109,15 +119,9 @@ const AuctionList: React.FC = () => {
           return matches;
         });
         
-        // Clear URL parameters that are not relevant for properties
-        const params = new URLSearchParams(searchParams);
-        ['types', 'brand', 'model', 'color', 'yearMin', 'yearMax'].forEach(param => {
-          if (params.has(param)) {
-            params.delete(param);
-          }
-        });
+        console.log(`After filtering: ${filteredItems.length} properties match the criteria`);
         
-        // Sort properties (very basic for now)
+        // Sort properties based on the selected option
         if (sortOption === 'price-asc') {
           filteredItems.sort((a, b) => a.currentBid - b.currentBid);
         } else if (sortOption === 'price-desc') {
@@ -129,32 +133,19 @@ const AuctionList: React.FC = () => {
             }
             return 0;
           });
-        } else {
-          // Default sorting (oldest first)
-          filteredItems.sort((a, b) => {
-            if (a.endDate && b.endDate) {
-              return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
-            }
-            return 0;
-          });
         }
         
-        console.log(`Filtered ${filteredItems.length} properties after applying filters`);
+        // Show a sample of the first item for debugging
+        if (filteredItems.length > 0) {
+          console.log('First property item:', filteredItems[0]);
+        } else {
+          console.warn('No property items matched the filters');
+        }
         
       } else {
-        console.log('Fetching vehicle items with filters:', filters);
-        
-        // For vehicles, use the existing filter and sort logic
+        // Vehicle handling (keep existing code)
         filteredItems = filterAuctions(sampleAuctions, filters);
         filteredItems = sortAuctions(filteredItems, sortOption);
-        
-        // Clear URL parameters that are not relevant for vehicles
-        const params = new URLSearchParams(searchParams);
-        ['propertyTypes', 'usefulArea.min', 'usefulArea.max'].forEach(param => {
-          if (params.has(param)) {
-            params.delete(param);
-          }
-        });
       }
       
       // Calculate total pages
@@ -168,28 +159,19 @@ const AuctionList: React.FC = () => {
       
       // Debug the items being rendered
       console.log(`[AuctionList] Content type: ${contentType}, Items count: ${paginatedItems.length}`);
-      if (paginatedItems.length > 0) {
-        console.log('[AuctionList] First item sample:', paginatedItems[0]);
-      } else {
-        console.warn('[AuctionList] No items matched the filters');
-      }
       
       setItems(paginatedItems);
       setLoading(false);
       setTimeout(() => setIsChangingPage(false), 300); // Small delay for smoother animation
     } catch (error) {
       console.error('Error processing items:', error);
-      
-      // Show appropriate error message based on content type
-      const contentTypeLabel = filters.contentType === 'property' ? 'imóveis' : 'leilões';
-      toast.error(`Ocorreu um erro ao carregar os ${contentTypeLabel}`);
-      
+      toast.error(`Ocorreu um erro ao carregar os itens`);
       setLoading(false);
       setIsChangingPage(false);
     }
-  }, [filters, sortOption, currentPage, itemsPerPage, lastContentType, searchParams]);
+  }, [filters, sortOption, currentPage, itemsPerPage, lastContentType, searchParams, updateFilter]);
 
-  // Effect to handle content type changes and reset irrelevant filters
+  // Effect to handle content type changes and filter cleanup
   useEffect(() => {
     if (lastContentType !== null && lastContentType !== filters.contentType) {
       // A change in content type occurred - let's clean up irrelevant filters
@@ -404,9 +386,6 @@ const AuctionList: React.FC = () => {
                 return null;
               }
               
-              // Log property item for debugging
-              console.log(`Rendering property item: ${property.id}`);
-              
               return (
                 <motion.div
                   key={property.id}
@@ -436,6 +415,7 @@ const AuctionList: React.FC = () => {
         </motion.div>
       </AnimatePresence>
       
+      {/* Pagination section */}
       {totalPages > 1 && (
         <motion.div 
           initial={{ opacity: 0, y: 20 }}

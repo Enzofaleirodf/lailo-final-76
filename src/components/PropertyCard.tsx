@@ -24,6 +24,9 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   const [favorited, setFavorited] = useState(false);
   const isMobile = useIsMobile();
 
+  // Debug the property data
+  console.log('PropertyCard rendering with data:', property);
+
   // Safely access nested properties with optional chaining
   const propertyType = property?.propertyInfo?.type || 'Imóvel';
   const usefulArea = property?.propertyInfo?.usefulAreaM2 || 0;
