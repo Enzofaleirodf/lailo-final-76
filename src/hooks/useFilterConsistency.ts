@@ -1,7 +1,9 @@
+
 import { useEffect, useRef } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useIsMobile } from './use-mobile';
 import { useToast } from './use-toast';
+import { FilterState } from '@/types/filters';
 
 interface FilterConsistencyOptions {
   /**
@@ -73,10 +75,12 @@ export const useFilterConsistency = (
               duration: 3000
             });
           } else {
-            const filterName = getFilterName(lastUpdatedFilter);
+            // Use type assertion to handle the key
+            const filterKey = lastUpdatedFilter as keyof FilterState;
+            const filterName = getFilterName(filterKey);
             const filterValue = getFilterDescription(
-              lastUpdatedFilter,
-              filters[lastUpdatedFilter as keyof typeof filters]
+              filterKey,
+              filters[filterKey]
             );
             
             if (filterName && filterValue && 

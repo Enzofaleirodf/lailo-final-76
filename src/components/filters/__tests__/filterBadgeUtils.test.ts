@@ -14,6 +14,7 @@ import {
   createPlaceBadge,
   generateFilterBadges
 } from '../utils/filterBadgeUtils';
+import { ContentType, FilterState } from '@/types/filters';
 
 describe('Filter Badge Utilities', () => {
   const mockOnRemove = jest.fn();
@@ -86,8 +87,8 @@ describe('Filter Badge Utilities', () => {
     const mockUpdateFilter = jest.fn();
     
     it('generates badges for all active filters', () => {
-      const filters = {
-        contentType: 'property',
+      const filters: FilterState = {
+        contentType: 'property' as ContentType,
         location: { state: 'SP', city: 'São Paulo' },
         vehicleTypes: ['carro', 'moto'],
         propertyTypes: ['apartamento'],
@@ -125,8 +126,8 @@ describe('Filter Badge Utilities', () => {
     });
     
     it('generates no badges when no filters are active', () => {
-      const filters = {
-        contentType: 'property',
+      const filters: FilterState = {
+        contentType: 'property' as ContentType,
         location: { state: '', city: '' },
         vehicleTypes: [],
         propertyTypes: [],
@@ -146,8 +147,8 @@ describe('Filter Badge Utilities', () => {
     });
     
     it('calls updateFilter with correct parameters when removing badges', () => {
-      const filters = {
-        contentType: 'property',
+      const filters: FilterState = {
+        contentType: 'property' as ContentType,
         location: { state: 'SP', city: 'São Paulo' },
         vehicleTypes: ['carro'],
         propertyTypes: [],
