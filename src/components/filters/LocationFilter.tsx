@@ -112,7 +112,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
           variant="outline" 
           role="combobox" 
           aria-expanded={open} 
-          className={`w-full justify-between h-10 border rounded-lg px-3 py-2 ${isFilterActive ? 'text-brand-700 font-medium' : 'text-gray-700'} focus:ring-2 focus:ring-accent2-500 focus:border-accent2-500`}
+          className={`w-full justify-between h-10 border rounded-lg px-3 py-2 ${isFilterActive ? 'text-brand-700 font-medium' : 'text-gray-700'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2`}
           style={{ height: '40px' }}
         >
           <div className="flex items-center gap-2 overflow-hidden">
