@@ -8,6 +8,73 @@ const getRandomFutureDate = () => {
   return now;
 };
 
+// Helper to generate random prices
+const getRandomPrice = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+// Helper function to create additional auction items
+const createAdditionalAuctions = (baseCount: number, total: number): AuctionItem[] => {
+  const additionalAuctions: AuctionItem[] = [];
+  const vehicleTypes = ['car', 'motorcycle', 'truck'];
+  const colors = ['Preto', 'Branco', 'Prata', 'Vermelho', 'Azul', 'Cinza', 'Verde', 'Amarelo'];
+  const brands = ['Honda', 'Toyota', 'Volkswagen', 'Ford', 'Chevrolet', 'Fiat', 'Hyundai', 'BMW', 'Mercedes', 'Audi'];
+  const models = {
+    Honda: ['Civic', 'City', 'Fit', 'HR-V', 'CR-V'],
+    Toyota: ['Corolla', 'Yaris', 'Hilux', 'RAV4', 'Etios'],
+    Volkswagen: ['Golf', 'Polo', 'T-Cross', 'Virtus', 'Tiguan'],
+    Ford: ['Ka', 'EcoSport', 'Ranger', 'Focus', 'Mustang'],
+    Chevrolet: ['Onix', 'Cruze', 'S10', 'Tracker', 'Spin'],
+    Fiat: ['Uno', 'Argo', 'Toro', 'Strada', 'Mobi'],
+    Hyundai: ['HB20', 'Creta', 'i30', 'Tucson', 'Santa Fe'],
+    BMW: ['320i', 'X1', 'X3', 'X5', '118i'],
+    Mercedes: ['Classe A', 'Classe C', 'GLA', 'GLC', 'CLA'],
+    Audi: ['A3', 'A4', 'Q3', 'Q5', 'A1']
+  };
+  const locations = ['São Paulo, SP', 'Rio de Janeiro, RJ', 'Belo Horizonte, MG', 'Brasília, DF', 'Curitiba, PR', 'Porto Alegre, RS', 'Salvador, BA', 'Recife, PE', 'Fortaleza, CE'];
+  const origins = ['Judicial', 'Extrajudicial', 'Bancário', 'Seguradoras'];
+  const places = ['1ª Praça', '2ª Praça', 'Venda Direta'];
+  const formats = ['Leilão', 'Venda Direta'];
+  const years = [2018, 2019, 2020, 2021, 2022, 2023];
+
+  for (let i = baseCount; i < total; i++) {
+    const brand = brands[Math.floor(Math.random() * brands.length)];
+    const model = models[brand as keyof typeof models][Math.floor(Math.random() * models[brand as keyof typeof models].length)];
+    const year = years[Math.floor(Math.random() * years.length)];
+    const vehicleType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
+    const currentBid = getRandomPrice(30000, 150000);
+    const hasDiscount = Math.random() > 0.5;
+    const originalPrice = hasDiscount ? currentBid * (1 + Math.random() * 0.3) : undefined;
+    
+    additionalAuctions.push({
+      id: `gen-${i}`,
+      title: `${brand} ${model} ${year}`,
+      description: `Veículo em bom estado, documentação em dia.`,
+      currentBid,
+      minBid: currentBid - 5000,
+      originalPrice,
+      imageUrl: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2970&auto=format&fit=crop',
+      endDate: getRandomFutureDate(),
+      location: locations[Math.floor(Math.random() * locations.length)],
+      vehicleInfo: {
+        brand,
+        model,
+        year,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        type: vehicleType,
+        mileage: Math.floor(Math.random() * 100000)
+      },
+      bidCount: Math.floor(Math.random() * 20) + 1,
+      format: formats[Math.floor(Math.random() * formats.length)],
+      origin: origins[Math.floor(Math.random() * origins.length)],
+      place: places[Math.floor(Math.random() * places.length)],
+      createdAt: new Date()
+    });
+  }
+  
+  return additionalAuctions;
+};
+
 export const sampleAuctions: AuctionItem[] = [
   {
     id: '1',
@@ -29,7 +96,8 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 12,
     format: 'Leilão',
     origin: 'Extrajudicial',
-    place: '1ª Praça'
+    place: '1ª Praça',
+    createdAt: new Date()
   },
   {
     id: '2',
@@ -51,7 +119,8 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 8,
     format: 'Leilão',
     origin: 'Judicial',
-    place: '2ª Praça'
+    place: '2ª Praça',
+    createdAt: new Date()
   },
   {
     id: '3',
@@ -73,7 +142,8 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 15,
     format: 'Venda Direta',
     origin: 'Extrajudicial',
-    place: '1ª Praça'
+    place: '1ª Praça',
+    createdAt: new Date()
   },
   {
     id: '4',
@@ -95,7 +165,8 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 20,
     format: 'Leilão',
     origin: 'Judicial',
-    place: '2ª Praça'
+    place: '2ª Praça',
+    createdAt: new Date()
   },
   {
     id: '5',
@@ -117,7 +188,8 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 7,
     format: 'Leilão',
     origin: 'Extrajudicial',
-    place: '1ª Praça'
+    place: '1ª Praça',
+    createdAt: new Date()
   },
   {
     id: '6',
@@ -139,9 +211,15 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 14,
     format: 'Venda Direta',
     origin: 'Judicial',
-    place: '2ª Praça'
+    place: '2ª Praça',
+    createdAt: new Date()
   }
 ];
+
+// Add additional auction items to total at least 31
+const baseCount = sampleAuctions.length;
+const additionalAuctions = createAdditionalAuctions(baseCount, 35);
+sampleAuctions.push(...additionalAuctions);
 
 export const fetchSampleAuctions = async () => {
   // In a real app, this would be an API call
