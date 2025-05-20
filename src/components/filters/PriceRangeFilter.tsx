@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import FilterRangeInput from './FilterRangeInput';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
@@ -17,7 +17,9 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
   const { range } = filters.price;
   
   // Use our filter consistency hook for unified behavior
-  useFilterConsistency(onFilterChange);
+  const { handleFilterChange } = useFilterConsistency({
+    onChange: onFilterChange
+  });
 
   const handleMinChange = useCallback((value: string) => {
     updateFilter('price', {
@@ -28,10 +30,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       }
     });
     
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [filters.price, range, updateFilter, onFilterChange]);
+    handleFilterChange();
+  }, [filters.price, range, updateFilter, handleFilterChange]);
 
   const handleMaxChange = useCallback((value: string) => {
     updateFilter('price', {
@@ -42,10 +42,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       }
     });
     
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [filters.price, range, updateFilter, onFilterChange]);
+    handleFilterChange();
+  }, [filters.price, range, updateFilter, handleFilterChange]);
 
   return (
     <div className="space-y-3">

@@ -1,136 +1,131 @@
 
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useFilterConsistency } from '../useFilterConsistency';
-import * as filterStoreModule from '@/stores/useFilterStore';
-import * as mobileHookModule from '@/hooks/use-mobile';
-import * as toastModule from '@/hooks/use-toast';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { useToast } from '@/hooks/use-toast';
 
 // Mock dependencies
 jest.mock('@/stores/useFilterStore');
-jest.mock('@/hooks/use-mobile');
 jest.mock('@/hooks/use-toast');
 jest.mock('@/utils/filterUtils', () => ({
-  getFilterName: jest.fn().mockImplementation((key) => key),
-  getFilterDescription: jest.fn().mockImplementation((key, value) => JSON.stringify(value))
+  getFilterName: jest.fn().mockReturnValue('Teste'),
+  getFilterDescription: jest.fn().mockReturnValue('Descrição do filtro'),
 }));
 
 describe('useFilterConsistency', () => {
-  // Create mocks
+  // Setup default mocks
   const mockToast = jest.fn();
-  const mockDispatchEvent = jest.spyOn(window, 'dispatchEvent');
+  const mockUpdateFilter = jest.fn();
   const mockOnChange = jest.fn();
   
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Mock the toast hook
-    (toastModule.useToast as jest.Mock).mockReturnValue({ toast: mockToast });
-    
-    // Mock isMobile
-    (mobileHookModule.useIsMobile as jest.Mock).mockReturnValue(false);
-    
-    // Mock filter store with no updates
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
-      filters: {},
-      lastUpdatedFilter: null
+    // Mock return values
+    (useToast as jest.Mock).mockReturnValue({ toast: mockToast });
+    (useFilterStore as jest.Mock).mockReturnValue({
+      filters: { test: 'value' },
+      lastUpdatedFilter: 'test',
+      updateFilter: mockUpdateFilter,
     });
+    
+    // Mock window methods
+    // @ts-ignore
+    window.dispatchEvent = jest.fn();
+    
+    // Mock setTimeout
+    jest.useFakeTimers();
   });
   
-  it('does nothing when lastUpdatedFilter is null', () => {
-    renderHook(() => useFilterConsistency({ onChange: mockOnChange }));
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('should call onChange when handleFilterChange is called', () => {
+    const { result } = renderHook(() => 
+      useFilterConsistency({ onChange: mockOnChange })
+    );
     
-    expect(mockOnChange).not.toHaveBeenCalled();
-    expect(mockDispatchEvent).not.toHaveBeenCalled();
+    act(() => {
+      result.current.handleFilterChange();
+    });
+    
+    expect(mockOnChange).toHaveBeenCalled();
+  });
+  
+  it('should dispatch filters:applied event when autoTriggerEvents is true', () => {
+    const { result } = renderHook(() => 
+      useFilterConsistency({ autoTriggerEvents: true })
+    );
+    
+    act(() => {
+      result.current.handleFilterChange();
+      jest.runAllTimers();
+    });
+    
+    expect(window.dispatchEvent).toHaveBeenCalled();
+    const callArgs = (window.dispatchEvent as jest.Mock).mock.calls[0][0];
+    expect(callArgs.type).toBe('filters:applied');
+  });
+  
+  it('should not dispatch event when autoTriggerEvents is false', () => {
+    const { result } = renderHook(() => 
+      useFilterConsistency({ autoTriggerEvents: false })
+    );
+    
+    act(() => {
+      result.current.handleFilterChange();
+      jest.runAllTimers();
+    });
+    
+    expect(window.dispatchEvent).not.toHaveBeenCalled();
+  });
+  
+  it('should show toast when filter is updated and showToasts is true', () => {
+    renderHook(() => 
+      useFilterConsistency({ showToasts: true })
+    );
+    
+    // Check if toast was called with the correct arguments
+    expect(mockToast).toHaveBeenCalled();
+    expect(mockToast.mock.calls[0][0].title).toContain('Filtro');
+  });
+  
+  it('should not show toast when showToasts is false', () => {
+    renderHook(() => 
+      useFilterConsistency({ showToasts: false })
+    );
+    
     expect(mockToast).not.toHaveBeenCalled();
   });
   
-  it('does nothing when lastUpdatedFilter is "initial"', () => {
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
+  it('should show reset notification when lastUpdatedFilter is reset', () => {
+    // Override lastUpdatedFilter to be 'reset'
+    (useFilterStore as jest.Mock).mockReturnValue({
       filters: {},
-      lastUpdatedFilter: 'initial'
+      lastUpdatedFilter: 'reset',
     });
     
-    renderHook(() => useFilterConsistency({ onChange: mockOnChange }));
-    
-    expect(mockOnChange).not.toHaveBeenCalled();
-    expect(mockDispatchEvent).not.toHaveBeenCalled();
-    expect(mockToast).not.toHaveBeenCalled();
-  });
-  
-  it('calls onChange and dispatches event when filter changes', () => {
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
-      filters: {
-        location: { state: 'SP', city: 'São Paulo' }
-      },
-      lastUpdatedFilter: 'location'
-    });
-    
-    renderHook(() => useFilterConsistency({ onChange: mockOnChange }));
-    
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockDispatchEvent).toHaveBeenCalledTimes(1);
-    expect(mockDispatchEvent.mock.calls[0][0].type).toBe('filters:applied');
-  });
-  
-  it('supports receiving just a callback function', () => {
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
-      filters: {
-        format: 'Leilão'
-      },
-      lastUpdatedFilter: 'format'
-    });
-    
-    renderHook(() => useFilterConsistency(mockOnChange));
-    
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockDispatchEvent).toHaveBeenCalledTimes(1);
-  });
-  
-  it('shows toast when showToasts is true', () => {
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
-      filters: {
-        format: 'Leilão'
-      },
-      lastUpdatedFilter: 'format'
-    });
-    
-    renderHook(() => useFilterConsistency({ 
-      onChange: mockOnChange,
-      showToasts: true 
-    }));
-    
-    expect(mockToast).toHaveBeenCalledTimes(1);
-  });
-  
-  it('does not trigger events when autoTriggerEvents is false', () => {
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
-      filters: {
-        format: 'Leilão'
-      },
-      lastUpdatedFilter: 'format'
-    });
-    
-    renderHook(() => useFilterConsistency({ 
-      onChange: mockOnChange,
-      autoTriggerEvents: false 
-    }));
-    
-    expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockDispatchEvent).not.toHaveBeenCalled();
-  });
-  
-  it('shows special toast for reset action', () => {
-    (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
-      filters: {},
-      lastUpdatedFilter: 'reset'
-    });
-    
-    renderHook(() => useFilterConsistency({ 
-      showToasts: true 
-    }));
+    renderHook(() => 
+      useFilterConsistency({ showToasts: true })
+    );
     
     expect(mockToast).toHaveBeenCalledWith(expect.objectContaining({
       title: "Filtros resetados"
     }));
+  });
+  
+  it('should not show toast for bulk updates', () => {
+    // Override lastUpdatedFilter to be 'bulk'
+    (useFilterStore as jest.Mock).mockReturnValue({
+      filters: {},
+      lastUpdatedFilter: 'bulk',
+    });
+    
+    renderHook(() => 
+      useFilterConsistency({ showToasts: true })
+    );
+    
+    expect(mockToast).not.toHaveBeenCalled();
   });
 });

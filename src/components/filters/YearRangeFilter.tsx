@@ -15,7 +15,9 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   const { year } = filters;
   
   // Use our new hook to ensure filter consistency
-  useFilterConsistency(onFilterChange);
+  const { handleFilterChange } = useFilterConsistency({
+    onChange: onFilterChange
+  });
   
   // Fetch auction data to find min/max years
   const { data: auctions, isLoading, error } = useQuery({
@@ -68,10 +70,8 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     });
     
     // Notify parent component that filter has changed
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [year, updateFilter, onFilterChange]);
+    handleFilterChange();
+  }, [year, updateFilter, handleFilterChange]);
 
   const handleMaxChange = useCallback((maxValue: string) => {
     updateFilter('year', {
@@ -80,10 +80,8 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     });
     
     // Notify parent component that filter has changed
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [year, updateFilter, onFilterChange]);
+    handleFilterChange();
+  }, [year, updateFilter, handleFilterChange]);
 
   if (isLoading) {
     return (

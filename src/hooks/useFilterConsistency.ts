@@ -3,8 +3,9 @@ import { useCallback, useRef, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
+import { FilterState } from '@/types/filters';
 
-interface UseFilterConsistencyProps {
+export interface UseFilterConsistencyProps {
   onChange?: () => void;
   showToasts?: boolean;
   autoTriggerEvents?: boolean;
@@ -71,9 +72,11 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
     }
     
     // Show filter change notification
-    const filterName = getFilterName(lastUpdatedFilter);
-    const filterValue = filters[lastUpdatedFilter];
-    const description = getFilterDescription(lastUpdatedFilter, filterValue);
+    // Type assertion to ensure typesafety when accessing filter names
+    const filterKey = lastUpdatedFilter as keyof FilterState;
+    const filterName = getFilterName(filterKey);
+    const filterValue = filters[filterKey];
+    const description = getFilterDescription(filterKey, filterValue);
     
     if (description) {
       toast({

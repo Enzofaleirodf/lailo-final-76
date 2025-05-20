@@ -2,6 +2,22 @@
 import { useState, useEffect } from 'react';
 
 /**
+ * Breakpoint definitions for consistent usage across the app
+ */
+export const breakpoints = {
+  xs: '(max-width: 639px)',
+  sm: '(min-width: 640px)',
+  md: '(min-width: 768px)',
+  lg: '(min-width: 1024px)',
+  xl: '(min-width: 1280px)',
+  '2xl': '(min-width: 1536px)',
+  // Aliases for common usages
+  mobile: '(max-width: 767px)',
+  tablet: '(min-width: 768px) and (max-width: 1023px)',
+  desktop: '(min-width: 1024px)',
+};
+
+/**
  * Custom hook that returns true if the given media query matches
  * @param query - Media query string to match or predefined breakpoint
  */
@@ -9,12 +25,15 @@ export function useMediaQuery(query: string) {
   // Handle predefined breakpoint names
   const getQueryString = (q: string) => {
     switch (q) {
-      case 'xs': return '(max-width: 639px)';
-      case 'sm': return '(min-width: 640px)';
-      case 'md': return '(min-width: 768px)';
-      case 'lg': return '(min-width: 1024px)';
-      case 'xl': return '(min-width: 1280px)';
-      case '2xl': return '(min-width: 1536px)';
+      case 'xs': return breakpoints.xs;
+      case 'sm': return breakpoints.sm;
+      case 'md': return breakpoints.md;
+      case 'lg': return breakpoints.lg;
+      case 'xl': return breakpoints.xl;
+      case '2xl': return breakpoints['2xl'];
+      case 'mobile': return breakpoints.mobile;
+      case 'tablet': return breakpoints.tablet;
+      case 'desktop': return breakpoints.desktop;
       default: return q; // Use the query as-is if not a predefined breakpoint
     }
   };

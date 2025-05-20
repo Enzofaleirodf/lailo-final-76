@@ -13,7 +13,9 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
   const { filters, updateFilter } = useFilterStore();
   
   // Use our filter consistency hook for unified behavior
-  useFilterConsistency(onFilterChange);
+  const { handleFilterChange } = useFilterConsistency({
+    onChange: onFilterChange
+  });
   
   const handleMinChange = useCallback((value: string) => {
     updateFilter('usefulArea', { 
@@ -21,10 +23,8 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
       min: value 
     });
     
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [filters.usefulArea, updateFilter, onFilterChange]);
+    handleFilterChange();
+  }, [filters.usefulArea, updateFilter, handleFilterChange]);
 
   const handleMaxChange = useCallback((value: string) => {
     updateFilter('usefulArea', { 
@@ -32,10 +32,8 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
       max: value 
     });
     
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [filters.usefulArea, updateFilter, onFilterChange]);
+    handleFilterChange();
+  }, [filters.usefulArea, updateFilter, handleFilterChange]);
 
   // Format the placeholder with the correct notation
   const formatPlaceholder = (value: string, isMin: boolean) => {
