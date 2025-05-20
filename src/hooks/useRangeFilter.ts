@@ -41,19 +41,6 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
     max: initialValues.max || ''
   });
   
-  // Estado de exibição para permitir formatação diferente do valor real
-  const [displayValues, setDisplayValues] = useState<RangeValues>({
-    min: formatDisplay ? formatValue(initialValues.min || '') : initialValues.min || '',
-    max: formatDisplay ? formatValue(initialValues.max || '') : initialValues.max || ''
-  });
-  
-  // Estado de erro para validação
-  const [errors, setErrors] = useState<{min: string | null, max: string | null}>({min: null, max: null});
-  
-  // Referência para rastrear interações do usuário - crucial para não contar valores iniciais como filtros ativos
-  const userHasInteracted = useRef<{min: boolean, max: boolean}>({min: false, max: false});
-  const [isActive, setIsActive] = useState<boolean>(false);
-  
   // Campo em modo de edição (para evitar formatação durante digitação)
   const editingField = useRef<'min' | 'max' | null>(null);
   
@@ -75,6 +62,19 @@ export function useRangeFilter(initialValues: RangeValues, options: RangeFilterO
       useGrouping: useThousandSeparator
     });
   }
+  
+  // Estado de exibição para permitir formatação diferente do valor real
+  const [displayValues, setDisplayValues] = useState<RangeValues>({
+    min: formatDisplay ? formatValue(initialValues.min || '') : initialValues.min || '',
+    max: formatDisplay ? formatValue(initialValues.max || '') : initialValues.max || ''
+  });
+  
+  // Estado de erro para validação
+  const [errors, setErrors] = useState<{min: string | null, max: string | null}>({min: null, max: null});
+  
+  // Referência para rastrear interações do usuário - crucial para não contar valores iniciais como filtros ativos
+  const userHasInteracted = useRef<{min: boolean, max: boolean}>({min: false, max: false});
+  const [isActive, setIsActive] = useState<boolean>(false);
   
   // Determinar se o filtro está ativo apenas se o usuário tiver interagido com ele
   // e os valores forem diferentes dos padrões
