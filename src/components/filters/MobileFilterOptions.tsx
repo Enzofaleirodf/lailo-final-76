@@ -61,7 +61,7 @@ const MobileFilterOptions: React.FC = () => {
           value={filters.format} 
           onChange={handleFormatChange} 
           options={formatOptions} 
-          className="border-gray-200 shadow-sm" 
+          className="border-gray-200 shadow-sm bg-white" 
         />
       </FilterSectionComponent>
 
@@ -76,7 +76,7 @@ const MobileFilterOptions: React.FC = () => {
           value={filters.origin} 
           onChange={handleOriginChange} 
           options={originOptions} 
-          className="border-gray-200 shadow-sm" 
+          className="border-gray-200 shadow-sm bg-white" 
         />
       </FilterSectionComponent>
 
@@ -91,7 +91,7 @@ const MobileFilterOptions: React.FC = () => {
           value={filters.place} 
           onChange={handlePlaceChange} 
           options={placeOptions} 
-          className="border-gray-200 shadow-sm" 
+          className="border-gray-200 shadow-sm bg-white" 
         />
       </FilterSectionComponent>
     </div>
