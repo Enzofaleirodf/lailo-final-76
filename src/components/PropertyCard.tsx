@@ -90,7 +90,13 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
             </button>
           </div>
           
-          {/* Price section */}
+          {/* Address row (movida de baixo para cima - agora é a segunda linha) */}
+          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
+            <MapPin size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
+            <span className="line-clamp-1">{property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}</span>
+          </div>
+
+          {/* Price section (movida de cima para baixo - agora é a terceira linha) */}
           <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
             <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none`}>
               {formatCurrency(property.currentBid)}
@@ -103,12 +109,6 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
                   {formatCurrency(property.originalPrice)}
                 </span>
               </div>}
-          </div>
-          
-          {/* Address row */}
-          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
-            <MapPin size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
-            <span className="line-clamp-1">{property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}</span>
           </div>
           
           {/* Subtle divider with precisely 12px margin below */}
