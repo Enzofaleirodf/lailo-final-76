@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -30,10 +29,8 @@ const AuctionStatus: React.FC = () => {
   const {
     sortOption
   } = useSortStore();
-
   const stats = useMemo(() => {
     const contentType = filters.contentType;
-    
     if (contentType === 'property') {
       // Handle properties counting
       const totalProperties = sampleProperties.length;
@@ -41,7 +38,6 @@ const AuctionStatus: React.FC = () => {
       const totalSites = uniqueLocations.size;
       // For properties, we'll consider 20% as "new" for demonstration
       const newProperties = Math.round(totalProperties * 0.2);
-      
       return {
         totalItems: totalProperties,
         totalSites,
@@ -53,7 +49,6 @@ const AuctionStatus: React.FC = () => {
       const totalAuctions = filteredAuctions.length;
       const totalSites = calculateTotalSites(filteredAuctions);
       const newAuctions = calculateNewAuctions(filteredAuctions);
-      
       return {
         totalItems: totalAuctions,
         totalSites,
@@ -69,19 +64,18 @@ const AuctionStatus: React.FC = () => {
 
   // Text varies based on content type
   const itemType = filters.contentType === 'property' ? 'imóveis' : 'leilões';
-  
-  return (
-    <motion.div 
-      className="text-sm w-full"
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+  return <motion.div initial={{
+    opacity: 0,
+    y: -10
+  }} animate={{
+    opacity: 1,
+    y: 0
+  }} transition={{
+    duration: 0.3
+  }} className="w-fit">
       Encontramos <span className="text-foreground font-medium">{stats.totalItems.toLocaleString('pt-BR')}</span> {itemType} em{' '}
       <span className="text-foreground font-medium">{stats.totalSites.toLocaleString('pt-BR')}</span> sites ·{' '}
       <span className="text-accent2-600 font-medium">{stats.newItems.toLocaleString('pt-BR')}</span> novos hoje
-    </motion.div>
-  );
+    </motion.div>;
 };
-
 export default React.memo(AuctionStatus);
