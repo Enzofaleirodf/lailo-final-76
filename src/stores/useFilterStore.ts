@@ -42,6 +42,11 @@ export const DEFAULT_FILTERS: FilterState = {
   place: 'Todas'
 };
 
+// Filter groups by content type
+export const VEHICLE_FILTER_KEYS = ['vehicleTypes', 'brand', 'model', 'color', 'year'];
+export const PROPERTY_FILTER_KEYS = ['propertyTypes', 'usefulArea'];
+export const COMMON_FILTER_KEYS = ['location', 'price', 'format', 'origin', 'place'];
+
 interface FilterStore {
   // State
   filters: FilterState;
@@ -56,6 +61,7 @@ interface FilterStore {
   resetFilters: () => void;
   toggleSection: (section: string) => void;
   cleanIrrelevantFilters: () => void;
+  resetFilterGroup: (contentType: ContentType) => void;
 }
 
 export const useFilterStore = create<FilterStore>((set, get) => ({
@@ -143,10 +149,22 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
             updatedFilters.model = 'todos';
             updatedFilters.color = 'todas';
             updatedFilters.year = { min: '', max: '' };
+            
+            // Reset the price for property-appropriate values
+            updatedFilters.price = {
+              value: [0, 100],
+              range: { min: '', max: '' }
+            };
           } else {
             // When switching to vehicles, clear property-specific filters
             updatedFilters.propertyTypes = [];
             updatedFilters.usefulArea = { min: '', max: '' };
+            
+            // Reset the price for vehicle-appropriate values
+            updatedFilters.price = {
+              value: [0, 100],
+              range: { min: '', max: '' }
+            };
           }
           
           return {
@@ -172,6 +190,30 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
         ...DEFAULT_FILTERS,
         contentType: currentContentType, // Preserve the content type when resetting
       }
+    });
+  },
+  
+  resetFilterGroup: (contentType: ContentType) => {
+    set((state) => {
+      const updatedFilters = { ...state.filters };
+      
+      // Reset filters based on content type
+      if (contentType === 'property') {
+        PROPERTY_FILTER_KEYS.forEach(key => {
+          updatedFilters[key] = DEFAULT_FILTERS[key];
+        });
+      } else {
+        VEHICLE_FILTER_KEYS.forEach(key => {
+          updatedFilters[key] = DEFAULT_FILTERS[key];
+        });
+      }
+      
+      // Always reset common filters
+      COMMON_FILTER_KEYS.forEach(key => {
+        updatedFilters[key] = DEFAULT_FILTERS[key];
+      });
+      
+      return { filters: updatedFilters };
     });
   },
   

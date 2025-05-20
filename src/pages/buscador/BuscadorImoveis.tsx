@@ -11,34 +11,37 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
-  const { updateFilter, resetFilters, filters } = useFilterStore();
-  const [searchParams] = useSearchParams();
+  const { updateFilter, filters } = useFilterStore();
   const location = useLocation();
   
-  // Set content type to property when this page loads and clean vehicle-specific filters
+  // Set content type to property when this page loads, but only if it's not already set
   useEffect(() => {
-    // Check if we're on the property page (to avoid content type loops)
-    const isPropertyPage = location.pathname.includes('/buscador/imoveis');
-    
-    // Only update if we're on the property page and content type isn't already 'property'
-    if (isPropertyPage && filters.contentType !== 'property') {
+    // Only update if content type isn't already 'property'
+    if (filters.contentType !== 'property') {
       console.log('BuscadorImoveis: Setting content type to property');
       updateFilter('contentType', 'property');
       
-      // Clean up any vehicle-specific filters directly
-      const cleanedFilters = { ...filters };
-      cleanedFilters.vehicleTypes = [];
-      cleanedFilters.brand = 'todas';
-      cleanedFilters.model = 'todos';
-      cleanedFilters.color = 'todas';
-      cleanedFilters.year = { min: '', max: '' };
+      // Clean up any vehicle-specific filters
+      if (filters.vehicleTypes.length > 0 || 
+          filters.brand !== 'todas' || 
+          filters.model !== 'todos' || 
+          filters.color !== 'todas' ||
+          filters.year.min !== '' || 
+          filters.year.max !== '') {
+        console.log('Cleaning vehicle-specific filters');
+        updateFilter('vehicleTypes', []);
+        updateFilter('brand', 'todas');
+        updateFilter('model', 'todos');
+        updateFilter('color', 'todas');
+        updateFilter('year', { min: '', max: '' });
+      }
     }
-  }, [updateFilter, filters.contentType, filters, location.pathname]);
+  }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brand, filters.model, filters.color, filters.year]);
   
   // Sync URL with filters and sort state
   useUrlParams();

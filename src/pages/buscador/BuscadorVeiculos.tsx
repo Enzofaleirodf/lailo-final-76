@@ -19,22 +19,23 @@ const BuscadorVeiculos = () => {
   const { updateFilter, filters } = useFilterStore();
   const location = useLocation();
   
-  // Set content type to vehicle when this page loads
+  // Set content type to vehicle when this page loads, but only if it's not already set
   useEffect(() => {
-    // Check if we're on the vehicles page (to avoid content type loops)
-    const isVehiclePage = location.pathname.includes('/buscador/veiculos');
-    
-    // Only update if we're on the vehicle page and content type isn't already 'vehicle'
-    if (isVehiclePage && filters.contentType !== 'vehicle') {
+    // Only update if content type isn't already 'vehicle'
+    if (filters.contentType !== 'vehicle') {
       console.log('BuscadorVeiculos: Setting content type to vehicle');
       updateFilter('contentType', 'vehicle');
       
-      // Clean up any property-specific filters directly
-      const cleanedFilters = { ...filters };
-      cleanedFilters.propertyTypes = [];
-      cleanedFilters.usefulArea = { min: '', max: '' };
+      // Clean up any property-specific filters
+      if (filters.propertyTypes.length > 0 || 
+          filters.usefulArea.min !== '' || 
+          filters.usefulArea.max !== '') {
+        console.log('Cleaning property-specific filters');
+        updateFilter('propertyTypes', []);
+        updateFilter('usefulArea', { min: '', max: '' });
+      }
     }
-  }, [updateFilter, filters.contentType, filters, location.pathname]);
+  }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
   
   // Sync URL with filters and sort state
   useUrlParams();

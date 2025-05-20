@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import AuctionCard from '@/components/AuctionCard';
 import PropertyCard from '@/components/PropertyCard';
@@ -11,6 +12,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
+import { useResultsStore } from '@/stores/useResultsStore';
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 
@@ -19,12 +21,12 @@ const ITEMS_PER_PAGE = 30;
 const AuctionList: React.FC = () => {
   const { filters, resetFilters, updateFilter } = useFilterStore();
   const { sortOption } = useSortStore();
-  const [loading, setLoading] = useState(true);
+  const { setFilteredResults, setLoading } = useResultsStore();
+  const [loading, setLocalLoading] = useState(true);
   const [items, setItems] = useState<AuctionItem[] | PropertyItem[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const [totalPages, setTotalPages] = useState(1);
-  const [filteredItemsCount, setFilteredItemsCount] = useState(0);
   const [itemsPerPage] = useState(ITEMS_PER_PAGE);
   const [isChangingPage, setIsChangingPage] = useState(false);
   const [lastContentType, setLastContentType] = useState<string | null>(null);
@@ -36,6 +38,8 @@ const AuctionList: React.FC = () => {
   const fetchItems = useCallback(async () => {
     try {
       setIsChangingPage(true);
+      setLoading(true);
+      setLocalLoading(true);
       
       // Check if content type changed since last fetch
       if (lastContentType !== null && lastContentType !== filters.contentType) {
@@ -53,7 +57,6 @@ const AuctionList: React.FC = () => {
       
       if (contentType === 'property') {
         console.log('Fetching property items with filters:', JSON.stringify(filters, null, 2));
-        console.log('Available sample properties:', sampleProperties.length);
         
         // For properties, apply property-specific filtering
         filteredItems = sampleProperties.filter(property => {
@@ -63,20 +66,17 @@ const AuctionList: React.FC = () => {
           if (filters.price.range.min) {
             const minPrice = Number(filters.price.range.min);
             matches = matches && property.currentBid >= minPrice;
-            if (!matches) console.log(`Property ${property.id} price ${property.currentBid} < min ${minPrice}`);
           }
           
           if (filters.price.range.max) {
             const maxPrice = Number(filters.price.range.max);
             matches = matches && property.currentBid <= maxPrice;
-            if (!matches) console.log(`Property ${property.id} price ${property.currentBid} > max ${maxPrice}`);
           }
           
           // Apply property type filter if set
           if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
             if (property.propertyInfo && property.propertyInfo.type) {
               matches = matches && filters.propertyTypes.includes(property.propertyInfo.type.toLowerCase());
-              if (!matches) console.log(`Property ${property.id} type ${property.propertyInfo.type} not in ${filters.propertyTypes}`);
             }
           }
           
@@ -84,31 +84,26 @@ const AuctionList: React.FC = () => {
           if (filters.usefulArea.min && property.propertyInfo) {
             const minArea = Number(filters.usefulArea.min);
             matches = matches && property.propertyInfo.usefulAreaM2 >= minArea;
-            if (!matches) console.log(`Property ${property.id} area ${property.propertyInfo.usefulAreaM2} < min ${minArea}`);
           }
           
           if (filters.usefulArea.max && property.propertyInfo) {
             const maxArea = Number(filters.usefulArea.max);
             matches = matches && property.propertyInfo.usefulAreaM2 <= maxArea;
-            if (!matches) console.log(`Property ${property.id} area ${property.propertyInfo.usefulAreaM2} > max ${maxArea}`);
           }
           
           // Apply format filter if needed
           if (filters.format !== 'Todos') {
             matches = matches && property.format === filters.format;
-            if (!matches) console.log(`Property ${property.id} format ${property.format} != ${filters.format}`);
           }
           
           // Apply origin filter if needed
           if (filters.origin !== 'Todas') {
             matches = matches && property.origin === filters.origin;
-            if (!matches) console.log(`Property ${property.id} origin ${property.origin} != ${filters.origin}`);
           }
           
           // Apply place filter if needed
           if (filters.place !== 'Todas') {
             matches = matches && property.place === filters.place;
-            if (!matches) console.log(`Property ${property.id} place ${property.place} != ${filters.place}`);
           }
           
           return matches;
@@ -138,8 +133,18 @@ const AuctionList: React.FC = () => {
         filteredItems = sortAuctions(filteredItems, sortOption);
       }
 
-      // Store total filtered items count for stats display
-      setFilteredItemsCount(filteredItems.length);
+      // Calculate stats for AuctionStatus component
+      const totalItems = filteredItems.length;
+      
+      // Calculate total sites - unique locations
+      const uniqueLocations = new Set(filteredItems.map(item => item.location));
+      const totalSites = uniqueLocations.size > 0 ? uniqueLocations.size : 1;
+      
+      // Calculate new items - roughly 10-20% of total for demo purposes
+      const newItems = Math.ceil(filteredItems.length * (contentType === 'property' ? 0.2 : 0.1));
+      
+      // Update the results store with calculated values
+      setFilteredResults(totalItems, totalSites, newItems);
       
       // Calculate total pages
       const total = Math.ceil(filteredItems.length / itemsPerPage);
@@ -152,13 +157,9 @@ const AuctionList: React.FC = () => {
       
       // Debug the items being rendered
       console.log(`[AuctionList] Content type: ${contentType}, Items count: ${paginatedItems.length}`);
-      if (paginatedItems.length > 0) {
-        console.log('[AuctionList] First item sample:', paginatedItems[0]);
-      } else {
-        console.warn('[AuctionList] No items matched the filters');
-      }
       
       setItems(paginatedItems);
+      setLocalLoading(false);
       setLoading(false);
       setTimeout(() => setIsChangingPage(false), 300); // Small delay for smoother animation
     } catch (error) {
@@ -168,30 +169,16 @@ const AuctionList: React.FC = () => {
       const contentTypeLabel = filters.contentType === 'property' ? 'imóveis' : 'leilões';
       toast.error(`Ocorreu um erro ao carregar os ${contentTypeLabel}`);
       
+      setLocalLoading(false);
       setLoading(false);
       setIsChangingPage(false);
+      setFilteredResults(0, 0, 0);
     }
-  }, [filters, sortOption, currentPage, itemsPerPage, lastContentType, searchParams]);
+  }, [filters, sortOption, currentPage, itemsPerPage, lastContentType, searchParams, setFilteredResults, setLoading]);
 
-  // Effect to handle content type changes and reset irrelevant filters
+  // Effect to reset page when content type changes
   useEffect(() => {
     if (lastContentType !== null && lastContentType !== filters.contentType) {
-      // A change in content type occurred - let's clean up irrelevant filters
-      const cleanedFilters = { ...filters };
-      
-      if (filters.contentType === 'property') {
-        // When switching to properties, clear vehicle-specific filters
-        cleanedFilters.vehicleTypes = [];
-        cleanedFilters.brand = 'todas';
-        cleanedFilters.model = 'todos';
-        cleanedFilters.color = 'todas';
-        cleanedFilters.year = { min: '', max: '' };
-      } else {
-        // When switching to vehicles, clear property-specific filters
-        cleanedFilters.propertyTypes = [];
-        cleanedFilters.usefulArea = { min: '', max: '' };
-      }
-      
       // Reset the page to 1 when content type changes
       const params = new URLSearchParams(searchParams);
       params.set('page', '1');
@@ -210,7 +197,6 @@ const AuctionList: React.FC = () => {
 
   // Effect to fetch data and handle scroll behavior on page changes
   useEffect(() => {
-    setLoading(true);
     fetchItems();
     
     // Scroll to top ONLY on explicit page changes
@@ -224,31 +210,15 @@ const AuctionList: React.FC = () => {
     // Mark that we're changing pages explicitly
     isPageChangeRef.current = true;
     
-    // Capture current scroll position before changing page
-    const currentScrollPosition = window.scrollY;
-    
-    const params = new URLSearchParams(searchParams);
-    
     // If we're going to the same page, do nothing
-    if (page.toString() === params.get('page')) {
+    if (page.toString() === searchParams.get('page')) {
       return;
     }
     
+    const params = new URLSearchParams(searchParams);
     params.set('page', page.toString());
-    
-    // Create and dispatch a custom event before changing page
-    const event = new CustomEvent('page:changing', {
-      detail: { 
-        fromPage: currentPage,
-        toPage: page,
-        scrollPosition: currentScrollPosition
-      }
-    });
-    window.dispatchEvent(event);
-    
-    // Update search params to change page
     setSearchParams(params);
-  }, [searchParams, setSearchParams, currentPage]);
+  }, [searchParams, setSearchParams]);
 
   // Render pagination items based on total pages and current page
   const renderPaginationItems = useCallback(() => {
@@ -326,12 +296,6 @@ const AuctionList: React.FC = () => {
     
     return items;
   }, [currentPage, handlePageChange, totalPages]);
-  
-  // Expose the filtered items count to the parent component
-  useEffect(() => {
-    // Make the filtered items count available to other components
-    (window as any).filteredItemsCount = filteredItemsCount;
-  }, [filteredItemsCount]);
   
   // Show skeleton during initial loading
   if (loading && !isChangingPage) {
