@@ -39,7 +39,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   };
 
   // Format auction end date to show only last 2 digits of year
-  const formatAuctionDate = (date: Date): string => {
+  const formatAuctionDate = (date: Date | undefined): string => {
     if (!date) return 'Data não disponível';
     
     try {

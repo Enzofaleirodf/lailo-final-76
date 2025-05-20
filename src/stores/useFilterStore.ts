@@ -55,6 +55,7 @@ interface FilterStore {
   updateFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
   resetFilters: () => void;
   toggleSection: (section: string) => void;
+  cleanIrrelevantFilters: () => void;
 }
 
 export const useFilterStore = create<FilterStore>((set, get) => ({
@@ -121,14 +122,80 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
   // Actions
   setFilters: (filters) => set({ filters }),
   
-  updateFilter: (key, value) => set((state) => ({
-    filters: {
-      ...state.filters,
-      [key]: value
-    }
-  })),
+  updateFilter: (key, value) => {
+    set((state) => {
+      // Special handling for contentType changes
+      if (key === 'contentType') {
+        const newContentType = value as ContentType;
+        const currentContentType = state.filters.contentType;
+        
+        if (newContentType !== currentContentType) {
+          console.log(`Content type changing from ${currentContentType} to ${newContentType}`);
+          
+          // Return with updated contentType and cleaned filters based on the new type
+          const updatedFilters = { ...state.filters, [key]: value };
+          
+          // Clean up content-specific filters
+          if (newContentType === 'property') {
+            // When switching to properties, clear vehicle-specific filters
+            updatedFilters.vehicleTypes = [];
+            updatedFilters.brand = 'todas';
+            updatedFilters.model = 'todos';
+            updatedFilters.color = 'todas';
+            updatedFilters.year = { min: '', max: '' };
+          } else {
+            // When switching to vehicles, clear property-specific filters
+            updatedFilters.propertyTypes = [];
+            updatedFilters.usefulArea = { min: '', max: '' };
+          }
+          
+          return {
+            filters: updatedFilters
+          };
+        }
+      }
+      
+      // Regular update for other filter keys
+      return {
+        filters: {
+          ...state.filters,
+          [key]: value
+        }
+      };
+    });
+  },
   
-  resetFilters: () => set({ filters: DEFAULT_FILTERS }),
+  resetFilters: () => {
+    const currentContentType = get().filters.contentType;
+    set({
+      filters: {
+        ...DEFAULT_FILTERS,
+        contentType: currentContentType, // Preserve the content type when resetting
+      }
+    });
+  },
+  
+  cleanIrrelevantFilters: () => {
+    set((state) => {
+      const contentType = state.filters.contentType;
+      const updatedFilters = { ...state.filters };
+      
+      if (contentType === 'property') {
+        // If on property page, clear vehicle filters
+        updatedFilters.vehicleTypes = [];
+        updatedFilters.brand = 'todas';
+        updatedFilters.model = 'todos';
+        updatedFilters.color = 'todas';
+        updatedFilters.year = { min: '', max: '' };
+      } else {
+        // If on vehicle page, clear property filters
+        updatedFilters.propertyTypes = [];
+        updatedFilters.usefulArea = { min: '', max: '' };
+      }
+      
+      return { filters: updatedFilters };
+    });
+  },
   
   toggleSection: (section) => set((state) => ({
     expandedSections: {

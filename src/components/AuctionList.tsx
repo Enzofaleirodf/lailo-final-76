@@ -17,7 +17,7 @@ import { PropertyItem } from '@/types/property';
 const ITEMS_PER_PAGE = 30;
 
 const AuctionList: React.FC = () => {
-  const { filters } = useFilterStore();
+  const { filters, resetFilters, updateFilter } = useFilterStore();
   const { sortOption } = useSortStore();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<AuctionItem[] | PropertyItem[]>([]);
@@ -26,6 +26,7 @@ const AuctionList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(ITEMS_PER_PAGE);
   const [isChangingPage, setIsChangingPage] = useState(false);
+  const [lastContentType, setLastContentType] = useState<string | null>(null);
   
   // Reference to track page changes
   const isPageChangeRef = useRef(false);
@@ -35,6 +36,15 @@ const AuctionList: React.FC = () => {
     try {
       setIsChangingPage(true);
       
+      // Check if content type changed since last fetch
+      if (lastContentType !== null && lastContentType !== filters.contentType) {
+        // When content type changes, we should clear vehicle/property specific filters
+        console.log(`Content type changed from ${lastContentType} to ${filters.contentType}`);
+      }
+      
+      // Update last content type
+      setLastContentType(filters.contentType);
+      
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
@@ -42,8 +52,9 @@ const AuctionList: React.FC = () => {
       let filteredItems = [];
       
       if (contentType === 'property') {
-        // For properties, we'll filter the sample properties data
-        // In a real app, this would use more sophisticated filtering
+        console.log('Fetching property items with filters:', filters);
+        
+        // For properties, limit the filters to only those that apply to properties
         filteredItems = sampleProperties.filter(property => {
           // Basic filtering for properties (can be expanded)
           let matches = true;
@@ -59,10 +70,16 @@ const AuctionList: React.FC = () => {
           // Apply property type filter if set
           if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
             // Make sure propertyInfo exists before checking the type
-            if (property.propertyInfo) {
+            if (property.propertyInfo && property.propertyInfo.type) {
               matches = matches && filters.propertyTypes.includes(property.propertyInfo.type);
             } else {
-              matches = false; // If propertyInfo is missing, it doesn't match
+              // If property has valid propertyInfo but no type specified, we'll include it by default
+              // This is a graceful fallback to avoid filtering out valid properties
+              if (!property.propertyInfo) {
+                console.warn(`Property ${property.id} is missing propertyInfo`);
+              } else if (!property.propertyInfo.type) {
+                console.warn(`Property ${property.id} is missing propertyInfo.type`);
+              }
             }
           }
           
@@ -74,7 +91,7 @@ const AuctionList: React.FC = () => {
             matches = matches && property.propertyInfo.usefulAreaM2 <= parseInt(filters.usefulArea.max);
           }
           
-          // Apply format filter if needed
+          // Apply format filter if needed (and ignore vehicle-only filters)
           if (filters.format !== 'Todos') {
             matches = matches && property.format === filters.format;
           }
@@ -92,21 +109,52 @@ const AuctionList: React.FC = () => {
           return matches;
         });
         
+        // Clear URL parameters that are not relevant for properties
+        const params = new URLSearchParams(searchParams);
+        ['types', 'brand', 'model', 'color', 'yearMin', 'yearMax'].forEach(param => {
+          if (params.has(param)) {
+            params.delete(param);
+          }
+        });
+        
         // Sort properties (very basic for now)
         if (sortOption === 'price-asc') {
           filteredItems.sort((a, b) => a.currentBid - b.currentBid);
         } else if (sortOption === 'price-desc') {
           filteredItems.sort((a, b) => b.currentBid - a.currentBid);
         } else if (sortOption === 'newest') {
-          filteredItems.sort((a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime());
+          filteredItems.sort((a, b) => {
+            if (a.endDate && b.endDate) {
+              return new Date(b.endDate).getTime() - new Date(a.endDate).getTime();
+            }
+            return 0;
+          });
         } else {
           // Default sorting (oldest first)
-          filteredItems.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+          filteredItems.sort((a, b) => {
+            if (a.endDate && b.endDate) {
+              return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+            }
+            return 0;
+          });
         }
+        
+        console.log(`Filtered ${filteredItems.length} properties after applying filters`);
+        
       } else {
+        console.log('Fetching vehicle items with filters:', filters);
+        
         // For vehicles, use the existing filter and sort logic
         filteredItems = filterAuctions(sampleAuctions, filters);
         filteredItems = sortAuctions(filteredItems, sortOption);
+        
+        // Clear URL parameters that are not relevant for vehicles
+        const params = new URLSearchParams(searchParams);
+        ['propertyTypes', 'usefulArea.min', 'usefulArea.max'].forEach(param => {
+          if (params.has(param)) {
+            params.delete(param);
+          }
+        });
       }
       
       // Calculate total pages
@@ -122,6 +170,8 @@ const AuctionList: React.FC = () => {
       console.log(`[AuctionList] Content type: ${contentType}, Items count: ${paginatedItems.length}`);
       if (paginatedItems.length > 0) {
         console.log('[AuctionList] First item sample:', paginatedItems[0]);
+      } else {
+        console.warn('[AuctionList] No items matched the filters');
       }
       
       setItems(paginatedItems);
@@ -137,7 +187,33 @@ const AuctionList: React.FC = () => {
       setLoading(false);
       setIsChangingPage(false);
     }
-  }, [filters, sortOption, currentPage, itemsPerPage]);
+  }, [filters, sortOption, currentPage, itemsPerPage, lastContentType, searchParams]);
+
+  // Effect to handle content type changes and reset irrelevant filters
+  useEffect(() => {
+    if (lastContentType !== null && lastContentType !== filters.contentType) {
+      // A change in content type occurred - let's clean up irrelevant filters
+      const cleanedFilters = { ...filters };
+      
+      if (filters.contentType === 'property') {
+        // When switching to properties, clear vehicle-specific filters
+        cleanedFilters.vehicleTypes = [];
+        cleanedFilters.brand = 'todas';
+        cleanedFilters.model = 'todos';
+        cleanedFilters.color = 'todas';
+        cleanedFilters.year = { min: '', max: '' };
+      } else {
+        // When switching to vehicles, clear property-specific filters
+        cleanedFilters.propertyTypes = [];
+        cleanedFilters.usefulArea = { min: '', max: '' };
+      }
+      
+      // Reset the page to 1 when content type changes
+      const params = new URLSearchParams(searchParams);
+      params.set('page', '1');
+      setSearchParams(params, { replace: true });
+    }
+  }, [filters.contentType, lastContentType, filters, searchParams, setSearchParams]);
 
   // Ensure valid page number
   useEffect(() => {
@@ -319,31 +395,40 @@ const AuctionList: React.FC = () => {
             
             // Determine which card component to use based on content type
             if (filters.contentType === 'property') {
-              // Check for required propertyInfo before rendering PropertyCard
-              if (!item.propertyInfo) {
-                console.error('Property missing propertyInfo:', item);
+              // Type guard to ensure this is a PropertyItem with required fields
+              const property = item as PropertyItem;
+              
+              // Enhanced validation for property items
+              if (!property.id || property.currentBid === undefined) {
+                console.error('Invalid property data:', property);
                 return null;
               }
               
+              // Log property item for debugging
+              console.log(`Rendering property item: ${property.id}`);
+              
               return (
                 <motion.div
-                  key={item.id}
+                  key={property.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
                 >
-                  <PropertyCard property={item as PropertyItem} />
+                  <PropertyCard property={property} />
                 </motion.div>
               );
             } else {
+              // For vehicle auctions, use the existing AuctionCard
+              const auction = item as AuctionItem;
+              
               return (
                 <motion.div
-                  key={item.id}
+                  key={auction.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: Math.random() * 0.2 }}
                 >
-                  <AuctionCard auction={item as AuctionItem} />
+                  <AuctionCard auction={auction} />
                 </motion.div>
               );
             }

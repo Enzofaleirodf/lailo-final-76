@@ -11,16 +11,31 @@ import SortOptions from '@/components/filters/SortOptions';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useUIStore } from '@/stores/useUIStore';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { useSearchParams } from 'react-router-dom';
 
 const BuscadorImoveis = () => {
   const isMobile = useIsMobile();
   const { filtersOpen, sortOpen, setFiltersOpen, setSortOpen } = useUIStore();
-  const { updateFilter } = useFilterStore();
+  const { updateFilter, resetFilters } = useFilterStore();
+  const [searchParams] = useSearchParams();
   
-  // Set content type to property when this page loads
+  // Set content type to property when this page loads and clean vehicle-specific filters
   useEffect(() => {
+    // Set the content type for this page
     updateFilter('contentType', 'property');
-  }, [updateFilter]);
+    
+    // Clean up any vehicle-specific filters that might be in the URL
+    const urlParams = Object.fromEntries(searchParams.entries());
+    const vehicleParams = ['types', 'brand', 'model', 'color', 'yearMin', 'yearMax'];
+    
+    // If we have vehicle filters in the URL but we're on the property page,
+    // we should inform the user or automatically remove those filters
+    const hasVehicleFilters = vehicleParams.some(param => searchParams.has(param));
+    
+    if (hasVehicleFilters) {
+      console.log('Vehicle filters detected on property page, these will be ignored');
+    }
+  }, [updateFilter, searchParams]);
   
   // Sync URL with filters and sort state
   useUrlParams();
