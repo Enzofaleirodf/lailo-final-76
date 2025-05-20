@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import AuctionCard from '@/components/AuctionCard';
 import PropertyCard from '@/components/PropertyCard';
@@ -59,14 +58,19 @@ const AuctionList: React.FC = () => {
           
           // Apply property type filter if set
           if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
-            matches = matches && filters.propertyTypes.includes(property.propertyInfo.type);
+            // Make sure propertyInfo exists before checking the type
+            if (property.propertyInfo) {
+              matches = matches && filters.propertyTypes.includes(property.propertyInfo.type);
+            } else {
+              matches = false; // If propertyInfo is missing, it doesn't match
+            }
           }
           
           // Apply useful area filter if set
-          if (filters.usefulArea.min) {
+          if (filters.usefulArea.min && property.propertyInfo) {
             matches = matches && property.propertyInfo.usefulAreaM2 >= parseInt(filters.usefulArea.min);
           }
-          if (filters.usefulArea.max) {
+          if (filters.usefulArea.max && property.propertyInfo) {
             matches = matches && property.propertyInfo.usefulAreaM2 <= parseInt(filters.usefulArea.max);
           }
           
@@ -113,6 +117,12 @@ const AuctionList: React.FC = () => {
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
       const paginatedItems = filteredItems.slice(start, end);
+      
+      // Debug the items being rendered
+      console.log(`[AuctionList] Content type: ${contentType}, Items count: ${paginatedItems.length}`);
+      if (paginatedItems.length > 0) {
+        console.log('[AuctionList] First item sample:', paginatedItems[0]);
+      }
       
       setItems(paginatedItems);
       setLoading(false);
@@ -302,8 +312,19 @@ const AuctionList: React.FC = () => {
           className="flex flex-col space-y-3"
         >
           {items.map((item) => {
+            if (!item) {
+              console.error('Null item found in items array');
+              return null;
+            }
+            
             // Determine which card component to use based on content type
             if (filters.contentType === 'property') {
+              // Check for required propertyInfo before rendering PropertyCard
+              if (!item.propertyInfo) {
+                console.error('Property missing propertyInfo:', item);
+                return null;
+              }
+              
               return (
                 <motion.div
                   key={item.id}
