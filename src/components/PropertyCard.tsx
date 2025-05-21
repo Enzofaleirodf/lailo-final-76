@@ -36,6 +36,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
         original: property.originalPrice
       }}
       extraInfo={extraInfo}
+      imageUrl={property.imageUrl}
       location={property.location}
       origin={property.origin}
       place={property.place}

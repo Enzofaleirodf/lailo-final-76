@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
 import FavoriteButton from './FavoriteButton';
+import { Card, CardContent } from '@/components/ui/card';
 
 export interface BaseCardProps {
   id: string;
@@ -16,6 +17,7 @@ export interface BaseCardProps {
     original?: number;
   };
   extraInfo: React.ReactNode; // Para detalhes específicos do tipo de conteúdo
+  imageUrl?: string; // Adicionado imageUrl
   location?: string;
   origin?: string;
   place?: string;
@@ -65,6 +67,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
   title,
   price,
   extraInfo,
+  imageUrl,
   location,
   origin,
   place,
@@ -94,6 +97,18 @@ const BaseCard: React.FC<BaseCardProps> = ({
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
     >
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
+        {/* Área da imagem - se imageUrl for fornecida */}
+        {imageUrl && (
+          <div className="relative w-full h-40">
+            <img 
+              src={imageUrl} 
+              alt={title} 
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        )}
+        
         {/* Content */}
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
           {/* Top row with title and favorite button */}

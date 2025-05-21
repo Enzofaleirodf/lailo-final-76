@@ -67,6 +67,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
         original: auction.originalPrice
       }}
       extraInfo={extraInfo}
+      imageUrl={auction.imageUrl}
       location={auction.location}
       origin={auction.origin}
       place={auction.place}
