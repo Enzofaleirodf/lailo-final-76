@@ -1,3 +1,4 @@
+
 import { FilterState, ContentType } from '@/types/filters';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { defaultRangeValues } from '@/stores/useFilterStore';
@@ -38,7 +39,7 @@ export const placeOptions = [
  * Obter todas as categorias de veículo disponíveis
  */
 export const getVehicleCategories = (): string[] => {
-  return ['Todos', ...Object.keys(vehicleCategoryToTypesMap).filter(cat => cat !== 'Todos')];
+  return Object.keys(vehicleCategoryToTypesMap);
 };
 
 /**

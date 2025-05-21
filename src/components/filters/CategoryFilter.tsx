@@ -17,7 +17,8 @@ import {
   Building, 
   Mountain, 
   Hotel,
-  Warehouse
+  Warehouse,
+  Trailer
 } from 'lucide-react';
 
 interface CategoryFilterProps {
@@ -34,15 +35,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
     ? getPropertyCategories()
     : getVehicleCategories();
     
-  // Ordenar alfabeticamente, mas manter "Todos" no início
-  if (categoryOptions.includes('Todos')) {
-    const todosIndex = categoryOptions.indexOf('Todos');
-    categoryOptions.splice(todosIndex, 1);
-    categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-    categoryOptions.unshift('Todos');
-  } else {
-    categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-  }
+  // Filtrar a opção "Todos" e ordenar alfabeticamente
+  categoryOptions = categoryOptions.filter(option => option !== 'Todos');
+  categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
   const handleCategoryChange = (value: string) => {
     updateFilter('category', value);
@@ -70,6 +65,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
         case 'Pesados': return Truck;
         case 'Máquinas Agrícolas': return Tractor;
         case 'Micro Veículos': return Bike;
+        case 'Auxiliares': return Trailer; // Novo ícone para categoria Auxiliares
         default: return CircleDashed;
       }
     }
@@ -78,7 +74,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
   return (
     <div className="space-y-3">
       <RadioGroup 
-        value={category || 'Todos'} 
+        value={category || categoryOptions[0]} 
         onValueChange={handleCategoryChange}
         className="grid-cols-3 w-full"
         aria-label="Selecione uma categoria"
