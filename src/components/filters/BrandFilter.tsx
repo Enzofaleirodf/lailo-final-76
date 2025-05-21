@@ -19,7 +19,17 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
       : '';
     
     // Obter as marcas disponíveis para o tipo de veículo selecionado
-    const brands = getBrandsByVehicleType(vehicleType);
+    let brands = getBrandsByVehicleType(vehicleType);
+    
+    // Ordenar alfabeticamente, mantendo "Todas" no início
+    if (brands.includes('Todas')) {
+      const todasIndex = brands.indexOf('Todas');
+      brands.splice(todasIndex, 1);
+      brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      brands.unshift('Todas');
+    } else {
+      brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    }
     
     // Transformar a lista de marcas em opções para o dropdown
     return brands.map(brand => ({

@@ -23,7 +23,19 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
   }
   
   // Acessar propriedades aninhadas com optional chaining
-  const propertyType = property?.propertyInfo?.type || 'Imóvel';
+  let propertyType = property?.propertyInfo?.type || 'Imóvel';
+  
+  // Garantir que o tipo esteja no singular
+  if (propertyType.endsWith('s') && propertyType !== 'Prédios') {
+    propertyType = propertyType.slice(0, -1);
+  } else if (propertyType.endsWith('is')) {
+    propertyType = propertyType.replace(/is$/, 'l');
+  } else if (propertyType.endsWith('ões')) {
+    propertyType = propertyType.replace(/ões$/, 'ão');
+  } else if (propertyType.endsWith('ns')) {
+    propertyType = propertyType.replace(/ns$/, 'm');
+  }
+  
   const usefulArea = property?.propertyInfo?.usefulAreaM2 || 0;
   const formattedArea = formatUsefulArea(usefulArea);
   

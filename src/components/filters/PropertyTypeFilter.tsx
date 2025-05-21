@@ -14,7 +14,29 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   const { category, contentType } = filters;
   
   // Obter os tipos de imóvel disponíveis para a categoria selecionada
-  const availableTypes = getTypesByCategory(category, 'property');
+  let availableTypes = getTypesByCategory(category, 'property');
+  
+  // Converter para plural, exceto "Todos"
+  availableTypes = availableTypes.map(type => {
+    if (type === 'Todos') return type;
+    
+    // Regras de pluralização em português
+    if (type.endsWith('ão')) return type.replace(/ão$/, 'ões');
+    if (type.endsWith('l')) return type.replace(/l$/, 'is');
+    if (type.endsWith('m')) return type.replace(/m$/, 'ns');
+    if (['a', 'e', 'i', 'o', 'u'].includes(type.slice(-1))) return type + 's';
+    return type + 's';
+  });
+  
+  // Ordenar alfabeticamente
+  if (availableTypes.includes('Todos')) {
+    const todosIndex = availableTypes.indexOf('Todos');
+    availableTypes.splice(todosIndex, 1);
+    availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    availableTypes.unshift('Todos');
+  } else {
+    availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }
   
   const handlePropertyTypeChange = useCallback((value: string) => {
     // Convert to array with single value for compatibility with existing filter logic
@@ -28,7 +50,10 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   
   // Função para determinar o ícone com base no tipo
   const getIconForType = (type: string) => {
-    switch(type.toLowerCase()) {
+    // Remover possível final 's' para verificação
+    const singularType = type.endsWith('s') ? type.slice(0, -1) : type;
+    
+    switch(singularType.toLowerCase()) {
       case 'apartamento':
       case 'kitnet':
       case 'quitinete':
@@ -66,11 +91,12 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
       case 'hotel':
       case 'motel':
       case 'pousada':
-        return Hotel; // Alterado de Hotel2 para Hotel
+        return Hotel;
       case 'prédio comercial':
       case 'prédio residencial':
       case 'edifício':
         return Building;
+      case 'todo':
       case 'todos':
         return CircleDashed;
       default:
@@ -91,7 +117,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   return (
     <div className="flex flex-wrap gap-2 w-full justify-start">
       <h4 className="text-sm font-medium text-gray-700 mb-2 w-full">
-        Tipo de {category === 'Todos' ? 'Imóvel' : category}
+        Tipos de {category === 'Todos' ? 'Imóveis' : category}
       </h4>
       <ToggleGroup 
         type="single" 

@@ -15,9 +15,19 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
   const { contentType, category } = filters;
 
   // Determinar opções de categoria baseadas no tipo de conteúdo
-  const categoryOptions = contentType === 'property' 
+  let categoryOptions = contentType === 'property' 
     ? getPropertyCategories()
     : getVehicleCategories();
+    
+  // Ordenar alfabeticamente, mas manter "Todos" no início
+  if (categoryOptions.includes('Todos')) {
+    const todosIndex = categoryOptions.indexOf('Todos');
+    categoryOptions.splice(todosIndex, 1);
+    categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    categoryOptions.unshift('Todos');
+  } else {
+    categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }
 
   const handleCategoryChange = (value: string) => {
     updateFilter('category', value);
