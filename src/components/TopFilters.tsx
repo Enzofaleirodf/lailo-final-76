@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -47,6 +46,10 @@ const TopFilters: React.FC = () => {
     }
   }, [updateFilter]);
 
+  // Estilo base comum para todos os componentes
+  const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
+  const baseDropdownStyle = "h-10 flex items-center justify-between px-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist shadow-sm rounded-lg border border-gray-200";
+
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
     const isSelected = filters.contentType === type;
@@ -65,7 +68,8 @@ const TopFilters: React.FC = () => {
       role="navigation" 
       aria-label="Filtros rápidos"
     >
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      {/* Primeiro componente - Tipo de conteúdo */}
+      <div className={`bg-white ${baseContainerStyle}`}>
         <div className="flex h-10" role="tablist" aria-label="Tipo de conteúdo">
           <button 
             onClick={() => handleContentTypeChange('property')}
@@ -78,7 +82,6 @@ const TopFilters: React.FC = () => {
             )}
             aria-label="Filtrar imóveis"
             {...getTabAttributes('property')}
-            style={{ height: '40px' }}
           >
             <Building2 size={18} className="shrink-0" aria-hidden="true" />
             <span>Imóveis</span>
@@ -95,7 +98,6 @@ const TopFilters: React.FC = () => {
             )}
             aria-label="Filtrar veículos"
             {...getTabAttributes('vehicle')}
-            style={{ height: '40px' }}
           >
             <Car size={18} className="shrink-0" aria-hidden="true" />
             <span>Veículos</span>
@@ -107,11 +109,10 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            className={baseDropdownStyle}
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
-            style={{ height: '40px' }}  
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
@@ -138,11 +139,10 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            className={baseDropdownStyle}
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
-            aria-expanded="false"
-            style={{ height: '40px' }}  
+            aria-expanded="false"  
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
@@ -169,11 +169,10 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            className={baseDropdownStyle}
             aria-label="Selecionar etapa"
             aria-haspopup="listbox"
             aria-expanded="false"
-            style={{ height: '40px' }}
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
