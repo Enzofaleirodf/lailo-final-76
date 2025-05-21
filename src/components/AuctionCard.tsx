@@ -86,7 +86,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           
           {/* Vehicle info row - only shown for vehicle items with proper null checks */}
           {isVehicleItem && auction.vehicleInfo && <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap  mb-1">
                 {auction.vehicleInfo.color && <div className="flex items-center">
                     <Palette size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
                     <span>{auction.vehicleInfo.color}</span>
@@ -102,7 +102,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                     <div className="mx-2 h-3 w-[1px] bg-gray-300"></div>
                     
                     {/* Location next to year with divider between them */}
-                    <span>{auction.location || 'Localização não disponível'}</span>
+                    <span className="">{auction.location || 'Localização não disponível'}</span>
                   </>}
               </div>
             </div>}
