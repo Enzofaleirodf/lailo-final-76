@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ModelFilterProps {
   onFilterChange?: () => void;
@@ -14,12 +15,24 @@ const brandOptions = [
   { value: 'ford', label: 'Ford' }
 ];
 
-const modelOptions = [
-  { value: 'todos', label: 'Todos os modelos' },
-  { value: 'corolla', label: 'Corolla' },
-  { value: 'civic', label: 'Civic' },
-  { value: 'focus', label: 'Focus' }
-];
+// Model options organized by brand
+const modelOptionsByBrand: Record<string, Array<{value: string, label: string}>> = {
+  toyota: [
+    { value: 'corolla', label: 'Corolla' },
+    { value: 'hilux', label: 'Hilux' },
+    { value: 'yaris', label: 'Yaris' }
+  ],
+  honda: [
+    { value: 'civic', label: 'Civic' },
+    { value: 'fit', label: 'Fit' },
+    { value: 'city', label: 'City' }
+  ],
+  ford: [
+    { value: 'focus', label: 'Focus' },
+    { value: 'ka', label: 'Ka' },
+    { value: 'ranger', label: 'Ranger' }
+  ]
+};
 
 const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
@@ -27,11 +40,16 @@ const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
   const handleBrandChange = useCallback((value: string) => {
     updateFilter('brand', value);
     
+    // Reset model when brand changes
+    if (value !== filters.brand) {
+      updateFilter('model', 'todos');
+    }
+    
     // Notify parent component that filter has changed
     if (onFilterChange) {
       onFilterChange();
     }
-  }, [updateFilter, onFilterChange]);
+  }, [updateFilter, onFilterChange, filters.brand]);
 
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
@@ -42,6 +60,18 @@ const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
     }
   }, [updateFilter, onFilterChange]);
 
+  // Get model options based on selected brand
+  const getModelOptions = () => {
+    if (filters.brand === 'todas') {
+      return [{ value: 'todos', label: 'Todos os modelos' }];
+    }
+    
+    return [
+      { value: 'todos', label: 'Todos os modelos' },
+      ...(modelOptionsByBrand[filters.brand] || [])
+    ];
+  };
+
   return (
     <div className="space-y-3">
       <FilterDropdown
@@ -51,13 +81,20 @@ const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
         onChange={handleBrandChange}
         options={brandOptions}
       />
-      <FilterDropdown
-        id="model-filter"
-        aria-label="Selecione o modelo"
-        value={filters.model}
-        onChange={handleModelChange}
-        options={modelOptions}
-      />
+      
+      {filters.brand === 'todas' ? (
+        <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-500 bg-gray-100">
+          Selecione uma marca
+        </div>
+      ) : (
+        <FilterDropdown
+          id="model-filter"
+          aria-label="Selecione o modelo"
+          value={filters.model}
+          onChange={handleModelChange}
+          options={getModelOptions()}
+        />
+      )}
     </div>
   );
 };

@@ -36,15 +36,20 @@ describe('ModelFilter', () => {
     });
   });
 
-  test('renders brand and model dropdowns', () => {
+  test('renders brand dropdown and disabled model message when no brand selected', () => {
     render(<ModelFilter />);
     
-    // Check if both dropdowns are rendered
+    // Check if brand dropdown is rendered
     expect(screen.getByLabelText('Selecione a marca')).toBeInTheDocument();
-    expect(screen.getByLabelText('Selecione o modelo')).toBeInTheDocument();
+    
+    // Check if disabled model message is displayed
+    expect(screen.getByText('Selecione uma marca')).toBeInTheDocument();
+    
+    // Check that model dropdown is not rendered
+    expect(screen.queryByLabelText('Selecione o modelo')).not.toBeInTheDocument();
   });
 
-  test('selects brand correctly', () => {
+  test('selects brand correctly and shows model dropdown', () => {
     render(<ModelFilter onFilterChange={mockOnFilterChange} />);
     
     // Find and interact with the brand dropdown
@@ -54,22 +59,62 @@ describe('ModelFilter', () => {
     // Verify the expected behavior
     expect(mockUpdateFilter).toHaveBeenCalledWith('brand', 'toyota');
     expect(mockOnFilterChange).toHaveBeenCalled();
-  });
-
-  test('selects model correctly', () => {
+    
+    // Setup the mock to show the model dropdown
+    mockUseFilterStore.mockReturnValue({
+      filters: { 
+        brand: 'toyota', 
+        model: 'todos' 
+      },
+      activeFilters: 1,
+      expandedSections: {},
+      lastUpdatedFilter: null,
+      updateFilter: mockUpdateFilter,
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
+    });
+    
+    // Re-render with updated state
     render(<ModelFilter onFilterChange={mockOnFilterChange} />);
     
-    // Find and interact with the model dropdown
+    // Now model dropdown should be visible
+    expect(screen.getByLabelText('Selecione o modelo')).toBeInTheDocument();
+  });
+
+  test('selects model correctly when brand is selected', () => {
+    // Set up the mock with a pre-selected brand
+    mockUseFilterStore.mockReturnValue({
+      filters: { 
+        brand: 'honda', 
+        model: 'todos' 
+      },
+      activeFilters: 1,
+      expandedSections: {},
+      lastUpdatedFilter: null,
+      updateFilter: mockUpdateFilter,
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
+    });
+
+    render(<ModelFilter onFilterChange={mockOnFilterChange} />);
+    
+    // Find and interact with the model dropdown which should now be visible
     const modelDropdown = screen.getByLabelText('Selecione o modelo');
-    fireEvent.change(modelDropdown, { target: { value: 'corolla' } });
+    fireEvent.change(modelDropdown, { target: { value: 'civic' } });
     
     // Verify the expected behavior
-    expect(mockUpdateFilter).toHaveBeenCalledWith('model', 'corolla');
+    expect(mockUpdateFilter).toHaveBeenCalledWith('model', 'civic');
     expect(mockOnFilterChange).toHaveBeenCalled();
   });
 
-  test('displays selected values correctly', () => {
-    // Set up the mock with pre-selected values
+  test('resets model when brand changes', () => {
+    // Set up the mock with selected brand and model
     mockUseFilterStore.mockReturnValue({
       filters: { 
         brand: 'honda', 
@@ -86,13 +131,14 @@ describe('ModelFilter', () => {
       expandAllSections: jest.fn()
     });
 
-    render(<ModelFilter />);
+    render(<ModelFilter onFilterChange={mockOnFilterChange} />);
     
-    // Check if dropdowns show the correct selected values
-    const brandDropdown = screen.getByLabelText('Selecione a marca') as HTMLSelectElement;
-    const modelDropdown = screen.getByLabelText('Selecione o modelo') as HTMLSelectElement;
+    // Find and change the brand dropdown
+    const brandDropdown = screen.getByLabelText('Selecione a marca');
+    fireEvent.change(brandDropdown, { target: { value: 'toyota' } });
     
-    expect(brandDropdown.value).toBe('honda');
-    expect(modelDropdown.value).toBe('civic');
+    // Should reset model when brand changes
+    expect(mockUpdateFilter).toHaveBeenCalledWith('brand', 'toyota');
+    expect(mockUpdateFilter).toHaveBeenCalledWith('model', 'todos');
   });
 });
