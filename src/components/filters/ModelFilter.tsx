@@ -84,7 +84,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
       
       {filters.brand === 'todas' ? (
         <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-500 bg-gray-100">
-          Selecione uma marca
+          Todos os modelos
         </div>
       ) : (
         <FilterDropdown

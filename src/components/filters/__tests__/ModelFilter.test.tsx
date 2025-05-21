@@ -43,7 +43,7 @@ describe('ModelFilter', () => {
     expect(screen.getByLabelText('Selecione a marca')).toBeInTheDocument();
     
     // Check if disabled model message is displayed
-    expect(screen.getByText('Selecione uma marca')).toBeInTheDocument();
+    expect(screen.getByText('Todos os modelos')).toBeInTheDocument();
     
     // Check that model dropdown is not rendered
     expect(screen.queryByLabelText('Selecione o modelo')).not.toBeInTheDocument();
