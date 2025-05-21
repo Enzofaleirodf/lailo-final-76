@@ -74,7 +74,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
         {/* Content (right side) */}
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
           {/* Top row with property type and area */}
-          <div className="flex justify-between items-start gap-2 mb-1 w-full">
+          <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-geist`}>
               {propertyType} • {formattedArea}
             </h3>
