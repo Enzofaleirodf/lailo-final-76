@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Palette, Hourglass, MapPin } from 'lucide-react';
@@ -8,11 +7,9 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
 import FavoriteButton from './FavoriteButton';
-
 interface AuctionCardProps {
   auction: AuctionItem;
 }
-
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
@@ -58,7 +55,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     }
   };
   const discount = calculateDiscount();
-
   const handleToggleFavorite = (id: string, newFavoritedState: boolean) => {
     setFavorited(newFavoritedState);
   };
@@ -81,15 +77,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
         {/* Content */}
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
           {/* Top row with vehicle title and favorite button */}
-          <div className="flex justify-between items-start gap-2 mb-1 w-full">
+          <div className="flex justify-between items-start gap-2 mb-1 w-full  items-center">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
               {getVehicleTitle()}
             </h3>
-            <FavoriteButton 
-              itemId={auction.id} 
-              isFavorited={favorited} 
-              onToggleFavorite={handleToggleFavorite} 
-            />
+            <FavoriteButton itemId={auction.id} isFavorited={favorited} onToggleFavorite={handleToggleFavorite} />
           </div>
           
           {/* Vehicle info row - only shown for vehicle items with proper null checks */}
@@ -152,6 +144,5 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       </div>
     </motion.div>;
 });
-
 AuctionCard.displayName = 'AuctionCard';
 export default AuctionCard;
