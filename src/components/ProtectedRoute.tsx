@@ -29,7 +29,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return (
     <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
       <DialogContent className="p-0 border-none max-w-md">
-        <LightLogin />
+        <LightLogin isInDialog={true} />
       </DialogContent>
     </Dialog>
   );

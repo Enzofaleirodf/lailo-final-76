@@ -32,7 +32,7 @@ const Perfil = () => {
   };
   
   if (!isAuthenticated) {
-    return <LightLogin />;
+    return <LightLogin isInDialog={false} />;
   }
   
   return (
