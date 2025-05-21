@@ -104,6 +104,9 @@ const BaseCard: React.FC<BaseCardProps> = ({
     return hoursLeft > 0 && hoursLeft <= 24;
   };
   
+  // Altura fixa padrão para todos os cards
+  const cardHeight = isMobile ? '138px' : '180px';
+  
   return (
     <motion.div 
       whileHover={{
@@ -114,34 +117,35 @@ const BaseCard: React.FC<BaseCardProps> = ({
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
       data-testid="base-card"
     >
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden">
-        {/* Área da imagem - posicionada à esquerda sem padding interno para eliminar a linha divisória */}
+      {/* Card Container - Definindo altura fixa para padronização */}
+      <div 
+        className="rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden"
+        style={{ height: cardHeight }}
+      >
+        {/* Área da imagem - posicionada à esquerda sem padding interno ou bordas */}
         {imageUrl && (
-          <div className="relative w-1/3 h-auto bg-white">
+          <div className="relative w-1/3 h-full bg-white overflow-hidden" style={{ padding: 0, margin: 0 }}>
             {!imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-white">
                 <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
               </div>
             )}
-            <AspectRatio ratio={3/4} className="h-full">
-              <div className="absolute inset-0">
-                <img 
-                  src={imageUrl} 
-                  alt={title} 
-                  className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                  loading="lazy"
-                  onLoad={handleImageLoad}
-                  aria-hidden={!imageLoaded}
-                />
+            <img 
+              src={imageUrl} 
+              alt={title} 
+              className={`w-full h-full object-cover transition-opacity duration-300 rounded-l-lg ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              loading="lazy"
+              onLoad={handleImageLoad}
+              aria-hidden={!imageLoaded}
+              style={{ objectPosition: 'center' }}
+            />
+            
+            {/* Indicador de "terminando em breve" */}
+            {isEndingSoon() && (
+              <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                Termina em breve
               </div>
-              
-              {/* Indicador de "terminando em breve" */}
-              {isEndingSoon() && (
-                <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
-                  Termina em breve
-                </div>
-              )}
-            </AspectRatio>
+            )}
           </div>
         )}
         
