@@ -52,7 +52,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
         onChange={handleColorChange}
         options={colorOptions}
         placeholder="Selecione"
-        className="border-gray-200 shadow-sm bg-white"
+        className="border-gray-300"
       />
     </div>
   );

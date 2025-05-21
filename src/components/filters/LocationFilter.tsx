@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { MapPin, X, ChevronDown, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -11,10 +12,12 @@ import { LocationFilter as LocationFilterType } from '@/types/filters';
 interface LocationFilterProps {
   onFilterChange?: () => void;
 }
+
 interface FilterDropdownOption {
   value: string;
   label: string;
 }
+
 const LocationFilter: React.FC<LocationFilterProps> = ({
   onFilterChange
 }) => {
@@ -136,16 +139,32 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
             <label htmlFor="state-select" className="text-sm font-medium text-gray-700">
               Estado
             </label>
-            {loadingStates ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="state-select" aria-label="Selecione o estado" value={localState} onChange={handleStateChange} options={stateOptions} placeholder="Todos os estados" />}
+            {loadingStates ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="state-select" aria-label="Selecione o estado" value={localState} onChange={handleStateChange} options={stateOptions} placeholder="Todos os estados" className="border-gray-300" />}
           </div>
           
           <div className="space-y-2">
             <label htmlFor="city-select" className="text-sm font-medium text-gray-700">
               Cidade
             </label>
-            {localState ? loadingCities ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="city-select" aria-label="Selecione a cidade" value={localCity} onChange={handleCityChange} options={cityOptions} placeholder="Todas as cidades" /> : <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
+            {localState ? 
+              loadingCities ? 
+                <Skeleton className="h-10 w-full" /> 
+                : 
+                <FilterDropdown 
+                  id="city-select" 
+                  aria-label="Selecione a cidade" 
+                  value={localCity} 
+                  onChange={handleCityChange} 
+                  options={cityOptions} 
+                  placeholder="Todas as cidades" 
+                  className="border-gray-300"
+                /> 
+              : 
+              <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
                 Selecione um estado antes
-              </div>}
+                <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
+              </div>
+            }
           </div>
           
           {/* Search bar for location - moved below city selection */}
@@ -154,13 +173,20 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
               Endereço
             </label>
             <div className="relative w-full">
-              <input id="address-search" type="text" value={searchQuery} onChange={handleSearchChange} placeholder="Busque por rua ou bairro" className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500" />
+              <input 
+                id="address-search" 
+                type="text" 
+                value={searchQuery} 
+                onChange={handleSearchChange} 
+                placeholder="Busque por rua ou bairro" 
+                className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500" 
+              />
               <Search size={18} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
             </div>
           </div>
           
           <div className="flex gap-2 pt-2">
-            <Button variant="outline" size="sm" className="flex-1 h-9 text-sm" onClick={resetFilter}>
+            <Button variant="outline" size="sm" className="flex-1 h-9 text-sm border-gray-300" onClick={resetFilter}>
               Redefinir
             </Button>
             <Button size="sm" className="flex-1 h-9 bg-brand-600 hover:bg-brand-700 text-sm" onClick={applyChanges}>
@@ -171,4 +197,5 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
       </PopoverContent>
     </Popover>;
 };
+
 export default React.memo(LocationFilter);
