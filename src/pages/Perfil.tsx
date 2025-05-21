@@ -32,7 +32,8 @@ const Perfil = () => {
   };
   
   if (!isAuthenticated) {
-    return <LightLogin isInDialog={false} />;
+    // Usando o LightLogin sem o botão de fechar (isInDialog=false e hideCloseButton=true)
+    return <LightLogin isInDialog={false} hideCloseButton={true} />;
   }
   
   return (

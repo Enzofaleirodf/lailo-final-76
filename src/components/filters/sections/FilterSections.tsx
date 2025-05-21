@@ -1,3 +1,4 @@
+
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -5,6 +6,7 @@ import VehicleTypeFilter from '../VehicleTypeFilter';
 import PropertyTypeFilter from '../PropertyTypeFilter';
 import LocationFilter from '../LocationFilter';
 import ModelFilter from '../ModelFilter';
+import BrandFilter from '../BrandFilter';
 import ColorFilter from '../ColorFilter';
 import YearRangeFilter from '../YearRangeFilter';
 import PriceRangeFilter from '../PriceRangeFilter';

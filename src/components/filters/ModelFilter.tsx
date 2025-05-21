@@ -1,64 +1,15 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronDown } from 'lucide-react';
+import BrandFilter from './BrandFilter';
+import { getModelsByBrand } from '@/utils/brandModelMapping';
 
 interface ModelFilterProps {
   onFilterChange?: () => void;
 }
-
-const brandOptions = [{
-  value: 'todas',
-  label: 'Todas'
-}, {
-  value: 'toyota',
-  label: 'Toyota'
-}, {
-  value: 'honda',
-  label: 'Honda'
-}, {
-  value: 'ford',
-  label: 'Ford'
-}];
-
-// Model options organized by brand
-const modelOptionsByBrand: Record<string, Array<{
-  value: string;
-  label: string;
-}>> = {
-  toyota: [{
-    value: 'corolla',
-    label: 'Corolla'
-  }, {
-    value: 'hilux',
-    label: 'Hilux'
-  }, {
-    value: 'yaris',
-    label: 'Yaris'
-  }],
-  honda: [{
-    value: 'civic',
-    label: 'Civic'
-  }, {
-    value: 'fit',
-    label: 'Fit'
-  }, {
-    value: 'city',
-    label: 'City'
-  }],
-  ford: [{
-    value: 'focus',
-    label: 'Focus'
-  }, {
-    value: 'ka',
-    label: 'Ka'
-  }, {
-    value: 'ranger',
-    label: 'Ranger'
-  }]
-};
 
 const ModelFilter: React.FC<ModelFilterProps> = ({
   onFilterChange
@@ -68,19 +19,14 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
     updateFilter
   } = useFilterStore();
   
-  const handleBrandChange = useCallback((value: string) => {
-    updateFilter('brand', value);
-
-    // Reset model when brand changes
-    if (value !== filters.brand) {
-      updateFilter('model', 'todos');
-    }
-
-    // Notify parent component that filter has changed
-    if (onFilterChange) {
-      onFilterChange();
-    }
-  }, [updateFilter, onFilterChange, filters.brand]);
+  // Obter opções de modelos com base na marca selecionada
+  const modelOptions = useMemo(() => {
+    const models = getModelsByBrand(filters.brand);
+    return models.map(model => ({
+      value: model.toLowerCase(),
+      label: model
+    }));
+  }, [filters.brand]);
   
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
@@ -90,29 +36,10 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
       onFilterChange();
     }
   }, [updateFilter, onFilterChange]);
-
-  // Get model options based on selected brand
-  const getModelOptions = () => {
-    if (filters.brand === 'todas') {
-      return [{
-        value: 'todos',
-        label: 'Todos'
-      }];
-    }
-    return [{
-      value: 'todos',
-      label: 'Todos'
-    }, ...(modelOptionsByBrand[filters.brand] || [])];
-  };
   
   return (
     <div className="space-y-3">
-      <div>
-        <label htmlFor="brand-filter" className="block text-sm font-medium text-gray-700 mb-1">
-          Marca
-        </label>
-        <FilterDropdown id="brand-filter" aria-label="Selecione a marca" value={filters.brand} onChange={handleBrandChange} options={brandOptions} />
-      </div>
+      <BrandFilter onFilterChange={onFilterChange} />
       
       <div>
         <label htmlFor="model-filter" className="block text-sm font-medium text-gray-700 mb-1">
@@ -129,7 +56,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
             aria-label="Selecione o modelo" 
             value={filters.model} 
             onChange={handleModelChange} 
-            options={getModelOptions()} 
+            options={modelOptions} 
           />
         )}
       </div>
