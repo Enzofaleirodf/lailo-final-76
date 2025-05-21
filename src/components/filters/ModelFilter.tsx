@@ -81,6 +81,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
       onFilterChange();
     }
   }, [updateFilter, onFilterChange, filters.brand]);
+  
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
 
@@ -103,7 +104,9 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
       label: 'Todos'
     }, ...(modelOptionsByBrand[filters.brand] || [])];
   };
-  return <div className="space-y-3">
+  
+  return (
+    <div className="space-y-3">
       <div>
         <label htmlFor="brand-filter" className="block text-sm font-medium text-gray-700 mb-1">
           Marca
@@ -130,7 +133,8 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
           />
         )}
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default React.memo(ModelFilter);

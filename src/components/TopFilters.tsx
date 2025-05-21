@@ -120,7 +120,7 @@ const TopFilters: React.FC = () => {
                 {filters.format}
               </span>
             </span>
-            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -150,7 +150,7 @@ const TopFilters: React.FC = () => {
                 {filters.origin}
               </span>
             </span>
-            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -180,7 +180,7 @@ const TopFilters: React.FC = () => {
                 {filters.place}
               </span>
             </span>
-            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">

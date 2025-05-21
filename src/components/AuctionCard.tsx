@@ -136,10 +136,10 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           {/* Bottom row with auction details */}
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
-              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-geist`}>
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}>
                 {auction.origin || 'Origem não disponível'}
               </Badge>
-              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-geist`}>
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}>
                 {auction.place || 'Praça não disponível'}
               </Badge>
             </div>
