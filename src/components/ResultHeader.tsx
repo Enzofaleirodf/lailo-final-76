@@ -7,6 +7,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SortOptions from './filters/SortOptions';
+import { ChevronDown } from 'lucide-react';
 
 const ResultHeader: React.FC = () => {
   const {
@@ -63,9 +64,10 @@ const ResultHeader: React.FC = () => {
             </p>
             <button 
               onClick={handleSortClick} 
-              className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none"
+              className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none gap-1"
             >
               <span className="font-medium text-gray-700">{currentSortOption.label}</span>
+              <ChevronDown size={16} className="text-gray-500" />
             </button>
             
             <SortOptions open={sortDialogOpen} onOpenChange={setSortDialogOpen} />
