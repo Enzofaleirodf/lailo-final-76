@@ -92,6 +92,17 @@ const BaseCard: React.FC<BaseCardProps> = ({
   const handleImageLoad = () => {
     setImageLoaded(true);
   };
+
+  // Verificar se o leilão está próximo do fim (menos de 24h)
+  const isEndingSoon = () => {
+    if (!endDate) return false;
+    
+    const now = new Date();
+    const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
+    const hoursLeft = (end.getTime() - now.getTime()) / (1000 * 60 * 60);
+    
+    return hoursLeft > 0 && hoursLeft <= 24;
+  };
   
   return (
     <motion.div 
@@ -99,6 +110,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
         y: -4,
         transition: { duration: 0.2 }
       }} 
+      whileTap={{ scale: 0.98 }}
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
       data-testid="base-card"
     >
@@ -119,6 +131,13 @@ const BaseCard: React.FC<BaseCardProps> = ({
               onLoad={handleImageLoad}
               aria-hidden={!imageLoaded}
             />
+            
+            {/* Indicador de "terminando em breve" */}
+            {isEndingSoon() && (
+              <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                Termina em breve
+              </div>
+            )}
           </div>
         )}
         

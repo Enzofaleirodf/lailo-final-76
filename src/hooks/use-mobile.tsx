@@ -1,16 +1,12 @@
 
-import * as React from "react";
-import { useMediaQuery } from "./useMediaQuery";
+import { useMediaQuery } from './useMediaQuery';
 
 /**
- * Hook para verificar se o dispositivo atual é considerado mobile.
- * Utiliza o sistema unificado de media queries para garantir consistência
- * entre todos os componentes.
+ * Hook para detectar se o dispositivo atual é mobile.
+ * Utiliza o hook useMediaQuery para verificar o tamanho da tela
  * 
- * @returns {boolean} true se o dispositivo é mobile (< 768px), false caso contrário
+ * @returns boolean indicando se o viewport atual é considerado mobile
  */
 export function useIsMobile() {
-  // Usar o sistema unificado de media queries
-  // Isso garante consistência com o resto da aplicação
-  return useMediaQuery("mobile");
+  return !useMediaQuery('md');
 }
