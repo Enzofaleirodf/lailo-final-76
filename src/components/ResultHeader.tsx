@@ -21,22 +21,28 @@ const ResultHeader: React.FC = () => {
   const [sortDialogOpen, setSortDialogOpen] = useState(false);
 
   // Get sort options without icons
-  const sortOptions = useMemo(() => [{
-    value: 'newest',
-    label: 'Mais recentes'
-  }, {
-    value: 'price-asc',
-    label: 'Menor preço'
-  }, {
-    value: 'price-desc',
-    label: 'Maior preço'
-  }, {
-    value: 'highest-discount',
-    label: 'Maior desconto'
-  }, {
-    value: 'nearest',
-    label: 'Mais próximos'
-  }], []);
+  const sortOptions = useMemo(() => [
+    {
+      value: 'newest',
+      label: 'Mais recentes'
+    }, 
+    {
+      value: 'price-asc',
+      label: 'Menor preço'
+    }, 
+    {
+      value: 'price-desc',
+      label: 'Maior preço'
+    }, 
+    {
+      value: 'highest-discount',
+      label: 'Maior desconto'
+    }, 
+    {
+      value: 'nearest',
+      label: 'Mais próximos'
+    }
+  ], []);
 
   // Get current sort option
   const currentSortOption = useMemo(() => {
