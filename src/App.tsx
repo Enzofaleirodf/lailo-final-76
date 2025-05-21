@@ -17,6 +17,7 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import AuthCallback from "./pages/auth/AuthCallback";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Create a client outside of the component function to avoid recreating it on every render
 const queryClient = new QueryClient({
@@ -61,10 +62,18 @@ const App = () => {
                 <Route path="/buscador/imoveis" element={<BuscadorImoveis />} />
                 <Route path="/buscador/veiculos" element={<BuscadorVeiculos />} />
                 
-                {/* Favoritos Routes */}
+                {/* Favoritos Routes - Protected */}
                 <Route path="/favoritos" element={<Navigate to="/favoritos/imoveis" replace />} />
-                <Route path="/favoritos/imoveis" element={<FavoritosImoveis />} />
-                <Route path="/favoritos/veiculos" element={<FavoritosVeiculos />} />
+                <Route path="/favoritos/imoveis" element={
+                  <ProtectedRoute>
+                    <FavoritosImoveis />
+                  </ProtectedRoute>
+                } />
+                <Route path="/favoritos/veiculos" element={
+                  <ProtectedRoute>
+                    <FavoritosVeiculos />
+                  </ProtectedRoute>
+                } />
                 
                 {/* Leiloeiros e Perfil */}
                 <Route path="/leiloeiros" element={<Leiloeiros />} />

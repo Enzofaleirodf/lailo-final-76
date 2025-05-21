@@ -1,14 +1,18 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Calendar, Palette, Hourglass, MapPin } from 'lucide-react';
+import { Calendar, Palette, Hourglass, MapPin } from 'lucide-react';
 import { AuctionItem } from '@/types/auction';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
+import FavoriteButton from './FavoriteButton';
+
 interface AuctionCardProps {
   auction: AuctionItem;
 }
+
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
@@ -55,6 +59,10 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   };
   const discount = calculateDiscount();
 
+  const handleToggleFavorite = (id: string, newFavoritedState: boolean) => {
+    setFavorited(newFavoritedState);
+  };
+
   // Extract vehicle brand and model (without year)
   const getVehicleTitle = () => {
     // Remove any year pattern like "2021" from the title
@@ -77,9 +85,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
               {getVehicleTitle()}
             </h3>
-            <button onClick={() => setFavorited(!favorited)} aria-label={favorited ? "Remove from favorites" : "Add to favorites"} className="flex-shrink-0">
-              <Heart size={isMobile ? 16 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
-            </button>
+            <FavoriteButton 
+              itemId={auction.id} 
+              isFavorited={favorited} 
+              onToggleFavorite={handleToggleFavorite} 
+            />
           </div>
           
           {/* Vehicle info row - only shown for vehicle items with proper null checks */}
@@ -142,5 +152,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       </div>
     </motion.div>;
 });
+
 AuctionCard.displayName = 'AuctionCard';
 export default AuctionCard;

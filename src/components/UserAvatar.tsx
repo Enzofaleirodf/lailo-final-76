@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Dialog,
   DialogContent,
@@ -16,15 +16,26 @@ interface UserAvatarProps {
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) => {
-  const { isAuthenticated, user, login, logout } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Função para lidar com o clique no avatar
   const handleAvatarClick = () => {
     if (isAuthenticated) {
       navigate('/perfil');
     } else {
+      setOpenDialog(true);
+    }
+  };
+
+  // Função para lidar com navegação para os favoritos
+  const handleFavoritesNavigation = (path: string) => {
+    if (isAuthenticated) {
+      navigate(path);
+    } else {
+      // Save current location to state so we can return after login
       setOpenDialog(true);
     }
   };

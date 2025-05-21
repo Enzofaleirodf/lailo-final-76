@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin } from 'lucide-react';
 import { PropertyItem } from '@/types/property';
 import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
+import FavoriteButton from './FavoriteButton';
 
 interface PropertyCardProps {
   property: PropertyItem;
@@ -65,6 +66,10 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   
   const discount = calculateDiscount();
   
+  const handleToggleFavorite = (id: string, newFavoritedState: boolean) => {
+    setFavorited(newFavoritedState);
+  };
+  
   return <motion.div whileHover={{
     y: -4,
     transition: {
@@ -79,9 +84,11 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-geist`}>
               {propertyType} • {formattedArea}
             </h3>
-            <button onClick={() => setFavorited(!favorited)} aria-label={favorited ? "Remove from favorites" : "Add to favorites"} className="flex-shrink-0">
-              <Heart size={isMobile ? 16 : 20} className={`${favorited ? "fill-accent2-500 stroke-accent2-600" : ""} transition-colors`} />
-            </button>
+            <FavoriteButton 
+              itemId={property.id} 
+              isFavorited={favorited} 
+              onToggleFavorite={handleToggleFavorite} 
+            />
           </div>
           
           {/* Address row (movida de baixo para cima - agora é a segunda linha) */}
