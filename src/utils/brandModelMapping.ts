@@ -38,12 +38,12 @@ export const modelsByBrand: Record<string, string[]> = {
   'Chevrolet': ['Onix', 'Prisma', 'Cruze', 'S10', 'Tracker', 'Cobalt', 'Spin', 'Montana'],
   'Fiat': ['Uno', 'Palio', 'Argo', 'Mobi', 'Strada', 'Toro', 'Cronos', 'Fiorino', 'Doblo'],
   'Volkswagen': ['Gol', 'Polo', 'Golf', 'Fox', 'Virtus', 'Jetta', 'Nivus', 'T-Cross', 'Amarok', 'Saveiro'],
-  'Honda': ['Civic', 'City', 'Fit', 'HR-V', 'WR-V', 'CR-V', 'Accord'],
+  'Honda (Carro)': ['Civic', 'City', 'Fit', 'HR-V', 'WR-V', 'CR-V', 'Accord'],
   'Toyota': ['Corolla', 'Yaris', 'Etios', 'Hilux', 'SW4', 'RAV4', 'Camry', 'Prius'],
   
   // Motos
   'Kawasaki': ['Ninja 300', 'Ninja 400', 'Z400', 'Versys 650', 'Vulcan S', 'Z900', 'Z1000', 'Ninja ZX-10R'],
-  'Honda': ['CG 160', 'Bros 160', 'Biz 125', 'CB 500F', 'CB 650R', 'XRE 300', 'PCX 150', 'Elite 125'],
+  'Honda (Moto)': ['CG 160', 'Bros 160', 'Biz 125', 'CB 500F', 'CB 650R', 'XRE 300', 'PCX 150', 'Elite 125'],
   'Yamaha': ['Factor 150', 'Fazer 250', 'MT-03', 'MT-07', 'MT-09', 'Crosser 150', 'Lander 250', 'NMAX 160'],
   'Suzuki': ['GSX-S750', 'V-Strom 650', 'Burgman 125', 'Hayabusa', 'Bandit 650', 'Intruder 125']
 };
@@ -81,6 +81,14 @@ export const getModelsByBrand = (brand: string): string[] => {
     return ['Todos'];
   }
   
+  // Verificar se a marca é Honda, que pode ser carro ou moto
+  if (brand === 'Honda') {
+    // Para Honda precisamos inferir qual é o tipo (carro ou moto)
+    // Aqui podemos retornar ambos os conjuntos de modelos ou verificar pelo tipo de veículo
+    // Uma solução simples é retornar todos os modelos Honda
+    return ['Todos', ...modelsByBrand['Honda (Carro)'] || [], ...modelsByBrand['Honda (Moto)'] || []];
+  }
+  
   const models = modelsByBrand[brand];
   if (!models || models.length === 0) {
     return ['Todos']; // Retornar apenas "Todos" se não houver modelos específicos
@@ -88,3 +96,4 @@ export const getModelsByBrand = (brand: string): string[] => {
   
   return ['Todos', ...models];
 };
+
