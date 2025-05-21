@@ -75,7 +75,7 @@ const FilterContent: React.FC = () => {
       <div className="mt-4 flex flex-col gap-2">
         <Button 
           variant="outline" 
-          className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-brand-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 transition-colors" 
+          className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-brand-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 transition-colors font-geist" 
           onClick={handleResetFilters} 
           aria-label="Resetar todos os filtros"
           data-testid="reset-filters-button"

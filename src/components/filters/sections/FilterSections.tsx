@@ -27,16 +27,16 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
       <>
         <FilterSectionComponent 
           title="Tipo de imóvel" 
-          isExpanded={expandedSections.propertyType} 
-          onToggle={() => toggleSection('propertyType')}
+          isExpanded={true} 
+          onToggle={() => {}}
         >
           <PropertyTypeFilter onFilterChange={onFilterChange} />
         </FilterSectionComponent>
 
         <FilterSectionComponent 
           title="Área útil" 
-          isExpanded={expandedSections.usefulArea} 
-          onToggle={() => toggleSection('usefulArea')}
+          isExpanded={true} 
+          onToggle={() => {}}
         >
           <UsefulAreaFilter onFilterChange={onFilterChange} />
         </FilterSectionComponent>
@@ -48,16 +48,16 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
     <>
       <FilterSectionComponent 
         title="Tipo de veículo" 
-        isExpanded={expandedSections.vehicleType} 
-        onToggle={() => toggleSection('vehicleType')}
+        isExpanded={true} 
+        onToggle={() => {}}
       >
         <VehicleTypeFilter onFilterChange={onFilterChange} />
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Características do veículo" 
-        isExpanded={expandedSections.model} 
-        onToggle={() => toggleSection('model')}
+        isExpanded={true} 
+        onToggle={() => {}}
       >
         <div className="space-y-4">
           <ModelFilter onFilterChange={onFilterChange} />
@@ -80,8 +80,8 @@ export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange })
     <>
       <FilterSectionComponent 
         title="Localização" 
-        isExpanded={expandedSections.location} 
-        onToggle={() => toggleSection('location')}
+        isExpanded={true} 
+        onToggle={() => {}}
       >
         <LocationFilter onFilterChange={onFilterChange} />
       </FilterSectionComponent>
@@ -99,8 +99,8 @@ export const PriceFilter: React.FC<FilterSectionsProps> = ({ onFilterChange }) =
   return (
     <FilterSectionComponent 
       title="Valor do lance atual" 
-      isExpanded={expandedSections.price} 
-      onToggle={() => toggleSection('price')}
+      isExpanded={true} 
+      onToggle={() => {}}
     >
       <PriceRangeFilter onFilterChange={onFilterChange} />
     </FilterSectionComponent>

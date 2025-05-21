@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, MapPin } from 'lucide-react';
@@ -6,9 +7,11 @@ import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
+
 interface PropertyCardProps {
   property: PropertyItem;
 }
+
 const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   property
 }) => {
@@ -49,6 +52,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       return 'Data não disponível';
     }
   };
+  
   const formatEndTime = (date: Date | undefined | string): string => {
     if (!date) return '';
     try {
@@ -58,7 +62,9 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       return '';
     }
   };
+  
   const discount = calculateDiscount();
+  
   return <motion.div whileHover={{
     y: -4,
     transition: {
@@ -70,7 +76,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
           {/* Top row with property type and area */}
           <div className="flex justify-between items-start gap-2 mb-1 w-full">
-            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>
+            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-geist`}>
               {propertyType} • {formattedArea}
             </h3>
             <button onClick={() => setFavorited(!favorited)} aria-label={favorited ? "Remove from favorites" : "Add to favorites"} className="flex-shrink-0">
@@ -79,21 +85,21 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
           </div>
           
           {/* Address row (movida de baixo para cima - agora é a segunda linha) */}
-          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
+          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-geist`}>
             <MapPin size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
             <span className="line-clamp-1">{property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}</span>
           </div>
 
           {/* Price section (movida de cima para baixo - agora é a terceira linha) */}
           <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
-            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none`}>
+            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-geist`}>
               {formatCurrency(property.currentBid)}
             </span>
             {property.originalPrice && <div className="flex items-center gap-2">
-                {discount && <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit">
+                {discount && <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-geist">
                     {discount}% OFF
                   </span>}
-                <span className="text-gray-500 line-through text-xs">
+                <span className="text-gray-500 line-through text-xs font-geist">
                   {formatCurrency(property.originalPrice)}
                 </span>
               </div>}
@@ -112,7 +118,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
                 {property.place || 'Praça não disponível'}
               </Badge>
             </div>
-            <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0`}>
+            <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0 font-geist`}>
               <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
               {property.endDate ? `${formatAuctionDate(property.endDate)} às ${formatEndTime(property.endDate)}` : 'Data não disponível'}
             </div>
@@ -121,5 +127,6 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       </div>
     </motion.div>;
 });
+
 PropertyCard.displayName = 'PropertyCard';
 export default PropertyCard;

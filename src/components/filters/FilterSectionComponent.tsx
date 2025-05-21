@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -31,40 +30,20 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   return (
     <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
       {/* Title section - clickable for both desktop and mobile for consistent interaction */}
-      <button 
-        className="w-full flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-3 cursor-pointer
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-        onClick={handleToggle}
-        aria-expanded={isExpanded}
-        aria-controls={id}
-        type="button"
-      >
-        <h3 className="text-sm font-medium text-brand-900">{title}</h3>
-        
-        {/* Always show chevron for consistent UX on both mobile and desktop */}
-        <ChevronDown 
-          size={18} 
-          className={cn(
-            "text-brand-700 transition-transform", 
-            isExpanded ? "transform rotate-180" : ""
-          )} 
-          aria-hidden="true"
-          data-testid="chevron-icon"
-        />
-      </button>
-      
-      {/* Content - toggleable on both desktop and mobile for consistency */}
       <div 
-        className={cn("transition-all duration-300 overflow-hidden", 
-          isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        )}
+        className="w-full bg-gradient-to-r from-brand-50 to-white p-3"
+      >
+        <h3 className="text-sm font-medium text-brand-900 font-geist">{title}</h3>
+      </div>
+      
+      {/* Content - always expanded - no more accordion */}
+      <div 
+        className="p-3"
         id={id}
         role="region"
         aria-labelledby={`heading-${id}`}
       >
-        <div className="p-3">
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   );

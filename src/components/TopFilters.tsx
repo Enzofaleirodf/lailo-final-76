@@ -1,3 +1,4 @@
+
 import React, { useCallback } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -69,7 +70,7 @@ const TopFilters: React.FC = () => {
           <button 
             onClick={() => handleContentTypeChange('property')}
             className={cn(
-              "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+              "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-geist",
               filters.contentType === 'property' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
@@ -86,7 +87,7 @@ const TopFilters: React.FC = () => {
           <button 
             onClick={() => handleContentTypeChange('vehicle')}
             className={cn(
-              "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors",
+              "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-geist",
               filters.contentType === 'vehicle' 
                 ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
@@ -106,7 +107,7 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
@@ -120,12 +121,12 @@ const TopFilters: React.FC = () => {
             <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50">
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
           {formatOptions.map(option => (
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('format', option.value as FilterFormat)} 
-              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal"
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-geist"
             >
               {option.label}
             </DropdownMenuItem>
@@ -137,7 +138,7 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
             aria-expanded="false"
@@ -151,12 +152,12 @@ const TopFilters: React.FC = () => {
             <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50">
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
           {originOptions.map(option => (
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('origin', option.value as FilterOrigin)} 
-              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal"
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-geist"
             >
               {option.label}
             </DropdownMenuItem>
@@ -168,7 +169,7 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
             aria-label="Selecionar etapa"
             aria-haspopup="listbox"
             aria-expanded="false"
@@ -182,12 +183,12 @@ const TopFilters: React.FC = () => {
             <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50">
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
           {placeOptions.map(option => (
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
-              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal"
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-geist"
             >
               {option.label}
             </DropdownMenuItem>

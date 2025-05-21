@@ -47,7 +47,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Format states for dropdown
   const stateOptions: FilterDropdownOption[] = [{
     value: '',
-    label: 'Todos os estados'
+    label: 'Todos'
   }, ...states.map(state => ({
     value: state.sigla,
     label: `${state.sigla} - ${state.nome}`
@@ -56,7 +56,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Format cities for dropdown
   const cityOptions: FilterDropdownOption[] = [{
     value: '',
-    label: 'Todas as cidades'
+    label: 'Todas'
   }, ...cities.map(city => ({
     value: city.nome,
     label: city.nome
@@ -123,9 +123,10 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
     }
     return 'Selecione a localização';
   };
+  
   return <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-brand-700 font-medium' : 'text-gray-700'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''}`}>
+        <Button variant="outline" role="combobox" aria-expanded={open} className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-brand-700 font-medium' : 'text-gray-700'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''} font-geist`}>
           <div className="flex items-center gap-2 overflow-hidden">
             <MapPin size={16} className={isFilterActive ? 'text-brand-700' : 'text-gray-500'} />
             <span className="truncate">{getDisplayText()}</span>
@@ -133,17 +134,17 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
           <ChevronDown size={16} className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 sm:w-80 p-4 bg-white shadow-md rounded-md z-[150]" align="start">
+      <PopoverContent className="w-72 sm:w-80 p-4 bg-white shadow-md rounded-md z-[150] font-geist" align="start">
         <div className="flex flex-col gap-4">
           <div className="space-y-2">
-            <label htmlFor="state-select" className="text-sm font-medium text-gray-700">
+            <label htmlFor="state-select" className="text-sm font-medium text-gray-700 font-geist">
               Estado
             </label>
-            {loadingStates ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="state-select" aria-label="Selecione o estado" value={localState} onChange={handleStateChange} options={stateOptions} placeholder="Todos os estados" className="border-gray-300" />}
+            {loadingStates ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="state-select" aria-label="Selecione o estado" value={localState} onChange={handleStateChange} options={stateOptions} className="border-gray-300 font-geist" />}
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="city-select" className="text-sm font-medium text-gray-700">
+            <label htmlFor="city-select" className="text-sm font-medium text-gray-700 font-geist">
               Cidade
             </label>
             {localState ? 
@@ -156,11 +157,10 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   value={localCity} 
                   onChange={handleCityChange} 
                   options={cityOptions} 
-                  placeholder="Todas as cidades" 
-                  className="border-gray-300"
+                  className="border-gray-300 font-geist"
                 /> 
               : 
-              <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
+              <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm font-geist">
                 Selecione um estado antes
                 <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
               </div>
@@ -169,7 +169,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
           
           {/* Search bar for location - moved below city selection */}
           <div className="space-y-2">
-            <label htmlFor="address-search" className="text-sm font-medium text-gray-700">
+            <label htmlFor="address-search" className="text-sm font-medium text-gray-700 font-geist">
               Endereço
             </label>
             <div className="relative w-full">
@@ -179,17 +179,17 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                 value={searchQuery} 
                 onChange={handleSearchChange} 
                 placeholder="Busque por rua ou bairro" 
-                className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500" 
+                className="w-full h-10 rounded-lg border border-gray-300 pl-3 pr-10 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-geist" 
               />
               <Search size={18} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
             </div>
           </div>
           
           <div className="flex gap-2 pt-2">
-            <Button variant="outline" size="sm" className="flex-1 h-9 text-sm border-gray-300" onClick={resetFilter}>
+            <Button variant="outline" size="sm" className="flex-1 h-9 text-sm border-gray-300 font-geist" onClick={resetFilter}>
               Redefinir
             </Button>
-            <Button size="sm" className="flex-1 h-9 bg-brand-600 hover:bg-brand-700 text-sm" onClick={applyChanges}>
+            <Button size="sm" className="flex-1 h-9 bg-brand-600 hover:bg-brand-700 text-sm font-geist" onClick={applyChanges}>
               Aplicar
             </Button>
           </div>

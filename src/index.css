@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,22 +74,28 @@
   }
   
   html {
-    font-family: 'Urbanist', sans-serif;
+    font-family: 'Geist', sans-serif;
   }
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Geist', sans-serif;
   }
   
   /* Add some base styles */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight;
+    @apply font-medium tracking-tight font-geist;
   }
   
   button {
-    @apply transition-all duration-200;
+    @apply transition-all duration-200 font-geist;
+  }
+
+  input, select, textarea {
+    @apply font-geist;
   }
 }
 
 /* Import Geist font from CDN Fonts */
 @import url('https://fonts.cdnfonts.com/css/geist');
+
