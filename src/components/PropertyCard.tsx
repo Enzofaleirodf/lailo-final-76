@@ -67,6 +67,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   const discount = calculateDiscount();
   
   const handleToggleFavorite = (id: string, newFavoritedState: boolean) => {
+    // Prevent event bubbling when clicking the favorite button
     setFavorited(newFavoritedState);
   };
   

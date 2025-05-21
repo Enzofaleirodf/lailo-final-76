@@ -1,10 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { LightLogin } from '@/components/ui/sign-in';
-import { useFavoriteButton } from '@/hooks/useFavoriteButton';
+import { useAuth } from '@/hooks/useAuth';
 
 interface FavoriteButtonProps {
   itemId: string;
@@ -19,11 +19,19 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   onToggleFavorite,
   className = '',
 }) => {
-  const { handleFavoriteClick, showLoginModal, setShowLoginModal } = useFavoriteButton();
+  const { isAuthenticated } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
   
-  const handleClick = () => {
-    const success = handleFavoriteClick(itemId);
-    if (success && onToggleFavorite) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+    
+    if (onToggleFavorite) {
       onToggleFavorite(itemId, !isFavorited);
     }
   };
