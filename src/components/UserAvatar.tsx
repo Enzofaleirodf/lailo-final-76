@@ -5,17 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog';
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { LightLogin } from '@/components/ui/sign-in';
 
 interface UserAvatarProps {
   className?: string;
@@ -56,104 +48,6 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) =>
     }
   };
 
-  // Componente de login para o Dialog
-  const LoginForm = () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <label htmlFor="email-login" className="text-sm font-medium">
-          Email
-        </label>
-        <input
-          id="email-login"
-          type="email"
-          className="w-full p-2 border rounded-md"
-          placeholder="seu@email.com"
-        />
-      </div>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label htmlFor="password-login" className="text-sm font-medium">
-            Senha
-          </label>
-          <Button variant="link" className="text-xs p-0 h-auto">
-            Esqueceu a senha?
-          </Button>
-        </div>
-        <input
-          id="password-login"
-          type="password"
-          className="w-full p-2 border rounded-md"
-        />
-      </div>
-      <Button
-        onClick={() => {
-          login();
-          setOpenDialog(false);
-        }}
-        className="w-full"
-      >
-        Entrar
-      </Button>
-    </div>
-  );
-
-  // Componente de cadastro para o Dialog
-  const SignUpForm = () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <label htmlFor="name-signup" className="text-sm font-medium">
-          Nome
-        </label>
-        <input
-          id="name-signup"
-          type="text"
-          className="w-full p-2 border rounded-md"
-          placeholder="Seu nome completo"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="email-signup" className="text-sm font-medium">
-          Email
-        </label>
-        <input
-          id="email-signup"
-          type="email"
-          className="w-full p-2 border rounded-md"
-          placeholder="seu@email.com"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="password-signup" className="text-sm font-medium">
-          Senha
-        </label>
-        <input
-          id="password-signup"
-          type="password"
-          className="w-full p-2 border rounded-md"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="confirm-password-signup" className="text-sm font-medium">
-          Confirmar Senha
-        </label>
-        <input
-          id="confirm-password-signup"
-          type="password"
-          className="w-full p-2 border rounded-md"
-        />
-      </div>
-      <Button
-        onClick={() => {
-          login();
-          setOpenDialog(false);
-        }}
-        className="w-full"
-      >
-        Criar Conta
-      </Button>
-    </div>
-  );
-
   return (
     <>
       {/* Avatar ou ícone do usuário, dependendo do estado de autenticação */}
@@ -174,24 +68,10 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) =>
         )}
       </button>
 
-      {/* Dialog para login/cadastro */}
+      {/* Dialog para login/cadastro usando o novo componente LightLogin */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center">Acesse sua conta</DialogTitle>
-          </DialogHeader>
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Cadastro</TabsTrigger>
-            </TabsList>
-            <TabsContent value="login" className="mt-4">
-              <LoginForm />
-            </TabsContent>
-            <TabsContent value="signup" className="mt-4">
-              <SignUpForm />
-            </TabsContent>
-          </Tabs>
+        <DialogContent className="p-0 border-none max-w-md">
+          <LightLogin />
         </DialogContent>
       </Dialog>
     </>
