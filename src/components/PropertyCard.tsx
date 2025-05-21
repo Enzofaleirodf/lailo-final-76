@@ -3,7 +3,7 @@ import React from 'react';
 import { PropertyItem } from '@/types/property';
 import { formatUsefulArea } from '@/utils/auctionUtils';
 import BaseCard from './BaseCard';
-import { Bed, Bath, Garage } from 'lucide-react';
+import { Bed, Bath, Car } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PropertyCardProps {
@@ -62,7 +62,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
         
         {garages !== undefined && (
           <div className="flex items-center ml-2" title={`${garages} vaga${garages !== 1 ? 's' : ''}`}>
-            <Garage size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" aria-hidden="true" />
+            <Car size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" aria-hidden="true" />
             <span className="text-xs">{garages}</span>
           </div>
         )}

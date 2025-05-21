@@ -1,8 +1,6 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { sampleProperties } from '@/data/sampleProperties';
-import { sortAuctions, filterAuctions } from '@/utils/auctionUtils';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useResultsStore } from '@/stores/useResultsStore';
