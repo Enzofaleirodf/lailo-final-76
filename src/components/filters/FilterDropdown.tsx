@@ -122,7 +122,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
-          isValueSelected ? "text-gray-800 font-medium" : "text-gray-700",
+          isValueSelected ? "text-gray-800 font-medium" : "text-gray-600",
           "border-gray-300",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
@@ -143,7 +143,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
           <option 
             key={`${option.value}-${option.label}`}
             value={option.value} 
-            className={`${option.value === value ? 'text-gray-800 font-medium' : 'text-gray-700 font-normal'} font-urbanist`}
+            className={`${option.value === value ? 'text-gray-800 font-medium' : 'text-gray-600 font-normal'} font-urbanist`}
           >
             {option.label}
           </option>
