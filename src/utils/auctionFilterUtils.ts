@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview Utilitários para filtragem de leilões e propriedades
  * Contém funções especializadas para cada tipo de filtro
@@ -72,13 +73,13 @@ export const applyLocationFilter = <T extends GenericItem>(
     let matchCity = !city;
     
     // Verificar propriedade stateCode se existir
-    if (state && 'stateCode' in item) {
-      matchState = item.stateCode?.toLowerCase() === state.toLowerCase();
+    if (state && 'stateCode' in item && typeof item.stateCode === 'string') {
+      matchState = item.stateCode.toLowerCase() === state.toLowerCase();
     }
     
     // Verificar propriedade city se existir
-    if (city && 'city' in item) {
-      matchCity = item.city?.toLowerCase() === city.toLowerCase();
+    if (city && 'city' in item && typeof item.city === 'string') {
+      matchCity = item.city.toLowerCase() === city.toLowerCase();
     }
     
     return matchState && matchCity;
