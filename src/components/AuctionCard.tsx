@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Calendar, Palette, Hourglass, MapPin } from 'lucide-react';
@@ -7,11 +6,9 @@ import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
-
 interface AuctionCardProps {
   auction: AuctionItem;
 }
-
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   auction
 }) => {
@@ -20,7 +17,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
     console.error('AuctionCard received undefined auction data');
     return null;
   }
-  
   const [favorited, setFavorited] = useState(false);
   const isMobile = useIsMobile();
 
@@ -37,20 +33,17 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   // Format auction end date to show only last 2 digits of year
   const formatAuctionDate = (date: Date | undefined | string): string => {
     if (!date) return 'Data não disponível';
-    
     try {
       const dateObject = typeof date === 'string' ? new Date(date) : date;
       const day = dateObject.getDate().toString().padStart(2, '0');
       const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
       const yearLastTwoDigits = dateObject.getFullYear().toString().slice(-2);
-      
       return `${day}/${month}/${yearLastTwoDigits}`;
     } catch (error) {
       console.error('Error formatting date:', error);
       return 'Data não disponível';
     }
   };
-
   const formatEndTime = (date: Date | undefined | string): string => {
     if (!date) return '';
     try {
@@ -60,31 +53,22 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
       return '';
     }
   };
-
   const discount = calculateDiscount();
-  
+
   // Extract vehicle brand and model (without year)
   const getVehicleTitle = () => {
     // Remove any year pattern like "2021" from the title
     return auction.title.replace(/\s+\d{4}$|\s+\d{4}\s+/, ' ').trim();
   };
-  
+
   // Check if this is a vehicle item and that vehicleInfo exists
-  const isVehicleItem = auction.vehicleInfo && 
-    (auction.vehicleInfo.type === 'car' || 
-     auction.vehicleInfo.type === 'motorcycle' || 
-     auction.vehicleInfo.type === 'truck');
-  
-  return (
-    <motion.div 
-      whileHover={{
-        y: -4,
-        transition: {
-          duration: 0.2
-        }
-      }} 
-      className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
-    >
+  const isVehicleItem = auction.vehicleInfo && (auction.vehicleInfo.type === 'car' || auction.vehicleInfo.type === 'motorcycle' || auction.vehicleInfo.type === 'truck');
+  return <motion.div whileHover={{
+    y: -4,
+    transition: {
+      duration: 0.2
+    }
+  }} className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
         {/* Content */}
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
@@ -99,18 +83,14 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
           
           {/* Vehicle info row - only shown for vehicle items with proper null checks */}
-          {isVehicleItem && auction.vehicleInfo && (
-            <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
+          {isVehicleItem && auction.vehicleInfo && <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'}`}>
               <div className="flex items-center gap-2 flex-wrap">
-                {auction.vehicleInfo.color && (
-                  <div className="flex items-center">
+                {auction.vehicleInfo.color && <div className="flex items-center">
                     <Palette size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
                     <span>{auction.vehicleInfo.color}</span>
-                  </div>
-                )}
+                  </div>}
                 
-                {auction.vehicleInfo.year && (
-                  <>
+                {auction.vehicleInfo.year && <>
                     <div className="flex items-center ml-2">
                       <Hourglass size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
                       <span>{auction.vehicleInfo.year}</span>
@@ -121,11 +101,9 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
                     
                     {/* Location next to year with divider between them */}
                     <span>{auction.location || 'Localização não disponível'}</span>
-                  </>
-                )}
+                  </>}
               </div>
-            </div>
-          )}
+            </div>}
           
           {/* Price section */}
           <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
@@ -133,7 +111,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
               {formatCurrency(auction.currentBid)}
             </span>
             {auction.originalPrice && <div className="flex items-center gap-2">
-                {discount && <span className="bg-accent2-50 text-accent2-900 px-2 py-0.5 rounded-md text-xs font-medium">
+                {discount && <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit">
                     {discount}% OFF
                   </span>}
                 <span className="text-gray-500 line-through text-xs">
@@ -162,9 +140,7 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
           </div>
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>;
 });
-
 AuctionCard.displayName = 'AuctionCard';
 export default AuctionCard;
