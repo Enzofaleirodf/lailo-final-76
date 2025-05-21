@@ -24,11 +24,11 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
   const { sortOption } = useSortStore();
   const { setFilteredResults, setLoading } = useResultsStore();
   const [loading, setLocalLoading] = useState(true);
-  const [items, setItems] = useState<AuctionItem[] | PropertyItem[]>([]);
+  const [items, setItems] = useState<(AuctionItem | PropertyItem)[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isChangingPage, setIsChangingPage] = useState(false);
   const [lastContentType, setLastContentType] = useState<string | null>(null);
-  const [rawData, setRawData] = useState<AuctionItem[] | PropertyItem[]>([]);
+  const [rawData, setRawData] = useState<(AuctionItem | PropertyItem)[]>([]);
   
   // Buscar dados quando o tipo de conteúdo muda
   useEffect(() => {

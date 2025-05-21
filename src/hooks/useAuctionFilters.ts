@@ -20,7 +20,7 @@ import {
  * Hook para aplicar filtros em leilões ou propriedades
  */
 export const useAuctionFilters = (
-  rawItems: AuctionItem[] | PropertyItem[],
+  rawItems: (AuctionItem | PropertyItem)[],
   filters: FilterState,
   sortOption: string
 ) => {
