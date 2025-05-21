@@ -100,7 +100,8 @@ describe('Filter Badge Utilities', () => {
         color: 'Preta',
         format: 'Leilão',
         origin: 'Judicial',
-        place: '2ª Praça'
+        place: '2ª Praça',
+        category: 'Todos'
       };
       
       const badges = generateFilterBadges(filters, mockUpdateFilter);
@@ -139,7 +140,8 @@ describe('Filter Badge Utilities', () => {
         color: 'todas',
         format: 'Todos',
         origin: 'Todas',
-        place: 'Todas'
+        place: 'Todas',
+        category: 'Todos'
       };
       
       const badges = generateFilterBadges(filters, mockUpdateFilter);
@@ -160,7 +162,8 @@ describe('Filter Badge Utilities', () => {
         color: 'todas',
         format: 'Todos',
         origin: 'Todas',
-        place: 'Todas'
+        place: 'Todas',
+        category: 'Todos'
       };
       
       const badges = generateFilterBadges(filters, mockUpdateFilter);

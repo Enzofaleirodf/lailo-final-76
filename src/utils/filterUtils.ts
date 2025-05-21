@@ -234,7 +234,8 @@ export const getFilterName = (key: keyof FilterState): string => {
     color: 'Cor',
     format: 'Formato',
     origin: 'Origem',
-    place: 'Etapa'
+    place: 'Etapa',
+    category: 'Categoria'
   };
   
   return filterNames[key] || key;

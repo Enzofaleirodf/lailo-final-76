@@ -30,7 +30,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
       <RadioGroup 
         value={category || 'Todos'} 
         onValueChange={handleCategoryChange}
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2"
+        className="grid grid-cols-2 gap-2"
         aria-label="Selecione uma categoria"
       >
         {categoryOptions.map((option) => (
