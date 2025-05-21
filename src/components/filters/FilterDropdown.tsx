@@ -22,6 +22,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   value,
   onChange,
   options,
+  placeholder = "Selecione",
   className = "",
   id,
   "aria-label": ariaLabel,
@@ -120,9 +121,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         id={id || `filter-dropdown-${Math.random().toString(36).substring(2, 9)}`}
         aria-label={ariaLabel}
         className={cn(
-          "w-full border border-gray-300 rounded-lg h-10 pl-3 pr-10 text-sm appearance-none",
+          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none",
           isValueSelected ? "text-brand-700 font-medium" : "text-gray-700",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:border-brand-500",
+          "border-gray-300",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
         )}
@@ -135,8 +137,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-required="false"
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
-        style={{ outline: 'none' }}
       >
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}

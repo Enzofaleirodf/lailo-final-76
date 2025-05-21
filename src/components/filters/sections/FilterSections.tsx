@@ -1,5 +1,6 @@
 
 import React from 'react';
+import FilterSectionComponent from '../FilterSectionComponent';
 import { useFilterStore } from '@/stores/useFilterStore';
 import VehicleTypeFilter from '../VehicleTypeFilter';
 import PropertyTypeFilter from '../PropertyTypeFilter';
@@ -15,43 +16,55 @@ interface FilterSectionsProps {
 }
 
 /**
- * ContentTypeFilters - Renders filter sections based on content type
+ * ContentTypeFilters - Conditionally renders filter sections based on content type
  */
 export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { filters } = useFilterStore();
+  const { expandedSections, toggleSection, filters } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
 
   if (isPropertyMode) {
     return (
       <>
-        <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-          <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Tipo de imóvel</h3>
+        <FilterSectionComponent 
+          title="Tipo de imóvel" 
+          isExpanded={expandedSections.propertyType} 
+          onToggle={() => toggleSection('propertyType')}
+        >
           <PropertyTypeFilter onFilterChange={onFilterChange} />
-        </div>
+        </FilterSectionComponent>
 
-        <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-          <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Área útil</h3>
+        <FilterSectionComponent 
+          title="Área útil" 
+          isExpanded={expandedSections.usefulArea} 
+          onToggle={() => toggleSection('usefulArea')}
+        >
           <UsefulAreaFilter onFilterChange={onFilterChange} />
-        </div>
+        </FilterSectionComponent>
       </>
     );
   }
   
   return (
     <>
-      <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-        <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Tipo de veículo</h3>
+      <FilterSectionComponent 
+        title="Tipo de veículo" 
+        isExpanded={expandedSections.vehicleType} 
+        onToggle={() => toggleSection('vehicleType')}
+      >
         <VehicleTypeFilter onFilterChange={onFilterChange} />
-      </div>
+      </FilterSectionComponent>
 
-      <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-        <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Características do veículo</h3>
+      <FilterSectionComponent 
+        title="Características do veículo" 
+        isExpanded={expandedSections.model} 
+        onToggle={() => toggleSection('model')}
+      >
         <div className="space-y-4">
           <ModelFilter onFilterChange={onFilterChange} />
           <ColorFilter onFilterChange={onFilterChange} />
           <YearRangeFilter onFilterChange={onFilterChange} />
         </div>
-      </div>
+      </FilterSectionComponent>
     </>
   );
 };
@@ -60,22 +73,36 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
  * CommonFilters - Renders filter sections common to all content types
  */
 export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
+  const { expandedSections, toggleSection, filters } = useFilterStore();
+  const isPropertyMode = filters.contentType === 'property';
+  
   return (
-    <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-      <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Localização</h3>
-      <LocationFilter onFilterChange={onFilterChange} />
-    </div>
+    <>
+      <FilterSectionComponent 
+        title="Localização" 
+        isExpanded={expandedSections.location} 
+        onToggle={() => toggleSection('location')}
+      >
+        <LocationFilter onFilterChange={onFilterChange} />
+      </FilterSectionComponent>
+    </>
   );
 };
 
 /**
- * PriceFilter - Renders the price filter section
+ * PriceFilter - Renders the price filter section separately to position it at the end
+ * This ensures it appears as the last filter in both property and vehicle modes
  */
 export const PriceFilter: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
+  const { expandedSections, toggleSection } = useFilterStore();
+  
   return (
-    <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-      <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Valor do lance atual</h3>
+    <FilterSectionComponent 
+      title="Valor do lance atual" 
+      isExpanded={expandedSections.price} 
+      onToggle={() => toggleSection('price')}
+    >
       <PriceRangeFilter onFilterChange={onFilterChange} />
-    </div>
+    </FilterSectionComponent>
   );
 };
