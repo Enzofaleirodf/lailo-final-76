@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, MapPin } from 'lucide-react';
@@ -8,11 +7,9 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
 import FavoriteButton from './FavoriteButton';
-
 interface PropertyCardProps {
   property: PropertyItem;
 }
-
 const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   property
 }) => {
@@ -53,7 +50,6 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       return 'Data não disponível';
     }
   };
-  
   const formatEndTime = (date: Date | undefined | string): string => {
     if (!date) return '';
     try {
@@ -63,14 +59,11 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       return '';
     }
   };
-  
   const discount = calculateDiscount();
-  
   const handleToggleFavorite = (id: string, newFavoritedState: boolean) => {
     // Prevent event bubbling when clicking the favorite button
     setFavorited(newFavoritedState);
   };
-  
   return <motion.div whileHover={{
     y: -4,
     transition: {
@@ -85,17 +78,13 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-geist`}>
               {propertyType} • {formattedArea}
             </h3>
-            <FavoriteButton 
-              itemId={property.id} 
-              isFavorited={favorited} 
-              onToggleFavorite={handleToggleFavorite} 
-            />
+            <FavoriteButton itemId={property.id} isFavorited={favorited} onToggleFavorite={handleToggleFavorite} />
           </div>
           
           {/* Address row (movida de baixo para cima - agora é a segunda linha) */}
           <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-geist`}>
-            <MapPin size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
-            <span className="line-clamp-1">{property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}</span>
+            
+            <span className="line-clamp-1 mb-1">{property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}</span>
           </div>
 
           {/* Price section (movida de cima para baixo - agora é a terceira linha) */}
@@ -135,6 +124,5 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
       </div>
     </motion.div>;
 });
-
 PropertyCard.displayName = 'PropertyCard';
 export default PropertyCard;
