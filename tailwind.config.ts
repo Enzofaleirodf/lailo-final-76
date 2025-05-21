@@ -21,7 +21,7 @@ export default {
 		extend: {
 			fontFamily: {
 				sans: ['Urbanist', 'sans-serif'],
-				geist: ['Geist', 'sans-serif'],
+				urbanist: ['Urbanist', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

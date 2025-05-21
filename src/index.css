@@ -74,28 +74,24 @@
   }
   
   html {
-    font-family: 'Geist', sans-serif;
+    font-family: 'Urbanist', sans-serif;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Geist', sans-serif;
+    font-family: 'Urbanist', sans-serif;
   }
   
   /* Add some base styles */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight font-geist;
+    @apply font-medium tracking-tight font-urbanist;
   }
   
   button {
-    @apply transition-all duration-200 font-geist;
+    @apply transition-all duration-200 font-urbanist;
   }
 
   input, select, textarea {
-    @apply font-geist;
+    @apply font-urbanist;
   }
 }
-
-/* Import Geist font from CDN Fonts */
-@import url('https://fonts.cdnfonts.com/css/geist');
-
