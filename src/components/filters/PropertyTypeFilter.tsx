@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { CircleDashed, Building, Home, Building2, Warehouse, Store, Mountain, Fence, Hotel, DoorOpen, Hotel2 } from 'lucide-react';
+import { CircleDashed, Building, Home, Building2, Warehouse, Store, Mountain, Fence, Hotel, DoorOpen } from 'lucide-react';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
 
 interface PropertyTypeFilterProps {
@@ -66,7 +66,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
       case 'hotel':
       case 'motel':
       case 'pousada':
-        return Hotel2;
+        return Hotel; // Alterado de Hotel2 para Hotel
       case 'prédio comercial':
       case 'prédio residencial':
       case 'edifício':
