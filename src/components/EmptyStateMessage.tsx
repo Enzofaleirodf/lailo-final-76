@@ -20,7 +20,7 @@ const EmptyStateMessage: React.FC<EmptyStateMessageProps> = ({
     opacity: 1,
     y: 0
   }} className="flex flex-col items-center justify-center py-16 px-4 text-center" role="status" aria-live="polite">
-      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-brand-50">
         {activeFilters > 0 ? <Search aria-hidden="true" className="w-8 h-8 text-brand-500 bg-transparent" /> : <AlertCircle className="w-8 h-8 text-purple-600" aria-hidden="true" />}
       </div>
       <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum {contentTypeLabel} encontrado</h3>
