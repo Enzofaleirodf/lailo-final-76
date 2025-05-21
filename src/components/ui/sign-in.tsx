@@ -1,10 +1,8 @@
-
 "use client";
 
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { DialogClose } from "@/components/ui/dialog";
-
 export const LightLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   return <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50\n">
@@ -23,7 +21,7 @@ export const LightLogin = () => {
             </div>
             <div className="p-0">
               <h2 className="text-2xl font-bold text-gray-900 text-center">Bem-vindo à Lailo</h2>
-              <p className="text-center text-gray-500 mt-2">Faça login para entrar na sua conta</p>
+              <p className="text-center text-gray-500 mt-2">Entre ou cadastre-se</p>
             </div>
           </div>
 
