@@ -1,17 +1,13 @@
 
 import React from 'react';
-import BuscadorLayout from '@/components/BuscadorLayout';
-import { useBuscadorSetup } from '@/hooks/useBuscadorSetup';
+import Buscador from '@/components/Buscador';
 
 /**
  * Página de busca e filtro de veículos em leilão
- * Utiliza componentes compartilhados para reduzir duplicação de código
+ * Utiliza o componente genérico Buscador com contentType='vehicle'
  */
 const BuscadorVeiculos = () => {
-  // Usar o hook personalizado para configurar o tipo de conteúdo como 'vehicle'
-  useBuscadorSetup('vehicle');
-  
-  return <BuscadorLayout />;
+  return <Buscador contentType="vehicle" />;
 };
 
 export default BuscadorVeiculos;
