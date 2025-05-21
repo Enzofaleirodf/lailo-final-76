@@ -1,3 +1,4 @@
+
 import React, { ReactNode } from 'react';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -7,6 +8,7 @@ import MobileFilterBar from '@/components/MobileFilterBar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SortOptions from '@/components/filters/SortOptions';
 import { useUIStore } from '@/stores/useUIStore';
+
 interface BuscadorLayoutProps {
   children?: ReactNode;
 }
@@ -15,9 +17,7 @@ interface BuscadorLayoutProps {
  * Componente de layout reutilizável para as páginas de busca
  * Implementa a estrutura visual compartilhada entre as páginas de busca
  */
-const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
-  children
-}) => {
+const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
   const isMobile = useIsMobile();
   const {
     filtersOpen,
@@ -25,13 +25,17 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
     setFiltersOpen,
     setSortOpen
   } = useUIStore();
+  
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
+  
   const handleSortClick = () => {
     setSortOpen(true);
   };
-  return <div className={`${isMobile ? 'pt-16' : ''}`}>
+  
+  return (
+    <div className={`${isMobile ? 'pt-16' : ''}`}>
       {/* Renderizar elementos filhos no topo, se houver */}
       {children}
       
@@ -41,14 +45,14 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
       {/* Mobile filter bar - mobile only */}
       {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
       
-      <div className="w-full flex flex-col lg:flex-row lg:gap-6 px-0 bg-white">
+      <div className="w-full flex flex-col lg:flex-row lg:gap-6 px-0">
         {/* Sidebar filter section - desktop only */}
         {!isMobile && <aside className="shrink-0 w-full lg:w-[448px]">
             <FilterSection />
           </aside>}
         
         {/* Main content area */}
-        <main className="flex-1 min-h-[80vh] w-full mt-4 lg:mt-0 px-0">
+        <main className="flex-1 min-h-[80vh] w-full mt-4 lg:mt-0">
           {/* Mobile filter drawer - only rendered on mobile */}
           {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
           
@@ -60,6 +64,8 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
       
       {/* Sort options modal - mobile only */}
       {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} />}
-    </div>;
+    </div>
+  );
 };
+
 export default BuscadorLayout;

@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from 'react';
 import AuctionStatus from './AuctionStatus';
 import { useSearchParams } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SortOptions from './filters/SortOptions';
 import { ChevronDown } from 'lucide-react';
+
 const ResultHeader: React.FC = () => {
   const {
     filters
@@ -40,33 +42,40 @@ const ResultHeader: React.FC = () => {
   const currentSortOption = useMemo(() => {
     return sortOptions.find(option => option.value === sortOption) || sortOptions[0];
   }, [sortOption, sortOptions]);
+  
   const handleSortClick = () => {
     setSortDialogOpen(true);
   };
-  return <motion.div className={`mt-0 pt-0 ${isMobile ? 'mb-3' : 'mb-4'}`} initial={{
-    opacity: 0,
-    y: -20
-  }} animate={{
-    opacity: 1,
-    y: 0
-  }} transition={{
-    duration: 0.3
-  }}>
-      <div className="flex flex-row justify-between items-center w-full bg-white">
+  
+  return (
+    <motion.div 
+      className={`mt-0 pt-0 ${isMobile ? 'mb-3' : 'mb-4'}`} 
+      initial={{ opacity: 0, y: -20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex flex-row justify-between items-center w-full">
         <AuctionStatus />
         
-        {!isMobile && <div className="flex items-center">
+        {!isMobile && (
+          <div className="flex items-center">
             <p className="text-sm text-gray-500 mr-2 font-normal">
               Ordenar por:
             </p>
-            <button onClick={handleSortClick} className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none gap-1">
+            <button 
+              onClick={handleSortClick} 
+              className="flex items-center text-sm text-brand-700 font-medium hover:text-brand-900 transition-colors focus:outline-none gap-1"
+            >
               <span className="font-medium text-gray-700">{currentSortOption.label}</span>
               <ChevronDown size={16} className="text-gray-500" />
             </button>
             
             <SortOptions open={sortDialogOpen} onOpenChange={setSortDialogOpen} />
-          </div>}
+          </div>
+        )}
       </div>
-    </motion.div>;
+    </motion.div>
+  );
 };
+
 export default React.memo(ResultHeader);
