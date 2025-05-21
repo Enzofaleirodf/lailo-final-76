@@ -68,7 +68,7 @@ const AuctionStatus: React.FC = () => {
     y: 0
   }} transition={{
     duration: 0.3
-  }} className="w-fit px-[16px]">
+  }} className="w-fit px-0">
       Encontramos <span className="text-foreground font-medium">{filteredItemsCount.toLocaleString('pt-BR')}</span> {itemType} em{' '}
       <span className="text-foreground font-medium">{totalSites.toLocaleString('pt-BR')}</span> sites ·{' '}
       <span className="text-accent2-600 font-medium">{newItems.toLocaleString('pt-BR')}</span> novos hoje
