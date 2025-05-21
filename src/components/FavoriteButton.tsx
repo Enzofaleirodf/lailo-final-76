@@ -41,7 +41,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       <Button
         variant="ghost"
         size="icon"
-        className={`hover:bg-gray-100 ${className}`}
+        className={`p-0 hover:bg-gray-100 ${className}`}
         onClick={handleClick}
         aria-label={isFavorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
       >
