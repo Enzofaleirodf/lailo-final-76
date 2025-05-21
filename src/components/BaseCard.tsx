@@ -147,68 +147,71 @@ const BaseCard: React.FC<BaseCardProps> = ({
           role="group"
           aria-label={`Card de ${title}`}
         >
-          {/* Top row with title and favorite button */}
-          <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
-            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
-              {title}
-            </h3>
-            <FavoriteButton 
-              itemId={id} 
-              isFavorited={favorited} 
-              onToggleFavorite={handleToggleFavorite} 
-              aria-label={favorited ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`}
-            />
-          </div>
-          
-          {/* ExtraInfo row - específico para cada tipo de conteúdo */}
-          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-urbanist`}>
-            {extraInfo}
-          </div>
-          
-          {/* Price section */}
-          <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
-            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-urbanist`}>
-              {formatCurrency(price.current)}
-            </span>
-            {price.original && (
-              <div className="flex items-center gap-2" aria-label={discount ? `Desconto de ${discount}%` : ''}>
-                {discount && (
-                  <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
-                    {discount}% OFF
-                  </span>
-                )}
-                <span className="text-gray-500 line-through text-xs font-urbanist">
-                  {formatCurrency(price.original)}
-                </span>
-              </div>
-            )}
-          </div>
-          
-          {/* Subtle divider */}
-          <Separator className={`${isMobile ? 'mb-2 mt-1' : 'mb-3 mt-1'} bg-gray-100`} />
-          
-          {/* Bottom row with auction details */}
-          <div className="flex justify-between items-center w-full">
-            <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
-              <Badge 
-                variant="outline" 
-                className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}
-              >
-                {origin || 'Origem não disponível'}
-              </Badge>
-              <Badge 
-                variant="outline" 
-                className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}
-              >
-                {place || 'Praça não disponível'}
-              </Badge>
+          {/* Nova div pai que agrupa todo o conteúdo */}
+          <div className="flex flex-col w-full">
+            {/* Linha 1 - título e botão favorito */}
+            <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
+              <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
+                {title}
+              </h3>
+              <FavoriteButton 
+                itemId={id} 
+                isFavorited={favorited} 
+                onToggleFavorite={handleToggleFavorite} 
+                aria-label={favorited ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`}
+              />
             </div>
-            <div 
-              className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0 font-urbanist`}
-              aria-label={`Data final: ${endDate ? formatAuctionDate(endDate) + ' às ' + formatEndTime(endDate) : 'Data não disponível'}`}
-            >
-              <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" aria-hidden="true" />
-              {endDate ? `${formatAuctionDate(endDate)} às ${formatEndTime(endDate)}` : 'Data não disponível'}
+            
+            {/* Linha 2 - ExtraInfo específico para cada tipo de conteúdo */}
+            <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-urbanist`}>
+              {extraInfo}
+            </div>
+            
+            {/* Linha 3 - Preço e desconto */}
+            <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
+              <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-urbanist`}>
+                {formatCurrency(price.current)}
+              </span>
+              {price.original && (
+                <div className="flex items-center gap-2" aria-label={discount ? `Desconto de ${discount}%` : ''}>
+                  {discount && (
+                    <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
+                      {discount}% OFF
+                    </span>
+                  )}
+                  <span className="text-gray-500 line-through text-xs font-urbanist">
+                    {formatCurrency(price.original)}
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            {/* Divisor */}
+            <Separator className={`${isMobile ? 'mb-2 mt-1' : 'mb-3 mt-1'} bg-gray-100`} />
+            
+            {/* Linha 4 - Detalhes do leilão */}
+            <div className="flex justify-between items-center w-full">
+              <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
+                <Badge 
+                  variant="outline" 
+                  className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}
+                >
+                  {origin || 'Origem não disponível'}
+                </Badge>
+                <Badge 
+                  variant="outline" 
+                  className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}
+                >
+                  {place || 'Praça não disponível'}
+                </Badge>
+              </div>
+              <div 
+                className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0 font-urbanist`}
+                aria-label={`Data final: ${endDate ? formatAuctionDate(endDate) + ' às ' + formatEndTime(endDate) : 'Data não disponível'}`}
+              >
+                <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" aria-hidden="true" />
+                {endDate ? `${formatAuctionDate(endDate)} às ${formatEndTime(endDate)}` : 'Data não disponível'}
+              </div>
             </div>
           </div>
         </div>
