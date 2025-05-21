@@ -116,7 +116,7 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
                 {filters.format}
               </span>
             </span>
@@ -128,7 +128,7 @@ const TopFilters: React.FC = () => {
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('format', option.value as FilterFormat)} 
-              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-urbanist"
+              className="cursor-pointer hover:bg-brand-50 hover:text-gray-800 font-normal font-urbanist"
             >
               {option.label}
             </DropdownMenuItem>
@@ -146,7 +146,7 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
                 {filters.origin}
               </span>
             </span>
@@ -158,7 +158,7 @@ const TopFilters: React.FC = () => {
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('origin', option.value as FilterOrigin)} 
-              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-urbanist"
+              className="cursor-pointer hover:bg-brand-50 hover:text-gray-800 font-normal font-urbanist"
             >
               {option.label}
             </DropdownMenuItem>
@@ -176,7 +176,7 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
                 {filters.place}
               </span>
             </span>
@@ -188,7 +188,7 @@ const TopFilters: React.FC = () => {
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
-              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-urbanist"
+              className="cursor-pointer hover:bg-brand-50 hover:text-gray-800 font-normal font-urbanist"
             >
               {option.label}
             </DropdownMenuItem>

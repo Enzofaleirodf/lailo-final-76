@@ -33,7 +33,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
       <div 
         className="w-full bg-gradient-to-r from-brand-50 to-white p-3"
       >
-        <h3 className="text-sm font-medium text-brand-900 font-geist">{title}</h3>
+        <h3 className="text-sm font-medium text-gray-900 font-urbanist">{title}</h3>
       </div>
       
       {/* Content - always expanded - no more accordion */}

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, MapPin } from 'lucide-react';
@@ -75,28 +76,28 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
         <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
           {/* Top row with property type and area */}
           <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
-            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-geist`}>
+            <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
               {propertyType} • {formattedArea}
             </h3>
             <FavoriteButton itemId={property.id} isFavorited={favorited} onToggleFavorite={handleToggleFavorite} />
           </div>
           
           {/* Address row (movida de baixo para cima - agora é a segunda linha) */}
-          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-geist`}>
+          <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-urbanist`}>
             
             <span className="line-clamp-1 mb-1">{property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}</span>
           </div>
 
           {/* Price section (movida de cima para baixo - agora é a terceira linha) */}
           <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
-            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-geist`}>
+            <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-urbanist`}>
               {formatCurrency(property.currentBid)}
             </span>
             {property.originalPrice && <div className="flex items-center gap-2">
-                {discount && <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-geist">
+                {discount && <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
                     {discount}% OFF
                   </span>}
-                <span className="text-gray-500 line-through text-xs font-geist">
+                <span className="text-gray-500 line-through text-xs font-urbanist">
                   {formatCurrency(property.originalPrice)}
                 </span>
               </div>}
@@ -108,14 +109,14 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
           {/* Bottom row with consistent 12px spacing from separator */}
           <div className="flex justify-between items-center w-full">
             <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
-              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-geist`}>
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}>
                 {property.origin || 'Origem não disponível'}
               </Badge>
-              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-geist`}>
+              <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-urbanist`}>
                 {property.place || 'Praça não disponível'}
               </Badge>
             </div>
-            <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0 font-geist`}>
+            <div className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0 font-urbanist`}>
               <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
               {property.endDate ? `${formatAuctionDate(property.endDate)} às ${formatEndTime(property.endDate)}` : 'Data não disponível'}
             </div>

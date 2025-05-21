@@ -41,7 +41,7 @@ const ActiveFilterBadges: React.FC = () => {
   }
   
   // Estilo de badge consistente entre desktop e mobile
-  const badgeClasses = "flex items-center gap-1 px-2 py-1 bg-brand-50 border-brand-200 text-brand-800";
+  const badgeClasses = "flex items-center gap-1 px-2 py-1 bg-brand-50 border-brand-200 text-gray-800";
   
   return (
     <div 
@@ -65,7 +65,7 @@ const ActiveFilterBadges: React.FC = () => {
             aria-label={`Remover filtro ${badge.label}`}
             tabIndex={0}
           >
-            <X size={10} className="text-brand-800" aria-hidden="true" />
+            <X size={10} className="text-gray-700" aria-hidden="true" />
           </Button>
         </Badge>
       ))}
@@ -74,7 +74,7 @@ const ActiveFilterBadges: React.FC = () => {
         <Button
           variant="ghost"
           size="sm" 
-          className="text-xs text-brand-700 hover:text-brand-800 hover:bg-brand-100 h-6"
+          className="text-xs text-gray-700 hover:text-gray-800 hover:bg-brand-100 h-6"
           onClick={handleClearAll}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {

@@ -42,7 +42,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
       role="group" 
       aria-labelledby="color-filter-label"
     >
-      <label id="color-filter-label" htmlFor="color-filter" className="block text-sm font-medium text-gray-700 mb-1 font-geist">
+      <label id="color-filter-label" htmlFor="color-filter" className="block text-sm font-medium text-gray-700 mb-1 font-urbanist">
         Cor
       </label>
       <FilterDropdown
@@ -51,7 +51,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
         value={filters.color || 'todas'}
         onChange={handleColorChange}
         options={colorOptions}
-        className="border-gray-300 font-geist"
+        className="border-gray-300 font-urbanist"
       />
     </div>
   );

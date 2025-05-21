@@ -11,7 +11,7 @@ interface FilterDropdownProps {
   id?: string;
   'aria-label'?: string;
   disabled?: boolean;
-  placeholder?: string; // Added placeholder prop
+  placeholder?: string;
 }
 
 /**
@@ -121,8 +121,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         id={id || `filter-dropdown-${Math.random().toString(36).substring(2, 9)}`}
         aria-label={ariaLabel}
         className={cn(
-          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-geist",
-          isValueSelected ? "text-brand-700 font-medium" : "text-gray-700",
+          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
+          isValueSelected ? "text-gray-800 font-medium" : "text-gray-700",
           "border-gray-300",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
@@ -143,7 +143,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
           <option 
             key={`${option.value}-${option.label}`}
             value={option.value} 
-            className={`${option.value === value ? 'text-brand-700 font-medium' : 'text-gray-700 font-normal'} font-geist`}
+            className={`${option.value === value ? 'text-gray-800 font-medium' : 'text-gray-700 font-normal'} font-urbanist`}
           >
             {option.label}
           </option>
