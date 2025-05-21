@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -45,7 +44,7 @@ export const LightLogin = () => {
 
             <div className="flex items-center my-4">
               <div className="flex-1 h-px bg-gray-200"></div>
-              <span className="px-4 text-sm text-gray-400">ou entre com</span>
+              <span className="px-4 text-sm text-gray-400">ou continue com</span>
               <div className="flex-1 h-px bg-gray-200"></div>
             </div>
 
