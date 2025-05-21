@@ -74,27 +74,37 @@ const ModelFilter: React.FC<ModelFilterProps> = ({ onFilterChange }) => {
 
   return (
     <div className="space-y-3">
-      <FilterDropdown
-        id="brand-filter"
-        aria-label="Selecione a marca"
-        value={filters.brand}
-        onChange={handleBrandChange}
-        options={brandOptions}
-      />
-      
-      {filters.brand === 'todas' ? (
-        <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-500 bg-gray-100">
-          Todos os modelos
-        </div>
-      ) : (
+      <div>
+        <label htmlFor="brand-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          Marca
+        </label>
         <FilterDropdown
-          id="model-filter"
-          aria-label="Selecione o modelo"
-          value={filters.model}
-          onChange={handleModelChange}
-          options={getModelOptions()}
+          id="brand-filter"
+          aria-label="Selecione a marca"
+          value={filters.brand}
+          onChange={handleBrandChange}
+          options={brandOptions}
         />
-      )}
+      </div>
+      
+      <div>
+        <label htmlFor="model-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          Modelo
+        </label>
+        {filters.brand === 'todas' ? (
+          <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-500 bg-gray-100">
+            Selecione uma marca acima
+          </div>
+        ) : (
+          <FilterDropdown
+            id="model-filter"
+            aria-label="Selecione o modelo"
+            value={filters.model}
+            onChange={handleModelChange}
+            options={getModelOptions()}
+          />
+        )}
+      </div>
     </div>
   );
 };

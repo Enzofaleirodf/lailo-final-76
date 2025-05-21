@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { MapPin, X, ChevronDown, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -118,7 +117,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
           variant="outline" 
           role="combobox" 
           aria-expanded={open} 
-          className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-brand-700 font-medium' : 'text-gray-700'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2`}
+          className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-brand-700 font-medium' : 'text-gray-700'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''}`}
         >
           <div className="flex items-center gap-2 overflow-hidden">
             <MapPin size={16} className={isFilterActive ? 'text-brand-700' : 'text-gray-500'} />
@@ -166,7 +165,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onFilterChange }) => {
               )
             ) : (
               <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-500 bg-gray-100">
-                Selecione um estado
+                Selecione um estado acima
               </div>
             )}
           </div>
