@@ -106,7 +106,7 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
           <Separator className={`${isMobile ? 'mb-2 mt-1' : 'mb-3 mt-1'} bg-gray-100`} />
           
           {/* Bottom row with consistent 12px spacing from separator */}
-          <div className="flex justify-between items-center w-full mt-1">
+          <div className="flex justify-between items-center w-full">
             <div className="flex gap-1.5 flex-shrink min-w-0 overflow-hidden">
               <Badge variant="outline" className={`bg-gray-50 text-gray-700 font-normal border-gray-200 ${isMobile ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2 py-0.5'} rounded font-geist`}>
                 {property.origin || 'Origem não disponível'}
