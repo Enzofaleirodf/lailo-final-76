@@ -1,15 +1,10 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { Building2, Car } from 'lucide-react';
-
 const Home = () => {
-  return (
-    <div className="flex flex-col items-center justify-center h-full py-8 px-4 text-center">
-      <h1 className="text-3xl sm:text-4xl font-bold mb-6">
-        Bem-vindo ao Portal de Leilões
-      </h1>
+  return <div className="flex flex-col items-center justify-center h-full py-8 px-4 text-center">
+      
       <p className="text-lg text-gray-600 mb-8 max-w-lg">
         Encontre as melhores oportunidades em leilões de imóveis e veículos.
       </p>
@@ -29,8 +24,6 @@ const Home = () => {
           </Button>
         </Link>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
