@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Separator } from "@/components/ui/separator";
 import FavoriteButton from './FavoriteButton';
-import { Card, CardContent } from '@/components/ui/card';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 export interface BaseCardProps {
   id: string;
@@ -114,32 +114,34 @@ const BaseCard: React.FC<BaseCardProps> = ({
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
       data-testid="base-card"
     >
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden">
-        {/* Área da imagem - posicionada à esquerda com padding igual ao conteúdo */}
+      <div className="rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden">
+        {/* Área da imagem - posicionada à esquerda sem padding interno para eliminar a linha divisória */}
         {imageUrl && (
-          <div className={`relative w-1/3 bg-white ${isMobile ? 'pt-3 pb-3 pl-3' : 'pt-4 pb-4 pl-4'}`}>
+          <div className="relative w-1/3 h-auto bg-white">
             {!imageLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center bg-white">
                 <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
               </div>
             )}
-            <div className="w-full h-full overflow-hidden rounded-lg">
-              <img 
-                src={imageUrl} 
-                alt={title} 
-                className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                loading="lazy"
-                onLoad={handleImageLoad}
-                aria-hidden={!imageLoaded}
-              />
-            </div>
-            
-            {/* Indicador de "terminando em breve" */}
-            {isEndingSoon() && (
-              <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
-                Termina em breve
+            <AspectRatio ratio={3/4} className="h-full">
+              <div className="absolute inset-0">
+                <img 
+                  src={imageUrl} 
+                  alt={title} 
+                  className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  loading="lazy"
+                  onLoad={handleImageLoad}
+                  aria-hidden={!imageLoaded}
+                />
               </div>
-            )}
+              
+              {/* Indicador de "terminando em breve" */}
+              {isEndingSoon() && (
+                <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                  Termina em breve
+                </div>
+              )}
+            </AspectRatio>
           </div>
         )}
         
@@ -150,46 +152,48 @@ const BaseCard: React.FC<BaseCardProps> = ({
           aria-label={`Card de ${title}`}
         >
           {/* Div pai que agrupa todo o conteúdo */}
-          <div className="flex flex-col w-full h-full">
-            {/* Linha 1 - título e botão favorito */}
-            <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
-              <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
-                {title}
-              </h3>
-              <FavoriteButton 
-                itemId={id} 
-                isFavorited={favorited} 
-                onToggleFavorite={handleToggleFavorite} 
-                aria-label={favorited ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`}
-              />
-            </div>
-            
-            {/* Linha 2 - ExtraInfo específico para cada tipo de conteúdo */}
-            <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-urbanist`}>
-              {extraInfo}
-            </div>
-            
-            {/* Linha 3 - Preço e desconto */}
-            <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
-              <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-urbanist`}>
-                {formatCurrency(price.current)}
-              </span>
-              {price.original && (
-                <div className="flex items-center gap-2" aria-label={discount ? `Desconto de ${discount}%` : ''}>
-                  {discount && (
-                    <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
-                      {discount}% OFF
+          <div className="flex flex-col w-full h-full justify-between">
+            <div>
+              {/* Linha 1 - título e botão favorito */}
+              <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
+                <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
+                  {title}
+                </h3>
+                <FavoriteButton 
+                  itemId={id} 
+                  isFavorited={favorited} 
+                  onToggleFavorite={handleToggleFavorite} 
+                  aria-label={favorited ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`}
+                />
+              </div>
+              
+              {/* Linha 2 - ExtraInfo específico para cada tipo de conteúdo */}
+              <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-urbanist`}>
+                {extraInfo}
+              </div>
+              
+              {/* Linha 3 - Preço e desconto */}
+              <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
+                <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-urbanist`}>
+                  {formatCurrency(price.current)}
+                </span>
+                {price.original && (
+                  <div className="flex items-center gap-2" aria-label={discount ? `Desconto de ${discount}%` : ''}>
+                    {discount && (
+                      <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
+                        {discount}% OFF
+                      </span>
+                    )}
+                    <span className="text-gray-500 line-through text-xs font-urbanist">
+                      {formatCurrency(price.original)}
                     </span>
-                  )}
-                  <span className="text-gray-500 line-through text-xs font-urbanist">
-                    {formatCurrency(price.original)}
-                  </span>
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
             
             {/* Divisor */}
-            <Separator className={`${isMobile ? 'mb-2 mt-1' : 'mb-3 mt-1'} bg-gray-100`} />
+            <Separator className={`${isMobile ? 'my-2' : 'my-3'} bg-gray-100`} />
             
             {/* Linha 4 - Detalhes do leilão */}
             <div className="flex justify-between items-center w-full">
