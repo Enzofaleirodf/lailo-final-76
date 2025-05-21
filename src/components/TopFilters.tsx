@@ -103,22 +103,22 @@ const TopFilters: React.FC = () => {
         </div>
       </div>
       
-      {/* Format Dropdown - Updating to match sidebar filter style */}
+      {/* Format Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
             style={{ height: '40px' }}  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-brand-700 font-medium" : "text-gray-700 font-normal"}>
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
                 {filters.format}
               </span>
             </span>
-            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
@@ -134,22 +134,22 @@ const TopFilters: React.FC = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Origin Dropdown - Updated to match sidebar filter style */}
+      {/* Origin Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
             aria-expanded="false"
             style={{ height: '40px' }}  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-brand-700 font-medium" : "text-gray-700 font-normal"}>
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
                 {filters.origin}
               </span>
             </span>
-            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
@@ -165,22 +165,22 @@ const TopFilters: React.FC = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Place options - Updated to match sidebar filter style */}
+      {/* Place options */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
             aria-label="Selecionar etapa"
             aria-haspopup="listbox"
             aria-expanded="false"
             style={{ height: '40px' }}
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-brand-700 font-medium" : "text-gray-700 font-normal"}>
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
                 {filters.place}
               </span>
             </span>
-            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">

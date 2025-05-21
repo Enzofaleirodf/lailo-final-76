@@ -1,3 +1,4 @@
+
 /* Custom scroll styling */
 ::-webkit-scrollbar {
   width: 8px;
@@ -373,69 +374,4 @@ html {
   z-index: calc(var(--z-drawer) + 10) !important;
   position: sticky !important;
   background-color: white !important;
-}
-
-/* Apply Geist font globally */
-html, body, button, input, select, textarea, div, p, span, h1, h2, h3, h4, h5, h6, a {
-  font-family: 'Geist', sans-serif !important;
-}
-
-/* Remove black outline from dropdowns and selects on focus */
-select:focus,
-[data-state="open"] button,
-[aria-expanded="true"],
-.dropdown-trigger:focus,
-[data-radix-popper-content-wrapper],
-button:focus,
-button:focus-visible,
-select:focus-visible {
-  outline-color: #202A44 !important;
-  outline-width: 2px !important;
-  box-shadow: none !important;
-  border-color: #202A44 !important;
-}
-
-/* Override for select inside filter wrapper */
-.filter-wrapper select:focus {
-  border-color: #202A44 !important;
-  box-shadow: 0 0 0 2px rgba(32, 42, 68, 0.3) !important;
-  outline: none !important; 
-}
-
-/* Standardize dropdown styles */
-.dropdown-trigger,
-[data-radix-dropdown-trigger],
-.select-trigger,
-.dropdown-button,
-select {
-  height: 40px !important;
-  border-color: #e5e7eb !important;
-}
-
-/* Reset unwanted focus styles */
-button:focus,
-select:focus,
-a:focus-visible,
-div:focus,
-[tabindex]:focus-visible {
-  outline-color: #202A44 !important;
-  outline-width: 2px !important;
-  outline-offset: 2px !important;
-  box-shadow: none !important;
-}
-
-/* Fix for dropdown and select styling */
-select,
-.filter-dropdown,
-button[role="combobox"] {
-  -webkit-appearance: none;
-  appearance: none;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-family: 'Geist', sans-serif !important;
-  background-position: right 0.5rem center;
-  background-repeat: no-repeat;
-  background-size: 1em;
 }

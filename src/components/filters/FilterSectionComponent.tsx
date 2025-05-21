@@ -29,7 +29,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   
   return (
     <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
-      {/* Title section - always with gradient background, no toggle button */}
+      {/* Title section - clickable for both desktop and mobile for consistent interaction */}
       <div 
         className="w-full bg-gradient-to-r from-brand-50 to-white p-3"
       >
