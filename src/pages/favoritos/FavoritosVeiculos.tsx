@@ -1,10 +1,40 @@
 
-import React from 'react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Car } from 'lucide-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { LightLogin } from '@/components/ui/sign-in';
+
+// Simulação do estado de autenticação - substituir pela sua lógica real de autenticação
+const useAuth = () => {
+  // Mockup simples para demonstração
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{name: string; email: string; photoUrl?: string} | null>(null);
+  
+  const login = () => {
+    setIsAuthenticated(true);
+    setUser({ name: 'Usuário Teste', email: 'usuario@teste.com' });
+  };
+  
+  const logout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+  };
+  
+  return { isAuthenticated, user, login, logout };
+};
 
 const FavoritosVeiculos = () => {
+  const { isAuthenticated } = useAuth();
+  const [openLoginDialog, setOpenLoginDialog] = useState(false);
+  
+  // Verificar autenticação quando o componente for montado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setOpenLoginDialog(true);
+    }
+  }, [isAuthenticated]);
+
   return (
     <div className="px-4 md:px-0">
       <h1 className="text-2xl font-bold mb-6">Meus Veículos Favoritos</h1>
@@ -24,6 +54,13 @@ const FavoritosVeiculos = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de Login para usuários não autenticados */}
+      <Dialog open={openLoginDialog} onOpenChange={setOpenLoginDialog}>
+        <DialogContent className="p-0 border-none max-w-md">
+          <LightLogin />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

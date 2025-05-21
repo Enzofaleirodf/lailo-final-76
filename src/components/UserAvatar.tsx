@@ -8,31 +8,12 @@ import {
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LightLogin } from '@/components/ui/sign-in';
+import { useAuth } from '@/hooks/useAuth';
 
 interface UserAvatarProps {
   className?: string;
   mobile?: boolean;
 }
-
-// Simulação do estado de autenticação - substituir pela sua lógica real de autenticação
-const useAuth = () => {
-  // Mockup simples para demonstração
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{name: string; email: string; photoUrl?: string} | null>(null);
-  
-  const login = () => {
-    // Mockup para demonstração - substituir com sua lógica real de login
-    setIsAuthenticated(true);
-    setUser({ name: 'Usuário Teste', email: 'usuario@teste.com' });
-  };
-  
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-  };
-  
-  return { isAuthenticated, user, login, logout };
-};
 
 const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) => {
   const { isAuthenticated, user, login, logout } = useAuth();
