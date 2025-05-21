@@ -80,7 +80,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
       <RadioGroup 
         value={category || 'Todos'} 
         onValueChange={handleCategoryChange}
-        className="grid-cols-2 w-full"
+        className="grid-cols-3 w-full"
         aria-label="Selecione uma categoria"
       >
         {categoryOptions.map((option) => {
@@ -89,7 +89,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
           return (
             <div
               key={`${id}-${option}`}
-              className="relative flex flex-col gap-2 rounded-lg border border-gray-200 p-3 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50"
+              className="relative flex flex-col gap-2 rounded-lg border border-gray-200 p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50"
             >
               <div className="flex justify-between gap-2">
                 <RadioGroupItem 
@@ -106,7 +106,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
               </div>
               <Label 
                 htmlFor={`${id}-${option}`}
-                className="text-sm font-normal cursor-pointer"
+                className="text-sm font-normal cursor-pointer text-xs"
               >
                 {option}
               </Label>
