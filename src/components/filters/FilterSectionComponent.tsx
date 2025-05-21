@@ -28,7 +28,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   };
   
   return (
-    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm w-full">
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
       {/* Title section - clickable for both desktop and mobile for consistent interaction */}
       <div 
         className="w-full bg-gradient-to-r from-brand-50 to-white p-3"
@@ -38,7 +38,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
       
       {/* Content - always expanded - no more accordion */}
       <div 
-        className="p-3 w-full"
+        className="p-3"
         id={id}
         role="region"
         aria-labelledby={`heading-${id}`}

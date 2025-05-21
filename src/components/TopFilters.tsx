@@ -1,12 +1,17 @@
 
 import React, { useCallback } from 'react';
-import { Building2, Car } from 'lucide-react';
+import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
-import FilterDropdown from '@/components/filters/FilterDropdown';
 
 /**
  * TopFilters - Barra de filtros rápidos para a versão desktop
@@ -54,22 +59,6 @@ const TopFilters: React.FC = () => {
     };
   };
 
-  // Convert dropdown options to the format expected by FilterDropdown
-  const getFormatOptions = () => formatOptions.map(option => ({
-    value: option.value,
-    label: option.label
-  }));
-
-  const getOriginOptions = () => originOptions.map(option => ({
-    value: option.value,
-    label: option.label
-  }));
-
-  const getPlaceOptions = () => placeOptions.map(option => ({
-    value: option.value,
-    label: option.label
-  }));
-
   return (
     <div 
       className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" 
@@ -114,53 +103,98 @@ const TopFilters: React.FC = () => {
         </div>
       </div>
       
-      {/* Format Dropdown - standardized with FilterDropdown */}
-      <div className="w-full">
-        <label className="sr-only" id="format-label">Formato</label>
-        <div className="relative w-full">
-          <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Formato:</span>
-          <FilterDropdown
-            value={filters.format}
-            onChange={(value) => handleFilterChange('format', value as FilterFormat)}
-            options={getFormatOptions()}
-            className="pl-[78px]"
-            aria-labelledby="format-label"
-            fullWidth={true}
-          />
-        </div>
-      </div>
+      {/* Format Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            aria-label="Selecionar formato"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            style={{ height: '40px' }}  
+          >
+            <span className="text-sm font-normal text-gray-700">
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
+                {filters.format}
+              </span>
+            </span>
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
+          {formatOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('format', option.value as FilterFormat)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-geist"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-      {/* Origin Dropdown - standardized with FilterDropdown */}
-      <div className="w-full">
-        <label className="sr-only" id="origin-label">Origem</label>
-        <div className="relative w-full">
-          <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Origem:</span>
-          <FilterDropdown
-            value={filters.origin}
-            onChange={(value) => handleFilterChange('origin', value as FilterOrigin)}
-            options={getOriginOptions()}
-            className="pl-[78px]"
-            aria-labelledby="origin-label"
-            fullWidth={true}
-          />
-        </div>
-      </div>
+      {/* Origin Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            aria-label="Selecionar origem"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            style={{ height: '40px' }}  
+          >
+            <span className="text-sm font-normal text-gray-700">
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
+                {filters.origin}
+              </span>
+            </span>
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
+          {originOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('origin', option.value as FilterOrigin)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-geist"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-      {/* Place Dropdown - standardized with FilterDropdown */}
-      <div className="w-full">
-        <label className="sr-only" id="place-label">Etapa</label>
-        <div className="relative w-full">
-          <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Etapa:</span>
-          <FilterDropdown
-            value={filters.place}
-            onChange={(value) => handleFilterChange('place', value as FilterPlace)}
-            options={getPlaceOptions()}
-            className="pl-[75px]"
-            aria-labelledby="place-label"
-            fullWidth={true}
-          />
-        </div>
-      </div>
+      {/* Place options */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button 
+            className="h-10 flex items-center justify-between px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-geist"
+            aria-label="Selecionar etapa"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            style={{ height: '40px' }}
+          >
+            <span className="text-sm font-normal text-gray-700">
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-brand-700 font-normal"}>
+                {filters.place}
+              </span>
+            </span>
+            <ChevronDown size={16} className="text-brand-500" aria-hidden="true" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-geist">
+          {placeOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-brand-700 font-normal font-geist"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
