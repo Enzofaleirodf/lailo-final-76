@@ -85,6 +85,7 @@ export const getTypesByCategory = (category: string, contentType: 'property' | '
     return contentType === 'vehicle' ? getAllVehicleTypes() : getAllPropertyTypes();
   }
   
+  // Se não for "Todos", retornar os tipos específicos da categoria
   if (contentType === 'vehicle') {
     return vehicleCategoryToTypesMap[category] || ['Todos'];
   } else {

@@ -14,6 +14,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   const { category, contentType } = filters;
   
   // Obter os tipos de imóvel disponíveis para a categoria selecionada
+  // Agora retorna todos os tipos quando categoria é "Todos"
   const availableTypes = getTypesByCategory(category, 'property');
   
   const handlePropertyTypeChange = useCallback((value: string) => {

@@ -24,6 +24,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
     updateFilter('category', value);
     
     // Ao mudar a categoria, redefine os filtros de tipo específicos
+    // Mesmo quando "Todos" é selecionado, resetamos os tipos para garantir consistência
     if (contentType === 'property') {
       updateFilter('propertyTypes', []);
     } else {

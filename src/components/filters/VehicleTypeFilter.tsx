@@ -14,6 +14,7 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   const { category, contentType } = filters;
   
   // Obter os tipos de veículo disponíveis para a categoria selecionada
+  // Agora retorna todos os tipos quando categoria é "Todos"
   const availableTypes = getTypesByCategory(category, 'vehicle');
   
   const handleVehicleTypeChange = useCallback((value: string) => {
