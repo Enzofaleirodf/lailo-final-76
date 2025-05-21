@@ -114,10 +114,10 @@ const BaseCard: React.FC<BaseCardProps> = ({
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
       data-testid="base-card"
     >
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
-        {/* Área da imagem - se imageUrl for fornecida */}
+      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row">
+        {/* Área da imagem - agora posicionada à esquerda */}
         {imageUrl && (
-          <div className="relative w-full h-40 bg-gray-100">
+          <div className="relative w-1/3 h-full bg-gray-100">
             {!imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
@@ -141,14 +141,14 @@ const BaseCard: React.FC<BaseCardProps> = ({
           </div>
         )}
         
-        {/* Content */}
+        {/* Content - agora posicionado à direita */}
         <div 
-          className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}
+          className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} ${imageUrl ? 'w-2/3' : 'w-full'}`}
           role="group"
           aria-label={`Card de ${title}`}
         >
-          {/* Nova div pai que agrupa todo o conteúdo */}
-          <div className="flex flex-col w-full">
+          {/* Div pai que agrupa todo o conteúdo */}
+          <div className="flex flex-col w-full h-full">
             {/* Linha 1 - título e botão favorito */}
             <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
               <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
