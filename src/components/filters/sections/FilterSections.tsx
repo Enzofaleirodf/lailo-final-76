@@ -55,27 +55,15 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
       </FilterSectionComponent>
 
       <FilterSectionComponent 
-        title="Marca e Modelo" 
+        title="Características do veículo" 
         isExpanded={expandedSections.model} 
         onToggle={() => toggleSection('model')}
       >
-        <ModelFilter onFilterChange={onFilterChange} />
-      </FilterSectionComponent>
-
-      <FilterSectionComponent 
-        title="Cor" 
-        isExpanded={expandedSections.color} 
-        onToggle={() => toggleSection('color')}
-      >
-        <ColorFilter onFilterChange={onFilterChange} />
-      </FilterSectionComponent>
-
-      <FilterSectionComponent 
-        title="Ano" 
-        isExpanded={expandedSections.year} 
-        onToggle={() => toggleSection('year')}
-      >
-        <YearRangeFilter onFilterChange={onFilterChange} />
+        <div className="space-y-4">
+          <ModelFilter onFilterChange={onFilterChange} />
+          <ColorFilter onFilterChange={onFilterChange} />
+          <YearRangeFilter onFilterChange={onFilterChange} />
+        </div>
       </FilterSectionComponent>
     </>
   );

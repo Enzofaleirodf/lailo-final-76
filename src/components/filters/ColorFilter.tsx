@@ -42,7 +42,9 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
       role="group" 
       aria-labelledby="color-filter-label"
     >
-      <div id="color-filter-label" className="sr-only">Filtro de cor</div>
+      <label id="color-filter-label" htmlFor="color-filter" className="block text-sm font-medium text-gray-700 mb-1">
+        Cor
+      </label>
       <FilterDropdown
         id="color-filter"
         aria-label="Selecione a cor"

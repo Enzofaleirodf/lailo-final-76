@@ -40,6 +40,9 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   
   return (
     <div className="space-y-3">
+      <label htmlFor="year-range" className="block text-sm font-medium text-gray-700 mb-1">
+        Ano
+      </label>
       <SimplifiedRangeFilter
         initialValues={filters.year}
         defaultValues={defaultValues}
@@ -56,6 +59,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
           useThousandSeparator: false,
           formatDisplay: false
         }}
+        id="year-range"
       />
     </div>
   );
