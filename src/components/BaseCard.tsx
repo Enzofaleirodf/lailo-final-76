@@ -114,10 +114,10 @@ const BaseCard: React.FC<BaseCardProps> = ({
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
       data-testid="base-card"
     >
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row">
-        {/* Área da imagem - agora posicionada à esquerda */}
+      <div className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden">
+        {/* Área da imagem - posicionada à esquerda */}
         {imageUrl && (
-          <div className="relative w-1/3 h-full bg-gray-100">
+          <div className="relative w-1/3 bg-gray-100">
             {!imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
@@ -141,7 +141,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
           </div>
         )}
         
-        {/* Content - agora posicionado à direita */}
+        {/* Content - posicionado à direita */}
         <div 
           className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} ${imageUrl ? 'w-2/3' : 'w-full'}`}
           role="group"
