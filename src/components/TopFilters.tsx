@@ -115,9 +115,9 @@ const TopFilters: React.FC = () => {
       </div>
       
       {/* Format Dropdown - standardized with FilterDropdown */}
-      <div className="relative">
+      <div className="w-full">
         <label className="sr-only" id="format-label">Formato</label>
-        <div className="flex items-center h-full">
+        <div className="flex items-center w-full">
           <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Formato:</span>
           <FilterDropdown
             value={filters.format}
@@ -125,14 +125,15 @@ const TopFilters: React.FC = () => {
             options={getFormatOptions()}
             className="pl-[78px]"
             aria-labelledby="format-label"
+            fullWidth={true}
           />
         </div>
       </div>
 
       {/* Origin Dropdown - standardized with FilterDropdown */}
-      <div className="relative">
+      <div className="w-full">
         <label className="sr-only" id="origin-label">Origem</label>
-        <div className="flex items-center h-full">
+        <div className="flex items-center w-full">
           <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Origem:</span>
           <FilterDropdown
             value={filters.origin}
@@ -140,14 +141,15 @@ const TopFilters: React.FC = () => {
             options={getOriginOptions()}
             className="pl-[78px]"
             aria-labelledby="origin-label"
+            fullWidth={true}
           />
         </div>
       </div>
 
       {/* Place Dropdown - standardized with FilterDropdown */}
-      <div className="relative">
+      <div className="w-full">
         <label className="sr-only" id="place-label">Etapa</label>
-        <div className="flex items-center h-full">
+        <div className="flex items-center w-full">
           <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Etapa:</span>
           <FilterDropdown
             value={filters.place}
@@ -155,6 +157,7 @@ const TopFilters: React.FC = () => {
             options={getPlaceOptions()}
             className="pl-[75px]"
             aria-labelledby="place-label"
+            fullWidth={true}
           />
         </div>
       </div>
