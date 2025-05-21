@@ -1,9 +1,21 @@
+
 /**
  * Utility functions for layout and responsive design
  * Otimizado para todos os tamanhos de tela
  */
 
-import { breakpoints } from '@/hooks/useMediaQuery';
+// Definindo breakpoints localmente em vez de importar
+const breakpoints = {
+  sm: '(min-width: 640px)',
+  md: '(min-width: 768px)',
+  lg: '(min-width: 1024px)',
+  xl: '(min-width: 1280px)',
+  '2xl': '(min-width: 1536px)',
+  mobile: '(max-width: 767px)',
+  tablet: '(min-width: 768px) and (max-width: 1023px)',
+  desktop: '(min-width: 1024px)',
+  largeDesktop: '(min-width: 1440px)',
+};
 
 /**
  * Tipos de dispositivo para classificação

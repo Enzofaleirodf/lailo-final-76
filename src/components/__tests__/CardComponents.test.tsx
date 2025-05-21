@@ -27,10 +27,12 @@ const testProperty: PropertyItem = {
   propertyInfo: {
     type: "Apartamento",
     usefulAreaM2: 75,
-    bedroomCount: 2,
-    bathroomCount: 1,
-    garageCount: 1
-  }
+    bedrooms: 2,  // Corrigido de bedroomCount para bedrooms
+    bathrooms: 1,
+    garages: 1    // Corrigido de garageCount para garages
+  },
+  bidCount: 5,
+  format: 'Leilão'
 };
 
 const testAuction: AuctionItem = {
@@ -47,7 +49,7 @@ const testAuction: AuctionItem = {
     type: "car",
     brand: "Honda",
     model: "Civic",
-    year: "2021",
+    year: 2021,  // Corrigido de string para number
     color: "Preto",
     mileage: 15000,
     fuel: "Flex"
