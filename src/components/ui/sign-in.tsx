@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -29,13 +30,13 @@ export const LightLogin = () => {
               <div className="flex justify-between items-center">
                 <label className="text-sm font-medium text-gray-700">Senha</label>
                 <a href="#" className="text-xs text-blue-600 hover:underline">
-                  Forgot password?
+                  Esqueceu a senha?
                 </a>
               </div>
               <div className="relative">
                 <input type={showPassword ? "text" : "password"} className="bg-gray-50 border-gray-200 text-gray-900 pr-12 h-12 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-500/50 focus:border-blue-500 w-full px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="••••••••" />
                 <button type="button" className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 hover:bg-gray-100 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? "Hide" : "Show"}
+                  {showPassword ? "Hide" : "Mostrar"}
                 </button>
               </div>
             </div>
@@ -65,9 +66,9 @@ export const LightLogin = () => {
 
           <div className="p-0 mt-6">
             <p className="text-sm text-center text-gray-500 w-full">
-              Don&apos;t have an account?{" "}
+              Não tem uma conta?{" "}
               <a href="#" className="text-blue-600 hover:underline font-medium">
-                Sign up
+                Cadastre-se
               </a>
             </p>
           </div>
