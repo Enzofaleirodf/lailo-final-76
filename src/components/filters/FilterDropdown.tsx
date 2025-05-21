@@ -11,6 +11,7 @@ interface FilterDropdownProps {
   id?: string;
   'aria-label'?: string;
   disabled?: boolean;
+  placeholder?: string; // Added placeholder prop
 }
 
 /**
@@ -24,7 +25,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   className = "",
   id,
   "aria-label": ariaLabel,
-  disabled = false
+  disabled = false,
+  placeholder
 }) => {
   // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -136,6 +138,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
       >
+        {placeholder && <option value="" disabled>{placeholder}</option>}
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}
