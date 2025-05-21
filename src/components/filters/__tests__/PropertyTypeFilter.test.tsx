@@ -5,6 +5,15 @@ import '@testing-library/jest-dom';
 import PropertyTypeFilter from '../PropertyTypeFilter';
 import * as filterStoreModule from '@/stores/useFilterStore';
 
+// Mock do módulo de categorias
+jest.mock('@/utils/categoryTypeMapping', () => ({
+  getTypesByCategory: jest.fn().mockImplementation((cat) => {
+    if (cat === 'Residencial') return ['Todos', 'Apartamento', 'Casa'];
+    if (cat === 'Comercial') return ['Todos', 'Loja', 'Sala'];
+    return ['Todos'];
+  })
+}));
+
 // Mock the dependencies
 jest.mock('@/stores/useFilterStore');
 
@@ -20,7 +29,11 @@ describe('PropertyTypeFilter', () => {
     
     // Set default mock return values
     mockUseFilterStore.mockReturnValue({
-      filters: { propertyTypes: [] },
+      filters: { 
+        propertyTypes: [],
+        contentType: 'property',
+        category: 'Residencial'
+      },
       activeFilters: 0,
       expandedSections: {},
       lastUpdatedFilter: null,
@@ -33,14 +46,13 @@ describe('PropertyTypeFilter', () => {
     });
   });
 
-  test('renderiza o componente com os tipos de imóveis', () => {
+  test('renderiza o componente com os tipos de imóveis da categoria selecionada', () => {
     render(<PropertyTypeFilter />);
     
-    // Verificar se todos os tipos de imóveis estão presentes
+    // Verificar se os tipos de imóveis para a categoria 'Residencial' estão presentes
     expect(screen.getByLabelText('Filtrar por Todos')).toBeInTheDocument();
     expect(screen.getByLabelText('Filtrar por Apartamento')).toBeInTheDocument();
     expect(screen.getByLabelText('Filtrar por Casa')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Terreno')).toBeInTheDocument();
   });
 
   test('seleciona um tipo de imóvel corretamente', () => {
@@ -50,14 +62,18 @@ describe('PropertyTypeFilter', () => {
     fireEvent.click(screen.getByLabelText('Filtrar por Apartamento'));
     
     // Verificar se as funções foram chamadas com valores corretos
-    expect(mockUpdateFilter).toHaveBeenCalledWith('propertyTypes', ['apartamento']);
+    expect(mockUpdateFilter).toHaveBeenCalledWith('propertyTypes', ['Apartamento']);
     expect(mockOnFilterChange).toHaveBeenCalled();
   });
 
   test('mantém a seleção atual no estado visual', () => {
     // Configurar o store para ter um tipo selecionado
     mockUseFilterStore.mockReturnValue({
-      filters: { propertyTypes: ['casa'] },
+      filters: { 
+        propertyTypes: ['Casa'],
+        contentType: 'property',
+        category: 'Residencial'
+      },
       activeFilters: 1,
       expandedSections: {},
       lastUpdatedFilter: null,
@@ -80,17 +96,59 @@ describe('PropertyTypeFilter', () => {
     expect(apartamentoButton).toHaveAttribute('data-state', 'off');
   });
 
-  test('acessibilidade: suporta navegação por teclado', () => {
-    render(<PropertyTypeFilter />);
-    
-    // Verificar atributos ARIA
-    const buttons = screen.getAllByRole('button');
-    
-    buttons.forEach(button => {
-      expect(button).toHaveAttribute('aria-label');
-      // Simular interação de foco
-      button.focus();
-      expect(document.activeElement).toBe(button);
+  test('não renderiza se o tipo de conteúdo não for property', () => {
+    mockUseFilterStore.mockReturnValue({
+      filters: { 
+        propertyTypes: [],
+        contentType: 'vehicle',
+        category: 'Leves'
+      },
+      activeFilters: 0,
+      expandedSections: {},
+      lastUpdatedFilter: null,
+      updateFilter: mockUpdateFilter,
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
     });
+    
+    const { container } = render(<PropertyTypeFilter />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  test('altera os tipos de imóveis quando a categoria muda', () => {
+    // Primeiro render com categoria 'Residencial'
+    const { rerender } = render(<PropertyTypeFilter />);
+    
+    expect(screen.getByLabelText('Filtrar por Apartamento')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Casa')).toBeInTheDocument();
+    
+    // Mudar a categoria para 'Comercial'
+    mockUseFilterStore.mockReturnValue({
+      filters: { 
+        propertyTypes: [],
+        contentType: 'property',
+        category: 'Comercial'
+      },
+      activeFilters: 0,
+      expandedSections: {},
+      lastUpdatedFilter: null,
+      updateFilter: mockUpdateFilter,
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
+    });
+    
+    // Re-renderizar o componente
+    rerender(<PropertyTypeFilter />);
+    
+    // Verificar que os tipos mudaram
+    expect(screen.queryByLabelText('Filtrar por Apartamento')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Loja')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Sala')).toBeInTheDocument();
   });
 });

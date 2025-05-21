@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { 
@@ -159,6 +160,23 @@ export const useFilterStore = create<FilterStore>()(
             ...state.filters, 
             [key]: value 
           };
+
+          // Se a categoria mudar, precisamos resetar os tipos de veículos/imóveis
+          if (key === 'category') {
+            if (state.filters.contentType === 'vehicle') {
+              newFilters.vehicleTypes = [];
+            } else {
+              newFilters.propertyTypes = [];
+            }
+          }
+          
+          // Se o tipo de conteúdo mudar, redefinir a categoria para "Todos"
+          if (key === 'contentType') {
+            newFilters.category = 'Todos';
+            newFilters.vehicleTypes = [];
+            newFilters.propertyTypes = [];
+          }
+
           return { 
             filters: newFilters, 
             activeFilters: countActiveFilters(newFilters),

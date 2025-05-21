@@ -4,6 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useFilterStore } from '@/stores/useFilterStore';
 import { ContentType } from '@/types/filters';
 import { Label } from "@/components/ui/label";
+import { getVehicleCategories, getPropertyCategories } from '@/utils/filterUtils';
 
 interface CategoryFilterProps {
   onFilterChange: () => void;
@@ -15,8 +16,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
 
   // Determinar opções de categoria baseadas no tipo de conteúdo
   const categoryOptions = contentType === 'property' 
-    ? ['Todos', 'Comercial', 'Hospedagem', 'Industrial', 'Residencial', 'Rural']
-    : ['Todos', 'Aéreos', 'Embarcações', 'Carros', 'Máquinas Agrícolas', 'Máquinas de Construção', 'Motos', 'Pesados', 'Recreativos'];
+    ? getPropertyCategories()
+    : getVehicleCategories();
 
   const handleCategoryChange = (value: string) => {
     updateFilter('category', value);

@@ -1,6 +1,7 @@
 import { FilterState, ContentType } from '@/types/filters';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { defaultRangeValues } from '@/stores/useFilterStore';
+import { vehicleCategoryToTypesMap, propertyCategoryToTypesMap } from './categoryTypeMapping';
 
 /**
  * Format options for filter dropdowns
@@ -34,28 +35,18 @@ export const placeOptions = [
 ];
 
 /**
- * Vehicle type options for filter dropdowns
+ * Obter todas as categorias de veículo disponíveis
  */
-export const vehicleTypeOptions = [
-  { value: 'todos', label: 'Todos os tipos' },
-  { value: 'carro', label: 'Carros' },
-  { value: 'moto', label: 'Motos' },
-  { value: 'caminhão', label: 'Caminhões' },
-  { value: 'van', label: 'Vans' },
-  { value: 'ônibus', label: 'Ônibus' }
-];
+export const getVehicleCategories = (): string[] => {
+  return ['Todos', ...Object.keys(vehicleCategoryToTypesMap).filter(cat => cat !== 'Todos')];
+};
 
 /**
- * Property type options for filter dropdowns
+ * Obter todas as categorias de imóvel disponíveis
  */
-export const propertyTypeOptions = [
-  { value: 'todos', label: 'Todos os imóveis' },
-  { value: 'apartamento', label: 'Apartamentos' },
-  { value: 'casa', label: 'Casas' },
-  { value: 'terreno', label: 'Terrenos' },
-  { value: 'comercial', label: 'Comerciais' },
-  { value: 'rural', label: 'Rurais' }
-];
+export const getPropertyCategories = (): string[] => {
+  return ['Todos', ...Object.keys(propertyCategoryToTypesMap).filter(cat => cat !== 'Todos')];
+};
 
 /**
  * Check if a filter value is the default/unset value
