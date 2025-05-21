@@ -41,6 +41,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
     <div 
       role="group" 
       aria-labelledby="color-filter-label"
+      className="w-full"
     >
       <label id="color-filter-label" htmlFor="color-filter" className="block text-sm font-medium text-gray-700 mb-1 font-geist">
         Cor
@@ -52,6 +53,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-geist"
+        fullWidth={true}
       />
     </div>
   );

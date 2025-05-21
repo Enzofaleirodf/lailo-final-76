@@ -117,7 +117,7 @@ const TopFilters: React.FC = () => {
       {/* Format Dropdown - standardized with FilterDropdown */}
       <div className="w-full">
         <label className="sr-only" id="format-label">Formato</label>
-        <div className="flex items-center w-full">
+        <div className="relative w-full">
           <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Formato:</span>
           <FilterDropdown
             value={filters.format}
@@ -133,7 +133,7 @@ const TopFilters: React.FC = () => {
       {/* Origin Dropdown - standardized with FilterDropdown */}
       <div className="w-full">
         <label className="sr-only" id="origin-label">Origem</label>
-        <div className="flex items-center w-full">
+        <div className="relative w-full">
           <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Origem:</span>
           <FilterDropdown
             value={filters.origin}
@@ -149,7 +149,7 @@ const TopFilters: React.FC = () => {
       {/* Place Dropdown - standardized with FilterDropdown */}
       <div className="w-full">
         <label className="sr-only" id="place-label">Etapa</label>
-        <div className="flex items-center w-full">
+        <div className="relative w-full">
           <span className="absolute left-3 text-sm text-gray-500 font-normal font-geist z-10">Etapa:</span>
           <FilterDropdown
             value={filters.place}

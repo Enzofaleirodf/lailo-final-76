@@ -13,7 +13,7 @@ interface FilterDropdownProps {
   'aria-labelledby'?: string;
   disabled?: boolean;
   placeholder?: string;
-  fullWidth?: boolean; // Added fullWidth prop
+  fullWidth?: boolean;
 }
 
 /**
@@ -30,7 +30,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   "aria-labelledby": ariaLabelledby,
   disabled = false,
   placeholder,
-  fullWidth = false // Default to false for backward compatibility
+  fullWidth = false
 }) => {
   // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -119,19 +119,22 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   }, [ariaLabel, value, options]);
   
   return (
-    <div className={cn("relative isolate", fullWidth ? "w-full" : "")}>
+    <div className={cn(
+      "relative isolate", 
+      fullWidth ? "w-full" : "w-auto"
+    )}>
       <select
         ref={selectRef}
         id={id || `filter-dropdown-${Math.random().toString(36).substring(2, 9)}`}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         className={cn(
-          "border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-geist text-left",
+          "border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-geist",
           isValueSelected ? "text-brand-700 font-medium" : "text-gray-700",
           "border-gray-300",
           "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-0",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
-          fullWidth ? "w-full" : "",
+          fullWidth ? "w-full" : "w-auto",
           className
         )}
         value={value}
@@ -143,15 +146,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-required="false"
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
-        style={{textAlign: "left"}}
       >
-        {placeholder && <option value="" disabled style={{textAlign: "left"}}>{placeholder}</option>}
+        {placeholder && <option value="" disabled>{placeholder}</option>}
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}
             value={option.value} 
             className={`${option.value === value ? 'text-brand-700 font-medium' : 'text-gray-700 font-normal'} font-geist`}
-            style={{textAlign: "left"}}
           >
             {option.label}
           </option>
