@@ -55,12 +55,15 @@ const BuscadorVeiculos = () => {
     }
     initialSetupDone.current = true;
   }, [updateFilter, filters.contentType, filters.propertyTypes, filters.usefulArea]);
+
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
+
   const handleSortClick = () => {
     setSortOpen(true);
   };
+
   return <div className={`${isMobile ? 'pt-16' : ''}`}>
       {/* Top filters bar - desktop only */}
       {!isMobile && <TopFilters />}

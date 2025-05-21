@@ -68,31 +68,31 @@ const FilterContent: React.FC = () => {
       <FilterWrapper>
         {/* Filter sections directly rendered without accordions */}
         <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-          <h3 className="text-sm font-medium text-brand-900 mb-3">Localização</h3>
+          <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Localização</h3>
           <LocationFilter onFilterChange={handleFilterChange} />
         </div>
 
         {isPropertyMode ? (
           <>
             <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-              <h3 className="text-sm font-medium text-brand-900 mb-3">Tipo de imóvel</h3>
+              <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Tipo de imóvel</h3>
               <PropertyTypeFilter onFilterChange={handleFilterChange} />
             </div>
 
             <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-              <h3 className="text-sm font-medium text-brand-900 mb-3">Área útil</h3>
+              <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Área útil</h3>
               <UsefulAreaFilter onFilterChange={handleFilterChange} />
             </div>
           </>
         ) : (
           <>
             <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-              <h3 className="text-sm font-medium text-brand-900 mb-3">Tipo de veículo</h3>
+              <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Tipo de veículo</h3>
               <VehicleTypeFilter onFilterChange={handleFilterChange} />
             </div>
 
             <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-              <h3 className="text-sm font-medium text-brand-900 mb-3">Características do veículo</h3>
+              <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Características do veículo</h3>
               <div className="space-y-4">
                 <ModelFilter onFilterChange={handleFilterChange} />
                 <ColorFilter onFilterChange={handleFilterChange} />
@@ -103,7 +103,7 @@ const FilterContent: React.FC = () => {
         )}
         
         <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
-          <h3 className="text-sm font-medium text-brand-900 mb-3">Valor do lance atual</h3>
+          <h3 className="text-sm font-medium text-brand-900 mb-3 bg-gradient-to-r from-brand-600 to-brand-800 bg-clip-text text-transparent">Valor do lance atual</h3>
           <PriceRangeFilter onFilterChange={handleFilterChange} />
         </div>
       </FilterWrapper>
