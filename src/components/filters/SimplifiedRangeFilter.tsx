@@ -27,6 +27,7 @@ export interface RangeFilterProps {
     useThousandSeparator?: boolean;
     formatDisplay?: boolean;
   };
+  id?: string; // Add the id prop to the interface
 }
 
 /**
@@ -50,7 +51,8 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   inputSuffix,
   className = "",
   isActive = false,
-  formatterOptions = {}
+  formatterOptions = {},
+  id // Include the id in the destructured props
 }) => {
   // Verificar consistência em diferentes tamanhos de tela
   useResponsiveConsistency({ 
@@ -87,7 +89,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   });
   
   // ID único para acessibilidade
-  const filterGroupId = React.useId();
+  const filterGroupId = id || React.useId();
   const minErrorId = `min-error-${filterGroupId}`;
   const maxErrorId = `max-error-${filterGroupId}`;
   

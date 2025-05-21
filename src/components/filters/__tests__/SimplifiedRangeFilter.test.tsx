@@ -20,6 +20,7 @@ describe('SimplifiedRangeFilter', () => {
         maxPlaceholder="Valor máximo"
         ariaLabelMin="Valor mínimo teste"
         ariaLabelMax="Valor máximo teste"
+        id="test-filter"
       />
     );
     
