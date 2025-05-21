@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { validateNumericRange } from '@/utils/urlUtils';
 
 /**
  * Valida e corrige parâmetros de URL inválidos
@@ -14,46 +15,50 @@ export const useUrlParamsValidator = () => {
     const newParams = new URLSearchParams(searchParams);
     let hasChanges = false;
 
-    // Validar intervalos numéricos
-    const validateNumericRange = (
-      minParam: string, 
-      maxParam: string, 
-      minDefault: string, 
-      maxDefault: string
-    ) => {
-      const min = searchParams.get(minParam);
-      const max = searchParams.get(maxParam);
-      
-      // Verificar se os valores são numéricos
-      if (min !== null && isNaN(Number(min))) {
-        invalidParams.push(`${minParam} (${min})`);
-        newParams.set(minParam, minDefault);
-        hasChanges = true;
-      }
-      
-      if (max !== null && isNaN(Number(max))) {
-        invalidParams.push(`${maxParam} (${max})`);
-        newParams.set(maxParam, maxDefault);
-        hasChanges = true;
-      }
-      
-      // Verificar se min > max
-      if (min !== null && max !== null && Number(min) > Number(max)) {
-        invalidParams.push(`${minParam}-${maxParam} (${min}-${max})`);
-        newParams.set(minParam, minDefault);
-        newParams.set(maxParam, maxDefault);
-        hasChanges = true;
-      }
-    };
-
-    // Validar anos
-    validateNumericRange('yearMin', 'yearMax', '', '');
+    // Validar intervalos numéricos para anos
+    const yearResult = validateNumericRange(
+      searchParams.get('yearMin'),
+      searchParams.get('yearMax'),
+      '',
+      ''
+    );
+    
+    if (!yearResult.isValid) {
+      invalidParams.push(`year (${searchParams.get('yearMin')}-${searchParams.get('yearMax')})`);
+      if (yearResult.minValue) newParams.set('yearMin', yearResult.minValue);
+      if (yearResult.maxValue) newParams.set('yearMax', yearResult.maxValue);
+      hasChanges = true;
+    }
     
     // Validar preços
-    validateNumericRange('priceMin', 'priceMax', '', '');
+    const priceResult = validateNumericRange(
+      searchParams.get('priceMin'),
+      searchParams.get('priceMax'),
+      '',
+      ''
+    );
+    
+    if (!priceResult.isValid) {
+      invalidParams.push(`price (${searchParams.get('priceMin')}-${searchParams.get('priceMax')})`);
+      if (priceResult.minValue) newParams.set('priceMin', priceResult.minValue);
+      if (priceResult.maxValue) newParams.set('priceMax', priceResult.maxValue);
+      hasChanges = true;
+    }
     
     // Validar área útil
-    validateNumericRange('usefulAreaMin', 'usefulAreaMax', '', '');
+    const areaResult = validateNumericRange(
+      searchParams.get('usefulAreaMin'),
+      searchParams.get('usefulAreaMax'),
+      '',
+      ''
+    );
+    
+    if (!areaResult.isValid) {
+      invalidParams.push(`usefulArea (${searchParams.get('usefulAreaMin')}-${searchParams.get('usefulAreaMax')})`);
+      if (areaResult.minValue) newParams.set('usefulAreaMin', areaResult.minValue);
+      if (areaResult.maxValue) newParams.set('usefulAreaMax', areaResult.maxValue);
+      hasChanges = true;
+    }
     
     // Validar tipo de conteúdo
     const contentType = searchParams.get('contentType');

@@ -31,61 +31,44 @@ export const useUrlParams = () => {
     scrollToTop 
   } = useScrollRestoration();
   
-  // Flag para indicar se este é o carregamento inicial
+  // Estados de controle do hook
   const isInitialLoadRef = useRef(true);
-  
-  // Flag para rastrear se devemos atualizar a URL
   const shouldUpdateUrlRef = useRef(false);
-  
-  // Ref do timer para debounce
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Flag para indicar que a URL está sendo atualizada
   const isUpdatingUrlRef = useRef(false);
-  
-  // Referência para rastrear alterações de página
   const isPageChangeRef = useRef(false);
-  
-  // Flag para rastrear erros de sincronização
   const hasErrorRef = useRef(false);
-  
-  // Ref to store previous filters to compare changes
   const prevFiltersRef = useRef<FilterState>(filters);
   const prevSortOptionRef = useRef(sortOption);
   
-  // Manipular o evento de aplicação de filtros explícito (para desktop)
+  // Manipulador para o evento de aplicação de filtros
   useEffect(() => {
     const handleFiltersApplied = (e: Event) => {
       try {
         const customEvent = e as CustomEvent;
         
-        // Obter posição de rolagem do evento ou capturar atual
-        if (customEvent.detail?.scrollPosition !== undefined) {
-          // Usar a posição fornecida pelo evento
-        } else {
-          // Armazenar a posição de rolagem atual antes de aplicar os filtros
+        // Capturar posição de rolagem
+        if (!customEvent.detail?.scrollPosition) {
           captureScrollPosition();
         }
         
-        // Marcar que devemos atualizar a URL
+        // Marcar para atualização da URL
         shouldUpdateUrlRef.current = true;
         
-        // Forçar atualização imediata da URL sem debounce para clique no botão Aplicar
+        // Limpar qualquer timer existente para forçar atualização imediata
         if (timerRef.current) {
           clearTimeout(timerRef.current);
         }
         
-        // Definir flag para indicar que a URL está sendo atualizada
+        // Marcar que a URL está sendo atualizada
         isUpdatingUrlRef.current = true;
         
-        // Atualizar URL e preventBrowserScroll=true para preservar posição de rolagem
+        // Atualizar URL e preservar posição de rolagem
         updateUrlParams(filters, sortOption, searchParams, setSearchParams);
         restoreScrollPosition({ preventBrowserScroll: true });
         
-        // Resetar flag de erro
+        // Resetar flag de erro e atualizar refs para prevenir loops
         hasErrorRef.current = false;
-        
-        // Update previous refs to prevent redundant updates
         prevFiltersRef.current = { ...filters };
         prevSortOptionRef.current = sortOption;
       } catch (error) {
@@ -100,24 +83,21 @@ export const useUrlParams = () => {
           duration: 5000
         });
       } finally {
-        // Reset the updating flag to prevent getting stuck
+        // Resetar flag de atualização
         isUpdatingUrlRef.current = false;
       }
     };
     
-    // Adicionar ouvinte para o evento de aplicação de filtros
+    // Adicionar e remover listener de evento
     window.addEventListener('filters:applied', handleFiltersApplied);
-    
-    return () => {
-      window.removeEventListener('filters:applied', handleFiltersApplied);
-    };
+    return () => window.removeEventListener('filters:applied', handleFiltersApplied);
   }, [filters, searchParams, setSearchParams, sortOption, captureScrollPosition, restoreScrollPosition, toast]);
 
-  // Helper function to check if filters have actually changed
+  // Verificar se os filtros foram alterados
   const haveFiltersChanged = () => {
     if (!prevFiltersRef.current) return true;
     
-    // Deep comparison using lodash's isEqual for better object comparison
+    // Deep comparison usando lodash
     if (!isEqual(filters, prevFiltersRef.current)) return true;
     if (sortOption !== prevSortOptionRef.current) return true;
     
@@ -126,25 +106,22 @@ export const useUrlParams = () => {
   
   // Atualizar URL quando filtros ou opção de ordenação mudam
   useEffect(() => {
-    // Don't update if we're already updating
+    // Não atualizar se já estamos atualizando
     if (isUpdatingUrlRef.current) return;
     
-    // Skip if filters haven't actually changed (prevents infinite loop)
+    // Pular se os filtros não mudaram
     if (!isInitialLoadRef.current && !shouldUpdateUrlRef.current && !haveFiltersChanged()) return;
     
-    // Não atualizar automaticamente a URL no modo desktop a menos que explicitamente acionado
+    // Não atualizar automaticamente em desktop a menos que explicitamente solicitado
     if (!isMobile && !shouldUpdateUrlRef.current && !isInitialLoadRef.current) return;
     
-    // Atualizar URL se:
-    // 1. É mobile (atualizações automáticas)
-    // 2. shouldUpdateUrlRef.current é true (do botão aplicar)
-    // 3. É o carregamento inicial (para sincronizar filtros da URL)
+    // Atualizar URL em casos específicos
     if (isMobile || shouldUpdateUrlRef.current || isInitialLoadRef.current) {
       try {
-        // Mark that we're updating to prevent recursive updates
+        // Marcar que estamos atualizando
         isUpdatingUrlRef.current = true;
         
-        // Armazenar posição de rolagem atual antes de qualquer atualização de URL
+        // Capturar posição de rolagem
         const scrollData = captureScrollPosition();
         
         // Limpar qualquer timer existente
@@ -152,18 +129,17 @@ export const useUrlParams = () => {
           clearTimeout(timerRef.current);
         }
         
-        // Definir um novo timer para atualização de URL com debounce (apenas mobile)
+        // Definir um novo timer para debounce
         timerRef.current = setTimeout(() => {
           // Atualizar parâmetros da URL
           updateUrlParams(filters, sortOption, searchParams, setSearchParams);
           
-          // Restaurar posição de rolagem com prevenção de rolagem automática do navegador
-          // mas não durante o carregamento inicial
+          // Restaurar posição de rolagem
           restoreScrollPosition({ 
             preventBrowserScroll: !isInitialLoadRef.current 
           });
           
-          // Update previous filters reference to prevent redundant updates
+          // Atualizar referências para prevenir loops
           prevFiltersRef.current = { ...filters };
           prevSortOptionRef.current = sortOption;
           
@@ -171,19 +147,19 @@ export const useUrlParams = () => {
           shouldUpdateUrlRef.current = false;
           hasErrorRef.current = false;
           
-          // Marcar que o carregamento inicial foi concluído
+          // Marcar carregamento inicial como concluído
           if (isInitialLoadRef.current) {
             isInitialLoadRef.current = false;
           }
           
-          // Reset the updating flag AFTER all updates
+          // Resetar flag de atualização
           isUpdatingUrlRef.current = false;
-        }, isMobile ? 300 : 0); // 300ms de atraso para mobile
+        }, isMobile ? 300 : 0); // Debounce para mobile
       } catch (error) {
         console.error("Erro ao sincronizar URL com filtros:", error);
         hasErrorRef.current = true;
         
-        // Resetar flags
+        // Resetar flag
         shouldUpdateUrlRef.current = false;
         
         // Notificar usuário sobre o erro
@@ -194,8 +170,7 @@ export const useUrlParams = () => {
           duration: 5000
         });
       } finally {
-        // Ensure updating flag is reset even if there was an error
-        // But do it after a small delay to prevent immediate re-render cycles
+        // Garantir que a flag seja resetada mesmo em caso de erro
         setTimeout(() => {
           isUpdatingUrlRef.current = false;
         }, 50);
@@ -212,12 +187,13 @@ export const useUrlParams = () => {
   
   // Carregar filtros da URL no carregamento inicial
   useEffect(() => {
-    // Skip if not initial load to prevent loops
+    // Pular se não for carregamento inicial
     if (!isInitialLoadRef.current) return;
     
     try {
       isUpdatingUrlRef.current = true;
       
+      // Carregar opção de ordenação da URL
       const sort = searchParams.get('sort');
       if (sort && ['newest', 'price-asc', 'price-desc', 'highest-discount', 'nearest'].includes(sort)) {
         setSortOption(sort as any);
@@ -226,10 +202,9 @@ export const useUrlParams = () => {
       // Carregar filtros da URL
       const newFilters = loadFiltersFromUrl(searchParams, filters);
       
-      // Apenas atualizar filtros se mudanças foram detectadas
+      // Atualizar filtros se houver mudanças
       if (newFilters) {
-        // Create a complete FilterState object by merging with current filters
-        // to ensure all required properties are present
+        // Criar objeto completo de filtros
         const completeFilters: FilterState = { 
           ...filters, 
           ...newFilters 
@@ -238,17 +213,17 @@ export const useUrlParams = () => {
         setFilters(completeFilters);
       }
       
-      // Resetar flag de erro
+      // Resetar flags
       hasErrorRef.current = false;
       
-      // Save initial state to prevent loops
+      // Salvar estado inicial para evitar loops
       prevFiltersRef.current = newFilters ? { ...filters, ...newFilters } : { ...filters };
       prevSortOptionRef.current = sort as any || sortOption;
     } catch (error) {
       console.error("Erro ao carregar filtros da URL:", error);
       hasErrorRef.current = true;
       
-      // Notificar usuário sobre o erro
+      // Notificar usuário
       toast({
         title: "Erro ao carregar filtros",
         description: "Não foi possível carregar os filtros da URL",
@@ -256,10 +231,10 @@ export const useUrlParams = () => {
         duration: 5000
       });
     } finally {
-      // Mark that initial load is complete
+      // Marcar carregamento inicial como concluído
       isInitialLoadRef.current = false;
       
-      // Reset updating flag with slight delay
+      // Resetar flag de atualização
       setTimeout(() => {
         isUpdatingUrlRef.current = false;
       }, 50);
@@ -268,22 +243,20 @@ export const useUrlParams = () => {
   
   // Efeito para rolagem ao topo em mudanças de página
   useEffect(() => {
-    // Se houve uma mudança de página (clique em paginação)
+    // Rolar ao topo quando a página mudar
     if (isPageChangeRef.current) {
-      // Rolar suavemente para o topo
       scrollToTop();
-      // Resetar flag
       isPageChangeRef.current = false;
     }
   }, [searchParams.get('page'), scrollToTop]);
   
-  // Função para marcar mudança de página e atualizar a URL
+  // Função para paginar e atualizar a URL
   const handlePageChange = (page: number) => {
     try {
-      // Marcar que houve mudança de página
+      // Marcar mudança de página
       isPageChangeRef.current = true;
       
-      // Se estamos na mesma página, não fazer nada
+      // Não fazer nada se já estamos na mesma página
       if (page.toString() === searchParams.get('page')) {
         return;
       }
@@ -299,7 +272,6 @@ export const useUrlParams = () => {
       console.error("Erro ao mudar página:", error);
       hasErrorRef.current = true;
       
-      // Notificar usuário sobre o erro
       toast({
         title: "Erro ao mudar página",
         description: "Não foi possível atualizar a página atual",
