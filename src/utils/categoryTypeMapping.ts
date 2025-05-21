@@ -30,62 +30,16 @@ export const propertyCategoryToTypesMap: Record<string, string[]> = {
 };
 
 /**
- * Obter todos os tipos de veículos disponíveis (de todas as categorias)
- */
-export const getAllVehicleTypes = (): string[] => {
-  // Conjunto para evitar duplicações
-  const typesSet = new Set(['Todos']);
-  
-  // Adiciona todos os tipos de todas as categorias (exceto 'Todos')
-  Object.entries(vehicleCategoryToTypesMap).forEach(([category, types]) => {
-    if (category !== 'Todos') {
-      types.forEach(type => {
-        if (type !== 'Todos') {
-          typesSet.add(type);
-        }
-      });
-    }
-  });
-  
-  // Converter o conjunto em array e ordenar alfabeticamente
-  return ['Todos', ...Array.from(typesSet).filter(type => type !== 'Todos').sort()];
-};
-
-/**
- * Obter todos os tipos de imóveis disponíveis (de todas as categorias)
- */
-export const getAllPropertyTypes = (): string[] => {
-  // Conjunto para evitar duplicações
-  const typesSet = new Set(['Todos']);
-  
-  // Adiciona todos os tipos de todas as categorias (exceto 'Todos')
-  Object.entries(propertyCategoryToTypesMap).forEach(([category, types]) => {
-    if (category !== 'Todos') {
-      types.forEach(type => {
-        if (type !== 'Todos') {
-          typesSet.add(type);
-        }
-      });
-    }
-  });
-  
-  // Converter o conjunto em array e ordenar alfabeticamente
-  return ['Todos', ...Array.from(typesSet).filter(type => type !== 'Todos').sort()];
-};
-
-/**
  * Obter os tipos disponíveis com base na categoria selecionada
  * @param category Categoria selecionada
  * @param contentType Tipo de conteúdo (veículo ou imóvel)
  * @returns Array de tipos disponíveis
  */
 export const getTypesByCategory = (category: string, contentType: 'property' | 'vehicle'): string[] => {
-  // Se a categoria for "Todos", retornar todos os tipos disponíveis
   if (!category || category === 'Todos') {
-    return contentType === 'vehicle' ? getAllVehicleTypes() : getAllPropertyTypes();
+    return ['Todos'];
   }
   
-  // Se não for "Todos", retornar os tipos específicos da categoria
   if (contentType === 'vehicle') {
     return vehicleCategoryToTypesMap[category] || ['Todos'];
   } else {

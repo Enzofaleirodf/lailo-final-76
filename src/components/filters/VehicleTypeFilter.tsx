@@ -14,7 +14,6 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   const { category, contentType } = filters;
   
   // Obter os tipos de veículo disponíveis para a categoria selecionada
-  // Agora retorna todos os tipos quando categoria é "Todos"
   const availableTypes = getTypesByCategory(category, 'vehicle');
   
   const handleVehicleTypeChange = useCallback((value: string) => {
@@ -52,16 +51,10 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
       case 'moto':
       case 'bicicleta':
       case 'ciclomotor':
-      case 'monociclo':
-      case 'patinete':
-      case 'scooter':
-      case 'segway':
-      case 'triciclo':
         return Bike;
       case 'micro-ônibus':
       case 'ônibus':
       case 'motorhome':
-      case 'van':
         return Bus;
       case 'todos':
         return CircleDashed;
@@ -80,15 +73,10 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
     return null;
   }
 
-  // Título do filtro - mostra "Tipo de Veículo" quando a categoria é "Todos"
-  const filterTitle = category === 'Todos' 
-    ? 'Tipo de Veículo' 
-    : `Tipo de ${category}`;
-
   return (
     <div className="flex flex-wrap gap-2 w-full justify-start">
       <h4 className="text-sm font-medium text-gray-700 mb-2 w-full">
-        {filterTitle}
+        Tipo de {category === 'Todos' ? 'Veículo' : category}
       </h4>
       <ToggleGroup 
         type="single" 

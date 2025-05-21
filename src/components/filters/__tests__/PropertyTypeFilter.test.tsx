@@ -10,7 +10,6 @@ jest.mock('@/utils/categoryTypeMapping', () => ({
   getTypesByCategory: jest.fn().mockImplementation((cat) => {
     if (cat === 'Residencial') return ['Todos', 'Apartamento', 'Casa'];
     if (cat === 'Comercial') return ['Todos', 'Loja', 'Sala'];
-    if (cat === 'Todos') return ['Todos', 'Apartamento', 'Casa', 'Loja', 'Sala'];
     return ['Todos'];
   })
 }));
@@ -149,34 +148,6 @@ describe('PropertyTypeFilter', () => {
     
     // Verificar que os tipos mudaram
     expect(screen.queryByLabelText('Filtrar por Apartamento')).not.toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Loja')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Sala')).toBeInTheDocument();
-  });
-  
-  test('mostra todos os tipos quando a categoria Todos está selecionada', () => {
-    // Configurar o store com a categoria 'Todos'
-    mockUseFilterStore.mockReturnValue({
-      filters: { 
-        propertyTypes: [],
-        contentType: 'property',
-        category: 'Todos'
-      },
-      activeFilters: 0,
-      expandedSections: {},
-      lastUpdatedFilter: null,
-      updateFilter: mockUpdateFilter,
-      resetFilters: jest.fn(),
-      setFilters: jest.fn(),
-      toggleSection: jest.fn(),
-      collapseAllSections: jest.fn(),
-      expandAllSections: jest.fn()
-    });
-    
-    render(<PropertyTypeFilter />);
-    
-    // Verificar que todos os tipos de diferentes categorias estão presentes
-    expect(screen.getByLabelText('Filtrar por Apartamento')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Casa')).toBeInTheDocument();
     expect(screen.getByLabelText('Filtrar por Loja')).toBeInTheDocument();
     expect(screen.getByLabelText('Filtrar por Sala')).toBeInTheDocument();
   });

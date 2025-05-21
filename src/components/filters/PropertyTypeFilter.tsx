@@ -14,7 +14,6 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   const { category, contentType } = filters;
   
   // Obter os tipos de imóvel disponíveis para a categoria selecionada
-  // Agora retorna todos os tipos quando categoria é "Todos"
   const availableTypes = getTypesByCategory(category, 'property');
   
   const handlePropertyTypeChange = useCallback((value: string) => {
@@ -36,7 +35,6 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
       case 'flat':
       case 'studio':
       case 'loft':
-      case 'cobertura':
         return Hotel;
       case 'casa':
       case 'sobrado':
@@ -68,7 +66,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
       case 'hotel':
       case 'motel':
       case 'pousada':
-        return Hotel;
+        return Hotel; // Alterado de Hotel2 para Hotel
       case 'prédio comercial':
       case 'prédio residencial':
       case 'edifício':
@@ -90,15 +88,10 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
     return null;
   }
 
-  // Título do filtro - mostra "Tipo de Imóvel" quando a categoria é "Todos"
-  const filterTitle = category === 'Todos' 
-    ? 'Tipo de Imóvel' 
-    : `Tipo de ${category}`;
-
   return (
     <div className="flex flex-wrap gap-2 w-full justify-start">
       <h4 className="text-sm font-medium text-gray-700 mb-2 w-full">
-        {filterTitle}
+        Tipo de {category === 'Todos' ? 'Imóvel' : category}
       </h4>
       <ToggleGroup 
         type="single" 

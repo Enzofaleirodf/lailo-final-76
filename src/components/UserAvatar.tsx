@@ -63,7 +63,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) =>
       {/* Dialog para login/cadastro usando o novo componente LightLogin */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="p-0 border-none max-w-md">
-          <LightLogin isInDialog={true} />
+          <LightLogin />
         </DialogContent>
       </Dialog>
     </>
