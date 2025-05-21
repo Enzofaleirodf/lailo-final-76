@@ -52,6 +52,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) =>
     if (isAuthenticated) {
       navigate('/perfil');
     } else {
+      // Apenas abra o modal de login quando não autenticado, não navega mais
       setOpenDialog(true);
     }
   };
