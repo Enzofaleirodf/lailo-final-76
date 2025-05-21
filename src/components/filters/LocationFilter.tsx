@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useStates, useCities } from '@/services/ibgeApi';
 import FilterDropdown from './FilterDropdown';
 import { LocationFilter as LocationFilterType } from '@/types/filters';
+
 interface LocationFilterProps {
   onFilterChange?: () => void;
 }
@@ -142,8 +143,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
             <label htmlFor="city-select" className="text-sm font-medium text-gray-700">
               Cidade
             </label>
-            {localState ? loadingCities ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="city-select" aria-label="Selecione a cidade" value={localCity} onChange={handleCityChange} options={cityOptions} placeholder="Todas as cidades" /> : <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-400 bg-gray-50">
-                Selecione um estado acima
+            {localState ? loadingCities ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="city-select" aria-label="Selecione a cidade" value={localCity} onChange={handleCityChange} options={cityOptions} placeholder="Todas as cidades" /> : <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
+                Selecione um estado antes
               </div>}
           </div>
           

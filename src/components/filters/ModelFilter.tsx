@@ -2,9 +2,11 @@ import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { Skeleton } from '@/components/ui/skeleton';
+
 interface ModelFilterProps {
   onFilterChange?: () => void;
 }
+
 const brandOptions = [{
   value: 'todas',
   label: 'Todas as marcas'
@@ -55,6 +57,7 @@ const modelOptionsByBrand: Record<string, Array<{
     label: 'Ranger'
   }]
 };
+
 const ModelFilter: React.FC<ModelFilterProps> = ({
   onFilterChange
 }) => {
@@ -62,6 +65,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
     filters,
     updateFilter
   } = useFilterStore();
+  
   const handleBrandChange = useCallback((value: string) => {
     updateFilter('brand', value);
 
@@ -109,8 +113,9 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
         <label htmlFor="model-filter" className="block text-sm font-medium text-gray-700 mb-1">
           Modelo
         </label>
-        {filters.brand === 'todas' ? <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-400 bg-gray-50">Selecione uma marca antes</div> : <FilterDropdown id="model-filter" aria-label="Selecione o modelo" value={filters.model} onChange={handleModelChange} options={getModelOptions()} />}
+        {filters.brand === 'todas' ? <div className="h-10 w-full border rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">Selecione uma marca antes</div> : <FilterDropdown id="model-filter" aria-label="Selecione o modelo" value={filters.model} onChange={handleModelChange} options={getModelOptions()} />}
       </div>
     </div>;
 };
+
 export default React.memo(ModelFilter);
