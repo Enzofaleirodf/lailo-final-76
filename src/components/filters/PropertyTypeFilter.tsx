@@ -1,15 +1,15 @@
 
-import React, { useCallback } from 'react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import React, { useCallback, useId } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { CircleDashed, Building, Home, Building2, Warehouse, Store, Mountain, Fence, Hotel, DoorOpen } from 'lucide-react';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface PropertyTypeFilterProps {
   onFilterChange?: () => void;
 }
 
 const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange }) => {
+  const id = useId();
   const { filters, updateFilter } = useFilterStore();
   const { category, contentType } = filters;
   
@@ -47,62 +47,6 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
       onFilterChange();
     }
   }, [updateFilter, onFilterChange]);
-  
-  // Função para determinar o ícone com base no tipo
-  const getIconForType = (type: string) => {
-    // Remover possível final 's' para verificação
-    const singularType = type.endsWith('s') ? type.slice(0, -1) : type;
-    
-    switch(singularType.toLowerCase()) {
-      case 'apartamento':
-      case 'kitnet':
-      case 'quitinete':
-      case 'flat':
-      case 'studio':
-      case 'loft':
-        return Hotel;
-      case 'casa':
-      case 'sobrado':
-      case 'imóvel misto':
-        return Home;
-      case 'condomínio residencial':
-      case 'condomínio comercial':
-      case 'conjunto residencial':
-      case 'conjunto comercial':
-        return Building2;
-      case 'galpão':
-      case 'industria':
-        return Warehouse;
-      case 'loja':
-      case 'sala':
-      case 'escritório':
-      case 'depósito':
-        return Store;
-      case 'terreno residencial':
-      case 'terreno comercial':
-      case 'lote residencial':
-      case 'lote comercial':
-      case 'terreno rural':
-        return Mountain;
-      case 'chácara':
-      case 'fazenda':
-      case 'sítio':
-        return Fence;
-      case 'hotel':
-      case 'motel':
-      case 'pousada':
-        return Hotel;
-      case 'prédio comercial':
-      case 'prédio residencial':
-      case 'edifício':
-        return Building;
-      case 'todo':
-      case 'todos':
-        return CircleDashed;
-      default:
-        return DoorOpen;
-    }
-  };
 
   // Get the current single value from the array
   const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 
@@ -115,33 +59,31 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   }
 
   return (
-    <div className="flex flex-wrap gap-2 w-full justify-start">
-      <h4 className="text-sm font-medium text-gray-700 mb-2 w-full">
+    <fieldset className="space-y-4">
+      <legend className="text-sm font-medium leading-none text-foreground">
         Tipos de {category === 'Todos' ? 'Imóveis' : category}
-      </h4>
-      <ToggleGroup 
-        type="single" 
-        className="flex flex-wrap gap-2 w-full justify-start"
+      </legend>
+      <RadioGroup 
+        className="grid grid-cols-3 gap-2" 
         value={currentValue}
         onValueChange={handlePropertyTypeChange}
       >
-        {availableTypes.map((type) => {
-          const Icon = getIconForType(type);
-          
-          return (
-            <ToggleGroupItem 
-              key={type}
-              value={type} 
-              className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-gray-800 data-[state=on]:border-purple-300 font-normal"
-              aria-label={`Filtrar por ${type}`}
-            >
-              <Icon size={14} />
-              <span>{type}</span>
-            </ToggleGroupItem>
-          );
-        })}
-      </ToggleGroup>
-    </div>
+        {availableTypes.map((type) => (
+          <label
+            key={`${id}-${type}`}
+            className="relative flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-input px-2 py-2 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+            aria-label={`Filtrar por ${type}`}
+          >
+            <RadioGroupItem
+              id={`${id}-${type}`}
+              value={type}
+              className="sr-only after:absolute after:inset-0"
+            />
+            <p className="text-xs font-normal leading-tight text-foreground">{type}</p>
+          </label>
+        ))}
+      </RadioGroup>
+    </fieldset>
   );
 };
 

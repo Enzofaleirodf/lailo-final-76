@@ -1,15 +1,15 @@
 
-import React, { useCallback } from 'react';
-import { List, Plane, Car, Truck, Tractor, Bike, Ship, Bus, CircleDashed } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import React, { useCallback, useId } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface VehicleTypeFilterProps {
   onFilterChange?: () => void;
 }
 
 const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange }) => {
+  const id = useId();
   const { filters, updateFilter } = useFilterStore();
   const { category, contentType } = filters;
   
@@ -48,52 +48,6 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
       onFilterChange();
     }
   }, [updateFilter, onFilterChange]);
-  
-  // Mapear ícones para os tipos de veículos
-  const getIconForType = (type: string) => {
-    // Remover possível final 's' para verificação
-    const singularType = type.endsWith('s') ? type.slice(0, -1) : type;
-    
-    switch(singularType.toLowerCase()) {
-      case 'avião':
-      case 'aviõe':
-      case 'helicóptero':
-      case 'drone':
-        return Plane;
-      case 'barco':
-      case 'lancha':
-      case 'jet ski':
-        return Ship;
-      case 'caminhão':
-      case 'caminhõe':
-      case 'carreta':
-      case 'cavalo mecânico':
-      case 'reboque':
-      case 'trailer':
-        return Truck;
-      case 'trator':
-      case 'tratore':
-      case 'colheitadeira':
-      case 'plantadeira':
-      case 'roçadeira':
-        return Tractor;
-      case 'moto':
-      case 'bicicleta':
-      case 'ciclomotor':
-        return Bike;
-      case 'micro-ônibu':
-      case 'micro-ônibus':
-      case 'ônibu':
-      case 'ônibus':
-      case 'motorhome':
-        return Bus;
-      case 'todo':
-      case 'todos':
-        return CircleDashed;
-      default:
-        return Car;
-    }
-  };
 
   // Get the current single value from the array
   const currentValue = filters.vehicleTypes && filters.vehicleTypes.length > 0 
@@ -106,33 +60,31 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   }
 
   return (
-    <div className="flex flex-wrap gap-2 w-full justify-start">
-      <h4 className="text-sm font-medium text-gray-700 mb-2 w-full">
+    <fieldset className="space-y-4">
+      <legend className="text-sm font-medium leading-none text-foreground">
         Tipos de {category === 'Todos' ? 'Veículos' : category}
-      </h4>
-      <ToggleGroup 
-        type="single" 
-        className="flex flex-wrap gap-2 w-full justify-start"
+      </legend>
+      <RadioGroup 
+        className="grid grid-cols-3 gap-2" 
         value={currentValue}
         onValueChange={handleVehicleTypeChange}
       >
-        {availableTypes.map((type) => {
-          const Icon = getIconForType(type);
-          
-          return (
-            <ToggleGroupItem 
-              key={type}
-              value={type} 
-              className="h-8 rounded-full px-3 border text-sm flex items-center gap-1 bg-white hover:bg-purple-50 data-[state=on]:bg-purple-100 data-[state=on]:text-gray-800 data-[state=on]:border-purple-300 font-normal"
-              aria-label={`Filtrar por ${type}`}
-            >
-              <Icon size={14} />
-              <span>{type}</span>
-            </ToggleGroupItem>
-          );
-        })}
-      </ToggleGroup>
-    </div>
+        {availableTypes.map((type) => (
+          <label
+            key={`${id}-${type}`}
+            className="relative flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-input px-2 py-2 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+            aria-label={`Filtrar por ${type}`}
+          >
+            <RadioGroupItem
+              id={`${id}-${type}`}
+              value={type}
+              className="sr-only after:absolute after:inset-0"
+            />
+            <p className="text-xs font-normal leading-tight text-foreground">{type}</p>
+          </label>
+        ))}
+      </RadioGroup>
+    </fieldset>
   );
 };
 
