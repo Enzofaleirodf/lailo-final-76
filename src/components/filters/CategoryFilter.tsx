@@ -20,7 +20,17 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
     : getVehicleCategories();
 
   const handleCategoryChange = (value: string) => {
+    // Atualiza a categoria
     updateFilter('category', value);
+    
+    // Ao mudar a categoria, redefine os filtros de tipo específicos
+    if (contentType === 'property') {
+      updateFilter('propertyTypes', []);
+    } else {
+      updateFilter('vehicleTypes', []);
+    }
+    
+    // Notifica sobre a mudança no filtro
     if (onFilterChange) {
       onFilterChange();
     }
