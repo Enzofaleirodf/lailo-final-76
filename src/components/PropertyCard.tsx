@@ -8,6 +8,13 @@ interface PropertyCardProps {
   property: PropertyItem;
 }
 
+/**
+ * Componente responsável por renderizar um card de imóvel
+ * Reutiliza o BaseCard para manter consistência visual e comportamental
+ * 
+ * @param property - Objeto com informações do imóvel a ser exibido
+ * @returns Componente de card de imóvel
+ */
 const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
   // Guard clause para evitar renderização se property for undefined
   if (!property) {
@@ -22,7 +29,10 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
   
   // Construir o componente de informações extras específico para imóveis
   const extraInfo = (
-    <span className="line-clamp-1 mb-1">
+    <span 
+      className="line-clamp-1 mb-1"
+      title={`${property.address || 'Endereço não disponível'} - ${property.location || 'Localização não disponível'}`}
+    >
       {property.address || 'Endereço não disponível'} - {property.location || 'Localização não disponível'}
     </span>
   );
@@ -45,5 +55,6 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
   );
 });
 
+// Definir displayName para debugging e React DevTools
 PropertyCard.displayName = 'PropertyCard';
 export default PropertyCard;

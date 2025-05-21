@@ -77,6 +77,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
 }) => {
   const [favorited, setFavorited] = useState(isFavorited);
   const isMobile = useIsMobile();
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   // Calcular desconto com base nos preços original e atual
   const discount = calculateDiscount(price.original, price.current);
@@ -87,6 +88,10 @@ const BaseCard: React.FC<BaseCardProps> = ({
       onToggleFavorite(id, newFavoritedState);
     }
   };
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
   
   return (
     <motion.div 
@@ -95,22 +100,34 @@ const BaseCard: React.FC<BaseCardProps> = ({
         transition: { duration: 0.2 }
       }} 
       className={`${isMobile ? 'mb-2' : 'mb-3'} w-full`}
+      data-testid="base-card"
     >
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full">
         {/* Área da imagem - se imageUrl for fornecida */}
         {imageUrl && (
-          <div className="relative w-full h-40">
+          <div className="relative w-full h-40 bg-gray-100">
+            {!imageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
+              </div>
+            )}
             <img 
               src={imageUrl} 
               alt={title} 
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading="lazy"
+              onLoad={handleImageLoad}
+              aria-hidden={!imageLoaded}
             />
           </div>
         )}
         
         {/* Content */}
-        <div className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}>
+        <div 
+          className={`flex flex-col ${isMobile ? 'p-3' : 'p-4'} w-full`}
+          role="group"
+          aria-label={`Card de ${title}`}
+        >
           {/* Top row with title and favorite button */}
           <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
             <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
@@ -120,6 +137,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
               itemId={id} 
               isFavorited={favorited} 
               onToggleFavorite={handleToggleFavorite} 
+              aria-label={favorited ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`}
             />
           </div>
           
@@ -134,7 +152,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
               {formatCurrency(price.current)}
             </span>
             {price.original && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" aria-label={discount ? `Desconto de ${discount}%` : ''}>
                 {discount && (
                   <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
                     {discount}% OFF
@@ -168,8 +186,9 @@ const BaseCard: React.FC<BaseCardProps> = ({
             </div>
             <div 
               className={`flex items-center bg-gray-50 rounded-md ${isMobile ? 'px-1.5 py-0.5' : 'px-2 py-1'} text-gray-700 font-medium ${isMobile ? 'text-xs' : 'text-xs'} whitespace-nowrap flex-shrink-0 font-urbanist`}
+              aria-label={`Data final: ${endDate ? formatAuctionDate(endDate) + ' às ' + formatEndTime(endDate) : 'Data não disponível'}`}
             >
-              <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" />
+              <Calendar size={isMobile ? 10 : 12} className="mr-1 text-gray-500" aria-hidden="true" />
               {endDate ? `${formatAuctionDate(endDate)} às ${formatEndTime(endDate)}` : 'Data não disponível'}
             </div>
           </div>

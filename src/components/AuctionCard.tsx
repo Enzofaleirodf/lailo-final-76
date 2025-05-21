@@ -9,6 +9,13 @@ interface AuctionCardProps {
   auction: AuctionItem;
 }
 
+/**
+ * Componente responsável por renderizar um card de leilão de veículo
+ * Reutiliza o BaseCard para manter consistência visual e comportamental
+ * 
+ * @param auction - Objeto com informações do veículo em leilão
+ * @returns Componente de card de leilão de veículo
+ */
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   // Guard clause para evitar renderização se auction for undefined
   if (!auction) {
@@ -33,10 +40,13 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   
   // Construir o componente de informações extras específico para veículos
   const extraInfo = isVehicleItem && auction.vehicleInfo ? (
-    <div className="flex items-center gap-2 flex-wrap mb-1">
+    <div 
+      className="flex items-center gap-2 flex-wrap mb-1"
+      aria-label={`Detalhes do veículo: ${auction.vehicleInfo.color || ''} ${auction.vehicleInfo.year || ''}`}
+    >
       {auction.vehicleInfo.color && (
         <div className="flex items-center">
-          <Palette size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
+          <Palette size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" aria-hidden="true" />
           <span>{auction.vehicleInfo.color}</span>
         </div>
       )}
@@ -44,12 +54,12 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
       {auction.vehicleInfo.year && (
         <>
           <div className="flex items-center ml-2">
-            <Hourglass size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" />
+            <Hourglass size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" aria-hidden="true" />
             <span>{auction.vehicleInfo.year}</span>
           </div>
           
           {/* Divisor entre ano e localização */}
-          <div className="mx-2 h-3 w-[1px] bg-gray-300"></div>
+          <div className="mx-2 h-3 w-[1px] bg-gray-300" aria-hidden="true"></div>
           
           {/* Localização ao lado do ano com divisor entre eles */}
           <span className="">{auction.location || 'Localização não disponível'}</span>
@@ -76,5 +86,6 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   );
 });
 
+// Definir displayName para debugging e React DevTools
 AuctionCard.displayName = 'AuctionCard';
 export default AuctionCard;

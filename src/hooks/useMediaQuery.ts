@@ -2,87 +2,58 @@
 import { useState, useEffect } from 'react';
 
 /**
- * Breakpoint definitions for consistent usage across the app
+ * Hook personalizado para responder a media queries CSS
+ * Permite componentes reagirem a mudanças no tamanho da tela
+ * 
+ * @param query - String com a media query CSS (ex: '(max-width: 768px)')
+ * @returns boolean indicando se a query corresponde ao estado atual
+ * 
+ * @example
+ * // Uso básico para detectar telas móveis
+ * const isMobile = useMediaQuery('(max-width: 768px)');
+ * 
+ * // Uso com múltiplas condições
+ * const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1024px)');
  */
-export const breakpoints = {
-  xs: '(max-width: 639px)',
-  sm: '(min-width: 640px)',
-  md: '(min-width: 768px)',
-  lg: '(min-width: 1024px)',
-  xl: '(min-width: 1280px)',
-  '2xl': '(min-width: 1536px)',
-  // Aliases for common usages
-  mobile: '(max-width: 767px)',
-  tablet: '(min-width: 768px) and (max-width: 1023px)',
-  desktop: '(min-width: 1024px)',
-};
-
-/**
- * Custom hook that returns true if the given media query matches
- * @param query - Media query string to match or predefined breakpoint
- */
-export function useMediaQuery(query: string) {
-  // Handle predefined breakpoint names
-  const getQueryString = (q: string) => {
-    switch (q) {
-      case 'xs': return breakpoints.xs;
-      case 'sm': return breakpoints.sm;
-      case 'md': return breakpoints.md;
-      case 'lg': return breakpoints.lg;
-      case 'xl': return breakpoints.xl;
-      case '2xl': return breakpoints['2xl'];
-      case 'mobile': return breakpoints.mobile;
-      case 'tablet': return breakpoints.tablet;
-      case 'desktop': return breakpoints.desktop;
-      default: return q; // Use the query as-is if not a predefined breakpoint
-    }
-  };
-
-  const queryString = getQueryString(query);
+export const useMediaQuery = (query: string): boolean => {
+  // Verificar ambiente de SSR (Server-side rendering)
+  const isSSR = typeof window === 'undefined';
   
-  // State and listener for the media query match
-  const [matches, setMatches] = useState<boolean>(() => {
-    // Check on first render only on client-side
-    if (typeof window !== 'undefined') {
-      return window.matchMedia(queryString).matches;
-    }
-    // Default to false for SSR
-    return false;
-  });
-
-  // Effect to add and remove media query listener
-  useEffect(() => {
-    // Skip in SSR
-    if (typeof window === 'undefined') return;
-
-    const mediaQueryList = window.matchMedia(queryString);
+  // Estado para armazenar o resultado da media query
+  const [matches, setMatches] = useState(() => {
+    // Para SSR, retornar false por padrão
+    if (isSSR) return false;
     
-    // Set initial state
+    // Para ambiente browser, verificar correspondência inicial
+    return window.matchMedia(query).matches;
+  });
+  
+  // Atualizar o estado quando o tamanho da tela mudar
+  useEffect(() => {
+    // Não fazer nada em ambiente SSR
+    if (isSSR) return undefined;
+    
+    // Criar MediaQueryList para observar mudanças
+    const mediaQueryList = window.matchMedia(query);
+    
+    // Definir estado inicial
     setMatches(mediaQueryList.matches);
-
-    // Define handler
-    const handler = (event: MediaQueryListEvent) => {
+    
+    // Função de callback para atualizar estado quando a correspondência mudar
+    const listener = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
-
-    // Use newer addEventListener if available, fall back to addListener
-    if (mediaQueryList.addEventListener) {
-      mediaQueryList.addEventListener('change', handler);
-    } else {
-      // @ts-ignore - For older browsers
-      mediaQueryList.addListener(handler);
-    }
-
-    // Cleanup
+    
+    // Adicionar listener com suporte para navegadores mais novos
+    mediaQueryList.addEventListener('change', listener);
+    
+    // Limpeza ao desmontar
     return () => {
-      if (mediaQueryList.removeEventListener) {
-        mediaQueryList.removeEventListener('change', handler);
-      } else {
-        // @ts-ignore - For older browsers
-        mediaQueryList.removeListener(handler);
-      }
+      mediaQueryList.removeEventListener('change', listener);
     };
-  }, [queryString]);
-
+  }, [query, isSSR]);
+  
   return matches;
-}
+};
+
+export default useMediaQuery;
