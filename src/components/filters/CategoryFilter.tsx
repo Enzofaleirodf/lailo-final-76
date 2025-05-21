@@ -18,7 +18,7 @@ import {
   Mountain, 
   Hotel,
   Warehouse,
-  Trailer
+  Box // Substituído Trailer por Box para representar a categoria Auxiliares
 } from 'lucide-react';
 
 interface CategoryFilterProps {
@@ -65,7 +65,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
         case 'Pesados': return Truck;
         case 'Máquinas Agrícolas': return Tractor;
         case 'Micro Veículos': return Bike;
-        case 'Auxiliares': return Trailer; // Novo ícone para categoria Auxiliares
+        case 'Auxiliares': return Box; // Alterado para usar o ícone Box para categoria Auxiliares
         default: return CircleDashed;
       }
     }
