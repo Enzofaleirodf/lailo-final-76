@@ -122,9 +122,9 @@ const BaseCard: React.FC<BaseCardProps> = ({
         className="rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden"
         style={{ height: cardHeight }}
       >
-        {/* Área da imagem - posicionada à esquerda COM O MESMO PADDING do conteúdo */}
+        {/* Área da imagem - posicionada à esquerda COM PADDING, exceto no lado direito */}
         {imageUrl && (
-          <div className={`relative w-1/3 h-full bg-white overflow-hidden ${isMobile ? 'p-3' : 'p-4'}`}>
+          <div className={`relative w-1/3 h-full bg-white overflow-hidden ${isMobile ? 'pt-3 pl-3 pb-3 pr-0' : 'pt-4 pl-4 pb-4 pr-0'}`}>
             {!imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-white">
                 <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
