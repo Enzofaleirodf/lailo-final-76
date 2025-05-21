@@ -28,7 +28,8 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({
   const calculateDiscount = () => {
     if (auction.originalPrice && auction.originalPrice > auction.currentBid) {
       const discount = Math.round((auction.originalPrice - auction.currentBid) / auction.originalPrice * 100);
-      return discount;
+      // Only return the discount if it's greater than 0
+      return discount > 0 ? discount : null;
     }
     return null;
   };

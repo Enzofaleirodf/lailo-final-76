@@ -33,7 +33,8 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({
   const calculateDiscount = () => {
     if (property.originalPrice && property.originalPrice > property.currentBid) {
       const discount = Math.round((property.originalPrice - property.currentBid) / property.originalPrice * 100);
-      return discount;
+      // Only return the discount if it's greater than 0
+      return discount > 0 ? discount : null;
     }
     return null;
   };
