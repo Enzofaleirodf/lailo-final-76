@@ -22,7 +22,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   value,
   onChange,
   options,
-  placeholder = "Selecione",
   className = "",
   id,
   "aria-label": ariaLabel,
@@ -138,7 +137,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
       >
-        {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}

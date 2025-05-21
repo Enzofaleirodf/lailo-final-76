@@ -11,7 +11,7 @@ interface ModelFilterProps {
 
 const brandOptions = [{
   value: 'todas',
-  label: 'Todas as marcas'
+  label: 'Todas'
 }, {
   value: 'toyota',
   label: 'Toyota'
@@ -95,12 +95,12 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
     if (filters.brand === 'todas') {
       return [{
         value: 'todos',
-        label: 'Todos os modelos'
+        label: 'Todos'
       }];
     }
     return [{
       value: 'todos',
-      label: 'Todos os modelos'
+      label: 'Todos'
     }, ...(modelOptionsByBrand[filters.brand] || [])];
   };
   return <div className="space-y-3">

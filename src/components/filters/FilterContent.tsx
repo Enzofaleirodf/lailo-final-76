@@ -5,8 +5,15 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
 import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
-import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import LocationFilter from './LocationFilter';
+import ModelFilter from './ModelFilter';
+import VehicleTypeFilter from './VehicleTypeFilter';
+import PropertyTypeFilter from './PropertyTypeFilter';
+import ColorFilter from './ColorFilter';
+import YearRangeFilter from './YearRangeFilter';
+import PriceRangeFilter from './PriceRangeFilter';
+import UsefulAreaFilter from './UsefulAreaFilter';
 
 /**
  * FilterContent - Principal componente que renderiza todas as seções de filtros
@@ -16,7 +23,7 @@ const FilterContent: React.FC = () => {
   const {
     resetFilters,
     activeFilters,
-    expandAllSections
+    filters
   } = useFilterStore();
   
   const isMobile = useIsMobile();
@@ -30,11 +37,6 @@ const FilterContent: React.FC = () => {
     showToasts: true,
     autoTriggerEvents: false // Não acionar eventos automaticamente, pois já fazemos isso manualmente
   });
-
-  // Expandir todas as seções por padrão
-  useEffect(() => {
-    expandAllSections();
-  }, [expandAllSections]);
 
   // Resetar filtros e notificar - comportamento consistente entre dispositivos
   const handleResetFilters = React.useCallback(() => {
@@ -51,6 +53,9 @@ const FilterContent: React.FC = () => {
     };
   }, [cleanup]);
 
+  const isPropertyMode = filters.contentType === 'property';
+  const handleFilterChange = () => {};
+
   return (
     <div 
       className="flex flex-col gap-0" 
@@ -61,14 +66,46 @@ const FilterContent: React.FC = () => {
       {isMobile && <MobileFilterOptions />}
 
       <FilterWrapper>
-        {/* Filtros comuns - localização */}
-        <CommonFilters onFilterChange={() => {}} />
+        {/* Filter sections directly rendered without accordions */}
+        <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
+          <h3 className="text-sm font-medium text-brand-900 mb-3">Localização</h3>
+          <LocationFilter onFilterChange={handleFilterChange} />
+        </div>
 
-        {/* Filtros condicionais com base no tipo de conteúdo */}
-        <ContentTypeFilters onFilterChange={() => {}} />
+        {isPropertyMode ? (
+          <>
+            <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
+              <h3 className="text-sm font-medium text-brand-900 mb-3">Tipo de imóvel</h3>
+              <PropertyTypeFilter onFilterChange={handleFilterChange} />
+            </div>
+
+            <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
+              <h3 className="text-sm font-medium text-brand-900 mb-3">Área útil</h3>
+              <UsefulAreaFilter onFilterChange={handleFilterChange} />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
+              <h3 className="text-sm font-medium text-brand-900 mb-3">Tipo de veículo</h3>
+              <VehicleTypeFilter onFilterChange={handleFilterChange} />
+            </div>
+
+            <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
+              <h3 className="text-sm font-medium text-brand-900 mb-3">Características do veículo</h3>
+              <div className="space-y-4">
+                <ModelFilter onFilterChange={handleFilterChange} />
+                <ColorFilter onFilterChange={handleFilterChange} />
+                <YearRangeFilter onFilterChange={handleFilterChange} />
+              </div>
+            </div>
+          </>
+        )}
         
-        {/* Filtro de preço sempre mostrado por último */}
-        <PriceFilter onFilterChange={() => {}} />
+        <div className="mb-4 bg-white shadow-sm border border-gray-200 rounded-lg p-3">
+          <h3 className="text-sm font-medium text-brand-900 mb-3">Valor do lance atual</h3>
+          <PriceRangeFilter onFilterChange={handleFilterChange} />
+        </div>
       </FilterWrapper>
 
       {/* Botão de resetar filtros - mesma aparência visual para desktop e mobile */}

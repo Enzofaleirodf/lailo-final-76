@@ -47,7 +47,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Format states for dropdown
   const stateOptions: FilterDropdownOption[] = [{
     value: '',
-    label: 'Todos os estados'
+    label: 'Todos'
   }, ...states.map(state => ({
     value: state.sigla,
     label: `${state.sigla} - ${state.nome}`
@@ -56,7 +56,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Format cities for dropdown
   const cityOptions: FilterDropdownOption[] = [{
     value: '',
-    label: 'Todas as cidades'
+    label: 'Todas'
   }, ...cities.map(city => ({
     value: city.nome,
     label: city.nome
@@ -139,7 +139,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
             <label htmlFor="state-select" className="text-sm font-medium text-gray-700">
               Estado
             </label>
-            {loadingStates ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="state-select" aria-label="Selecione o estado" value={localState} onChange={handleStateChange} options={stateOptions} placeholder="Todos os estados" className="border-gray-300" />}
+            {loadingStates ? <Skeleton className="h-10 w-full" /> : <FilterDropdown id="state-select" aria-label="Selecione o estado" value={localState} onChange={handleStateChange} options={stateOptions} className="border-gray-300" />}
           </div>
           
           <div className="space-y-2">
@@ -156,7 +156,6 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   value={localCity} 
                   onChange={handleCityChange} 
                   options={cityOptions} 
-                  placeholder="Todas as cidades" 
                   className="border-gray-300"
                 /> 
               : 

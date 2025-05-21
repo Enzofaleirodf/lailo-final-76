@@ -1,3 +1,4 @@
+
 import { FilterState, ContentType } from '@/types/filters';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { defaultRangeValues } from '@/stores/useFilterStore';
@@ -37,7 +38,7 @@ export const placeOptions = [
  * Vehicle type options for filter dropdowns
  */
 export const vehicleTypeOptions = [
-  { value: 'todos', label: 'Todos os tipos' },
+  { value: 'todos', label: 'Todos' },
   { value: 'carro', label: 'Carros' },
   { value: 'moto', label: 'Motos' },
   { value: 'caminhão', label: 'Caminhões' },
@@ -49,7 +50,7 @@ export const vehicleTypeOptions = [
  * Property type options for filter dropdowns
  */
 export const propertyTypeOptions = [
-  { value: 'todos', label: 'Todos os imóveis' },
+  { value: 'todos', label: 'Todos' },
   { value: 'apartamento', label: 'Apartamentos' },
   { value: 'casa', label: 'Casas' },
   { value: 'terreno', label: 'Terrenos' },
