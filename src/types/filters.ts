@@ -42,6 +42,7 @@ export interface FilterState {
   format: FilterFormat;
   origin: FilterOrigin;
   place: FilterPlace;
+  category: string;
 }
 
 export interface ExpandedSectionsState {
@@ -56,6 +57,7 @@ export interface ExpandedSectionsState {
   format: boolean;
   origin: boolean;
   place: boolean;
+  category: boolean;
 }
 
 // Interface para o estado do filtro store

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -10,6 +9,7 @@ import ColorFilter from '../ColorFilter';
 import YearRangeFilter from '../YearRangeFilter';
 import PriceRangeFilter from '../PriceRangeFilter';
 import UsefulAreaFilter from '../UsefulAreaFilter';
+import CategoryFilter from '../CategoryFilter';
 
 interface FilterSectionsProps {
   onFilterChange: () => void;
@@ -22,49 +22,58 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
   const { expandedSections, toggleSection, filters } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
 
-  if (isPropertyMode) {
-    return (
-      <>
-        <FilterSectionComponent 
-          title="Tipo de imóvel" 
-          isExpanded={true} 
-          onToggle={() => {}}
-        >
-          <PropertyTypeFilter onFilterChange={onFilterChange} />
-        </FilterSectionComponent>
-
-        <FilterSectionComponent 
-          title="Área útil" 
-          isExpanded={true} 
-          onToggle={() => {}}
-        >
-          <UsefulAreaFilter onFilterChange={onFilterChange} />
-        </FilterSectionComponent>
-      </>
-    );
-  }
-  
+  // Sempre renderizar o filtro de Categoria primeiro
   return (
     <>
       <FilterSectionComponent 
-        title="Tipo de veículo" 
+        title="Categoria" 
         isExpanded={true} 
         onToggle={() => {}}
       >
-        <VehicleTypeFilter onFilterChange={onFilterChange} />
+        <CategoryFilter onFilterChange={onFilterChange} />
       </FilterSectionComponent>
 
-      <FilterSectionComponent 
-        title="Características do veículo" 
-        isExpanded={true} 
-        onToggle={() => {}}
-      >
-        <div className="space-y-4">
-          <ModelFilter onFilterChange={onFilterChange} />
-          <ColorFilter onFilterChange={onFilterChange} />
-          <YearRangeFilter onFilterChange={onFilterChange} />
-        </div>
-      </FilterSectionComponent>
+      {isPropertyMode ? (
+        <>
+          <FilterSectionComponent 
+            title="Tipo de imóvel" 
+            isExpanded={true} 
+            onToggle={() => {}}
+          >
+            <PropertyTypeFilter onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
+
+          <FilterSectionComponent 
+            title="Área útil" 
+            isExpanded={true} 
+            onToggle={() => {}}
+          >
+            <UsefulAreaFilter onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
+        </>
+      ) : (
+        <>
+          <FilterSectionComponent 
+            title="Tipo de veículo" 
+            isExpanded={true} 
+            onToggle={() => {}}
+          >
+            <VehicleTypeFilter onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
+
+          <FilterSectionComponent 
+            title="Características do veículo" 
+            isExpanded={true} 
+            onToggle={() => {}}
+          >
+            <div className="space-y-4">
+              <ModelFilter onFilterChange={onFilterChange} />
+              <ColorFilter onFilterChange={onFilterChange} />
+              <YearRangeFilter onFilterChange={onFilterChange} />
+            </div>
+          </FilterSectionComponent>
+        </>
+      )}
     </>
   );
 };

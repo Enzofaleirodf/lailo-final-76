@@ -16,7 +16,8 @@ jest.mock('@/hooks/use-mobile', () => ({
 // Mock child components to simplify tests
 jest.mock('../sections/FilterSections', () => ({
   CommonFilters: () => <div data-testid="common-filters">Common Filters</div>,
-  ContentTypeFilters: () => <div data-testid="content-type-filters">Content Type Filters</div>
+  ContentTypeFilters: () => <div data-testid="content-type-filters">Content Type Filters</div>,
+  PriceFilter: () => <div data-testid="price-filter">Price Filter</div>
 }));
 
 // Properly type mocks
@@ -48,7 +49,8 @@ describe('FilterContent', () => {
         color: 'todas',
         format: 'Todos',
         origin: 'Todas',
-        place: 'Todas'
+        place: 'Todas',
+        category: 'Todos'
       },
       activeFilters: 0,
       expandedSections: {},

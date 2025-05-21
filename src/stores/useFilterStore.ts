@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { 
@@ -56,7 +55,8 @@ const initialFilterState: FilterState = {
   color: 'todas',
   format: 'Leilão', // Default visual option changed from 'Todos' to 'Leilão'
   origin: 'Todas',
-  place: 'Todas'
+  place: 'Todas',
+  category: 'Todos' // Novo campo de categoria com valor padrão
 };
 
 // Define which filter sections are expanded by default
@@ -71,7 +71,8 @@ const initialExpandedSections: ExpandedSectionsState = {
   color: true,
   format: true,
   origin: true,
-  place: true
+  place: true,
+  category: true // Nova seção para categoria
 };
 
 // Valores padrão para os filtros de intervalo (simulando o que viria do banco)
@@ -135,6 +136,9 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
   if (filters.origin !== 'Todas') count++;
   if (filters.place !== 'Todas') count++;
+
+  // Category - conta se for diferente do padrão
+  if (filters.category !== 'Todos') count++;
   
   return count;
 };

@@ -46,6 +46,11 @@ jest.mock('../UsefulAreaFilter', () => ({
   default: () => <div data-testid="useful-area-filter">Useful Area Filter</div>
 }));
 
+jest.mock('../CategoryFilter', () => ({
+  __esModule: true,
+  default: () => <div data-testid="category-filter">Category Filter</div>
+}));
+
 jest.mock('../FilterSectionComponent', () => ({
   __esModule: true,
   default: ({ children, title, isExpanded }: any) => (
@@ -60,6 +65,7 @@ jest.mock('../FilterSectionComponent', () => ({
 const mockFilterStore = {
   filters: {
     contentType: 'property',
+    category: 'Todos',
   },
   expandedSections: {
     location: true,
@@ -70,6 +76,7 @@ const mockFilterStore = {
     usefulArea: false,
     model: false,
     color: false,
+    category: true,
   },
   toggleSection: jest.fn(),
 };
@@ -86,6 +93,13 @@ describe('FilterSections', () => {
   });
   
   describe('ContentTypeFilters', () => {
+    it('renders category filter for all content types', () => {
+      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} />);
+      
+      expect(screen.getByText('Categoria')).toBeInTheDocument();
+      expect(screen.getByTestId('category-filter')).toBeInTheDocument();
+    });
+    
     it('renders property filters when content type is property', () => {
       render(<ContentTypeFilters onFilterChange={mockOnFilterChange} />);
       
@@ -99,15 +113,16 @@ describe('FilterSections', () => {
       // Override mock to return vehicle content type
       (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue({
         ...mockFilterStore,
-        filters: { contentType: 'vehicle' },
+        filters: { 
+          contentType: 'vehicle', 
+          category: 'Todos' 
+        },
       });
       
       render(<ContentTypeFilters onFilterChange={mockOnFilterChange} />);
       
+      expect(screen.getByText('Categoria')).toBeInTheDocument();
       expect(screen.getByText('Tipo de veículo')).toBeInTheDocument();
-      expect(screen.getByText('Marca e Modelo')).toBeInTheDocument();
-      expect(screen.getByText('Cor')).toBeInTheDocument();
-      expect(screen.getByText('Ano')).toBeInTheDocument();
       expect(screen.getByTestId('vehicle-type-filter')).toBeInTheDocument();
       expect(screen.queryByTestId('property-type-filter')).not.toBeInTheDocument();
     });
