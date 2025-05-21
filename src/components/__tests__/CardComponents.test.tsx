@@ -16,7 +16,9 @@ jest.mock('@/hooks/use-mobile', () => ({
 const testProperty: PropertyItem = {
   id: "prop123",
   title: "Apartamento em São Paulo",
+  description: "Descrição do apartamento para teste", // Adicionado campo description
   currentBid: 500000,
+  minBid: 450000, // Adicionado campo minBid
   originalPrice: 600000,
   imageUrl: "https://example.com/apartment.jpg",
   location: "São Paulo, SP",
@@ -27,9 +29,9 @@ const testProperty: PropertyItem = {
   propertyInfo: {
     type: "Apartamento",
     usefulAreaM2: 75,
-    bedrooms: 2,  // Corrigido de bedroomCount para bedrooms
+    bedrooms: 2,
     bathrooms: 1,
-    garages: 1    // Corrigido de garageCount para garages
+    garages: 1
   },
   bidCount: 5,
   format: 'Leilão'
@@ -38,7 +40,9 @@ const testProperty: PropertyItem = {
 const testAuction: AuctionItem = {
   id: "auc456",
   title: "Honda Civic 2021",
+  description: "Descrição do veículo para teste", // Adicionado campo description
   currentBid: 50000,
+  minBid: 45000, // Adicionado campo minBid
   originalPrice: 60000,
   imageUrl: "https://example.com/civic.jpg",
   location: "Rio de Janeiro, RJ",
@@ -49,11 +53,13 @@ const testAuction: AuctionItem = {
     type: "car",
     brand: "Honda",
     model: "Civic",
-    year: 2021,  // Corrigido de string para number
+    year: 2021,
     color: "Preto",
-    mileage: 15000,
-    fuel: "Flex"
-  }
+    mileage: 15000
+    // Removido campo 'fuel' que não existe no tipo
+  },
+  bidCount: 3, // Adicionado campo bidCount
+  format: 'Leilão' // Adicionado campo format
 };
 
 describe('Card Components Integration', () => {
