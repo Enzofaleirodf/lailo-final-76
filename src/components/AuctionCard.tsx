@@ -2,7 +2,6 @@
 import React from 'react';
 import { AuctionItem } from '@/types/auction';
 import BaseCard from './BaseCard';
-import { Palette, Hourglass } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AuctionCardProps {
@@ -41,29 +40,27 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   // Construir o componente de informações extras específico para veículos
   const extraInfo = isVehicleItem && auction.vehicleInfo ? (
     <div 
-      className="flex items-center gap-2 flex-wrap mb-1"
+      className="flex items-center gap-1 mb-1"
       aria-label={`Detalhes do veículo: ${auction.vehicleInfo.color || ''} ${auction.vehicleInfo.year || ''}`}
     >
       {auction.vehicleInfo.color && (
-        <div className="flex items-center">
-          <Palette size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" aria-hidden="true" />
-          <span>{auction.vehicleInfo.color}</span>
-        </div>
+        <span>{auction.vehicleInfo.color}</span>
+      )}
+      
+      {auction.vehicleInfo.color && auction.vehicleInfo.year && (
+        <span className="mx-1">•</span>
       )}
       
       {auction.vehicleInfo.year && (
-        <>
-          <div className="flex items-center ml-2">
-            <Hourglass size={isMobile ? 12 : 14} className="mr-1 text-gray-500 flex-shrink-0" aria-hidden="true" />
-            <span>{auction.vehicleInfo.year}</span>
-          </div>
-          
-          {/* Divisor entre ano e localização */}
-          <div className="mx-2 h-3 w-[1px] bg-gray-300" aria-hidden="true"></div>
-          
-          {/* Localização ao lado do ano com divisor entre eles */}
-          <span className="">{auction.location || 'Localização não disponível'}</span>
-        </>
+        <span>{auction.vehicleInfo.year}</span>
+      )}
+      
+      {((auction.vehicleInfo.color || auction.vehicleInfo.year) && auction.location) && (
+        <span className="mx-1">•</span>
+      )}
+      
+      {auction.location && (
+        <span>{auction.location || 'Localização não disponível'}</span>
       )}
     </div>
   ) : <span>Informações não disponíveis</span>;
