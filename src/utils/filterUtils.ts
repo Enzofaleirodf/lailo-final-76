@@ -6,7 +6,6 @@ import { defaultRangeValues } from '@/stores/useFilterStore';
  * Format options for filter dropdowns
  */
 export const formatOptions = [
-  { value: 'Todos', label: 'Todos' },
   { value: 'Alienação Particular', label: 'Alienação Particular' },
   { value: 'Leilão', label: 'Leilão' },
   { value: 'Venda Direta', label: 'Venda Direta' }

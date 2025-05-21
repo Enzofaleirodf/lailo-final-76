@@ -9,7 +9,7 @@ interface ColorFilterProps {
 }
 
 const colorOptions = [
-  { value: 'todas', label: 'Todas as cores' },
+  { value: 'todas', label: 'Todas' },
   { value: 'preto', label: 'Preto' },
   { value: 'branco', label: 'Branco' },
   { value: 'prata', label: 'Prata' },
