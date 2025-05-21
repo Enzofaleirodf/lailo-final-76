@@ -31,7 +31,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
     <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
       {/* Title section - clickable for both desktop and mobile for consistent interaction */}
       <div 
-        className="w-full bg-gradient-to-r from-gray-50 to-white p-3"
+        className="w-full bg-gradient-to-r from-brand-50 to-white p-3"
       >
         <h3 className="text-sm font-medium text-gray-900 font-urbanist">{title}</h3>
       </div>
