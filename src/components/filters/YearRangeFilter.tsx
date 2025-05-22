@@ -4,7 +4,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import { FormLabel } from '@/components/ui/form';
 import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
-import { FilterRangeInput } from './FilterRangeInput';
+import FilterRangeInput from './FilterRangeInput';
 
 interface YearRangeFilterProps {
   onFilterChange?: () => void;
@@ -20,14 +20,11 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   const [yearMax, setYearMax] = useState(filters.year.max || '');
   
   // Validação de intervalo
-  const { error, validateRange } = useFilterRangeValidator({
-    min: { value: yearMin, type: 'number', minValue: 1900, maxValue: currentYear },
-    max: { value: yearMax, type: 'number', minValue: 1900, maxValue: currentYear },
-    errorMessages: {
-      invalidMin: 'Ano mínimo inválido',
-      invalidMax: 'Ano máximo inválido',
-      rangeError: 'Ano mínimo deve ser menor que o máximo'
-    }
+  const { minError, maxError, validateRange, handleMinChange, handleMaxChange } = useFilterRangeValidator(yearMin, yearMax, {
+    minAllowed: 1900,
+    maxAllowed: currentYear,
+    onMinChange: setYearMin,
+    onMaxChange: setYearMax
   });
   
   // Atualizar o filtro no store
@@ -42,56 +39,56 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
   }, [updateFilter, onFilterChange, handleFilterChange]);
   
   // Lidar com mudança no valor mínimo
-  const handleMinChange = useCallback((value: string) => {
-    setYearMin(value);
+  const handleMinYearChange = useCallback((value: string) => {
+    handleMinChange(value);
     
-    if (validateRange(value, yearMax)) {
+    if (!minError && !maxError) {
       updateYearFilter(value, yearMax);
     }
-  }, [yearMax, validateRange, updateYearFilter]);
+  }, [yearMax, minError, maxError, handleMinChange, updateYearFilter]);
   
   // Lidar com mudança no valor máximo
-  const handleMaxChange = useCallback((value: string) => {
-    setYearMax(value);
+  const handleMaxYearChange = useCallback((value: string) => {
+    handleMaxChange(value);
     
-    if (validateRange(yearMin, value)) {
+    if (!minError && !maxError) {
       updateYearFilter(yearMin, value);
     }
-  }, [yearMin, validateRange, updateYearFilter]);
+  }, [yearMin, minError, maxError, handleMaxChange, updateYearFilter]);
   
   return (
-    <div className="space-y-2">
-      <FormLabel className="text-sm font-medium leading-none text-gray-700 mb-0">Ano</FormLabel>
+    <div className="space-y-1">
+      <FormLabel className="text-sm font-medium leading-none text-gray-700">Ano</FormLabel>
       
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 mt-1">
         <FilterRangeInput
           id="year-min"
           value={yearMin}
-          onChange={handleMinChange}
+          onChange={handleMinYearChange}
           placeholder="Min."
           maxLength={4}
           inputMode="numeric"
           aria-label="Ano mínimo"
-          hasError={!!error}
+          hasError={!!minError}
           className="w-full"
         />
         <span className="text-gray-400">-</span>
         <FilterRangeInput
           id="year-max"
           value={yearMax}
-          onChange={handleMaxChange}
+          onChange={handleMaxYearChange}
           placeholder="Max."
           maxLength={4}
           inputMode="numeric"
           aria-label="Ano máximo"
-          hasError={!!error}
+          hasError={!!maxError}
           className="w-full"
         />
       </div>
       
-      {error && (
-        <p className="text-xs text-red-500 mt-1">
-          {error}
+      {(minError || maxError) && (
+        <p className="text-xs text-red-500">
+          {minError || maxError}
         </p>
       )}
     </div>
