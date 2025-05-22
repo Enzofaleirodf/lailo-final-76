@@ -2,8 +2,9 @@
 import React from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import FilterSectionComponent from './FilterSectionComponent';
-import { ContentType } from '@/types/filters';
+import { ContentType, FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
+import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
 
 interface MobileFilterOptionsProps {
   contentType: ContentType;
@@ -16,41 +17,20 @@ interface MobileFilterOptionsProps {
 const MobileFilterOptions: React.FC<MobileFilterOptionsProps> = ({ contentType }) => {
   const { filters, updateFilter, toggleSection, expandedSections } = useFilterStoreSelector(contentType);
 
-  // Opções de formato
-  const formatOptions = [
-    { value: 'Todos', label: 'Todos os formatos' },
-    { value: 'Leilão', label: 'Leilão' },
-    { value: 'Alienação Particular', label: 'Alienação Particular' },
-    { value: 'Venda Direta', label: 'Venda Direta' }
-  ];
-
-  // Opções de origem
-  const originOptions = [
-    { value: 'Todas', label: 'Todas as origens' },
-    { value: 'Judicial', label: 'Judicial' },
-    { value: 'Extrajudicial', label: 'Extrajudicial' },
-    { value: 'Particular', label: 'Particular' }
-  ];
-
-  // Opções de praça
-  const placeOptions = [
-    { value: 'Todas', label: 'Todas as etapas' },
-    { value: '1ª Praça', label: '1ª Praça' },
-    { value: '2ª Praça', label: '2ª Praça' },
-    { value: 'Praça única', label: 'Praça única' }
-  ];
-
   // Manipuladores de alteração
   const handleFormatChange = (value: string) => {
-    updateFilter('format', value);
+    // Garantindo que apenas valores válidos do tipo FilterFormat sejam passados
+    updateFilter('format', value as FilterFormat);
   };
 
   const handleOriginChange = (value: string) => {
-    updateFilter('origin', value);
+    // Garantindo que apenas valores válidos do tipo FilterOrigin sejam passados
+    updateFilter('origin', value as FilterOrigin);
   };
 
   const handlePlaceChange = (value: string) => {
-    updateFilter('place', value);
+    // Garantindo que apenas valores válidos do tipo FilterPlace sejam passados
+    updateFilter('place', value as FilterPlace);
   };
 
   return (
