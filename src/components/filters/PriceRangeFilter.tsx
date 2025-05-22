@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import RangeFilter from './RangeFilter';
@@ -15,6 +15,7 @@ interface PriceRangeFilterProps {
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilterChange }) => {
   const { filters, updateFilter } = useFilterStoreSelector(contentType);
+  const initializationDone = useRef(false);
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -28,27 +29,45 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
+    // Não atualizar se os valores forem iguais aos atuais
+    if (filters?.price?.range?.min === values.min && 
+        filters?.price?.range?.max === values.max) {
+      return;
+    }
+    
     updateFilter('price', {
       ...filters.price,
       range: values
     });
     handleFilterChange();
-  }, [filters.price, updateFilter, handleFilterChange]);
+  }, [filters?.price, updateFilter, handleFilterChange]);
   
   // Initialize with default values if empty - only on first mount
   useEffect(() => {
-    if (!filters.price.range.min && !filters.price.range.max) {
+    // Se a inicialização já foi feita, não execute novamente
+    if (initializationDone.current) return;
+    
+    // Verificar se o filtro price existe e se já tem valores
+    if (!filters?.price?.range?.min && !filters?.price?.range?.max) {
       updateFilter('price', {
-        ...filters.price,
+        value: filters?.price?.value || [0, 100],
         range: defaultValues
       });
     }
-  }, [defaultValues, filters.price]); // Adicionar dependências para evitar loops
+    
+    initializationDone.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Executar apenas uma vez na montagem
+  
+  // Adicionar verificação de segurança para evitar erros
+  if (!filters?.price?.range) {
+    return null; // Não renderizar nada se os dados não estiverem prontos
+  }
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
-    filters.price.range.min !== defaultValues.min || 
-    filters.price.range.max !== defaultValues.max;
+    filters?.price?.range?.min !== defaultValues.min || 
+    filters?.price?.range?.max !== defaultValues.max;
   
   return (
     <div className="space-y-3">

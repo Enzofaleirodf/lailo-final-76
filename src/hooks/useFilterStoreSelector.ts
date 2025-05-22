@@ -1,7 +1,8 @@
+
 import { useCallback, useMemo } from 'react';
 import { usePropertyFiltersStore } from '@/stores/usePropertyFiltersStore';
 import { useVehicleFiltersStore } from '@/stores/useVehicleFiltersStore';
-import { ContentType, FilterState } from '@/types/filters';
+import { ContentType, FilterState, ExpandedSectionsState } from '@/types/filters';
 
 /**
  * Hook que retorna a store correta com base no tipo de conteúdo
@@ -13,16 +14,34 @@ export const useFilterStoreSelector = (contentType: ContentType) => {
   const propertyUpdateFilter = usePropertyFiltersStore(state => state.updateFilter);
   const propertySetFilters = usePropertyFiltersStore(state => state.setFilters);
   const propertyResetFilters = usePropertyFiltersStore(state => state.resetFilters);
+  const propertyExpandedSections = usePropertyFiltersStore(state => state.expandedSections);
+  const propertyToggleSection = usePropertyFiltersStore(state => state.toggleSection);
+  const propertyActiveFilters = usePropertyFiltersStore(state => state.activeFilters);
+  const propertyExpandAllSections = usePropertyFiltersStore(state => state.expandAllSections);
+  const propertyCollapseAllSections = usePropertyFiltersStore(state => state.collapseAllSections);
   
   const vehicleFilters = useVehicleFiltersStore(state => state.filters);
   const vehicleUpdateFilter = useVehicleFiltersStore(state => state.updateFilter);
   const vehicleSetFilters = useVehicleFiltersStore(state => state.setFilters);
   const vehicleResetFilters = useVehicleFiltersStore(state => state.resetFilters);
+  const vehicleExpandedSections = useVehicleFiltersStore(state => state.expandedSections);
+  const vehicleToggleSection = useVehicleFiltersStore(state => state.toggleSection);
+  const vehicleActiveFilters = useVehicleFiltersStore(state => state.activeFilters);
+  const vehicleExpandAllSections = useVehicleFiltersStore(state => state.expandAllSections);
+  const vehicleCollapseAllSections = useVehicleFiltersStore(state => state.collapseAllSections);
   
   // Selecionar os valores corretos com base no tipo de conteúdo
   const filters = useMemo(() => {
     return contentType === 'property' ? propertyFilters : vehicleFilters;
   }, [contentType, propertyFilters, vehicleFilters]);
+  
+  const expandedSections = useMemo(() => {
+    return contentType === 'property' ? propertyExpandedSections : vehicleExpandedSections;
+  }, [contentType, propertyExpandedSections, vehicleExpandedSections]);
+  
+  const activeFilters = useMemo(() => {
+    return contentType === 'property' ? propertyActiveFilters : vehicleActiveFilters;
+  }, [contentType, propertyActiveFilters, vehicleActiveFilters]);
   
   // Memoizar funções para evitar recriações desnecessárias
   const updateFilter = useCallback((key: keyof FilterState, value: any) => {
@@ -49,11 +68,40 @@ export const useFilterStoreSelector = (contentType: ContentType) => {
     }
   }, [contentType, propertyResetFilters, vehicleResetFilters]);
   
+  const toggleSection = useCallback((section: keyof ExpandedSectionsState) => {
+    if (contentType === 'property') {
+      propertyToggleSection(section);
+    } else {
+      vehicleToggleSection(section);
+    }
+  }, [contentType, propertyToggleSection, vehicleToggleSection]);
+  
+  const expandAllSections = useCallback(() => {
+    if (contentType === 'property') {
+      propertyExpandAllSections();
+    } else {
+      vehicleExpandAllSections();
+    }
+  }, [contentType, propertyExpandAllSections, vehicleExpandAllSections]);
+  
+  const collapseAllSections = useCallback(() => {
+    if (contentType === 'property') {
+      propertyCollapseAllSections();
+    } else {
+      vehicleCollapseAllSections();
+    }
+  }, [contentType, propertyCollapseAllSections, vehicleCollapseAllSections]);
+  
   return {
     filters,
+    expandedSections,
+    activeFilters,
     updateFilter,
     setFilters,
-    resetFilters
+    resetFilters,
+    toggleSection,
+    expandAllSections,
+    collapseAllSections
   };
 };
 

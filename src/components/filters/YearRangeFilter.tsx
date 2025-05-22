@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import RangeFilter from './RangeFilter';
@@ -15,6 +15,7 @@ interface YearRangeFilterProps {
 
 const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilterChange }) => {
   const { filters, updateFilter } = useFilterStoreSelector(contentType);
+  const initializationDone = useRef(false);
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -28,23 +29,43 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
+    // Não atualizar se os valores forem iguais aos atuais
+    if (filters?.year?.min === values.min && 
+        filters?.year?.max === values.max) {
+      return;
+    }
+    
     updateFilter('year', values);
     handleFilterChange();
-  }, [updateFilter, handleFilterChange]);
+  }, [filters?.year, updateFilter, handleFilterChange]);
   
   // Initialize with default values if empty - only on first mount
   useEffect(() => {
-    if (!filters.year.min && !filters.year.max) {
-      updateFilter('year', defaultValues);
+    // Garantir que a inicialização aconteça apenas uma vez
+    if (initializationDone.current) return;
+    
+    // Inicializar apenas se ambos os valores estiverem vazios
+    if (!filters?.year?.min && !filters?.year?.max) {
+      // Apenas atualizar se realmente diferente dos valores padrão
+      if (defaultValues.min !== filters?.year?.min || 
+          defaultValues.max !== filters?.year?.max) {
+        updateFilter('year', defaultValues);
+      }
     }
-  }, [defaultValues]); // Adicionar dependências para evitar loops
+    
+    initializationDone.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
+  
+  // Verificação de segurança para evitar erros
+  if (!filters?.year) {
+    return null; // Não renderizar nada se os dados não estiverem prontos
+  }
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
     filters.year.min !== defaultValues.min || 
     filters.year.max !== defaultValues.max;
-  
-  const currentYear = new Date().getFullYear();
   
   return (
     <div className="space-y-3">
@@ -58,7 +79,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
         ariaLabelMax="Ano máximo"
         allowDecimals={false}
         minAllowed={Number(defaultValues.min)}
-        maxAllowed={currentYear}
+        maxAllowed={Number(defaultValues.max)}
         isActive={isFilterActive}
         formatterOptions={{
           useThousandSeparator: false,

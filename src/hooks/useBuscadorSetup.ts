@@ -11,7 +11,7 @@ import { useFilterCache } from '@/hooks/useFilterCache';
  * Versão otimizada com caching e prevenção de loops
  */
 export const useBuscadorSetup = (contentType: ContentType) => {
-  const { updateFilter, filters } = useFilterStoreSelector(contentType);
+  const { updateFilter, filters, setFilters } = useFilterStoreSelector(contentType);
   const initialSetupDone = useRef(false);
   
   // Integrar sistema de cache
@@ -36,8 +36,8 @@ export const useBuscadorSetup = (contentType: ContentType) => {
       const cachedFilters = loadFromCache();
       
       if (cachedFilters) {
-        // Preservar o tipo de conteúdo atual
-        updateFilter('filters', { ...cachedFilters, contentType });
+        // Preservar o tipo de conteúdo atual e usar setFilters em vez de updateFilter
+        setFilters({ ...cachedFilters, contentType });
       }
     }
     
