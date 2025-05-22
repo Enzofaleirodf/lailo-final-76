@@ -37,7 +37,7 @@ describe('ModelFilter', () => {
   });
 
   test('renders brand dropdown and disabled model message when no brand selected', () => {
-    render(<ModelFilter />);
+    render(<ModelFilter contentType="vehicle" />);
     
     // Check if brand dropdown is rendered
     expect(screen.getByLabelText('Selecione a marca')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('ModelFilter', () => {
   });
 
   test('selects brand correctly and shows model dropdown', () => {
-    render(<ModelFilter onFilterChange={mockOnFilterChange} />);
+    render(<ModelFilter contentType="vehicle" onFilterChange={mockOnFilterChange} />);
     
     // Find and interact with the brand dropdown
     const brandDropdown = screen.getByLabelText('Selecione a marca');
@@ -78,7 +78,7 @@ describe('ModelFilter', () => {
     });
     
     // Re-render with updated state
-    render(<ModelFilter onFilterChange={mockOnFilterChange} />);
+    render(<ModelFilter contentType="vehicle" onFilterChange={mockOnFilterChange} />);
     
     // Now model dropdown should be visible
     expect(screen.getByLabelText('Selecione o modelo')).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('ModelFilter', () => {
       expandAllSections: jest.fn()
     });
 
-    render(<ModelFilter onFilterChange={mockOnFilterChange} />);
+    render(<ModelFilter contentType="vehicle" onFilterChange={mockOnFilterChange} />);
     
     // Find and interact with the model dropdown which should now be visible
     const modelDropdown = screen.getByLabelText('Selecione o modelo');
@@ -131,7 +131,7 @@ describe('ModelFilter', () => {
       expandAllSections: jest.fn()
     });
 
-    render(<ModelFilter onFilterChange={mockOnFilterChange} />);
+    render(<ModelFilter contentType="vehicle" onFilterChange={mockOnFilterChange} />);
     
     // Find and change the brand dropdown
     const brandDropdown = screen.getByLabelText('Selecione a marca');

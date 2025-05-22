@@ -63,7 +63,7 @@ describe('MobileFilterOptions', () => {
   });
   
   test('renders all filter sections', () => {
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     expect(screen.getByText('Formato')).toBeInTheDocument();
     expect(screen.getByText('Origem')).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('MobileFilterOptions', () => {
   });
   
   test('toggles section when header is clicked', () => {
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     // Click on the Origin section header
     fireEvent.click(screen.getByText('Origem'));
@@ -81,7 +81,7 @@ describe('MobileFilterOptions', () => {
   });
   
   test('calls updateFilter with correct format value when format changes', () => {
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     // Find the format dropdown and trigger change
     const formatSelect = screen.getByLabelText('Selecionar formato');
@@ -92,7 +92,7 @@ describe('MobileFilterOptions', () => {
   });
   
   test('calls updateFilter with correct origin value when origin changes', () => {
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     // Find the origin dropdown and trigger change
     const originSelect = screen.getByLabelText('Selecionar origem');
@@ -103,7 +103,7 @@ describe('MobileFilterOptions', () => {
   });
   
   test('calls updateFilter with correct place value when place changes', () => {
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     // Find the place dropdown and trigger change
     const placeSelect = screen.getByLabelText('Selecionar etapa');
@@ -127,7 +127,7 @@ describe('MobileFilterOptions', () => {
     // This fixes the TypeScript error
     (filterStoreModule.useFilterStore as unknown as jest.Mock).mockReturnValue(expandedFormatMockStore);
 
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     // Verifies that the format dropdown is visible (expanded)
     expect(screen.getByLabelText('Selecionar formato')).toBeVisible();
@@ -138,7 +138,7 @@ describe('MobileFilterOptions', () => {
   });
   
   test('applies all filter options correctly', () => {
-    render(<MobileFilterOptions />);
+    render(<MobileFilterOptions contentType="property" />);
     
     // Change format
     fireEvent.change(screen.getByLabelText('Selecionar formato'), { 

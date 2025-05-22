@@ -95,7 +95,7 @@ describe('Integração de Filtros', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
+          <TopFilters contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -114,7 +114,7 @@ describe('Integração de Filtros', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -147,7 +147,7 @@ describe('Integração de Filtros', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -168,8 +168,8 @@ describe('Integração de Filtros', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
-          <TopFilters />
+          <FilterSection contentType="property" />
+          <TopFilters contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );

@@ -69,12 +69,12 @@ describe('LocationFilter', () => {
   });
 
   test('renders location filter button', () => {
-    render(<LocationFilter />);
+    render(<LocationFilter contentType="property" />);
     expect(screen.getByText('Selecione a localização')).toBeInTheDocument();
   });
 
   test('opens popover when clicked', async () => {
-    render(<LocationFilter />);
+    render(<LocationFilter contentType="property" />);
     
     // Click the location button to open popover
     fireEvent.click(screen.getByText('Selecione a localização'));
@@ -94,7 +94,7 @@ describe('LocationFilter', () => {
       error: null
     });
     
-    render(<LocationFilter />);
+    render(<LocationFilter contentType="property" />);
     
     // Open popover
     fireEvent.click(screen.getByText('Selecione a localização'));
@@ -108,7 +108,7 @@ describe('LocationFilter', () => {
   });
 
   test('applies selected location', async () => {
-    render(<LocationFilter onFilterChange={mockOnFilterChange} />);
+    render(<LocationFilter contentType="property" onFilterChange={mockOnFilterChange} />);
     
     // Open popover
     fireEvent.click(screen.getByText('Selecione a localização'));
@@ -163,7 +163,7 @@ describe('LocationFilter', () => {
       expandAllSections: jest.fn()
     });
     
-    render(<LocationFilter onFilterChange={mockOnFilterChange} />);
+    render(<LocationFilter contentType="property" onFilterChange={mockOnFilterChange} />);
     
     // Check if the button shows selected location
     expect(screen.getByText('São Paulo, SP')).toBeInTheDocument();

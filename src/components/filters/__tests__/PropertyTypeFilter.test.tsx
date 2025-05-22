@@ -47,7 +47,7 @@ describe('PropertyTypeFilter', () => {
   });
 
   test('renderiza o componente com os tipos de imóveis da categoria selecionada', () => {
-    render(<PropertyTypeFilter />);
+    render(<PropertyTypeFilter contentType="property" />);
     
     // Verificar se os tipos de imóveis para a categoria 'Residencial' estão presentes
     expect(screen.getByLabelText('Filtrar por Todos')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('PropertyTypeFilter', () => {
   });
 
   test('seleciona um tipo de imóvel corretamente', () => {
-    render(<PropertyTypeFilter onFilterChange={mockOnFilterChange} />);
+    render(<PropertyTypeFilter contentType="property" onFilterChange={mockOnFilterChange} />);
     
     // Clicar em um tipo de imóvel específico
     fireEvent.click(screen.getByLabelText('Filtrar por Apartamentos'));
@@ -85,7 +85,7 @@ describe('PropertyTypeFilter', () => {
       expandAllSections: jest.fn()
     });
     
-    render(<PropertyTypeFilter />);
+    render(<PropertyTypeFilter contentType="property" />);
     
     // Verificar que o item para Casa tem o estado "checked"
     const casaLabel = screen.getByLabelText('Filtrar por Casas');
@@ -110,7 +110,7 @@ describe('PropertyTypeFilter', () => {
       expandAllSections: jest.fn()
     });
     
-    const { container } = render(<PropertyTypeFilter />);
+    const { container } = render(<PropertyTypeFilter contentType="property" />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -132,13 +132,13 @@ describe('PropertyTypeFilter', () => {
       expandAllSections: jest.fn()
     });
     
-    const { container } = render(<PropertyTypeFilter />);
+    const { container } = render(<PropertyTypeFilter contentType="property" />);
     expect(container.firstChild).toBeNull();
   });
 
   test('altera os tipos de imóveis quando a categoria muda', () => {
     // Primeiro render com categoria 'Residenciais'
-    const { rerender } = render(<PropertyTypeFilter />);
+    const { rerender } = render(<PropertyTypeFilter contentType="property" />);
     
     expect(screen.getByLabelText('Filtrar por Apartamentos')).toBeInTheDocument();
     expect(screen.getByLabelText('Filtrar por Casas')).toBeInTheDocument();
@@ -162,7 +162,7 @@ describe('PropertyTypeFilter', () => {
     });
     
     // Re-renderizar o componente
-    rerender(<PropertyTypeFilter />);
+    rerender(<PropertyTypeFilter contentType="property" />);
     
     // Verificar que os tipos mudaram
     expect(screen.queryByLabelText('Filtrar por Apartamentos')).not.toBeInTheDocument();

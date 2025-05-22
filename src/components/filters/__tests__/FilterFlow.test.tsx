@@ -7,6 +7,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import FilterSection from '@/components/FilterSection';
 import * as filterStoreModule from '@/stores/useFilterStore';
 import * as uiStoreModule from '@/stores/useUIStore';
+import { mockFilterSectionProps } from './mockFilterProps';
 
 // Criar um mock do evento de disparo
 const mockDispatchEvent = jest.fn();
@@ -89,7 +90,7 @@ describe('FilterFlow Integration', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection isOpen={true} onOpenChange={mockUIStore.setFiltersOpen} />
+          <FilterSection isOpen={true} onOpenChange={mockUIStore.setFiltersOpen} contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -126,7 +127,7 @@ describe('FilterFlow Integration', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection isOpen={true} onOpenChange={mockUIStore.setFiltersOpen} />
+          <FilterSection isOpen={true} onOpenChange={mockUIStore.setFiltersOpen} contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );

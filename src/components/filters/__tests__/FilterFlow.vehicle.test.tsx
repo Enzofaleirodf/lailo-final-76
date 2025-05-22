@@ -111,7 +111,7 @@ describe('Fluxo de Filtros de Veículos', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection contentType="vehicle" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -130,7 +130,7 @@ describe('Fluxo de Filtros de Veículos', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
+          <TopFilters contentType="vehicle" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -160,7 +160,7 @@ describe('Fluxo de Filtros de Veículos', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <MobileFilterBar onFilterClick={mockFilterClick} onSortClick={mockSortClick} />
+          <MobileFilterBar onFilterClick={mockFilterClick} onSortClick={mockSortClick} contentType="vehicle" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -197,7 +197,7 @@ describe('Fluxo de Filtros de Veículos', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection contentType="vehicle" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -231,7 +231,7 @@ describe('Fluxo de Filtros de Veículos', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection contentType="vehicle" />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -254,7 +254,7 @@ describe('Fluxo de Filtros de Veículos', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
+          <TopFilters contentType="vehicle" />
         </BrowserRouter>
       </QueryClientProvider>
     );
