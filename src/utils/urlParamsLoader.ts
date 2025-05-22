@@ -1,7 +1,8 @@
+
 /**
  * @fileoverview Funções para carregar valores de filtro da URL
  */
-import { FilterState } from '@/types/filters';
+import { FilterState, FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { defaultRangeValues } from '@/stores/useFilterStore';
 import { isValidFormat, isValidOrigin, isValidPlace } from './urlParamsValidator';
 
@@ -223,7 +224,7 @@ const loadAuctionParams = (
   if (searchParams.has('origin')) {
     const origin = searchParams.get('origin');
     if (isValidOrigin(origin) && origin !== 'Todas') {
-      newFilters.origin = origin;
+      newFilters.origin = origin as FilterOrigin;
       hasChanges = true;
     }
   }
@@ -232,7 +233,7 @@ const loadAuctionParams = (
   if (searchParams.has('place')) {
     const place = searchParams.get('place');
     if (isValidPlace(place) && place !== 'Todas') {
-      newFilters.place = place;
+      newFilters.place = place as FilterPlace;
       hasChanges = true;
     }
   }
