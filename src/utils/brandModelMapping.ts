@@ -97,3 +97,36 @@ export const getModelsByBrand = (brand: string): string[] => {
   return ['Todos', ...models];
 };
 
+/**
+ * Obtém as marcas com base na categoria selecionada
+ * @param category Categoria selecionada
+ * @returns Array de marcas
+ */
+export const getBrandsByCategory = (category: string): string[] => {
+  if (!category || category === '') {
+    return [];
+  }
+  
+  // Para categorias de veículos leves, retornar carros e motos
+  if (category === 'Leves') {
+    return ['Todas', ...carBrands, ...motoBrands];
+  }
+  
+  // Para outras categorias, retornar marcas de acordo com o tipo
+  switch (category) {
+    case 'Aéreos':
+      return ['Todas', 'Airbus', 'Boeing', 'Cessna', 'Embraer', 'Piper'];
+    case 'Náuticos':
+      return ['Todas', 'Bayliner', 'Boston Whaler', 'Intermarine', 'Jet Sea', 'Kawasaki', 'Sea Doo', 'Yamaha'];
+    case 'Recreativos':
+      return ['Todas', 'BRP', 'Caloi', 'Honda', 'Kawasaki', 'Polaris', 'Suzuki', 'Yamaha'];
+    case 'Pesados':
+      return ['Todas', 'DAF', 'Ford', 'Iveco', 'MAN', 'Mercedes-Benz', 'Scania', 'Volkswagen', 'Volvo'];
+    case 'Máquinas Agrícolas':
+      return ['Todas', 'Case', 'John Deere', 'Massey Ferguson', 'New Holland', 'Valtra'];
+    case 'Máquinas de Construção':
+      return ['Todas', 'Caterpillar', 'JCB', 'Komatsu', 'New Holland', 'Volvo'];
+    default:
+      return ['Todas'];
+  }
+};
