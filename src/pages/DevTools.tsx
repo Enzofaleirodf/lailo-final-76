@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import PerformanceMonitor from '@/components/performance-monitor/PerformanceMonitor';
@@ -16,8 +15,12 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 const DevTools: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { testAllScreenSizes, inconsistencies } = useResponsiveConsistency({ 
-    testMode: true,
-    logInconsistencies: true 
+    targetElements: [
+      { selector: '.visual-test-input', properties: ['height', 'padding'] },
+      { selector: '.visual-test-button', properties: ['font-size', 'padding'] }
+    ],
+    logInconsistencies: true,
+    testMode: true
   });
   const { toast } = useToast();
   const isMobile = useMediaQuery('mobile');
