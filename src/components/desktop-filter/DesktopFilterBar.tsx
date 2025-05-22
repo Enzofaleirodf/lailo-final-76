@@ -31,12 +31,12 @@ const DesktopFilterBar: React.FC<DesktopFilterBarProps> = ({ contentType }) => {
 
   return (
     <div 
-      className="mb-4 p-3 bg-white rounded-lg border border-gray-200 shadow-sm" 
+      className="mb-6 p-4 bg-white rounded-lg border border-gray-200 shadow-sm" 
       role="region" 
       aria-label="Filtros de busca específicos"
     >
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="w-40 lg:w-44">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="w-48">
           <label htmlFor="desktop-format-filter" className="block text-sm font-medium text-gray-700 mb-1">
             Formato
           </label>
@@ -50,7 +50,7 @@ const DesktopFilterBar: React.FC<DesktopFilterBarProps> = ({ contentType }) => {
           />
         </div>
         
-        <div className="w-40 lg:w-44">
+        <div className="w-48">
           <label htmlFor="desktop-origin-filter" className="block text-sm font-medium text-gray-700 mb-1">
             Origem
           </label>
@@ -64,7 +64,7 @@ const DesktopFilterBar: React.FC<DesktopFilterBarProps> = ({ contentType }) => {
           />
         </div>
         
-        <div className="w-40 lg:w-44">
+        <div className="w-48">
           <label htmlFor="desktop-place-filter" className="block text-sm font-medium text-gray-700 mb-1">
             Etapa
           </label>

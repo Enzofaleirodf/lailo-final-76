@@ -32,7 +32,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
   };
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="container mx-auto px-4 py-8">
       {/* Barra de filtros móvel */}
       {isMobile && (
         <MobileFilterBar 
@@ -50,10 +50,9 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
         <DesktopFilterBar contentType={contentType} />
       )}
       
-      {/* Ajustando o layout para evitar sobreposição */}
-      <div className="flex flex-col md:flex-row md:space-x-4 w-full">
-        {/* Área de filtros lateral com largura fixa e sem flex-shrink */}
-        <div className="w-full md:w-[260px] md:flex-none md:sticky md:top-4 md:self-start">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Área de filtros lateral */}
+        <div className="w-full md:w-1/4 lg:w-1/5">
           {isMobile ? (
             <FilterContent contentType={contentType} />
           ) : (
@@ -65,8 +64,8 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
           )}
         </div>
         
-        {/* Área de resultados com flex-grow e min-width para evitar encolher demais */}
-        <div className="w-full md:flex-1 md:min-w-0 md:max-w-full">
+        {/* Área de resultados */}
+        <div className="w-full md:w-3/4 lg:w-4/5">
           <ResultHeader />
           <AuctionList />
         </div>
