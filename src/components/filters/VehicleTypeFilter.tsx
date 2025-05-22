@@ -1,5 +1,5 @@
 
-import React, { useCallback, useId } from 'react';
+import React, { useCallback, useId, useEffect } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

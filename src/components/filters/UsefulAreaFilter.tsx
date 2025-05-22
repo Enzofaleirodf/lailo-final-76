@@ -4,7 +4,6 @@ import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
-import FilterSectionComponent from './FilterSectionComponent';
 
 interface UsefulAreaFilterProps {
   onFilterChange?: () => void;
@@ -15,7 +14,7 @@ interface UsefulAreaFilterProps {
  * Melhorado para tratamento adequado do sufixo "m²"
  */
 const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter, expandedSections, toggleSection } = useFilterStore();
+  const { filters, updateFilter } = useFilterStore();
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -37,10 +36,6 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
       updateFilter('usefulArea', defaultValues);
     }
   }, []);
-
-  const handleSectionToggle = () => {
-    toggleSection('usefulArea');
-  };
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
@@ -48,13 +43,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
     filters.usefulArea.max !== defaultValues.max;
   
   return (
-    <FilterSectionComponent 
-      title="Área Útil" 
-      isExpanded={expandedSections.usefulArea} 
-      onToggle={handleSectionToggle}
-      isActive={isFilterActive}
-    >
-      {/* Removida a div de espaçamento e a label redundante */}
+    <div className="space-y-3">
       <SimplifiedRangeFilter
         initialValues={filters.usefulArea}
         defaultValues={defaultValues}
@@ -73,7 +62,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
           formatDisplay: true
         }}
       />
-    </FilterSectionComponent>
+    </div>
   );
 };
 

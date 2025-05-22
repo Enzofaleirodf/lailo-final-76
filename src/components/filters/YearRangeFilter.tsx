@@ -4,14 +4,13 @@ import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
-import FilterSectionComponent from './FilterSectionComponent';
 
 interface YearRangeFilterProps {
   onFilterChange?: () => void;
 }
 
 const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter, expandedSections, toggleSection } = useFilterStore();
+  const { filters, updateFilter } = useFilterStore();
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -33,10 +32,6 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
       updateFilter('year', defaultValues);
     }
   }, []);
-
-  const handleSectionToggle = () => {
-    toggleSection('year');
-  };
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
@@ -44,13 +39,10 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     filters.year.max !== defaultValues.max;
   
   return (
-    <FilterSectionComponent 
-      title="Ano" 
-      isExpanded={expandedSections.year} 
-      onToggle={handleSectionToggle}
-      isActive={isFilterActive}
-    >
-      {/* Removida a label redundante, mantendo apenas o SimplifiedRangeFilter */}
+    <div className="space-y-3">
+      <label htmlFor="year-range" className="block text-sm font-medium text-gray-700 mb-1">
+        Ano
+      </label>
       <SimplifiedRangeFilter
         initialValues={filters.year}
         defaultValues={defaultValues}
@@ -69,7 +61,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
         }}
         id="year-range"
       />
-    </FilterSectionComponent>
+    </div>
   );
 };
 

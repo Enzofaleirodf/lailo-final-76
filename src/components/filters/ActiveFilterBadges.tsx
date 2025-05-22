@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +41,7 @@ const ActiveFilterBadges: React.FC = () => {
   }
   
   // Estilo de badge consistente entre desktop e mobile
-  const badgeClasses = "flex items-center gap-1 px-2 py-1 bg-brand-50 border border-purple-300 text-gray-800";
+  const badgeClasses = "flex items-center gap-1 px-2 py-1 bg-brand-50 border-brand-200 text-gray-800";
   
   return (
     <div 

@@ -4,14 +4,13 @@ import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
-import FilterSectionComponent from './FilterSectionComponent';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
 }
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter, expandedSections, toggleSection } = useFilterStore();
+  const { filters, updateFilter } = useFilterStore();
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -39,10 +38,6 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       });
     }
   }, []);
-
-  const handleSectionToggle = () => {
-    toggleSection('price');
-  };
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
@@ -50,13 +45,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     filters.price.range.max !== defaultValues.max;
   
   return (
-    <FilterSectionComponent 
-      title="Preço" 
-      isExpanded={expandedSections.price} 
-      onToggle={handleSectionToggle}
-      isActive={isFilterActive}
-    >
-      {/* Removida a div de espaçamento e o SimplifiedRangeFilter agora é filho direto */}
+    <div className="space-y-3">
       <SimplifiedRangeFilter
         initialValues={filters.price.range}
         defaultValues={defaultValues}
@@ -75,7 +64,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
           formatDisplay: true
         }}
       />
-    </FilterSectionComponent>
+    </div>
   );
 };
 
