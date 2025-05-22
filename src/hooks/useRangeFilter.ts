@@ -24,7 +24,7 @@ export interface RangeFilterOptions {
 
 /**
  * Hook para gerenciar campos de entrada de intervalo com estado, validação e formatação
- * Versão otimizada com memoização e cache para reduzir recálculos
+ * Versão otimizada com memoização e controle para evitar loops de renderização
  */
 export function useRangeFilter(
   initialValues: RangeValues,
@@ -48,6 +48,7 @@ export function useRangeFilter(
   // Cache de valores processados anteriormente para evitar recálculos
   const formatCache = useRef<Record<string, string>>({});
   const onChangeCallRef = useRef(false);
+  const prevValues = useRef<RangeValues>({min: '', max: ''});
   
   // Estado para rastrear valores de entrada
   const [values, setValues] = useState<RangeValues>({
@@ -70,13 +71,22 @@ export function useRangeFilter(
   // Formatar valores para exibição com cache
   const displayValues = useMemo(() => {
     const getCachedFormat = (value: string, type: 'min' | 'max') => {
+      // Se não há valor, retornar string vazia
+      if (!value) return '';
+      
+      // Criar chave única para cache
       const cacheKey = `${type}:${value}:${useThousandSeparator}:${formatDisplay}:${prefix}:${suffix}`;
       
-      if (!formatCache.current[cacheKey] && value) {
-        formatCache.current[cacheKey] = formatDisplayValue(value);
+      // Usar valor em cache se existir
+      if (formatCache.current[cacheKey]) {
+        return formatCache.current[cacheKey];
       }
       
-      return value ? (formatCache.current[cacheKey] || formatDisplayValue(value)) : '';
+      // Caso contrário, calcular e armazenar em cache
+      const formattedValue = formatDisplayValue(value);
+      formatCache.current[cacheKey] = formattedValue;
+      
+      return formattedValue;
     };
     
     return {
@@ -85,19 +95,36 @@ export function useRangeFilter(
     };
   }, [values.min, values.max, formatDisplayValue, useThousandSeparator, formatDisplay, prefix, suffix]);
 
+  // Handler para evitar chamadas desnecessárias ao onChange
+  const notifyChange = useCallback(() => {
+    if (!onChange) return;
+    
+    // Verificar se os valores realmente mudaram
+    if (
+      prevValues.current.min !== values.min || 
+      prevValues.current.max !== values.max
+    ) {
+      prevValues.current = {...values};
+      onChange(values);
+    }
+  }, [onChange, values]);
+
   // Atualizar o componente pai quando os valores mudarem
   useEffect(() => {
     // Evitar a chamada de onChange na primeira renderização
     if (!onChangeCallRef.current) {
       onChangeCallRef.current = true;
+      prevValues.current = {...values};
       return;
     }
     
-    if (onChange) {
-      onChange(values);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values]);
+    // Usar timeout para evitar múltiplas chamadas em sequência
+    const timer = setTimeout(() => {
+      notifyChange();
+    }, 0);
+    
+    return () => clearTimeout(timer);
+  }, [values, notifyChange]);
 
   // Manipuladores de eventos para campos min/max
   const handleMinChange = useCallback((value: string) => {

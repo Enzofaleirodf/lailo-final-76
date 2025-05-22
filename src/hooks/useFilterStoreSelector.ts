@@ -1,17 +1,60 @@
-
+import { useCallback, useMemo } from 'react';
 import { usePropertyFiltersStore } from '@/stores/usePropertyFiltersStore';
 import { useVehicleFiltersStore } from '@/stores/useVehicleFiltersStore';
-import { ContentType } from '@/types/filters';
+import { ContentType, FilterState } from '@/types/filters';
 
 /**
  * Hook que retorna a store correta com base no tipo de conteúdo
- * Simplifica o acesso às stores específicas de cada página
+ * Implementação otimizada com memoização e seletores específicos
  */
 export const useFilterStoreSelector = (contentType: ContentType) => {
-  // Escolher a store apropriada com base no tipo de conteúdo
-  return contentType === 'property' 
-    ? usePropertyFiltersStore() 
-    : useVehicleFiltersStore();
+  // Usar seletores específicos para cada prop para evitar re-renders desnecessários
+  const propertyFilters = usePropertyFiltersStore(state => state.filters);
+  const propertyUpdateFilter = usePropertyFiltersStore(state => state.updateFilter);
+  const propertySetFilters = usePropertyFiltersStore(state => state.setFilters);
+  const propertyResetFilters = usePropertyFiltersStore(state => state.resetFilters);
+  
+  const vehicleFilters = useVehicleFiltersStore(state => state.filters);
+  const vehicleUpdateFilter = useVehicleFiltersStore(state => state.updateFilter);
+  const vehicleSetFilters = useVehicleFiltersStore(state => state.setFilters);
+  const vehicleResetFilters = useVehicleFiltersStore(state => state.resetFilters);
+  
+  // Selecionar os valores corretos com base no tipo de conteúdo
+  const filters = useMemo(() => {
+    return contentType === 'property' ? propertyFilters : vehicleFilters;
+  }, [contentType, propertyFilters, vehicleFilters]);
+  
+  // Memoizar funções para evitar recriações desnecessárias
+  const updateFilter = useCallback((key: keyof FilterState, value: any) => {
+    if (contentType === 'property') {
+      propertyUpdateFilter(key, value);
+    } else {
+      vehicleUpdateFilter(key, value);
+    }
+  }, [contentType, propertyUpdateFilter, vehicleUpdateFilter]);
+  
+  const setFilters = useCallback((newFilters: Partial<FilterState>) => {
+    if (contentType === 'property') {
+      propertySetFilters(newFilters);
+    } else {
+      vehicleSetFilters(newFilters);
+    }
+  }, [contentType, propertySetFilters, vehicleSetFilters]);
+  
+  const resetFilters = useCallback(() => {
+    if (contentType === 'property') {
+      propertyResetFilters();
+    } else {
+      vehicleResetFilters();
+    }
+  }, [contentType, propertyResetFilters, vehicleResetFilters]);
+  
+  return {
+    filters,
+    updateFilter,
+    setFilters,
+    resetFilters
+  };
 };
 
 /**

@@ -15,7 +15,7 @@ interface UsefulAreaFilterProps {
 
 /**
  * Componente de filtro para área útil de imóveis
- * Melhorado para tratamento adequado do sufixo "m²"
+ * Versão otimizada para evitar loops de renderização
  */
 const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilterChange }) => {
   const { filters, updateFilter } = useFilterStoreSelector(contentType);
@@ -31,21 +31,34 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
     propertyDefaultRangeValues.usefulArea : 
     vehicleDefaultRangeValues.usefulArea;
   
-  // Handle filter value changes
+  // Handle filter value changes - com memoização para prevenir recriação desnecessária
   const handleRangeChange = useCallback((values: RangeValues) => {
+    // Não atualizar se os valores forem iguais aos atuais
+    if (values.min === filters.usefulArea.min && values.max === filters.usefulArea.max) {
+      return;
+    }
+    
     updateFilter('usefulArea', values);
     handleFilterChange();
-  }, [updateFilter, handleFilterChange]);
+  }, [updateFilter, handleFilterChange, filters.usefulArea.min, filters.usefulArea.max]);
   
   // Initialize with default values if empty - only on first mount
   useEffect(() => {
-    // Apenas inicializa uma vez, quando o componente monta
-    if (!initializationDone.current && !filters.usefulArea.min && !filters.usefulArea.max) {
-      updateFilter('usefulArea', defaultValues);
-      initializationDone.current = true;
+    // Garantir que a inicialização aconteça apenas uma vez
+    if (initializationDone.current) return;
+    
+    // Inicializar apenas se ambos os valores estiverem vazios
+    if (!filters.usefulArea.min && !filters.usefulArea.max) {
+      // Apenas atualizar se realmente diferente dos valores padrão
+      if (defaultValues.min !== filters.usefulArea.min || 
+          defaultValues.max !== filters.usefulArea.max) {
+        updateFilter('usefulArea', defaultValues);
+      }
     }
+    
+    initializationDone.current = true;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Dependências removidas para evitar loops, controlando com ref
+  }, []); 
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 

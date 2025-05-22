@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import BuscadorLayout from '@/components/BuscadorLayout';
 import { useBuscadorSetup } from '@/hooks/useBuscadorSetup';
 import { ContentType } from '@/types/filters';
@@ -11,20 +11,24 @@ interface BuscadorProps {
 }
 
 /**
- * Componente genérico de busca que pode ser usado para diferentes tipos de conteúdo
- * (imóveis ou veículos) com base no contentType fornecido.
- * Encapsula toda a lógica comum de busca e filtros.
+ * Componente genérico de busca com integração de cache
+ * e otimizações para evitar loops de renderização
  */
 const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
   // Usar o hook personalizado para configurar o tipo de conteúdo
   const { initialSetupDone } = useBuscadorSetup(contentType);
   
-  // Obter referências às stores (necessário para garantir que elas são inicializadas)
+  // Obter referências às stores usando seletores específicos
   const propertyStore = usePropertyFiltersStore(state => state.updateFilter);
   const vehicleStore = useVehicleFiltersStore(state => state.updateFilter);
   
   // Referência para controlar a inicialização única
   const contentTypeSetRef = useRef(false);
+  
+  // Memorizar o title da página baseado no tipo de conteúdo
+  const pageTitle = useMemo(() => {
+    return contentType === 'property' ? 'Busca de Imóveis' : 'Busca de Veículos';
+  }, [contentType]);
   
   // Atualizar o tipo de conteúdo correto na store apropriada
   useEffect(() => {
@@ -37,6 +41,9 @@ const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
       vehicleStore('contentType', 'vehicle');
     }
     
+    // Definir o título da página
+    document.title = pageTitle;
+    
     contentTypeSetRef.current = true;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentType]); 
@@ -44,4 +51,4 @@ const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
   return <BuscadorLayout contentType={contentType} />;
 };
 
-export default Buscador;
+export default React.memo(Buscador);

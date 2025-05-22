@@ -3,20 +3,27 @@ import { useEffect, useRef } from 'react';
 import { ContentType } from '@/types/filters';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterCache } from '@/hooks/useFilterCache';
 
 /**
  * Hook personalizado que encapsula toda a lógica de inicialização
  * e configuração para os componentes de buscador de imóveis ou veículos
- * Versão otimizada com remoção de loops de renderização
+ * Versão otimizada com caching e prevenção de loops
  */
 export const useBuscadorSetup = (contentType: ContentType) => {
-  const { updateFilter } = useFilterStoreSelector(contentType);
+  const { updateFilter, filters } = useFilterStoreSelector(contentType);
   const initialSetupDone = useRef(false);
   
-  // Sincronizar URL com estado de filtros e ordenação - passando contentType explicitamente
+  // Integrar sistema de cache
+  const { loadFromCache, saveToCache, isInitialized } = useFilterCache({
+    key: 'buscador_state',
+    contentType
+  });
+  
+  // Sincronizar URL com estado de filtros e ordenação
   const urlParams = useUrlParams(contentType);
 
-  // Definir o tipo de conteúdo quando a página carregar
+  // Definir o tipo de conteúdo e gerenciar cache
   useEffect(() => {
     // Evitar inicialização duplicada
     if (initialSetupDone.current) return;
@@ -24,9 +31,29 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     // Sempre garantir que o tipo de conteúdo está definido corretamente
     updateFilter('contentType', contentType);
     
+    // Carregar do cache se disponível e não tiver parâmetros na URL
+    if (isInitialized && window.location.search === '' || window.location.search === '?page=1') {
+      const cachedFilters = loadFromCache();
+      
+      if (cachedFilters) {
+        // Preservar o tipo de conteúdo atual
+        updateFilter('filters', { ...cachedFilters, contentType });
+      }
+    }
+    
     initialSetupDone.current = true;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentType]); // Removido updateFilter das dependências para evitar loops
+  }, [contentType]); // Executar apenas quando o contentType mudar
+  
+  // Salvar no cache quando os filtros mudarem
+  useEffect(() => {
+    // Não salvar durante a inicialização
+    if (!initialSetupDone.current || !isInitialized) return;
+    
+    // Salvar no cache apenas após a primeira renderização
+    saveToCache(filters);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]); // Depender dos filtros para salvar quando mudarem
       
   return { 
     initialSetupDone: initialSetupDone.current,
