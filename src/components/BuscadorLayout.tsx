@@ -38,7 +38,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
       {/* Barra de filtros superior para desktop com formato, origem e etapa */}
       {!isMobile && <DesktopFilterBar contentType={contentType} />}
       
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="container mx-auto py-8 flex gap-4 px-0">
         {/* Área de filtros lateral */}
         <div className="w-full md:w-1/4 lg:w-1/5">
           {isMobile ? <FilterContent contentType={contentType} /> : <FilterSection isOpen={true} contentType={contentType} onOpenChange={() => {}} />}
