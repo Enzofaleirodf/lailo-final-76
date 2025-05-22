@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useId } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { Label } from "@/components/ui/label";
 import FilterRangeInput from './FilterRangeInput';
@@ -11,7 +11,6 @@ interface YearRangeFilterProps {
 }
 
 const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => {
-  const id = useId();
   const { filters, updateFilter } = useFilterStore();
   const { year } = filters;
   
@@ -24,13 +23,30 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     validateRange,
     clearErrors,
     hasErrors
-  } = useFilterRangeValidator({
-    min: year.min,
-    max: year.max,
-    fieldName: 'year',
-    minLimit: defaultRangeValues.year.min,
-    maxLimit: defaultRangeValues.year.max
-  });
+  } = useFilterRangeValidator(
+    year.min,
+    year.max,
+    {
+      minAllowed: Number(defaultRangeValues.year.min),
+      maxAllowed: Number(defaultRangeValues.year.max),
+      onMinChange: (value) => {
+        updateFilter('year', {
+          ...year,
+          min: value
+        });
+        
+        if (onFilterChange) onFilterChange();
+      },
+      onMaxChange: (value) => {
+        updateFilter('year', {
+          ...year,
+          max: value
+        });
+        
+        if (onFilterChange) onFilterChange();
+      }
+    }
+  );
 
   // Limpar erros ao desmontar o componente
   useEffect(() => {
@@ -39,58 +55,31 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     };
   }, [clearErrors]);
 
-  // Funções para atualizar os valores de filtro
-  const handleMinYearChange = useCallback((value: string) => {
-    handleMinChange(value);
-    
-    updateFilter('year', {
-      ...year,
-      min: value
-    });
-    
-    if (onFilterChange) onFilterChange();
-  }, [handleMinChange, updateFilter, year, onFilterChange]);
-
-  const handleMaxYearChange = useCallback((value: string) => {
-    handleMaxChange(value);
-    
-    updateFilter('year', {
-      ...year,
-      max: value
-    });
-    
-    if (onFilterChange) onFilterChange();
-  }, [handleMaxChange, updateFilter, year, onFilterChange]);
+  // Verificar se o filtro está ativo
+  const isFilterActive = year.min !== defaultRangeValues.year.min || year.max !== defaultRangeValues.year.max;
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={`${id}-min-year`} className="text-sm font-medium text-gray-700">
+      <Label htmlFor="year-filter" className="text-sm font-medium text-gray-700">
         Ano do veículo
       </Label>
       
-      <div className="flex gap-2 items-center">
+      <div className="flex items-center gap-2">
         <FilterRangeInput
-          value={year.min}
-          onChange={handleMinYearChange}
-          placeholder="Min"
-          maxLength={4}
-          inputMode="numeric"
-          aria-label="Ano mínimo"
-          hasError={!!minError}
+          minValue={year.min}
+          maxValue={year.max}
+          onMinChange={handleMinChange}
+          onMaxChange={handleMaxChange}
+          minPlaceholder="Min"
+          maxPlaceholder="Max"
+          ariaLabelMin="Ano mínimo"
+          ariaLabelMax="Ano máximo"
           className="flex-1"
-        />
-        
-        <span className="text-gray-400">até</span>
-        
-        <FilterRangeInput
-          value={year.max}
-          onChange={handleMaxYearChange}
-          placeholder="Max"
-          maxLength={4}
-          inputMode="numeric"
-          aria-label="Ano máximo"
-          hasError={!!maxError}
-          className="flex-1"
+          minAllowed={Number(defaultRangeValues.year.min)}
+          maxAllowed={Number(defaultRangeValues.year.max)}
+          isFilterActive={isFilterActive}
+          defaultMin={defaultRangeValues.year.min}
+          defaultMax={defaultRangeValues.year.max}
         />
       </div>
       
