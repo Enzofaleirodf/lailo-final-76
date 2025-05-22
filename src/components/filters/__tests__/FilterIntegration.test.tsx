@@ -2,102 +2,31 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import * as filterStoreModule from '@/stores/useFilterStore';
-import * as uiStoreModule from '@/stores/useUIStore';
-
-// Criar cliente de consulta para testes
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
-
-// Mock para eventos
-const mockDispatchEvent = jest.fn();
-window.dispatchEvent = mockDispatchEvent;
-
-// Properly mock the stores with jest.fn()
-jest.mock('@/stores/useFilterStore');
-jest.mock('@/stores/useUIStore');
-
-// Get the mocked stores with proper typing
-const mockUseFilterStore = filterStoreModule.useFilterStore as jest.MockedFunction<typeof filterStoreModule.useFilterStore>;
-const mockUseUIStore = uiStoreModule.useUIStore as jest.MockedFunction<typeof uiStoreModule.useUIStore>;
-
-// Mock dos hooks de acessibilidade
-jest.mock('@/hooks/use-mobile', () => ({
-  useIsMobile: () => false
-}));
+import {
+  TestProviders,
+  resetAllMocks,
+  mockDispatchEvent,
+  createDefaultFilterStoreMock
+} from './setupFilterTests';
 
 describe('Integração de Filtros', () => {
-  const defaultFilterStore = {
-    filters: {
-      contentType: 'property',
-      location: { state: '', city: '' },
-      vehicleTypes: [],
-      propertyTypes: [],
-      price: { value: [0, 100], range: { min: '', max: '' } },
-      brand: 'todas',
-      model: 'todos',
-      color: 'todas',
-      format: 'Todos',
-      origin: 'Todas',
-      place: 'Todas',
-      year: { min: '', max: '' },
-      usefulArea: { min: '', max: '' }
-    },
-    expandedSections: {
-      location: true,
-      price: false,
-      propertyType: false,
-      vehicleType: false,
-      year: false,
-      usefulArea: false,
-      model: false,
-      color: false,
-      format: false,
-      origin: false,
-      place: false
-    },
-    activeFilters: 0,
-    lastUpdatedFilter: null,
-    updateFilter: jest.fn(),
-    resetFilters: jest.fn(),
-    setFilters: jest.fn(),
-    toggleSection: jest.fn(),
-    collapseAllSections: jest.fn(),
-    expandAllSections: jest.fn()
-  };
-
-  const defaultUIStore = {
-    filtersOpen: true,
-    sortOpen: false,
-    setFiltersOpen: jest.fn(),
-    setSortOpen: jest.fn(),
-    toggleFilters: jest.fn(),
-    toggleSort: jest.fn()
-  };
+  // Usar store comum para testes
+  const defaultFilterStore = createDefaultFilterStoreMock('property');
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockUseFilterStore.mockReturnValue(defaultFilterStore);
-    mockUseUIStore.mockReturnValue(defaultUIStore);
+    resetAllMocks();
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue(defaultFilterStore);
   });
 
   test('Fluxo completo: alterar tipo de conteúdo e aplicar filtro', async () => {
     // Renderizar o componente TopFilters para seleção de tipo de conteúdo
     render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <TopFilters contentType="property" />
-        </BrowserRouter>
-      </QueryClientProvider>
+      <TestProviders filterStoreMock={defaultFilterStore}>
+        <TopFilters contentType="property" />
+      </TestProviders>
     );
 
     // Clicar no botão de veículos
@@ -112,11 +41,9 @@ describe('Integração de Filtros', () => {
 
     // Renderizar FilterSection para testar a aplicação de filtros
     render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <FilterSection contentType="property" />
-        </BrowserRouter>
-      </QueryClientProvider>
+      <TestProviders filterStoreMock={defaultFilterStore}>
+        <FilterSection contentType="property" />
+      </TestProviders>
     );
 
     // Clicar no botão de aplicar filtros
@@ -142,14 +69,12 @@ describe('Integração de Filtros', () => {
       }
     };
     
-    mockUseFilterStore.mockReturnValue(activeFilterStore);
+    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue(activeFilterStore);
 
     render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <FilterSection contentType="property" />
-        </BrowserRouter>
-      </QueryClientProvider>
+      <TestProviders filterStoreMock={activeFilterStore}>
+        <FilterSection contentType="property" />
+      </TestProviders>
     );
     
     // Encontrar e clicar no botão de resetar filtros
@@ -166,12 +91,10 @@ describe('Integração de Filtros', () => {
 
   test('Acessibilidade: navegação por teclado nos controles de filtro', async () => {
     render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <FilterSection contentType="property" />
-          <TopFilters contentType="property" />
-        </BrowserRouter>
-      </QueryClientProvider>
+      <TestProviders filterStoreMock={defaultFilterStore}>
+        <FilterSection contentType="property" />
+        <TopFilters contentType="property" />
+      </TestProviders>
     );
     
     // Verificar se botões podem ser navegados por teclado

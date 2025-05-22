@@ -54,7 +54,7 @@ const RangeFilter: React.FC<RangeFilterProps> = ({
   formatterOptions = {},
   id
 }) => {
-  // Verificar consistência em diferentes tamanhos de tela
+  // Verificar consistência apenas em desenvolvimento
   useResponsiveConsistency({ 
     targetElements: [
       {
@@ -62,7 +62,7 @@ const RangeFilter: React.FC<RangeFilterProps> = ({
         properties: ['border-color', 'border-radius', 'padding', 'background-color']
       }
     ],
-    logInconsistencies: false // Desativado em produção
+    logInconsistencies: process.env.NODE_ENV === 'development'
   });
   
   const isMobile = useIsMobile();
