@@ -176,6 +176,11 @@ export const useFilterStore = create<FilterStore>()(
             newFilters.vehicleTypes = [];
             newFilters.propertyTypes = [];
           }
+          
+          // Se o formato mudar para "Venda Direta" ou "Alienação Particular", resetar o filtro de etapa
+          if (key === 'format' && (value === 'Venda Direta' || value === 'Alienação Particular')) {
+            newFilters.place = 'Todas';
+          }
 
           return { 
             filters: newFilters, 
@@ -187,15 +192,26 @@ export const useFilterStore = create<FilterStore>()(
       
       // Reset all filters to initial state
       resetFilters: () => {
-        set((state) => ({ 
-          filters: { 
-            ...initialFilterState,
-            // Preserve content type when resetting
+        set((state) => {
+          // Criar um estado filtro inicial limpo, mas mantendo o tipo de conteúdo atual
+          const resetState = {
+            ...JSON.parse(JSON.stringify(initialFilterState)),
             contentType: state.filters.contentType
-          }, 
-          activeFilters: 0,
-          lastUpdatedFilter: 'reset'
-        }));
+          };
+          
+          // Garantir que todos os inputs de intervalo sejam limpos
+          resetState.price.range = { min: '', max: '' };
+          resetState.year = { min: '', max: '' };
+          resetState.usefulArea = { min: '', max: '' };
+          
+          console.log('Reset filters to:', resetState);
+          
+          return { 
+            filters: resetState,
+            activeFilters: 0,
+            lastUpdatedFilter: 'reset'
+          };
+        });
       },
       
       // Set multiple filters at once (used for URL sync)

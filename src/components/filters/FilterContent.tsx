@@ -7,6 +7,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
 import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import { useToast } from '@/hooks/use-toast';
 
 /**
  * FilterContent - Principal componente que renderiza todas as seções de filtros
@@ -20,6 +21,7 @@ const FilterContent: React.FC = () => {
   } = useFilterStore();
   
   const isMobile = useIsMobile();
+  const { toast } = useToast();
 
   // Usar o hook de consistência do filtro com notificação de toast ativada
   // Isso atua como um único ponto para tratar mudanças de filtro
@@ -40,9 +42,18 @@ const FilterContent: React.FC = () => {
   const handleResetFilters = React.useCallback(() => {
     resetFilters();
     
-    // Acionar evento de aplicação de filtro
-    window.dispatchEvent(new CustomEvent('filters:applied'));
-  }, [resetFilters]);
+    // Acionar evento de aplicação de filtro para garantir que a UI seja atualizada
+    window.dispatchEvent(new CustomEvent('filters:applied', {
+      detail: { forceReset: true }
+    }));
+    
+    // Notificar o usuário
+    toast({
+      title: "Filtros resetados",
+      description: "Todos os filtros foram resetados com sucesso",
+      duration: 2000
+    });
+  }, [resetFilters, toast]);
 
   // Limpar recursos quando o componente é desmontado
   useEffect(() => {
