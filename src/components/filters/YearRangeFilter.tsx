@@ -38,10 +38,6 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
     filters.year.min !== defaultValues.min || 
     filters.year.max !== defaultValues.max;
   
-  console.log('YearRangeFilter - isFilterActive:', isFilterActive);
-  console.log('filters.year:', filters.year);
-  console.log('defaultValues:', defaultValues);
-  
   return (
     <div className="space-y-3">
       <label htmlFor="year-range" className="block text-sm font-medium text-gray-700 mb-1">

@@ -12,7 +12,6 @@ interface FilterDropdownProps {
   'aria-label'?: string;
   disabled?: boolean;
   placeholder?: string;
-  isActive?: boolean;
 }
 
 /**
@@ -27,12 +26,14 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   id,
   "aria-label": ariaLabel,
   disabled = false,
-  placeholder = "Selecione",
-  isActive = false
+  placeholder
 }) => {
   // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
   const [isTouched, setIsTouched] = useState(false);
+  
+  // Verificar se o valor não está vazio e não é um valor padrão como "Todas", "Todos"
+  const isValueSelected = value && value !== "todas" && value !== "Todas" && value !== "todos" && value !== "Todos";
   
   // Handler para mudança com prevenção de efeitos colaterais de rolagem
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -113,9 +114,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     };
   }, [ariaLabel, value, options]);
   
-  // Verifica se o filtro está realmente ativo - valor não vazio e diferente de placeholder
-  const isActiveState = isActive && value !== '';
-  
   return (
     <div className="relative isolate">
       <select
@@ -124,8 +122,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
-          value ? "text-gray-800 font-medium" : "text-gray-500 font-normal", 
-          isActiveState ? "border-purple-300" : "border-gray-300", // Borda roxa apenas quando ativo
+          isValueSelected ? "text-gray-800 font-medium" : "text-gray-600",
+          "border-gray-300",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
@@ -139,14 +137,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-required="false"
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
-        data-active={isActiveState ? 'true' : 'false'}
       >
-        <option value="" disabled>{placeholder}</option>
+        {placeholder && <option value="" disabled>{placeholder}</option>}
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}
             value={option.value} 
-            className="text-gray-800 font-medium font-urbanist"
+            className={`${option.value === value ? 'text-gray-800 font-medium' : 'text-gray-600 font-normal'} font-urbanist`}
           >
             {option.label}
           </option>

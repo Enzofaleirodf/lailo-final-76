@@ -27,7 +27,7 @@ export interface RangeFilterProps {
     useThousandSeparator?: boolean;
     formatDisplay?: boolean;
   };
-  id?: string;
+  id?: string; // Add the id prop to the interface
 }
 
 /**
@@ -52,7 +52,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   className = "",
   isActive = false,
   formatterOptions = {},
-  id
+  id // Include the id in the destructured props
 }) => {
   // Verificar consistência em diferentes tamanhos de tela
   useResponsiveConsistency({ 
@@ -92,11 +92,6 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   const filterGroupId = id || React.useId();
   const minErrorId = `min-error-${filterGroupId}`;
   const maxErrorId = `max-error-${filterGroupId}`;
-  
-  // Log para debug
-  console.log('SimplifiedRangeFilter - isActive:', isActive);
-  console.log('values:', values);
-  console.log('defaultValues:', defaultValues);
   
   // Calcular placeholder específico para dispositivo
   const getResponsivePlaceholder = (placeholder: string) => {

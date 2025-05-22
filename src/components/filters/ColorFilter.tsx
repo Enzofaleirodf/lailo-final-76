@@ -9,6 +9,7 @@ interface ColorFilterProps {
 }
 
 const colorOptions = [
+  { value: 'todas', label: 'Todas' },
   { value: 'preto', label: 'Preto' },
   { value: 'branco', label: 'Branco' },
   { value: 'prata', label: 'Prata' },
@@ -29,18 +30,12 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
     onChange: onFilterChange
   });
   
-  // Verificar se o filtro está ativo - apenas quando tem valor
-  const isFilterActive = !!filters.color && filters.color !== '';
-  
   const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);
     
     // Notify parent component that filter has changed
     handleFilterChange();
   }, [updateFilter, handleFilterChange]);
-
-  // Log para debug
-  console.log('ColorFilter - isFilterActive:', isFilterActive);
 
   return (
     <div 
@@ -53,12 +48,10 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
       <FilterDropdown
         id="color-filter"
         aria-label="Selecione a cor"
-        value={filters.color || ''}
+        value={filters.color || 'todas'}
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-urbanist"
-        isActive={isFilterActive}
-        placeholder="Selecione a cor"
       />
     </div>
   );

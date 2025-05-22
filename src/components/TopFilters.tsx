@@ -22,9 +22,6 @@ const TopFilters: React.FC = () => {
   const { filters, updateFilter } = useFilterStore();
   const navigate = useNavigate();
 
-  // Verifica se o filtro de etapa deve estar desativado
-  const isPlaceFilterDisabled = filters.format === 'Venda Direta' || filters.format === 'Alienação Particular';
-
   const handleContentTypeChange = useCallback((type: ContentType) => {
     // Não fazer nada se já estivermos no tipo selecionado
     if (filters.contentType === type) return;
@@ -43,11 +40,6 @@ const TopFilters: React.FC = () => {
   const handleFilterChange = useCallback((filterType: 'format' | 'origin' | 'place', value: FilterFormat | FilterOrigin | FilterPlace) => {
     if (filterType === 'format') {
       updateFilter('format', value as FilterFormat);
-      
-      // Se o formato for "Venda Direta" ou "Alienação Particular", reseta o valor do filtro de etapa
-      if (value === 'Venda Direta' || value === 'Alienação Particular') {
-        updateFilter('place', 'Todas' as FilterPlace);
-      }
     } else if (filterType === 'origin') {
       updateFilter('origin', value as FilterOrigin);
     } else if (filterType === 'place') {
@@ -57,21 +49,7 @@ const TopFilters: React.FC = () => {
 
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
-
-  // Verificar se cada filtro está ativo com base no valor selecionado
-  const isFormatActive = !!filters.format && filters.format !== 'Todos';
-  const isOriginActive = !!filters.origin && filters.origin !== 'Todas';
-  const isPlaceActive = !!filters.place && filters.place !== 'Todas' && !isPlaceFilterDisabled;
-
-  // Base style for dropdowns with active state
-  const getDropdownStyle = (isActive: boolean, isDisabled = false) => cn(
-    "h-10 flex items-center justify-between px-4 transition-colors",
-    "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-urbanist shadow-sm rounded-lg",
-    isActive ? "border border-purple-300" : "border border-gray-200",
-    isDisabled 
-      ? "bg-gray-100 cursor-not-allowed opacity-70 text-gray-500" 
-      : "bg-white hover:bg-gray-50 cursor-pointer"
-  );
+  const baseDropdownStyle = "h-10 flex items-center justify-between px-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-urbanist shadow-sm rounded-lg border border-gray-200";
 
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
@@ -132,16 +110,14 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={getDropdownStyle(isFormatActive)}
+            className={baseDropdownStyle}
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
-            data-active={isFormatActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> 
-              <span className={filters.format && filters.format !== 'Todos' ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
-                {filters.format || "Selecione"}
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
+                {filters.format}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -164,16 +140,14 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={getDropdownStyle(isOriginActive)}
+            className={baseDropdownStyle}
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
-            aria-expanded="false"
-            data-active={isOriginActive ? 'true' : 'false'}
+            aria-expanded="false"  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> 
-              <span className={filters.origin && filters.origin !== 'Todas' ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
-                {filters.origin || "Selecione"}
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
+                {filters.origin}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -192,46 +166,34 @@ const TopFilters: React.FC = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Place options - Desativado para Venda Direta e Alienação Particular */}
+      {/* Place options */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild disabled={isPlaceFilterDisabled}>
+        <DropdownMenuTrigger asChild>
           <button 
-            className={getDropdownStyle(isPlaceActive, isPlaceFilterDisabled)}
+            className={baseDropdownStyle}
             aria-label="Selecionar etapa"
             aria-haspopup="listbox"
             aria-expanded="false"
-            data-active={isPlaceActive ? 'true' : 'false'}
-            disabled={isPlaceFilterDisabled}
-            title={isPlaceFilterDisabled ? "Etapa não disponível para este formato" : ""}
           >
-            <span className="text-sm font-normal">
-              <span className={isPlaceFilterDisabled ? "text-gray-400" : "text-gray-500 font-normal"}>Etapa:</span> 
-              <span className={
-                isPlaceFilterDisabled 
-                  ? "text-gray-400 ml-1" 
-                  : filters.place && filters.place !== 'Todas'
-                    ? "text-gray-800 font-medium ml-1" 
-                    : "text-gray-500 font-normal ml-1"
-              }>
-                {isPlaceFilterDisabled ? "N/A" : (filters.place || "Selecione")}
+            <span className="text-sm font-normal text-gray-700">
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
+                {filters.place}
               </span>
             </span>
-            <ChevronDown size={16} className={isPlaceFilterDisabled ? "text-gray-400" : "text-gray-500"} aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
-        {!isPlaceFilterDisabled && (
-          <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
-            {placeOptions.map(option => (
-              <DropdownMenuItem 
-                key={option.value}
-                onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
-                className="cursor-pointer hover:bg-brand-50 hover:text-gray-800 font-normal font-urbanist"
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        )}
+        <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
+          {placeOptions.map(option => (
+            <DropdownMenuItem 
+              key={option.value}
+              onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
+              className="cursor-pointer hover:bg-brand-50 hover:text-gray-800 font-normal font-urbanist"
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
