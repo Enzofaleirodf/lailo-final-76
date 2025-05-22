@@ -30,7 +30,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
       </div>
       
       {/* Content - always expanded - no more accordion */}
-      <div className="p-3" id={id} role="region" aria-labelledby={`heading-${id}`}>
+      <div id={id} role="region" aria-labelledby={`heading-${id}`} className="p-1">
         {children}
       </div>
     </div>;
