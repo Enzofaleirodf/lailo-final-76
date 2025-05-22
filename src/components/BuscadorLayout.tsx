@@ -7,7 +7,7 @@ import ResultHeader from './ResultHeader';
 import AuctionList from './AuctionList';
 import MobileFilterBar from './mobile-filter/MobileFilterBar';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Drawer } from '@/components/ui/sheet';
+import { Drawer } from '@/components/ui/drawer';
 
 interface BuscadorLayoutProps {
   contentType: ContentType;
