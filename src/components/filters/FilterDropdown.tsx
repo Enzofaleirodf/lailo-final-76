@@ -27,8 +27,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   id,
   "aria-label": ariaLabel,
   disabled = false,
-  placeholder,
-  isActive = true // Alterado para true por padrão
+  placeholder = "Selecione",
+  isActive = false
 }) => {
   // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -113,10 +113,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     };
   }, [ariaLabel, value, options]);
   
-  // Para debug - verificar quando isActive muda
-  useEffect(() => {
-    console.log(`FilterDropdown ${id} - isActive:`, isActive);
-  }, [isActive, id]);
+  // Verifica se o filtro está realmente ativo - valor não vazio e diferente de placeholder
+  const isActiveState = isActive && value !== '';
   
   return (
     <div className="relative isolate">
@@ -126,8 +124,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
-          "text-gray-800 font-medium", // Sempre mostrar em negrito
-          isActive ? "border-purple-300" : "border-gray-300", // Sempre aplicar borda roxa
+          value ? "text-gray-800 font-medium" : "text-gray-500 font-normal", 
+          isActiveState ? "border-purple-300" : "border-gray-300", // Borda roxa apenas quando ativo
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
@@ -141,14 +139,14 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-required="false"
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
-        data-active={isActive ? 'true' : 'false'}
+        data-active={isActiveState ? 'true' : 'false'}
       >
-        {placeholder && <option value="" disabled>{placeholder}</option>}
+        <option value="" disabled>{placeholder}</option>
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}
             value={option.value} 
-            className={`text-gray-800 font-medium font-urbanist`} // Sempre mostrar em negrito
+            className="text-gray-800 font-medium font-urbanist"
           >
             {option.label}
           </option>

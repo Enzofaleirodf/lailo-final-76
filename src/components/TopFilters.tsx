@@ -46,7 +46,7 @@ const TopFilters: React.FC = () => {
       
       // Se o formato for "Venda Direta" ou "Alienação Particular", reseta o valor do filtro de etapa
       if (value === 'Venda Direta' || value === 'Alienação Particular') {
-        updateFilter('place', 'Todas');
+        updateFilter('place', '');
       }
     } else if (filterType === 'origin') {
       updateFilter('origin', value as FilterOrigin);
@@ -58,10 +58,10 @@ const TopFilters: React.FC = () => {
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
 
-  // Verificar se cada filtro está ativo - SEMPRE considerar como ativo
-  const isFormatActive = true;
-  const isOriginActive = true;
-  const isPlaceActive = !isPlaceFilterDisabled;
+  // Verificar se cada filtro está ativo com base no valor selecionado
+  const isFormatActive = !!filters.format && filters.format !== '';
+  const isOriginActive = !!filters.origin && filters.origin !== '';
+  const isPlaceActive = !!filters.place && filters.place !== '' && !isPlaceFilterDisabled;
 
   // Base style for dropdowns with active state
   const getDropdownStyle = (isActive: boolean, isDisabled = false) => cn(
@@ -139,8 +139,9 @@ const TopFilters: React.FC = () => {
             data-active={isFormatActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className={isFormatActive ? "text-gray-800 font-medium" : "text-gray-700 font-normal"}>
-                {filters.format}
+              <span className="text-gray-500 font-normal">Formato:</span> 
+              <span className={filters.format ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
+                {filters.format || "Selecione"}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -170,8 +171,9 @@ const TopFilters: React.FC = () => {
             data-active={isOriginActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className={isOriginActive ? "text-gray-800 font-medium" : "text-gray-700 font-normal"}>
-                {filters.origin}
+              <span className="text-gray-500 font-normal">Origem:</span> 
+              <span className={filters.origin ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
+                {filters.origin || "Selecione"}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -206,12 +208,12 @@ const TopFilters: React.FC = () => {
               <span className={isPlaceFilterDisabled ? "text-gray-400" : "text-gray-500 font-normal"}>Etapa:</span> 
               <span className={
                 isPlaceFilterDisabled 
-                  ? "text-gray-400" 
-                  : isPlaceActive 
-                    ? "text-gray-800 font-medium" 
-                    : "text-gray-700 font-normal"
+                  ? "text-gray-400 ml-1" 
+                  : filters.place
+                    ? "text-gray-800 font-medium ml-1" 
+                    : "text-gray-500 font-normal ml-1"
               }>
-                {isPlaceFilterDisabled ? "N/A" : filters.place}
+                {isPlaceFilterDisabled ? "N/A" : (filters.place || "Selecione")}
               </span>
             </span>
             <ChevronDown size={16} className={isPlaceFilterDisabled ? "text-gray-400" : "text-gray-500"} aria-hidden="true" />

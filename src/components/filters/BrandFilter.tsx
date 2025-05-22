@@ -21,15 +21,13 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     // Obter as marcas disponíveis para o tipo de veículo selecionado
     let brands = getBrandsByVehicleType(vehicleType);
     
-    // Ordenar alfabeticamente, mantendo "Todas" no início
+    // Ordenar alfabeticamente
     if (brands.includes('Todas')) {
       const todasIndex = brands.indexOf('Todas');
       brands.splice(todasIndex, 1);
-      brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-      brands.unshift('Todas');
-    } else {
-      brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
     }
+    
+    brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
     
     // Transformar a lista de marcas em opções para o dropdown
     return brands.map(brand => ({
@@ -38,8 +36,8 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     }));
   }, [filters.vehicleTypes]);
   
-  // Verificar se o filtro está ativo - SEMPRE mostrar como ativo
-  const isFilterActive = true;
+  // Verificar se o filtro está ativo - apenas se tiver valor
+  const isFilterActive = !!filters.brand && filters.brand !== '';
   
   // Manipular a mudança de marca
   const handleBrandChange = useCallback((value: string) => {
@@ -47,7 +45,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     
     // Resetar modelo quando a marca mudar
     if (value !== filters.brand) {
-      updateFilter('model', 'todos');
+      updateFilter('model', '');
     }
     
     // Notificar o componente pai sobre a mudança
@@ -67,10 +65,11 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
       <FilterDropdown 
         id="brand-filter" 
         aria-label="Selecione a marca" 
-        value={filters.brand} 
+        value={filters.brand || ''} 
         onChange={handleBrandChange} 
         options={brandOptions}
         isActive={isFilterActive}
+        placeholder="Selecione a marca"
       />
     </div>
   );

@@ -9,7 +9,6 @@ interface ColorFilterProps {
 }
 
 const colorOptions = [
-  { value: 'todas', label: 'Todas' },
   { value: 'preto', label: 'Preto' },
   { value: 'branco', label: 'Branco' },
   { value: 'prata', label: 'Prata' },
@@ -30,8 +29,8 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
     onChange: onFilterChange
   });
   
-  // Verificar se o filtro está ativo - QUALQUER valor é considerado ativo, incluindo "todas"
-  const isFilterActive = true; // Sempre mostrar como ativo
+  // Verificar se o filtro está ativo - apenas quando tem valor
+  const isFilterActive = !!filters.color && filters.color !== '';
   
   const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);
@@ -54,11 +53,12 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
       <FilterDropdown
         id="color-filter"
         aria-label="Selecione a cor"
-        value={filters.color || 'todas'}
+        value={filters.color || ''}
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-urbanist"
         isActive={isFilterActive}
+        placeholder="Selecione a cor"
       />
     </div>
   );

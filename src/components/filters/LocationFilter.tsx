@@ -46,22 +46,16 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   }, [filters.location.state, filters.location.city]);
 
   // Format states for dropdown
-  const stateOptions: FilterDropdownOption[] = [{
-    value: '',
-    label: 'Todos'
-  }, ...states.map(state => ({
+  const stateOptions: FilterDropdownOption[] = states.map(state => ({
     value: state.sigla,
     label: `${state.sigla} - ${state.nome}`
-  }))];
+  }));
 
   // Format cities for dropdown
-  const cityOptions: FilterDropdownOption[] = [{
-    value: '',
-    label: 'Todas'
-  }, ...cities.map(city => ({
+  const cityOptions: FilterDropdownOption[] = cities.map(city => ({
     value: city.nome,
     label: city.nome
-  }))];
+  }));
 
   // Handle state change
   const handleStateChange = useCallback((value: string) => {
@@ -73,11 +67,6 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Handle city change
   const handleCityChange = useCallback((value: string) => {
     setLocalCity(value);
-  }, []);
-
-  // Handle search input change
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
   }, []);
 
   // Apply filter changes
@@ -110,8 +99,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
     setLocalCity('');
   }, []);
 
-  // O filtro de localização é SEMPRE ativo, mesmo quando a localização é vazia
-  const isFilterActive = true;
+  // Verifica se o filtro está ativo com base nos valores selecionados
+  const isFilterActive = !!(filters.location.state || filters.location.city);
 
   // Generate display text for the button
   const getDisplayText = () => {
@@ -183,7 +172,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleStateChange}
                   options={stateOptions}
                   aria-label="Selecione o estado"
-                  isActive={true} // Sempre mostrar como ativo
+                  isActive={!!localState}
+                  placeholder="Selecione o estado"
                 />
               )}
             </div>
@@ -206,7 +196,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleCityChange}
                   options={cityOptions}
                   aria-label="Selecione a cidade"
-                  isActive={true} // Sempre mostrar como ativo
+                  isActive={!!localCity}
+                  placeholder="Selecione a cidade"
                 />
               )}
             </div>
