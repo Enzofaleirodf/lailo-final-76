@@ -16,7 +16,7 @@ export const useBuscadorSetup = (contentType: ContentType) => {
   
   // Integrar sistema de cache
   const { loadFromCache, saveToCache, isInitialized } = useFilterCache({
-    key: 'buscador_state',
+    key: `buscador_${contentType}_state`,
     contentType
   });
   
@@ -32,7 +32,7 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     updateFilter('contentType', contentType);
     
     // Carregar do cache se disponível e não tiver parâmetros na URL
-    if (isInitialized && window.location.search === '' || window.location.search === '?page=1') {
+    if (isInitialized && (window.location.search === '' || window.location.search === '?page=1')) {
       const cachedFilters = loadFromCache();
       
       if (cachedFilters) {

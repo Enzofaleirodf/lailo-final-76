@@ -29,6 +29,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
+    if (!filters?.price) return; // Proteção contra valores indefinidos
+    
     // Não atualizar se os valores forem iguais aos atuais
     if (filters?.price?.range?.min === values.min && 
         filters?.price?.range?.max === values.max) {
@@ -48,7 +50,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
     if (initializationDone.current) return;
     
     // Verificar se o filtro price existe e se já tem valores
-    if (!filters?.price?.range?.min && !filters?.price?.range?.max) {
+    if (filters && (!filters?.price?.range?.min && !filters?.price?.range?.max)) {
       updateFilter('price', {
         value: filters?.price?.value || [0, 100],
         range: defaultValues
@@ -57,9 +59,9 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
     
     initializationDone.current = true;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Executar apenas uma vez na montagem
+  }, [filters]); // Executar apenas quando filters mudar
   
-  // Adicionar verificação de segurança para evitar erros
+  // Verificação de segurança para evitar erros
   if (!filters?.price?.range) {
     return null; // Não renderizar nada se os dados não estiverem prontos
   }

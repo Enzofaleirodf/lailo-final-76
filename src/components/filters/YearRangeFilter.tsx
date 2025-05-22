@@ -29,6 +29,8 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
+    if (!filters?.year) return; // Proteção contra valores indefinidos
+    
     // Não atualizar se os valores forem iguais aos atuais
     if (filters?.year?.min === values.min && 
         filters?.year?.max === values.max) {
@@ -43,6 +45,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
   useEffect(() => {
     // Garantir que a inicialização aconteça apenas uma vez
     if (initializationDone.current) return;
+    if (!filters) return; // Proteção adicional
     
     // Inicializar apenas se ambos os valores estiverem vazios
     if (!filters?.year?.min && !filters?.year?.max) {
@@ -55,7 +58,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
     
     initializationDone.current = true;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, [filters]); 
   
   // Verificação de segurança para evitar erros
   if (!filters?.year) {
