@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { MapPin, X, ChevronDown, Search } from 'lucide-react';
+import { MapPin, ChevronDown } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,6 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   const [open, setOpen] = useState(false);
   const [localState, setLocalState] = useState(filters.location.state);
   const [localCity, setLocalCity] = useState(filters.location.city);
-  const [searchQuery, setSearchQuery] = useState('');
   const {
     states,
     loading: loadingStates
@@ -47,7 +46,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Format states for dropdown
   const stateOptions: FilterDropdownOption[] = [{
     value: '',
-    label: 'Todos'
+    label: 'Todos os estados'
   }, ...states.map(state => ({
     value: state.sigla,
     label: `${state.sigla} - ${state.nome}`
@@ -56,7 +55,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Format cities for dropdown
   const cityOptions: FilterDropdownOption[] = [{
     value: '',
-    label: 'Todas'
+    label: 'Todas as cidades'
   }, ...cities.map(city => ({
     value: city.nome,
     label: city.nome
@@ -72,11 +71,6 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   // Handle city change
   const handleCityChange = useCallback((value: string) => {
     setLocalCity(value);
-  }, []);
-
-  // Handle search input change
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
   }, []);
 
   // Apply filter changes
@@ -124,9 +118,15 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
     return 'Selecione a localização';
   };
   
-  return <Popover open={open} onOpenChange={setOpen}>
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-gray-900 font-medium' : 'text-gray-500'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''} font-urbanist`}>
+        <Button 
+          variant="outline" 
+          role="combobox" 
+          aria-expanded={open} 
+          className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-gray-900 font-medium' : 'text-gray-500'} font-urbanist`}
+        >
           <div className="flex items-center gap-2 overflow-hidden">
             <MapPin size={16} className={isFilterActive ? 'text-gray-800' : 'text-gray-500'} />
             <span className="truncate">
@@ -206,7 +206,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
           </div>
         </div>
       </PopoverContent>
-    </Popover>;
+    </Popover>
+  );
 };
 
 export default React.memo(LocationFilter);

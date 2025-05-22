@@ -135,10 +135,14 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> 
-              <span className={filters.format !== 'Selecione' ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
-                {filters.format !== 'Selecione' ? filters.format : getDisplayText('format')}
-              </span>
+              {filters.format !== 'Selecione' ? (
+                <>
+                  <span className="text-gray-500 font-normal">Formato:</span>{" "}
+                  <span className="text-gray-700 font-normal">{filters.format}</span>
+                </>
+              ) : (
+                <span className="text-gray-500 font-normal">Selecione um formato</span>
+              )}
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
@@ -166,10 +170,14 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> 
-              <span className={filters.origin !== 'Selecione' ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
-                {filters.origin !== 'Selecione' ? filters.origin : getDisplayText('origin')}
-              </span>
+              {filters.origin !== 'Selecione' ? (
+                <>
+                  <span className="text-gray-500 font-normal">Origem:</span>{" "}
+                  <span className="text-gray-700 font-normal">{filters.origin}</span>
+                </>
+              ) : (
+                <span className="text-gray-500 font-normal">Selecione uma origem</span>
+              )}
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
@@ -197,10 +205,14 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> 
-              <span className={filters.place !== 'Selecione' ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
-                {filters.place !== 'Selecione' ? filters.place : getDisplayText('place')}
-              </span>
+              {filters.place !== 'Selecione' ? (
+                <>
+                  <span className="text-gray-500 font-normal">Etapa:</span>{" "}
+                  <span className="text-gray-700 font-normal">{filters.place}</span>
+                </>
+              ) : (
+                <span className="text-gray-500 font-normal">Selecione uma etapa</span>
+              )}
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>

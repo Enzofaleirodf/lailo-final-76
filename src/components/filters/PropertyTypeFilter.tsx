@@ -4,28 +4,21 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { cn } from '@/lib/utils';
 
 interface PropertyTypeFilterProps {
   onFilterChange?: () => void;
 }
 
-const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
-  onFilterChange
-}) => {
+const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange }) => {
   const id = useId();
-  const {
-    filters,
-    updateFilter
-  } = useFilterStore();
-  const {
-    category,
-    contentType
-  } = filters;
+  const { filters, updateFilter } = useFilterStore();
+  const { category, contentType } = filters;
+  
+  // Get available property types based on selected category
+  let availableTypes = category ? getTypesByCategory(category, 'property') : [];
 
-  // Obter os tipos de imóvel disponíveis para a categoria selecionada
-  let availableTypes = category ? getTypesByCategory(category, 'property') : ['Todos'];
-
-  // Ordenar alfabeticamente
+  // Sorting 
   if (availableTypes.includes('Todos')) {
     const todosIndex = availableTypes.indexOf('Todos');
     availableTypes.splice(todosIndex, 1);
@@ -38,7 +31,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   const handlePropertyTypeChange = useCallback((value: string) => {
     // Convert to array with single value for compatibility with existing filter logic
     updateFilter('propertyTypes', value ? [value] : []);
-
+    
     // Notify parent component that filter has changed
     if (onFilterChange) {
       onFilterChange();
@@ -46,14 +39,24 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   }, [updateFilter, onFilterChange]);
 
   // Get the current single value from the array
-  const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 ? filters.propertyTypes[0] : '';
+  const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 
+    ? filters.propertyTypes[0] 
+    : '';
 
-  // Verificar se os controles devem estar desabilitados
+  // Check if controls should be disabled
   const isDisabled = !category;
-  
-  // Não mostrar nada se não for o modo imóvel
+
+  // Don't show anything if not in property mode
   if (contentType !== 'property') {
     return null;
+  }
+
+  if (availableTypes.length === 0) {
+    return (
+      <div className="px-1 py-2 text-sm text-gray-400">
+        Escolha uma categoria antes
+      </div>
+    );
   }
 
   return (
@@ -68,10 +71,10 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
           <div
             key={`${id}-${type}`}
             className={cn(
-              "relative flex flex-col items-start gap-2 rounded-lg border border-input p-2 shadow-sm shadow-black/5",
+              "relative flex flex-col items-start gap-2 rounded-lg border p-2 shadow-sm shadow-black/5",
               isDisabled 
                 ? "opacity-50 cursor-not-allowed border-gray-200 bg-gray-50"
-                : "has-[[data-state=checked]]:border-blue-300 has-[[data-state=checked]]:bg-blue-50"
+                : "border-input has-[[data-state=checked]]:border-blue-300 has-[[data-state=checked]]:bg-blue-50"
             )}
           >
             <div className="flex items-center gap-2">
@@ -98,8 +101,5 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
     </fieldset>
   );
 };
-
-// Adicionar import do cn que estava faltando
-import { cn } from '@/lib/utils';
 
 export default React.memo(PropertyTypeFilter);

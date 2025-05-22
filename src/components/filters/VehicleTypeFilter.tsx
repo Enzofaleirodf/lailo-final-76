@@ -16,7 +16,7 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   const { category, contentType } = filters;
   
   // Obter os tipos de veículo disponíveis para a categoria selecionada
-  let availableTypes = category ? getTypesByCategory(category, 'vehicle') : ['Todos'];
+  let availableTypes = category ? getTypesByCategory(category, 'vehicle') : [];
   
   // Ordenar alfabeticamente
   if (availableTypes.includes('Todos')) {
@@ -49,6 +49,14 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   // Não mostrar nada se não for o modo veículo
   if (contentType !== 'vehicle') {
     return null;
+  }
+
+  if (availableTypes.length === 0) {
+    return (
+      <div className="px-1 py-2 text-sm text-gray-400">
+        Escolha uma categoria antes
+      </div>
+    );
   }
 
   return (
