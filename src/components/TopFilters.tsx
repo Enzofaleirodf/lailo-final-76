@@ -58,10 +58,10 @@ const TopFilters: React.FC = () => {
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
 
-  // Verificar se cada filtro está ativo - qualquer valor é considerado ativo
-  const isFormatActive = !!filters.format;
-  const isOriginActive = !!filters.origin;
-  const isPlaceActive = !isPlaceFilterDisabled && !!filters.place;
+  // Verificar se cada filtro está ativo - SEMPRE considerar como ativo
+  const isFormatActive = true;
+  const isOriginActive = true;
+  const isPlaceActive = !isPlaceFilterDisabled;
 
   // Base style for dropdowns with active state
   const getDropdownStyle = (isActive: boolean, isDisabled = false) => cn(

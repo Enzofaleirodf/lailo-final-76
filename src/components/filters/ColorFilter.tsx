@@ -30,8 +30,8 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
     onChange: onFilterChange
   });
   
-  // Verificar se o filtro está ativo - qualquer valor é considerado ativo
-  const isFilterActive = !!filters.color;
+  // Verificar se o filtro está ativo - QUALQUER valor é considerado ativo, incluindo "todas"
+  const isFilterActive = true; // Sempre mostrar como ativo
   
   const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);

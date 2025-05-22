@@ -28,14 +28,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   "aria-label": ariaLabel,
   disabled = false,
   placeholder,
-  isActive = false
+  isActive = true // Alterado para true por padrão
 }) => {
   // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
   const [isTouched, setIsTouched] = useState(false);
-  
-  // Verificar se o valor está selecionado - agora qualquer valor é considerado selecionado
-  const isValueSelected = !!value;
   
   // Handler para mudança com prevenção de efeitos colaterais de rolagem
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -129,8 +126,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-label={ariaLabel}
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
-          isValueSelected ? "text-gray-800 font-medium" : "text-gray-600",
-          isActive ? "border-purple-300" : "border-gray-300",
+          "text-gray-800 font-medium", // Sempre mostrar em negrito
+          isActive ? "border-purple-300" : "border-gray-300", // Sempre aplicar borda roxa
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
@@ -151,7 +148,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
           <option 
             key={`${option.value}-${option.label}`}
             value={option.value} 
-            className={`${option.value === value ? 'text-gray-800 font-medium' : 'text-gray-600 font-normal'} font-urbanist`}
+            className={`text-gray-800 font-medium font-urbanist`} // Sempre mostrar em negrito
           >
             {option.label}
           </option>

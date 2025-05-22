@@ -38,8 +38,8 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     }));
   }, [filters.vehicleTypes]);
   
-  // Verificar se o filtro está ativo - qualquer valor selecionado é considerado ativo
-  const isFilterActive = !!filters.brand;
+  // Verificar se o filtro está ativo - SEMPRE mostrar como ativo
+  const isFilterActive = true;
   
   // Manipular a mudança de marca
   const handleBrandChange = useCallback((value: string) => {

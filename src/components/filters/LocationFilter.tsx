@@ -110,8 +110,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
     setLocalCity('');
   }, []);
 
-  // Check if the filter is active - qualquer valor é considerado ativo
-  const isFilterActive = !!(filters.location.state || filters.location.city);
+  // O filtro de localização é SEMPRE ativo, mesmo quando a localização é vazia
+  const isFilterActive = true;
 
   // Generate display text for the button
   const getDisplayText = () => {
@@ -157,7 +157,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-medium text-sm text-gray-900">Localização</h3>
-            {isFilterActive && (
+            {(!!filters.location.state || !!filters.location.city) && (
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -183,7 +183,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleStateChange}
                   options={stateOptions}
                   aria-label="Selecione o estado"
-                  isActive={!!localState}
+                  isActive={true} // Sempre mostrar como ativo
                 />
               )}
             </div>
@@ -206,7 +206,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleCityChange}
                   options={cityOptions}
                   aria-label="Selecione a cidade"
-                  isActive={!!localCity}
+                  isActive={true} // Sempre mostrar como ativo
                 />
               )}
             </div>
