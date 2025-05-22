@@ -4,7 +4,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import PriceRangeFilter from '../PriceRangeFilter';
-import * as filterStoreModule from '@/stores/useFilterStore';
+import * as propertyFilterStoreModule from '@/stores/usePropertyFiltersStore';
+import * as vehicleFilterStoreModule from '@/stores/useVehicleFiltersStore';
+import * as filterSelectorModule from '@/hooks/useFilterStoreSelector';
 import { fetchSampleAuctions } from '@/data/sampleAuctions';
 
 // Mock the dependencies
@@ -39,8 +41,8 @@ describe('PriceRangeFilter', () => {
       { id: 3, currentBid: 300000 }
     ]);
     
-    // Mock the useFilterStore hook
-    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue({
+    // Mock the useFilterStoreSelector hook
+    jest.spyOn(filterSelectorModule, 'useFilterStoreSelector').mockReturnValue({
       filters: {
         contentType: 'property',
         price: { 
@@ -58,7 +60,8 @@ describe('PriceRangeFilter', () => {
         color: 'todas',
         format: 'Todos',
         origin: 'Todas',
-        place: 'Todas'
+        place: 'Todas',
+        category: ''
       },
       updateFilter: mockUpdateFilter,
       resetFilters: jest.fn(),
@@ -75,44 +78,27 @@ describe('PriceRangeFilter', () => {
   test('renders with default values', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <PriceRangeFilter onFilterChange={mockOnFilterChange} />
+        <PriceRangeFilter contentType="property" onFilterChange={mockOnFilterChange} />
       </QueryClientProvider>
     );
     
     // Wait for the component to finish rendering
     await waitFor(() => {
-      expect(screen.getByLabelText('Ajustar intervalo de preço')).toBeInTheDocument();
-    });
-  });
-  
-  test('updates filter when slider changes', async () => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <PriceRangeFilter onFilterChange={mockOnFilterChange} />
-      </QueryClientProvider>
-    );
-    
-    // Wait for the component to finish rendering
-    await waitFor(() => {
-      const slider = screen.getByLabelText('Ajustar intervalo de preço');
-      expect(slider).toBeInTheDocument();
-      
-      // Note: Testing slider interactions is complex due to its implementation
-      // This is a simplified test that doesn't actually change the slider values
-      // but verifies the component renders
+      expect(screen.getByLabelText('Preço mínimo')).toBeInTheDocument();
+      expect(screen.getByLabelText('Preço máximo')).toBeInTheDocument();
     });
   });
   
   test('updates filter when min input changes', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <PriceRangeFilter onFilterChange={mockOnFilterChange} />
+        <PriceRangeFilter contentType="property" onFilterChange={mockOnFilterChange} />
       </QueryClientProvider>
     );
     
     // Wait for the component to finish rendering and find the inputs
     await waitFor(() => {
-      const minInput = screen.getByLabelText('Valor mínimo do lance');
+      const minInput = screen.getByLabelText('Preço mínimo');
       expect(minInput).toBeInTheDocument();
       
       // Change the min input value
