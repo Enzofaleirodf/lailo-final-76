@@ -16,12 +16,24 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   // Obter os tipos de imóvel disponíveis para a categoria selecionada
   let availableTypes = getTypesByCategory(category, 'property');
   
-  // Converter para plural, exceto "Todos"
+  // Converter para plural com regras específicas para imóveis
   availableTypes = availableTypes.map(type => {
     if (type === 'Todos') return type;
     
-    // Regras de pluralização em português
-    if (type.endsWith('ão')) return type.replace(/ão$/, 'ões');
+    // Casos especiais
+    if (type === 'Imóvel Misto') return 'Imóveis Mistos';
+    if (type === 'Lote Comercial') return 'Lotes Comerciais';
+    if (type === 'Lote Residencial') return 'Lotes Residenciais';
+    if (type === 'Prédio Comercial') return 'Prédios Comerciais';
+    if (type === 'Prédio Residencial') return 'Prédios Residenciais';
+    if (type === 'Terreno Comercial') return 'Terrenos Comerciais';
+    if (type === 'Terreno Residencial') return 'Terrenos Residenciais';
+    if (type === 'Terreno Rural') return 'Terrenos Rurais';
+    if (type === 'Condomínio Comercial') return 'Condomínios Comerciais';
+    if (type === 'Condomínio Residencial') return 'Condomínios Residenciais';
+    if (type === 'Conjunto Residencial') return 'Conjuntos Residenciais';
+    
+    // Casos padrão
     if (type.endsWith('l')) return type.replace(/l$/, 'is');
     if (type.endsWith('m')) return type.replace(/m$/, 'ns');
     if (['a', 'e', 'i', 'o', 'u'].includes(type.slice(-1))) return type + 's';
@@ -61,7 +73,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ onFilterChange 
   return (
     <fieldset className="space-y-4">
       <legend className="text-sm font-medium leading-none text-foreground">
-        Tipos de {category === 'Todos' ? 'Imóveis' : category}
+        Tipos
       </legend>
       <RadioGroup 
         className="grid grid-cols-3 gap-2" 

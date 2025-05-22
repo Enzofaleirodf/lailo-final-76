@@ -16,9 +16,12 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   // Obter os tipos de veículo disponíveis para a categoria selecionada
   let availableTypes = getTypesByCategory(category, 'vehicle');
   
-  // Converter para plural, exceto "Todos"
+  // Converter para plural com regras específicas para veículos
   availableTypes = availableTypes.map(type => {
     if (type === 'Todos') return type;
+    
+    // Casos especiais
+    if (type === 'Ônibus' || type === 'Micro-ônibus') return type;
     
     // Regras de pluralização em português
     if (type.endsWith('ão')) return type.replace(/ão$/, 'ões');
@@ -69,7 +72,7 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   return (
     <fieldset className="space-y-4">
       <legend className="text-sm font-medium leading-none text-foreground">
-        Tipos de {category === 'Todos' ? 'Veículos' : category}
+        Tipos
       </legend>
       <RadioGroup 
         className="grid grid-cols-3 gap-2" 
