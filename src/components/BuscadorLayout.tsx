@@ -45,7 +45,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
         </div>
         
         {/* Área de resultados */}
-        <div className="w-full md:w-3/4 lg:w-4/5 bg-gray-100 p-4 rounded-lg\n">
+        <div className="flex-1 min-w-[200px] bg-gray-100 p-4 rounded-lg\n">
           <ResultHeader />
           <AuctionList />
         </div>
