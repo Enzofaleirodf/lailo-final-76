@@ -99,9 +99,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
             </div>}
         </div>
 
-        {isFilterActive && <Badge variant="outline" className="bg-brand-50 text-brand-700 border-brand-200 h-10 flex items-center" aria-label="Filtro ativo">
-            Ativo
-          </Badge>}
+        {isFilterActive}
       </div>
       
       {/* Error messages with proper aria attributes */}
