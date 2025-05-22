@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from 'react';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
@@ -8,7 +7,6 @@ import MobileFilterBar from '@/components/MobileFilterBar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SortOptions from '@/components/filters/SortOptions';
 import { useUIStore } from '@/stores/useUIStore';
-
 interface BuscadorLayoutProps {
   children?: ReactNode;
 }
@@ -17,7 +15,9 @@ interface BuscadorLayoutProps {
  * Componente de layout reutilizável para as páginas de busca
  * Implementa a estrutura visual compartilhada entre as páginas de busca
  */
-const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
+const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
+  children
+}) => {
   const isMobile = useIsMobile();
   const {
     filtersOpen,
@@ -25,17 +25,13 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
     setFiltersOpen,
     setSortOpen
   } = useUIStore();
-  
   const handleFilterClick = () => {
     setFiltersOpen(true);
   };
-  
   const handleSortClick = () => {
     setSortOpen(true);
   };
-  
-  return (
-    <div className={`${isMobile ? 'pt-16' : ''}`}>
+  return <div className={`${isMobile ? 'pt-16' : ''}`}>
       {/* Renderizar elementos filhos no topo, se houver */}
       {children}
       
@@ -52,7 +48,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
           </aside>}
         
         {/* Main content area */}
-        <main className="flex-1 min-h-[80vh] w-full mt-4 lg:mt-0">
+        <main className="flex-1 bg-gray-100 mt-4 lg:mt-0\n">
           {/* Mobile filter drawer - only rendered on mobile */}
           {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
           
@@ -64,8 +60,6 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
       
       {/* Sort options modal - mobile only */}
       {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} />}
-    </div>
-  );
+    </div>;
 };
-
 export default BuscadorLayout;
