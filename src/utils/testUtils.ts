@@ -18,6 +18,6 @@ export const withContentType = <T extends object>(props: T, contentType: Content
 export const addRequiredProps = <T extends object>(Component: React.ComponentType<T & { contentType: ContentType }>) => {
   return (props: T) => {
     const enhancedProps = withContentType(props, 'property');
-    return <Component {...enhancedProps} />;
+    return React.createElement(Component, enhancedProps);
   };
 };
