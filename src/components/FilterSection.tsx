@@ -60,7 +60,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 
   // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
-    return <div role="region" aria-label="Filtros de busca" className="w-full lg:w-[460px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10 focus:outline-none">
+    return <div role="region" aria-label="Filtros de busca" className="w-full lg:w-[512px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10 focus:outline-none">
         <FilterContent />
       </div>;
   }
