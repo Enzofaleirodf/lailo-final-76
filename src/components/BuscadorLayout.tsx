@@ -52,7 +52,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
       
       <div className="flex flex-col md:flex-row gap-6 relative">
         {/* Área de filtros lateral */}
-        <div className="w-full md:w-1/4 lg:w-1/5 md:sticky md:top-4 md:self-start">
+        <div className="w-full md:w-1/4 lg:w-1/5 md:sticky md:top-4 md:self-start md:flex-shrink-0">
           {isMobile ? (
             <FilterContent contentType={contentType} />
           ) : (
