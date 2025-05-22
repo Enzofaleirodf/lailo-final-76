@@ -1,90 +1,107 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useId } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import { FormLabel } from '@/components/ui/form';
-import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
+import { Label } from "@/components/ui/label";
 import FilterRangeInput from './FilterRangeInput';
+import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
+import { defaultRangeValues } from '@/stores/useFilterStore';
 
 interface YearRangeFilterProps {
   onFilterChange?: () => void;
 }
 
 const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => {
+  const id = useId();
   const { filters, updateFilter } = useFilterStore();
-  const { handleFilterChange } = useFilterConsistency();
-  const currentYear = new Date().getFullYear();
+  const { year } = filters;
   
-  // Estado local para controlar os valores de input
-  const [yearMin, setYearMin] = useState(filters.year.min || '');
-  const [yearMax, setYearMax] = useState(filters.year.max || '');
-  
-  // Validação de intervalo
-  const { minError, maxError, validateRange, handleMinChange, handleMaxChange } = useFilterRangeValidator(yearMin, yearMax, {
-    minAllowed: 1900,
-    maxAllowed: currentYear,
-    onMinChange: setYearMin,
-    onMaxChange: setYearMax
+  // Usar o hook de validação para gerenciar erros
+  const {
+    minError,
+    maxError,
+    handleMinChange,
+    handleMaxChange,
+    validateRange,
+    clearErrors,
+    hasErrors
+  } = useFilterRangeValidator({
+    min: year.min,
+    max: year.max,
+    fieldName: 'year',
+    minLimit: defaultRangeValues.year.min,
+    maxLimit: defaultRangeValues.year.max
   });
-  
-  // Atualizar o filtro no store
-  const updateYearFilter = useCallback((min: string, max: string) => {
-    updateFilter('year', { min, max });
-    
-    if (onFilterChange) {
-      onFilterChange();
-    }
-    
-    handleFilterChange();
-  }, [updateFilter, onFilterChange, handleFilterChange]);
-  
-  // Lidar com mudança no valor mínimo
+
+  // Limpar erros ao desmontar o componente
+  useEffect(() => {
+    return () => {
+      clearErrors();
+    };
+  }, [clearErrors]);
+
+  // Funções para atualizar os valores de filtro
   const handleMinYearChange = useCallback((value: string) => {
     handleMinChange(value);
     
-    if (!minError && !maxError) {
-      updateYearFilter(value, yearMax);
-    }
-  }, [yearMax, minError, maxError, handleMinChange, updateYearFilter]);
-  
-  // Lidar com mudança no valor máximo
+    updateFilter('year', {
+      ...year,
+      min: value
+    });
+    
+    if (onFilterChange) onFilterChange();
+  }, [handleMinChange, updateFilter, year, onFilterChange]);
+
   const handleMaxYearChange = useCallback((value: string) => {
     handleMaxChange(value);
     
-    if (!minError && !maxError) {
-      updateYearFilter(yearMin, value);
-    }
-  }, [yearMin, minError, maxError, handleMaxChange, updateYearFilter]);
-  
+    updateFilter('year', {
+      ...year,
+      max: value
+    });
+    
+    if (onFilterChange) onFilterChange();
+  }, [handleMaxChange, updateFilter, year, onFilterChange]);
+
   return (
-    <div className="space-y-1">
-      <FormLabel className="text-sm font-medium leading-none text-gray-700">Ano</FormLabel>
+    <div className="space-y-2">
+      <Label htmlFor={`${id}-min-year`} className="text-sm font-medium text-gray-700">
+        Ano do veículo
+      </Label>
       
-      <div className="flex items-center space-x-2 mt-1">
+      <div className="flex gap-2 items-center">
         <FilterRangeInput
-          minValue={yearMin}
-          maxValue={yearMax}
-          onMinChange={handleMinYearChange}
-          onMaxChange={handleMaxYearChange}
-          minPlaceholder="Min."
-          maxPlaceholder="Max."
-          ariaLabelMin="Ano mínimo"
-          ariaLabelMax="Ano máximo"
-          allowDecimals={false}
-          allowNegative={false}
-          minAllowed={1900}
-          maxAllowed={currentYear}
-          className="w-full"
+          value={year.min}
+          onChange={handleMinYearChange}
+          placeholder="Min"
+          maxLength={4}
+          inputMode="numeric"
+          aria-label="Ano mínimo"
+          hasError={!!minError}
+          className="flex-1"
+        />
+        
+        <span className="text-gray-400">até</span>
+        
+        <FilterRangeInput
+          value={year.max}
+          onChange={handleMaxYearChange}
+          placeholder="Max"
+          maxLength={4}
+          inputMode="numeric"
+          aria-label="Ano máximo"
+          hasError={!!maxError}
+          className="flex-1"
         />
       </div>
       
+      {/* Exibir mensagens de erro */}
       {(minError || maxError) && (
-        <p className="text-xs text-red-500">
+        <div className="text-xs text-red-500 mt-1">
           {minError || maxError}
-        </p>
+        </div>
       )}
     </div>
   );
 };
 
-export default YearRangeFilter;
+export default React.memo(YearRangeFilter);
