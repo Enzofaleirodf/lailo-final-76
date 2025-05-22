@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
@@ -8,7 +7,6 @@ import FilterContent from './filters/FilterContent';
 import { useUIStore } from '@/stores/useUIStore';
 import { ContentType } from '@/types/filters';
 import FilterApplyButton from './filters/FilterApplyButton';
-
 interface FilterSectionProps {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -36,7 +34,6 @@ const FilterSection: React.FC<FilterSectionProps> = ({
       setFiltersOpen(isOpen);
     }
   }, [isOpen, setFiltersOpen]);
-  
   const handleOpenChange = (newOpenState: boolean) => {
     setFiltersOpen(newOpenState);
     if (onOpenChange) {
@@ -62,7 +59,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 
   // For desktop (large screens), render the sidebar directly
   if (!isMobile) {
-    return <div role="region" aria-label="Filtros de busca" className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10 focus:outline-none">
+    return <div role="region" aria-label="Filtros de busca" className="w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10 focus:outline-none\n">
         <FilterContent contentType={contentType} />
       </div>;
   }
