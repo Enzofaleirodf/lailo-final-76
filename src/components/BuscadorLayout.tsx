@@ -40,7 +40,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
       
       <div className="flex flex-col md:flex-row gap-6">
         {/* Área de filtros lateral */}
-        <div className="w-full md:w-1/4 lg:w-1/5">
+        w-full lg:w-[448px] bg-gradient-to-br from-white to-brand-50 rounded-lg border border-gray-200 p-4 flex flex-col shadow-sm z-10 focus:outline-none
           {isMobile ? <FilterContent contentType={contentType} /> : <FilterSection isOpen={true} contentType={contentType} onOpenChange={() => {}} />}
         </div>
         
