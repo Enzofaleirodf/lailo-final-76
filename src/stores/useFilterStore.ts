@@ -54,9 +54,9 @@ const initialFilterState: FilterState = {
   brand: '',
   model: '',
   color: '',
-  format: 'Leilão', // Valor padrão alterado de 'Todos' para 'Leilão'
-  origin: 'Todas',
-  place: 'Todas',
+  format: '', // Valor inicial vazio (não selecionado)
+  origin: '', // Valor inicial vazio (não selecionado)
+  place: '', // Valor inicial vazio (não selecionado)
   category: ''
 };
 
@@ -133,9 +133,9 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.color !== '') count++;
   
   // Auction format, origin, place
-  if (filters.format !== 'Todos') count++;
-  if (filters.origin !== 'Todas') count++;
-  if (filters.place !== 'Todas') count++;
+  if (filters.format !== '') count++; // Considerar vazio como inativo
+  if (filters.origin !== '') count++; // Considerar vazio como inativo
+  if (filters.place !== '') count++; // Considerar vazio como inativo
 
   // Category
   if (filters.category !== '') count++;
@@ -177,10 +177,10 @@ export const useFilterStore = create<FilterStore>()(
           }
 
           // Se o formato mudar para Alienação Particular ou Venda Direta, 
-          // resetar etapa para 'Todas' pois o filtro é inválido nestes casos
+          // resetar etapa para vazio pois o filtro é inválido nestes casos
           if (key === 'format') {
             if (value === 'Alienação Particular' || value === 'Venda Direta') {
-              newFilters.place = 'Todas';
+              newFilters.place = '';
             }
           }
 
@@ -211,9 +211,9 @@ export const useFilterStore = create<FilterStore>()(
           const updatedFilters = { ...state.filters, ...newFilters };
           
           // Garantir consistência: se o formato for Alienação Particular ou Venda Direta,
-          // etapa deve ser 'Todas' pois o filtro é inválido nestes casos
+          // etapa deve ser vazia pois o filtro é inválido nestes casos
           if (updatedFilters.format === 'Alienação Particular' || updatedFilters.format === 'Venda Direta') {
-            updatedFilters.place = 'Todas';
+            updatedFilters.place = '';
           }
           
           return { 

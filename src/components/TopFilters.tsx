@@ -27,10 +27,10 @@ const TopFilters: React.FC = () => {
     return filters.format === 'Alienação Particular' || filters.format === 'Venda Direta';
   }, [filters.format]);
 
-  // Se o formato mudar para algo que desabilita etapa, resetar etapa para 'Todas'
+  // Se o formato mudar para algo que desabilita etapa, resetar etapa para vazio
   React.useEffect(() => {
-    if (isPlaceDisabled && filters.place !== 'Todas') {
-      updateFilter('place', 'Todas');
+    if (isPlaceDisabled && filters.place !== '') {
+      updateFilter('place', '');
     }
   }, [isPlaceDisabled, filters.place, updateFilter]);
 
@@ -73,6 +73,37 @@ const TopFilters: React.FC = () => {
       "aria-controls": "content-type-selector",
       tabIndex: isSelected ? 0 : -1
     };
+  };
+
+  // Função para renderizar o conteúdo do botão do dropdown com base no estado do filtro
+  const renderDropdownButtonContent = (
+    filterType: 'format' | 'origin' | 'place', 
+    value: string, 
+    placeholder: string
+  ) => {
+    if (!value) {
+      // Se não houver valor selecionado, mostrar o placeholder em cinza
+      return (
+        <span className="text-sm font-normal text-gray-500">
+          {placeholder}
+        </span>
+      );
+    } else {
+      // Se houver valor selecionado, mostrar o filtro e o valor com cores diferentes
+      const label = filterType === 'format' ? 'Formato' : 
+                    filterType === 'origin' ? 'Origem' : 'Etapa';
+      
+      return (
+        <div className="flex items-center space-x-1">
+          <span className="text-sm font-normal text-gray-500">
+            {label}:
+          </span>
+          <span className="text-sm font-medium text-brand-900">
+            {value}
+          </span>
+        </div>
+      );
+    }
   };
 
   return (
@@ -127,9 +158,7 @@ const TopFilters: React.FC = () => {
             aria-haspopup="listbox"
             aria-expanded="false"
           >
-            <span className="text-sm font-normal text-gray-800">
-              Selecione um formato
-            </span>
+            {renderDropdownButtonContent('format', filters.format, 'Selecione um formato')}
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
@@ -158,14 +187,7 @@ const TopFilters: React.FC = () => {
             aria-haspopup="listbox"
             aria-expanded="false"  
           >
-            <span className={cn("text-sm font-normal", 
-              filters.origin !== 'Todas' ? "text-gray-800" : "text-gray-800"
-            )}>
-              {filters.origin === 'Todas' 
-                ? "Todas" 
-                : filters.origin
-              }
-            </span>
+            {renderDropdownButtonContent('origin', filters.origin, 'Selecione uma origem')}
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
@@ -198,12 +220,7 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
             aria-disabled={isPlaceDisabled}
           >
-            <span className={cn("text-sm font-normal text-gray-800")}>
-              {filters.place === 'Todas' 
-                ? "Todas" 
-                : filters.place
-              }
-            </span>
+            {renderDropdownButtonContent('place', filters.place, 'Selecione uma etapa')}
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
