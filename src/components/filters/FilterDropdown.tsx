@@ -114,6 +114,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     };
   }, [ariaLabel, value, options]);
   
+  // Encontrar a opção selecionada para exibir seu label
+  const selectedOption = options.find(opt => opt.value === value);
+  const displayText = selectedOption?.label || placeholder || '';
+  
   return (
     <div className="relative isolate">
       <select

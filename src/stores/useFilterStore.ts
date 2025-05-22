@@ -54,7 +54,7 @@ const initialFilterState: FilterState = {
   brand: '',
   model: '',
   color: '',
-  format: 'Todos',
+  format: 'Leilão', // Valor padrão alterado de 'Todos' para 'Leilão'
   origin: 'Todas',
   place: 'Todas',
   category: ''

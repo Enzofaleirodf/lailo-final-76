@@ -59,20 +59,6 @@ const TopFilters: React.FC = () => {
     }
   }, [updateFilter]);
 
-  // Função para obter o label do filtro selecionado
-  const getSelectedLabel = (filterType: 'format' | 'origin' | 'place'): string => {
-    const options = filterType === 'format' 
-      ? formatOptions 
-      : filterType === 'origin' 
-        ? originOptions 
-        : placeOptions;
-    
-    const value = filters[filterType];
-    const option = options.find(opt => opt.value === value);
-    
-    return option?.label || '';
-  };
-
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
   const baseDropdownStyle = "h-10 flex items-center justify-between px-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 font-urbanist shadow-sm rounded-lg border border-gray-200";
@@ -136,24 +122,15 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={cn(baseDropdownStyle, 
-              filters.format !== 'Todos' && "bg-brand-50 border-brand-200"
-            )}
+            className={baseDropdownStyle}
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
           >
-            <span className={cn("text-sm font-normal", 
-              filters.format !== 'Todos' 
-                ? "text-brand-700 font-medium" 
-                : "text-gray-500"
-            )}>
-              {filters.format !== 'Todos' 
-                ? getSelectedLabel('format')
-                : "Selecione um formato"
-              }
+            <span className="text-sm font-normal text-gray-800">
+              Selecione um formato
             </span>
-            <ChevronDown size={16} className={filters.format !== 'Todos' ? "text-brand-500" : "text-gray-500"} aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -176,24 +153,20 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={cn(baseDropdownStyle, 
-              filters.origin !== 'Todas' && "bg-brand-50 border-brand-200"
-            )}
+            className={baseDropdownStyle}
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
             aria-expanded="false"  
           >
             <span className={cn("text-sm font-normal", 
-              filters.origin !== 'Todas' 
-                ? "text-brand-700 font-medium" 
-                : "text-gray-500"
+              filters.origin !== 'Todas' ? "text-gray-800" : "text-gray-800"
             )}>
-              {filters.origin !== 'Todas' 
-                ? getSelectedLabel('origin')
-                : "Selecione uma origem"
+              {filters.origin === 'Todas' 
+                ? "Todas" 
+                : filters.origin
               }
             </span>
-            <ChevronDown size={16} className={filters.origin !== 'Todas' ? "text-brand-500" : "text-gray-500"} aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -217,8 +190,7 @@ const TopFilters: React.FC = () => {
         <DropdownMenuTrigger asChild disabled={isPlaceDisabled}>
           <button 
             className={cn(
-              baseDropdownStyle, 
-              filters.place !== 'Todas' && "bg-brand-50 border-brand-200",
+              baseDropdownStyle,
               isPlaceDisabled && "opacity-50 cursor-not-allowed"
             )}
             aria-label="Selecionar etapa"
@@ -226,17 +198,13 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
             aria-disabled={isPlaceDisabled}
           >
-            <span className={cn("text-sm font-normal", 
-              filters.place !== 'Todas' 
-                ? "text-brand-700 font-medium" 
-                : "text-gray-500"
-            )}>
-              {filters.place !== 'Todas' 
-                ? getSelectedLabel('place')
-                : "Selecione uma etapa"
+            <span className={cn("text-sm font-normal text-gray-800")}>
+              {filters.place === 'Todas' 
+                ? "Todas" 
+                : filters.place
               }
             </span>
-            <ChevronDown size={16} className={filters.place !== 'Todas' ? "text-brand-500" : "text-gray-500"} aria-hidden="true" />
+            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
