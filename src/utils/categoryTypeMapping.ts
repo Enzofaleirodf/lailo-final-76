@@ -5,11 +5,10 @@
 export const vehicleCategoryToTypesMap: Record<string, string[]> = {
   'Aéreos': ['Todos', 'Aviões', 'Helicópteros', 'Drones'],
   'Náuticos': ['Todos', 'Barcos', 'Lanchas', 'Jet Skis'],
-  'Micro Veículos': ['Todos', 'Bicicletas', 'Ciclomotores', 'Monociclos', 'Patinetes', 'Scooters', 'Segways', 'Triciclos'],
+  'Recreativos': ['Todos', 'Buggies', 'Quadriciclos', 'UTVs', 'Karts', 'Bicicletas', 'Patinetes', 'Triciclos'],
   'Leves': ['Todos', 'Carros', 'Motos'], 
   'Pesados': ['Todos', 'Caminhões', 'Carretas', 'Cavalos Mecânicos', 'Micro-ônibus', 'Motorhomes', 'Ônibus'],
   'Auxiliares': ['Todos', 'Reboques', 'Trailers'],
-  'Recreativos': ['Todos', 'Buggies', 'Quadriciclos', 'UTVs', 'Karts'],
   'Máquinas Agrícolas': ['Todos', 'Colheitadeiras', 'Plantadeiras', 'Tratores', 'Roçadeiras'],
   'Máquinas de Construção': ['Todos', 'Escavadeiras', 'Retroescavadeiras', 'Motoniveladoras', 'Guindastes', 'Pás Carregadeiras']
 };
@@ -19,14 +18,14 @@ export const vehicleCategoryToTypesMap: Record<string, string[]> = {
  */
 export const propertyCategoryToTypesMap: Record<string, string[]> = {
   'Todos': ['Todos'],
-  'Comercial': ['Todos', 'Condomínios', 'Depósitos', 'Escritórios', 
+  'Comerciais': ['Todos', 'Condomínios', 'Depósitos', 'Escritórios', 
               'Lojas', 'Lotes', 'Prédios', 'Salas', 'Terrenos'],
-  'Hospedagem': ['Todos', 'Hotéis', 'Motéis', 'Pousadas'],
-  'Industrial': ['Todos', 'Galpões', 'Lotes', 'Terrenos', 'Depósitos'],
-  'Residencial': ['Todos', 'Apartamentos', 'Casas', 'Condomínios', 
+  'Hospedagens': ['Todos', 'Hotéis', 'Motéis', 'Pousadas'],
+  'Industriais': ['Todos', 'Galpões', 'Lotes', 'Terrenos', 'Depósitos'],
+  'Residenciais': ['Todos', 'Apartamentos', 'Casas', 'Condomínios', 
                 'Edifícios', 'Flats', 'Imóveis Mistos', 'Kitnets', 'Lofts', 'Lotes',
                 'Prédios', 'Quitinetes', 'Sobrados', 'Studios', 'Terrenos'],
-  'Rural': ['Todos', 'Chácaras', 'Fazendas', 'Terrenos', 'Sítios']
+  'Rurais': ['Todos', 'Chácaras', 'Fazendas', 'Terrenos', 'Sítios']
 };
 
 /**

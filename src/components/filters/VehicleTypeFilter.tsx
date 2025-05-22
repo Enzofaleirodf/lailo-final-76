@@ -50,7 +50,8 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
     : '';
 
   // Não mostrar nada se não houver categoria selecionada ou se estivermos no modo imóvel
-  if (contentType !== 'vehicle' || !category) {
+  // Agora também ocultando quando a categoria é 'Todos'
+  if (contentType !== 'vehicle' || !category || category === 'Todos') {
     return null;
   }
 

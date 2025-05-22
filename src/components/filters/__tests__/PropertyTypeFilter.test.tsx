@@ -8,8 +8,8 @@ import * as filterStoreModule from '@/stores/useFilterStore';
 // Mock do módulo de categorias
 jest.mock('@/utils/categoryTypeMapping', () => ({
   getTypesByCategory: jest.fn().mockImplementation((cat) => {
-    if (cat === 'Residencial') return ['Todos', 'Apartamentos', 'Casas'];
-    if (cat === 'Comercial') return ['Todos', 'Lojas', 'Salas'];
+    if (cat === 'Residenciais') return ['Todos', 'Apartamentos', 'Casas'];
+    if (cat === 'Comerciais') return ['Todos', 'Lojas', 'Salas'];
     return ['Todos'];
   })
 }));
@@ -32,7 +32,7 @@ describe('PropertyTypeFilter', () => {
       filters: { 
         propertyTypes: [],
         contentType: 'property',
-        category: 'Residencial'
+        category: 'Residenciais'
       },
       activeFilters: 0,
       expandedSections: {},
@@ -72,7 +72,7 @@ describe('PropertyTypeFilter', () => {
       filters: { 
         propertyTypes: ['Casas'],
         contentType: 'property',
-        category: 'Residencial'
+        category: 'Residenciais'
       },
       activeFilters: 1,
       expandedSections: {},
@@ -114,19 +114,41 @@ describe('PropertyTypeFilter', () => {
     expect(container.firstChild).toBeNull();
   });
 
+  test('não renderiza se a categoria for "Todos"', () => {
+    mockUseFilterStore.mockReturnValue({
+      filters: { 
+        propertyTypes: [],
+        contentType: 'property',
+        category: 'Todos'
+      },
+      activeFilters: 0,
+      expandedSections: {},
+      lastUpdatedFilter: null,
+      updateFilter: mockUpdateFilter,
+      resetFilters: jest.fn(),
+      setFilters: jest.fn(),
+      toggleSection: jest.fn(),
+      collapseAllSections: jest.fn(),
+      expandAllSections: jest.fn()
+    });
+    
+    const { container } = render(<PropertyTypeFilter />);
+    expect(container.firstChild).toBeNull();
+  });
+
   test('altera os tipos de imóveis quando a categoria muda', () => {
-    // Primeiro render com categoria 'Residencial'
+    // Primeiro render com categoria 'Residenciais'
     const { rerender } = render(<PropertyTypeFilter />);
     
     expect(screen.getByLabelText('Filtrar por Apartamentos')).toBeInTheDocument();
     expect(screen.getByLabelText('Filtrar por Casas')).toBeInTheDocument();
     
-    // Mudar a categoria para 'Comercial'
+    // Mudar a categoria para 'Comerciais'
     mockUseFilterStore.mockReturnValue({
       filters: { 
         propertyTypes: [],
         contentType: 'property',
-        category: 'Comercial'
+        category: 'Comerciais'
       },
       activeFilters: 0,
       expandedSections: {},

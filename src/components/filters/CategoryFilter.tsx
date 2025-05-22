@@ -36,9 +36,14 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
     ? getPropertyCategories()
     : getVehicleCategories();
     
-  // Filtrar a opção "Todos" e ordenar alfabeticamente
-  categoryOptions = categoryOptions.filter(option => option !== 'Todos');
+  // Ordenar alfabeticamente - mas manter "Todos" no início
+  const todosIndex = categoryOptions.indexOf('Todos');
+  if (todosIndex > -1) {
+    categoryOptions.splice(todosIndex, 1);
+  }
+  
   categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  categoryOptions.unshift('Todos');
 
   const handleCategoryChange = (value: string) => {
     updateFilter('category', value);
@@ -59,11 +64,12 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
   const getIconForCategory = (categoryName: string) => {
     if (contentType === 'property') {
       switch(categoryName) {
-        case 'Comercial': return Building;
-        case 'Hospedagem': return Hotel;
-        case 'Industrial': return Warehouse;
-        case 'Residencial': return Home;
-        case 'Rural': return Mountain;
+        case 'Comerciais': return Building;
+        case 'Hospedagens': return Hotel;
+        case 'Industriais': return Warehouse;
+        case 'Residenciais': return Home;
+        case 'Rurais': return Mountain;
+        case 'Todos': return CircleDashed;
         default: return CircleDashed;
       }
     } else {
@@ -73,9 +79,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
         case 'Leves': return Car;
         case 'Pesados': return Truck;
         case 'Máquinas Agrícolas': return Tractor;
-        case 'Micro Veículos': return Bike;
-        case 'Auxiliares': return Caravan; // Alterado para usar somente o ícone Caravan 
-        case 'Máquinas de Construção': return Forklift; // Adicionado para usar Forklift
+        case 'Recreativos': return Bike;
+        case 'Auxiliares': return Caravan;
+        case 'Máquinas de Construção': return Forklift;
+        case 'Todos': return CircleDashed;
         default: return CircleDashed;
       }
     }

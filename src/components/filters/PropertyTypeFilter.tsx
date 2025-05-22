@@ -49,7 +49,8 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 ? filters.propertyTypes[0] : '';
 
   // Não mostrar nada se não houver categoria selecionada ou se estivermos no modo veículo
-  if (contentType !== 'property' || !category) {
+  // Agora também ocultando quando a categoria é 'Todos'
+  if (contentType !== 'property' || !category || category === 'Todos') {
     return null;
   }
   
