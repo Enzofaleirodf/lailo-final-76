@@ -119,7 +119,7 @@ export const useUrlParams = (contentType: ContentType) => {
       isInitialLoadRef.current = false;
       isUpdatingUrlRef.current = false;
     }
-  }, []);
+  }, [filters, searchParams, setFilters, setSortOption, sortOption, toast]);
   
   // Função para paginar e atualizar a URL
   const handlePageChange = (page: number) => {

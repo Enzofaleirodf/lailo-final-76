@@ -16,20 +16,22 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ contentType, onFi
   
   // Obter tipos de veículo com base na categoria selecionada
   const typeOptions = useMemo(() => {
-    return getTypesByCategory(filters.category, 'vehicle');
+    return getTypesByCategory(filters.category, 'vehicle') || [];
   }, [filters.category]);
   
   const isDisabled = !filters.category;
   
   const handleSelectType = useCallback((type: string) => {
+    // Garantir que vehicleTypes seja sempre um array
+    const vehicleTypes = filters.vehicleTypes || [];
     let newTypes: string[];
     
-    if (filters.vehicleTypes.includes(type)) {
+    if (vehicleTypes.includes(type)) {
       // Se o tipo já está selecionado, remova-o
-      newTypes = filters.vehicleTypes.filter(t => t !== type);
+      newTypes = vehicleTypes.filter(t => t !== type);
     } else {
       // Caso contrário, adicione-o
-      newTypes = [...filters.vehicleTypes, type];
+      newTypes = [...vehicleTypes, type];
     }
     
     updateFilter('vehicleTypes', newTypes);
@@ -50,7 +52,7 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ contentType, onFi
       ) : (
         <VirtualizedFilterOptions
           options={typeOptions}
-          selectedOptions={filters.vehicleTypes}
+          selectedOptions={filters.vehicleTypes || []}
           onSelectOption={handleSelectType}
           placeholder="Selecione os tipos"
           maxHeight={200}

@@ -13,8 +13,8 @@ export const useBuscadorSetup = (contentType: ContentType) => {
   const { updateFilter } = useFilterStoreSelector(contentType);
   const initialSetupDone = useRef(false);
   
-  // Sincronizar URL com estado de filtros e ordenação
-  useUrlParams(contentType);
+  // Sincronizar URL com estado de filtros e ordenação - passando contentType explicitamente
+  const urlParams = useUrlParams(contentType);
 
   // Definir o tipo de conteúdo quando a página carregar
   useEffect(() => {
@@ -27,5 +27,8 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     initialSetupDone.current = true;
   }, [contentType, updateFilter]);
       
-  return { initialSetupDone: initialSetupDone.current };
+  return { 
+    initialSetupDone: initialSetupDone.current,
+    ...urlParams 
+  };
 };

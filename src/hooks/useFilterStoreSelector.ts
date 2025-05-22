@@ -1,21 +1,17 @@
 
 import { usePropertyFiltersStore } from '@/stores/usePropertyFiltersStore';
 import { useVehicleFiltersStore } from '@/stores/useVehicleFiltersStore';
-import { ContentType, FilterState, ExpandedSectionsState } from '@/types/filters';
-import { useMemo } from 'react';
+import { ContentType } from '@/types/filters';
 
 /**
  * Hook que retorna a store correta com base no tipo de conteúdo
  * Simplifica o acesso às stores específicas de cada página
- * Versão otimizada com seletores Zustand mais eficientes
  */
 export const useFilterStoreSelector = (contentType: ContentType) => {
   // Escolher a store apropriada com base no tipo de conteúdo
-  return useMemo(() => {
-    return contentType === 'property' 
-      ? usePropertyFiltersStore() 
-      : useVehicleFiltersStore();
-  }, [contentType]);
+  return contentType === 'property' 
+    ? usePropertyFiltersStore() 
+    : useVehicleFiltersStore();
 };
 
 /**
