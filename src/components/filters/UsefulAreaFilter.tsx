@@ -5,6 +5,8 @@ import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
 import { ContentType } from '@/types/filters';
+import { defaultRangeValues as propertyDefaultRangeValues } from '@/stores/usePropertyFiltersStore';
+import { defaultRangeValues as vehicleDefaultRangeValues } from '@/stores/useVehicleFiltersStore';
 
 interface UsefulAreaFilterProps {
   contentType: ContentType;
@@ -23,13 +25,10 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
     onChange: onFilterChange
   });
   
-  // Definir os valores padrão baseados na store correta
-  const storeModule = contentType === 'property' ? 
-    require('@/stores/usePropertyFiltersStore') : 
-    require('@/stores/useVehicleFiltersStore');
-  
-  // Define default values
-  const defaultValues = storeModule.defaultRangeValues.usefulArea;
+  // Obter valores padrão corretos com base no tipo de conteúdo
+  const defaultValues = contentType === 'property' ? 
+    propertyDefaultRangeValues.usefulArea : 
+    vehicleDefaultRangeValues.usefulArea;
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
