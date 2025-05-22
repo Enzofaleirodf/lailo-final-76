@@ -109,7 +109,7 @@ describe('RangeInputField', () => {
     expect(input.className).toContain('border-red-500');
   });
 
-  test('aplica classe de ativo quando isActive é true', () => {
+  test('aplica classe de borda roxa quando isActive é true', () => {
     render(
       <RangeInputField
         id="test-input"
@@ -122,6 +122,6 @@ describe('RangeInputField', () => {
     );
     
     const input = screen.getByLabelText('Campo de teste');
-    expect(input.className).toContain('border-brand-600');
+    expect(input.className).toContain('border-purple-300');
   });
 });
