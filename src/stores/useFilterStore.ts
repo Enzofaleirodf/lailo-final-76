@@ -54,10 +54,10 @@ const initialFilterState: FilterState = {
   brand: '',
   model: '',
   color: '',
-  format: 'Selecione' as FilterFormat, // Usando string para placeholder
-  origin: 'Selecione' as FilterOrigin,
-  place: 'Selecione' as FilterPlace,
-  category: '' // Agora não terá uma categoria padrão
+  format: 'Selecione',
+  origin: 'Selecione',
+  place: 'Selecione',
+  category: ''
 };
 
 // Define which filter sections are expanded by default
