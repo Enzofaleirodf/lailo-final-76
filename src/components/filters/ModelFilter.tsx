@@ -28,6 +28,9 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
     }));
   }, [filters.brand]);
   
+  // Verificar se o filtro está ativo
+  const isFilterActive = filters.model !== 'todos';
+  
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
 
@@ -36,6 +39,9 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
       onFilterChange();
     }
   }, [updateFilter, onFilterChange]);
+  
+  // Log para debug
+  console.log('ModelFilter - isFilterActive:', isFilterActive);
   
   return (
     <div className="space-y-3">
@@ -56,7 +62,8 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
             aria-label="Selecione o modelo" 
             value={filters.model} 
             onChange={handleModelChange} 
-            options={modelOptions} 
+            options={modelOptions}
+            isActive={isFilterActive}
           />
         )}
       </div>

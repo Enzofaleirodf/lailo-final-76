@@ -12,6 +12,7 @@ interface FilterDropdownProps {
   'aria-label'?: string;
   disabled?: boolean;
   placeholder?: string;
+  isActive?: boolean;
 }
 
 /**
@@ -26,7 +27,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   id,
   "aria-label": ariaLabel,
   disabled = false,
-  placeholder
+  placeholder,
+  isActive = false
 }) => {
   // Referências para o elemento select
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -114,6 +116,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     };
   }, [ariaLabel, value, options]);
   
+  // Para debug - verificar quando isActive muda
+  useEffect(() => {
+    console.log(`FilterDropdown ${id} - isActive:`, isActive);
+  }, [isActive, id]);
+  
   return (
     <div className="relative isolate">
       <select
@@ -123,7 +130,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         className={cn(
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
           isValueSelected ? "text-gray-800 font-medium" : "text-gray-600",
-          "border-gray-300",
+          isActive ? "border-purple-300" : "border-gray-300",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
@@ -137,6 +144,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-required="false"
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
+        data-active={isActive ? 'true' : 'false'}
       >
         {placeholder && <option value="" disabled>{placeholder}</option>}
         {options.map((option) => (

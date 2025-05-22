@@ -49,7 +49,23 @@ const TopFilters: React.FC = () => {
 
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
-  const baseDropdownStyle = "h-10 flex items-center justify-between px-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-urbanist shadow-sm rounded-lg border border-gray-200";
+
+  // Verificar se cada filtro está ativo
+  const isFormatActive = filters.format !== 'Leilão'; // considerando 'Leilão' como padrão visual
+  const isOriginActive = filters.origin !== 'Todas';
+  const isPlaceActive = filters.place !== 'Todas';
+  
+  // Log para debug
+  console.log('TopFilters - isFormatActive:', isFormatActive);
+  console.log('TopFilters - isOriginActive:', isOriginActive);
+  console.log('TopFilters - isPlaceActive:', isPlaceActive);
+
+  // Base style for dropdowns with active state
+  const getDropdownStyle = (isActive: boolean) => cn(
+    "h-10 flex items-center justify-between px-4 bg-white hover:bg-gray-50 transition-colors",
+    "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-urbanist shadow-sm rounded-lg",
+    isActive ? "border border-purple-300" : "border border-gray-200"
+  );
 
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
@@ -110,10 +126,11 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={baseDropdownStyle}
+            className={getDropdownStyle(isFormatActive)}
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
+            data-active={isFormatActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
@@ -140,10 +157,11 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={baseDropdownStyle}
+            className={getDropdownStyle(isOriginActive)}
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
-            aria-expanded="false"  
+            aria-expanded="false"
+            data-active={isOriginActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
@@ -170,10 +188,11 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={baseDropdownStyle}
+            className={getDropdownStyle(isPlaceActive)}
             aria-label="Selecionar etapa"
             aria-haspopup="listbox"
             aria-expanded="false"
+            data-active={isPlaceActive ? 'true' : 'false'}  
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>

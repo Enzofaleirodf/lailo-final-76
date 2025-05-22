@@ -1,7 +1,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { getBrandsByVehicleType } from '@/utils/brandModelMapping';
 
 interface BrandFilterProps {
@@ -38,6 +38,9 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     }));
   }, [filters.vehicleTypes]);
   
+  // Verificar se o filtro está ativo (não está no valor padrão)
+  const isFilterActive = filters.brand !== 'todas';
+  
   // Manipular a mudança de marca
   const handleBrandChange = useCallback((value: string) => {
     updateFilter('brand', value);
@@ -53,6 +56,9 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     }
   }, [updateFilter, onFilterChange, filters.brand]);
   
+  // Log para debug
+  console.log('BrandFilter - isFilterActive:', isFilterActive);
+  
   return (
     <div>
       <label htmlFor="brand-filter" className="block text-sm font-medium text-gray-700 mb-1">
@@ -63,7 +69,8 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
         aria-label="Selecione a marca" 
         value={filters.brand} 
         onChange={handleBrandChange} 
-        options={brandOptions} 
+        options={brandOptions}
+        isActive={isFilterActive}
       />
     </div>
   );

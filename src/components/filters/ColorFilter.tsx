@@ -30,12 +30,18 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
     onChange: onFilterChange
   });
   
+  // Verificar se o filtro está ativo
+  const isFilterActive = filters.color !== 'todas';
+  
   const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);
     
     // Notify parent component that filter has changed
     handleFilterChange();
   }, [updateFilter, handleFilterChange]);
+
+  // Log para debug
+  console.log('ColorFilter - isFilterActive:', isFilterActive);
 
   return (
     <div 
@@ -52,6 +58,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-urbanist"
+        isActive={isFilterActive}
       />
     </div>
   );

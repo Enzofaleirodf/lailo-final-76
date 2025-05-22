@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useStates, useCities } from '@/services/ibgeApi';
 import FilterDropdown from './FilterDropdown';
 import { LocationFilter as LocationFilterType } from '@/types/filters';
+import { cn } from '@/lib/utils';
 
 interface LocationFilterProps {
   onFilterChange?: () => void;
@@ -124,11 +125,26 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
     return 'Selecione a localização';
   };
   
+  // Log para debug
+  console.log('LocationFilter - isFilterActive:', isFilterActive);
+
   return <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-gray-900 font-medium' : 'text-gray-700'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''} font-urbanist`}>
+        <Button 
+          variant="outline" 
+          role="combobox" 
+          aria-expanded={open} 
+          className={cn(
+            "w-full justify-between h-10 border rounded-lg px-3 py-2",
+            isFilterActive ? "border-purple-300 text-gray-900 font-medium" : "border-gray-300 text-gray-700",
+            "focus-visible:outline-none",
+            !open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : '',
+            "font-urbanist"
+          )} 
+          data-active={isFilterActive ? 'true' : 'false'}
+        >
           <div className="flex items-center gap-2 overflow-hidden">
-            <MapPin size={16} className={isFilterActive ? 'text-gray-800' : 'text-gray-500'} />
+            <MapPin size={16} className={isFilterActive ? "text-gray-800" : "text-gray-500"} />
             <span className="truncate">
               {getDisplayText()}
             </span>
@@ -167,6 +183,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleStateChange}
                   options={stateOptions}
                   aria-label="Selecione o estado"
+                  isActive={!!localState}
                 />
               )}
             </div>
@@ -189,6 +206,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleCityChange}
                   options={cityOptions}
                   aria-label="Selecione a cidade"
+                  isActive={!!localCity}
                 />
               )}
             </div>
