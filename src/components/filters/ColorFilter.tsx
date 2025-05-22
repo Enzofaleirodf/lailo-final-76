@@ -48,10 +48,11 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
       <FilterDropdown
         id="color-filter"
         aria-label="Selecione a cor"
-        value={filters.color || 'todas'}
+        value={filters.color}
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-urbanist"
+        placeholder="Selecione"
       />
     </div>
   );

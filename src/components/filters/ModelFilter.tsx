@@ -57,6 +57,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
             value={filters.model} 
             onChange={handleModelChange} 
             options={modelOptions} 
+            placeholder="Selecione"
           />
         )}
       </div>

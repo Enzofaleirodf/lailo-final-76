@@ -124,7 +124,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
           "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
           isValueSelected ? "text-gray-800 font-medium" : "text-gray-600",
           "border-gray-300",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
           disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
           className
         )}
@@ -138,7 +138,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         aria-autocomplete="list"
         tabIndex={disabled ? -1 : 0}
       >
-        {placeholder && <option value="" disabled>{placeholder}</option>}
+        {placeholder && (!value || value === '') && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}

@@ -64,6 +64,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
         value={filters.brand} 
         onChange={handleBrandChange} 
         options={brandOptions} 
+        placeholder="Selecione"
       />
     </div>
   );
