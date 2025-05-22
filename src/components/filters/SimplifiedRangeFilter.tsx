@@ -1,165 +1,99 @@
+import React, { useState, useCallback } from 'react';
+import { Input } from "@/components/ui/input";
+import { formatNumber } from '@/lib/utils';
+import { RangeValues } from '@/hooks/useRangeFilter';
 
-import React, { useMemo } from 'react';
-import RangeInputField from './RangeInputField';
-import { useRangeFilter, RangeValues } from '@/hooks/useRangeFilter';
-import { cn } from '@/lib/utils';
-import RangeErrorMessages from './RangeErrorMessages';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useResponsiveConsistency } from '@/hooks/useResponsiveConsistency';
-
-export interface RangeFilterProps {
-  initialValues: RangeValues;
-  defaultValues?: RangeValues;
-  onChange?: (values: RangeValues) => void;
-  minPlaceholder?: string;
-  maxPlaceholder?: string;
-  ariaLabelMin?: string;
-  ariaLabelMax?: string;
-  allowDecimals?: boolean;
-  allowNegative?: boolean;
-  minAllowed?: number;
-  maxAllowed?: number;
-  inputPrefix?: string;
-  inputSuffix?: string;
-  className?: string;
-  isActive?: boolean;
-  formatterOptions?: {
-    useThousandSeparator?: boolean;
-    formatDisplay?: boolean;
-  };
-  id?: string; // Add the id prop to the interface
+interface FormatterOptions {
+  useThousandSeparator: boolean;
+  formatDisplay: boolean;
 }
 
-/**
- * Componente simplificado para filtros de intervalo
- * Unifica o comportamento visual e funcional dos filtros de intervalo
- * Otimizado para desempenho com grandes conjuntos de dados
- */
-const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
+// Adicionar isActive à interface de propriedades
+interface SimplifiedRangeFilterProps {
+  initialValues: RangeValues;
+  defaultValues: RangeValues;
+  onChange: (values: RangeValues) => void;
+  minPlaceholder: string;
+  maxPlaceholder: string;
+  ariaLabelMin: string;
+  ariaLabelMax: string;
+  allowDecimals: boolean;
+  minAllowed: number;
+  maxAllowed: number;
+  inputPrefix?: string;
+  inputSuffix?: string;
+  isActive?: boolean;
+  formatterOptions: FormatterOptions;
+  id?: string;
+}
+
+const SimplifiedRangeFilter: React.FC<SimplifiedRangeFilterProps> = ({
   initialValues,
-  defaultValues = { min: '', max: '' },
+  defaultValues,
   onChange,
-  minPlaceholder = "Min",
-  maxPlaceholder = "Max",
-  ariaLabelMin = "Valor mínimo",
-  ariaLabelMax = "Valor máximo",
-  allowDecimals = false,
-  allowNegative = false,
+  minPlaceholder,
+  maxPlaceholder,
+  ariaLabelMin,
+  ariaLabelMax,
+  allowDecimals,
   minAllowed,
   maxAllowed,
-  inputPrefix,
-  inputSuffix,
-  className = "",
+  inputPrefix = '',
+  inputSuffix = '',
   isActive = false,
-  formatterOptions = {},
-  id // Include the id in the destructured props
+  formatterOptions,
+  id
 }) => {
-  // Verificar consistência em diferentes tamanhos de tela
-  useResponsiveConsistency({ 
-    targetElements: [
-      {
-        selector: '[data-testid="range-filter"] input',
-        properties: ['border-color', 'border-radius', 'padding', 'background-color']
-      }
-    ],
-    logInconsistencies: true
-  });
-  
-  const isMobile = useIsMobile();
-  
-  // Usar nosso hook atualizado para gerenciar estado e validação
-  const {
-    values,
-    displayValues,
-    errors,
-    handleMinChange,
-    handleMaxChange,
-    handleBlur,
-  } = useRangeFilter(initialValues, {
-    defaultMin: defaultValues.min,
-    defaultMax: defaultValues.max,
-    allowDecimals,
-    allowNegative,
-    minAllowed, 
-    maxAllowed,
-    onChange,
-    prefix: inputPrefix,
-    suffix: inputSuffix,
-    ...formatterOptions
-  });
-  
-  // ID único para acessibilidade
-  const filterGroupId = id || React.useId();
-  const minErrorId = `min-error-${filterGroupId}`;
-  const maxErrorId = `max-error-${filterGroupId}`;
-  
-  // Calcular placeholder específico para dispositivo
-  const getResponsivePlaceholder = (placeholder: string) => {
-    if (isMobile && placeholder.length > 4) {
-      // Abreviar placeholder em dispositivos móveis
-      return placeholder.substring(0, 3) + '.';
-    }
-    return placeholder;
-  };
-  
-  // Usar memo para evitar recálculos desnecessários
-  const responsiveMinPlaceholder = useMemo(() => 
-    getResponsivePlaceholder(minPlaceholder), 
-    [minPlaceholder, isMobile]
-  );
-  
-  const responsiveMaxPlaceholder = useMemo(() => 
-    getResponsivePlaceholder(maxPlaceholder), 
-    [maxPlaceholder, isMobile]
-  );
-  
+  const [minValue, setMinValue] = useState<string>(initialValues.min || '');
+  const [maxValue, setMaxValue] = useState<string>(initialValues.max || '');
+
+  const handleMinChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMinValue(value);
+    
+    const parsedValue = value === '' ? '' : value;
+    onChange({ min: parsedValue, max: maxValue });
+  }, [maxValue, onChange]);
+
+  const handleMaxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMaxValue(value);
+    
+    const parsedValue = value === '' ? '' : value;
+    onChange({ min: minValue, max: parsedValue });
+  }, [minValue, onChange]);
+
   return (
-    <div className="space-y-2" data-testid="range-filter">
-      <div className={cn("flex gap-2 items-center", className)}>
-        <RangeInputField
-          id={`min-${filterGroupId}`}
-          value={displayValues.min}
-          placeholder={responsiveMinPlaceholder}
-          onChange={(e) => handleMinChange(e.target.value)}
-          onBlur={() => handleBlur(true)}
-          ariaLabel={ariaLabelMin}
-          ariaInvalid={!!errors.min}
-          ariaDescribedBy={errors.min ? minErrorId : undefined}
-          isError={!!errors.min}
-          isActive={isActive}
-          inputPrefix={inputPrefix}
-          inputSuffix={inputSuffix}
-          className="flex-1"
-          dataTestId="range-input-min"
+    <div className="flex items-center gap-2">
+      <div className={`flex-1 flex items-center border rounded-md px-2 py-1 focus-within:ring-1 focus-within:ring-brand-300 ${isActive ? 'border-purple-300' : 'border-gray-200'}`}>
+        {inputPrefix && <span className="text-gray-500 mr-2">{inputPrefix}</span>}
+        <Input
+          type="text"
+          id={id ? `${id}-min` : undefined}
+          placeholder={minPlaceholder}
+          aria-label={ariaLabelMin}
+          value={minValue}
+          onChange={handleMinChange}
+          className="flex-1 border-none shadow-none focus-visible:ring-0 focus-visible:ring-transparent p-0 m-0"
         />
-        
-        <RangeInputField
-          id={`max-${filterGroupId}`}
-          value={displayValues.max}
-          placeholder={responsiveMaxPlaceholder}
-          onChange={(e) => handleMaxChange(e.target.value)}
-          onBlur={() => handleBlur(false)}
-          ariaLabel={ariaLabelMax}
-          ariaInvalid={!!errors.max}
-          ariaDescribedBy={errors.max ? maxErrorId : undefined}
-          isError={!!errors.max}
-          isActive={isActive}
-          inputPrefix={inputPrefix}
-          inputSuffix={inputSuffix}
-          className="flex-1"
-          dataTestId="range-input-max"
-        />
+        {inputSuffix && <span className="text-gray-500 ml-2">{inputSuffix}</span>}
       </div>
-      
-      {/* Mensagens de erro */}
-      <RangeErrorMessages 
-        minError={errors.min}
-        maxError={errors.max}
-        minErrorId={minErrorId}
-        maxErrorId={maxErrorId}
-      />
+      <span className="text-gray-500">até</span>
+      <div className={`flex-1 flex items-center border rounded-md px-2 py-1 focus-within:ring-1 focus-within:ring-brand-300 ${isActive ? 'border-purple-300' : 'border-gray-200'}`}>
+        {inputPrefix && <span className="text-gray-500 mr-2">{inputPrefix}</span>}
+        <Input
+          type="text"
+          id={id ? `${id}-max` : undefined}
+          placeholder={maxPlaceholder}
+          aria-label={ariaLabelMax}
+          value={maxValue}
+          onChange={handleMaxChange}
+          className="flex-1 border-none shadow-none focus-visible:ring-0 focus-visible:ring-transparent p-0 m-0"
+        />
+        {inputSuffix && <span className="text-gray-500 ml-2">{inputSuffix}</span>}
+      </div>
     </div>
   );
 };
 
-export default React.memo(SimplifiedRangeFilter);
+export default SimplifiedRangeFilter;

@@ -4,13 +4,14 @@ import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
+import FilterSectionComponent from './FilterSectionComponent';
 
 interface PriceRangeFilterProps {
   onFilterChange?: () => void;
 }
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStore();
+  const { filters, updateFilter, expandedSections, toggleSection } = useFilterStore();
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -38,6 +39,10 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       });
     }
   }, []);
+
+  const handleSectionToggle = () => {
+    toggleSection('price');
+  };
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
@@ -45,26 +50,33 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
     filters.price.range.max !== defaultValues.max;
   
   return (
-    <div className="space-y-3">
-      <SimplifiedRangeFilter
-        initialValues={filters.price.range}
-        defaultValues={defaultValues}
-        onChange={handleRangeChange}
-        minPlaceholder="Min"
-        maxPlaceholder="Max"
-        ariaLabelMin="Preço mínimo"
-        ariaLabelMax="Preço máximo"
-        allowDecimals={true}
-        minAllowed={Number(defaultValues.min)}
-        maxAllowed={Number(defaultValues.max)}
-        inputPrefix="R$"
-        isActive={isFilterActive}
-        formatterOptions={{
-          useThousandSeparator: true,
-          formatDisplay: true
-        }}
-      />
-    </div>
+    <FilterSectionComponent 
+      title="Preço" 
+      isExpanded={expandedSections.price} 
+      onToggle={handleSectionToggle}
+      isActive={isFilterActive}
+    >
+      <div className="space-y-3">
+        <SimplifiedRangeFilter
+          initialValues={filters.price.range}
+          defaultValues={defaultValues}
+          onChange={handleRangeChange}
+          minPlaceholder="Min"
+          maxPlaceholder="Max"
+          ariaLabelMin="Preço mínimo"
+          ariaLabelMax="Preço máximo"
+          allowDecimals={true}
+          minAllowed={Number(defaultValues.min)}
+          maxAllowed={Number(defaultValues.max)}
+          inputPrefix="R$"
+          isActive={isFilterActive}
+          formatterOptions={{
+            useThousandSeparator: true,
+            formatDisplay: true
+          }}
+        />
+      </div>
+    </FilterSectionComponent>
   );
 };
 
