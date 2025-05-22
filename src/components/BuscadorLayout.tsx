@@ -1,7 +1,10 @@
+
 import React from 'react';
 import { ContentType } from '@/types/filters';
 import FilterContent from './filters/FilterContent';
 import TopFilters from './TopFilters';
+import ResultHeader from './ResultHeader';
+import AuctionList from './AuctionList';
 
 interface BuscadorLayoutProps {
   contentType: ContentType;
@@ -19,7 +22,8 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
           <FilterContent contentType={contentType} />
         </div>
         <div className="w-full md:w-3/4 lg:w-4/5">
-          {/* Conteúdo principal aqui */}
+          <ResultHeader />
+          <AuctionList />
         </div>
       </div>
     </div>
