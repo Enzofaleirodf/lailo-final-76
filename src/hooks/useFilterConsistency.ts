@@ -55,7 +55,7 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
   
   // Função de limpeza para quaisquer listeners
   const cleanup = useCallback(() => {
-    // Implementação simplificada, sem código de depuração
+    // Implementação simplificada sem código de depuração
   }, []);
   
   return {

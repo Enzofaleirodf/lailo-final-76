@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ContentType } from '@/types/filters';
@@ -40,7 +40,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
   }, [contentType, onTabChange, navigate]);
   
   // Definir atributos aria para acessibilidade
-  const getTabAttributes = (type: ContentType) => {
+  const getTabAttributes = useCallback((type: ContentType) => {
     const isSelected = contentType === type;
     
     return {
@@ -50,7 +50,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
       tabIndex: isSelected ? 0 : -1,
       "data-state": isSelected ? "active" : "inactive"
     };
-  };
+  }, [contentType]);
   
   // Manipuladores de eventos de teclado para acessibilidade
   const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
@@ -61,7 +61,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
   }, []);
   
   // Função de utilitário para anúncios de leitores de tela
-  const announceForScreenReader = (message: string) => {
+  const announceForScreenReader = useCallback((message: string) => {
     let announcer = document.getElementById('mobile-filter-announcer');
     if (!announcer) {
       announcer = document.createElement('div');
@@ -79,7 +79,24 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
     setTimeout(() => {
       if (announcer) announcer.textContent = message;
     }, 100);
-  };
+  }, []);
+  
+  // Usar memo para evitar recálculos de classes
+  const propertyButtonClass = useMemo(() => cn(
+    getButtonSizeClass,
+    "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
+    contentType === 'property' 
+      ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
+      : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+  ), [contentType, getButtonSizeClass]);
+  
+  const vehicleButtonClass = useMemo(() => cn(
+    getButtonSizeClass,
+    "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
+    contentType === 'vehicle' 
+      ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
+      : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+  ), [contentType, getButtonSizeClass]);
   
   return (
     <div 
@@ -90,34 +107,22 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
       <button 
         onClick={() => handleTabChange('property')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
-        className={cn(
-          getButtonSizeClass(),
-          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
-          contentType === 'property' 
-            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
-        )} 
+        className={propertyButtonClass} 
         aria-label="Filtrar imóveis" 
         {...getTabAttributes('property')}
       >
-        <Building2 size={getIconSize()} className="shrink-0" aria-hidden="true" />
+        <Building2 size={getIconSize} className="shrink-0" aria-hidden="true" />
         <span className="sr-only">Imóveis</span>
       </button>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
       <button 
         onClick={() => handleTabChange('vehicle')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('vehicle'))}
-        className={cn(
-          getButtonSizeClass(),
-          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
-          contentType === 'vehicle' 
-            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
-        )} 
+        className={vehicleButtonClass} 
         aria-label="Filtrar veículos" 
         {...getTabAttributes('vehicle')}
       >
-        <Car size={getIconSize()} className="shrink-0" aria-hidden="true" />
+        <Car size={getIconSize} className="shrink-0" aria-hidden="true" />
         <span className="sr-only">Veículos</span>
       </button>
     </div>

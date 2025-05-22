@@ -20,8 +20,16 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onFilterClick,
   onSortClick
 }) => {
-  return <div role="navigation" aria-label="Opções de filtro e ordenação" className="fixed top-0 left-0 right-0 z-30 w-full pt-4 pb-0 mt-0 bg-[#fbfbfc] px-2">
-      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white" aria-label="Barra de filtros para dispositivos móveis">
+  return (
+    <div 
+      role="navigation" 
+      aria-label="Opções de filtro e ordenação" 
+      className="fixed top-0 left-0 right-0 z-30 w-full pt-4 pb-0 mt-0 bg-[#fbfbfc] px-2"
+    >
+      <div 
+        className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white" 
+        aria-label="Barra de filtros para dispositivos móveis"
+      >
         {/* Abas de tipo de conteúdo (imóveis/veículos) com largura aumentada */}
         <ContentTypeTabs contentType={contentType} />
         
@@ -30,10 +38,16 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
       </div>
       
       {/* Região de anúncio para leitores de tela */}
-      <div id="mobile-filter-announcer" aria-live="polite" aria-atomic="true" className="sr-only">
+      <div 
+        id="mobile-filter-announcer" 
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+      >
         {/* Preenchido dinamicamente via JavaScript */}
       </div>
-    </div>;
+    </div>
+  );
 };
 
 // Usar memo para evitar renderizações desnecessárias

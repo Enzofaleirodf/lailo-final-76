@@ -29,7 +29,10 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ contentType, onFilterChange }
   
   // Use our new hook to ensure filter consistency
   const { handleFilterChange } = useFilterConsistency({
-    onChange: onFilterChange
+    onChange: onFilterChange,
+    // Desativando toast e eventos automáticos para melhor desempenho
+    showToasts: false,
+    autoTriggerEvents: false
   });
   
   const handleColorChange = useCallback((value: string) => {
