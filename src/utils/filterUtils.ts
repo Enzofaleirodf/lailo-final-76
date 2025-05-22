@@ -3,7 +3,7 @@
  * Opções de filtro para formato de leilão
  */
 export const formatOptions = [
-  { value: 'Todos', label: 'Todos os formatos' },
+  { value: 'Todos', label: 'Todos' },
   { value: 'Alienação Particular', label: 'Alienação Particular' },
   { value: 'Leilão', label: 'Leilão' },
   { value: 'Venda Direta', label: 'Venda Direta' }
@@ -13,7 +13,7 @@ export const formatOptions = [
  * Opções de filtro para origem de leilão
  */
 export const originOptions = [
-  { value: 'Todas', label: 'Todas as origens' },
+  { value: 'Todas', label: 'Todas' },
   { value: 'Extrajudicial', label: 'Extrajudicial' },
   { value: 'Judicial', label: 'Judicial' },
   { value: 'Particular', label: 'Particular' },
@@ -24,7 +24,7 @@ export const originOptions = [
  * Opções de filtro para etapa de leilão
  */
 export const placeOptions = [
-  { value: 'Todas', label: 'Todas as etapas' },
+  { value: 'Todas', label: 'Todas' },
   { value: 'Praça única', label: 'Praça única' },
   { value: '1ª Praça', label: '1ª Praça' },
   { value: '2ª Praça', label: '2ª Praça' },

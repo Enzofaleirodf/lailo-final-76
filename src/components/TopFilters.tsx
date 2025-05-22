@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,18 @@ import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils'
 const TopFilters: React.FC = () => {
   const { filters, updateFilter } = useFilterStore();
   const navigate = useNavigate();
+
+  // Determina se o filtro de etapa deve estar inativo
+  const isPlaceDisabled = useMemo(() => {
+    return filters.format === 'Alienação Particular' || filters.format === 'Venda Direta';
+  }, [filters.format]);
+
+  // Se o formato mudar para algo que desabilita etapa, resetar etapa para 'Todas'
+  React.useEffect(() => {
+    if (isPlaceDisabled && filters.place !== 'Todas') {
+      updateFilter('place', 'Todas');
+    }
+  }, [isPlaceDisabled, filters.place, updateFilter]);
 
   const handleContentTypeChange = useCallback((type: ContentType) => {
     // Não fazer nada se já estivermos no tipo selecionado
@@ -46,6 +58,20 @@ const TopFilters: React.FC = () => {
       updateFilter('place', value as FilterPlace);
     }
   }, [updateFilter]);
+
+  // Função para obter o label do filtro selecionado
+  const getSelectedLabel = (filterType: 'format' | 'origin' | 'place'): string => {
+    const options = filterType === 'format' 
+      ? formatOptions 
+      : filterType === 'origin' 
+        ? originOptions 
+        : placeOptions;
+    
+    const value = filters[filterType];
+    const option = options.find(opt => opt.value === value);
+    
+    return option?.label || '';
+  };
 
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
@@ -110,19 +136,24 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={baseDropdownStyle}
+            className={cn(baseDropdownStyle, 
+              filters.format !== 'Todos' && "bg-brand-50 border-brand-200"
+            )}
             aria-label="Selecionar formato"
             aria-haspopup="listbox"
             aria-expanded="false"
           >
-            <span className="text-sm font-normal text-gray-700">
-              {filters.format !== 'Todos' ? (
-                filters.format
-              ) : (
-                <span className="text-gray-500 font-normal">Selecione um formato</span>
-              )}
+            <span className={cn("text-sm font-normal", 
+              filters.format !== 'Todos' 
+                ? "text-brand-700 font-medium" 
+                : "text-gray-500"
+            )}>
+              {filters.format !== 'Todos' 
+                ? getSelectedLabel('format')
+                : "Selecione um formato"
+              }
             </span>
-            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
+            <ChevronDown size={16} className={filters.format !== 'Todos' ? "text-brand-500" : "text-gray-500"} aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -130,7 +161,10 @@ const TopFilters: React.FC = () => {
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('format', option.value as FilterFormat)} 
-              className="cursor-pointer hover:bg-blue-50 hover:text-gray-800 font-normal font-urbanist"
+              className={cn(
+                "cursor-pointer hover:bg-blue-50 hover:text-gray-800 font-normal font-urbanist",
+                filters.format === option.value && "bg-brand-50 text-brand-700 font-medium"
+              )}
             >
               {option.label}
             </DropdownMenuItem>
@@ -142,19 +176,24 @@ const TopFilters: React.FC = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
-            className={baseDropdownStyle}
+            className={cn(baseDropdownStyle, 
+              filters.origin !== 'Todas' && "bg-brand-50 border-brand-200"
+            )}
             aria-label="Selecionar origem"
             aria-haspopup="listbox"
             aria-expanded="false"  
           >
-            <span className="text-sm font-normal text-gray-700">
-              {filters.origin !== 'Todas' ? (
-                filters.origin
-              ) : (
-                <span className="text-gray-500 font-normal">Selecione uma origem</span>
-              )}
+            <span className={cn("text-sm font-normal", 
+              filters.origin !== 'Todas' 
+                ? "text-brand-700 font-medium" 
+                : "text-gray-500"
+            )}>
+              {filters.origin !== 'Todas' 
+                ? getSelectedLabel('origin')
+                : "Selecione uma origem"
+              }
             </span>
-            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
+            <ChevronDown size={16} className={filters.origin !== 'Todas' ? "text-brand-500" : "text-gray-500"} aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -162,7 +201,10 @@ const TopFilters: React.FC = () => {
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('origin', option.value as FilterOrigin)} 
-              className="cursor-pointer hover:bg-blue-50 hover:text-gray-800 font-normal font-urbanist"
+              className={cn(
+                "cursor-pointer hover:bg-blue-50 hover:text-gray-800 font-normal font-urbanist",
+                filters.origin === option.value && "bg-brand-50 text-brand-700 font-medium"
+              )}
             >
               {option.label}
             </DropdownMenuItem>
@@ -172,21 +214,29 @@ const TopFilters: React.FC = () => {
 
       {/* Place options */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild disabled={isPlaceDisabled}>
           <button 
-            className={baseDropdownStyle}
+            className={cn(
+              baseDropdownStyle, 
+              filters.place !== 'Todas' && "bg-brand-50 border-brand-200",
+              isPlaceDisabled && "opacity-50 cursor-not-allowed"
+            )}
             aria-label="Selecionar etapa"
             aria-haspopup="listbox"
             aria-expanded="false"
+            aria-disabled={isPlaceDisabled}
           >
-            <span className="text-sm font-normal text-gray-700">
-              {filters.place !== 'Todas' ? (
-                filters.place
-              ) : (
-                <span className="text-gray-500 font-normal">Selecione uma etapa</span>
-              )}
+            <span className={cn("text-sm font-normal", 
+              filters.place !== 'Todas' 
+                ? "text-brand-700 font-medium" 
+                : "text-gray-500"
+            )}>
+              {filters.place !== 'Todas' 
+                ? getSelectedLabel('place')
+                : "Selecione uma etapa"
+              }
             </span>
-            <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
+            <ChevronDown size={16} className={filters.place !== 'Todas' ? "text-brand-500" : "text-gray-500"} aria-hidden="true" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-full min-w-[200px] bg-white shadow-md rounded-md z-50 font-urbanist">
@@ -194,7 +244,10 @@ const TopFilters: React.FC = () => {
             <DropdownMenuItem 
               key={option.value}
               onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
-              className="cursor-pointer hover:bg-blue-50 hover:text-gray-800 font-normal font-urbanist"
+              className={cn(
+                "cursor-pointer hover:bg-blue-50 hover:text-gray-800 font-normal font-urbanist",
+                filters.place === option.value && "bg-brand-50 text-brand-700 font-medium"
+              )}
             >
               {option.label}
             </DropdownMenuItem>

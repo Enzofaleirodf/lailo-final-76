@@ -127,17 +127,17 @@ const countActiveFilters = (filters: FilterState): number => {
   
   if (!isAreaDefault && (filters.usefulArea.min !== '' || filters.usefulArea.max !== '')) count++;
   
-  // Brand, model, color - agora verificando se não estão vazios
+  // Brand, model, color
   if (filters.brand !== '') count++;
   if (filters.model !== '') count++;
   if (filters.color !== '') count++;
   
-  // Auction format, origin, place - verificar se não estão com valor padrão
+  // Auction format, origin, place
   if (filters.format !== 'Todos') count++;
   if (filters.origin !== 'Todas') count++;
   if (filters.place !== 'Todas') count++;
 
-  // Category - conta se for diferente do padrão (agora vazio)
+  // Category
   if (filters.category !== '') count++;
   
   return count;
@@ -176,6 +176,14 @@ export const useFilterStore = create<FilterStore>()(
             newFilters.propertyTypes = [];
           }
 
+          // Se o formato mudar para Alienação Particular ou Venda Direta, 
+          // resetar etapa para 'Todas' pois o filtro é inválido nestes casos
+          if (key === 'format') {
+            if (value === 'Alienação Particular' || value === 'Venda Direta') {
+              newFilters.place = 'Todas';
+            }
+          }
+
           return { 
             filters: newFilters, 
             activeFilters: countActiveFilters(newFilters),
@@ -201,6 +209,13 @@ export const useFilterStore = create<FilterStore>()(
       setFilters: (newFilters) => {
         set((state) => {
           const updatedFilters = { ...state.filters, ...newFilters };
+          
+          // Garantir consistência: se o formato for Alienação Particular ou Venda Direta,
+          // etapa deve ser 'Todas' pois o filtro é inválido nestes casos
+          if (updatedFilters.format === 'Alienação Particular' || updatedFilters.format === 'Venda Direta') {
+            updatedFilters.place = 'Todas';
+          }
+          
           return { 
             filters: updatedFilters, 
             activeFilters: countActiveFilters(updatedFilters),
