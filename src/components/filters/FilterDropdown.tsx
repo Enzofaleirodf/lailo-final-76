@@ -34,8 +34,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const selectRef = useRef<HTMLSelectElement>(null);
   const [isTouched, setIsTouched] = useState(false);
   
-  // Verificar se o valor não está vazio e não é um valor padrão como "Todas", "Todos"
-  const isValueSelected = value && value !== "todas" && value !== "Todas" && value !== "todos" && value !== "Todos";
+  // Verificar se o valor está selecionado - agora qualquer valor é considerado selecionado
+  const isValueSelected = !!value;
   
   // Handler para mudança com prevenção de efeitos colaterais de rolagem
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

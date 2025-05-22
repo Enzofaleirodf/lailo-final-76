@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -50,10 +49,10 @@ const TopFilters: React.FC = () => {
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
 
-  // Verificar se cada filtro está ativo
-  const isFormatActive = filters.format !== 'Leilão'; // considerando 'Leilão' como padrão visual
-  const isOriginActive = filters.origin !== 'Todas';
-  const isPlaceActive = filters.place !== 'Todas';
+  // Verificar se cada filtro está ativo - qualquer valor é considerado ativo
+  const isFormatActive = !!filters.format;
+  const isOriginActive = !!filters.origin;
+  const isPlaceActive = !!filters.place;
   
   // Log para debug
   console.log('TopFilters - isFormatActive:', isFormatActive);
@@ -133,7 +132,7 @@ const TopFilters: React.FC = () => {
             data-active={isFormatActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
+              <span className="text-gray-500 font-normal">Formato:</span> <span className={isFormatActive ? "text-gray-800 font-medium" : "text-gray-700 font-normal"}>
                 {filters.format}
               </span>
             </span>
@@ -164,7 +163,7 @@ const TopFilters: React.FC = () => {
             data-active={isOriginActive ? 'true' : 'false'}
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
+              <span className="text-gray-500 font-normal">Origem:</span> <span className={isOriginActive ? "text-gray-800 font-medium" : "text-gray-700 font-normal"}>
                 {filters.origin}
               </span>
             </span>
@@ -195,7 +194,7 @@ const TopFilters: React.FC = () => {
             data-active={isPlaceActive ? 'true' : 'false'}  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
+              <span className="text-gray-500 font-normal">Etapa:</span> <span className={isPlaceActive ? "text-gray-800 font-medium" : "text-gray-700 font-normal"}>
                 {filters.place}
               </span>
             </span>

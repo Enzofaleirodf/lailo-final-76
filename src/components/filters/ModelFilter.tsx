@@ -28,8 +28,8 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
     }));
   }, [filters.brand]);
   
-  // Verificar se o filtro está ativo
-  const isFilterActive = filters.model !== 'todos';
+  // Verificar se o filtro está ativo - qualquer valor selecionado é considerado ativo
+  const isFilterActive = !!filters.model;
   
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);

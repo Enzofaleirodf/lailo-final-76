@@ -110,8 +110,8 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
     setLocalCity('');
   }, []);
 
-  // Check if the filter is active
-  const isFilterActive = filters.location.state || filters.location.city;
+  // Check if the filter is active - qualquer valor é considerado ativo
+  const isFilterActive = !!(filters.location.state || filters.location.city);
 
   // Generate display text for the button
   const getDisplayText = () => {
