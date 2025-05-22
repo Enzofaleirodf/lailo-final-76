@@ -18,7 +18,7 @@ import {
   Mountain, 
   Hotel,
   Warehouse,
-  Caravan, 
+  Caravan,
   Forklift
 } from 'lucide-react';
 
@@ -66,7 +66,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
         case 'Pesados': return Truck;
         case 'Máquinas Agrícolas': return Tractor;
         case 'Micro Veículos': return Bike;
-        case 'Auxiliares': return categoryOptions.indexOf(categoryName) % 2 === 0 ? Caravan : Forklift; // Alternando entre Caravan e Forklift
+        case 'Auxiliares': return Caravan; // Alterado para usar somente o ícone Caravan 
+        case 'Máquinas de Construção': return Forklift; // Adicionado para usar Forklift
         default: return CircleDashed;
       }
     }
