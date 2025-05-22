@@ -28,7 +28,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({
   const handleSortClick = () => {
     setIsSortOpen(true);
   };
-  return <div className="container mx-auto px-4 py-8">
+  return <div className="container mx-auto px-4 py-8 flex gap-4\n">
       {/* Barra de filtros móvel */}
       {isMobile && <MobileFilterBar contentType={contentType} onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
       
