@@ -17,7 +17,6 @@ export const useUrlParams = (contentType: ContentType) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { filters, setFilters } = useFilterStoreSelector(contentType);
   const { sortOption, setSortOption } = useSortStore();
-  const isMobile = useIsMobile();
   const { toast } = useToast();
   
   // Utilizar hooks auxiliares

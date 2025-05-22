@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import SimplifiedRangeFilter from './SimplifiedRangeFilter';
+import RangeFilter from './RangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
 import { ContentType } from '@/types/filters';
 import { defaultRangeValues as propertyDefaultRangeValues } from '@/stores/usePropertyFiltersStore';
@@ -52,7 +52,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
   
   return (
     <div className="space-y-3">
-      <SimplifiedRangeFilter
+      <RangeFilter
         initialValues={filters.price.range}
         defaultValues={defaultValues}
         onChange={handleRangeChange}

@@ -5,6 +5,7 @@ import { validateNumericRange } from '@/utils/urlUtils';
 
 /**
  * Valida e corrige parâmetros de URL inválidos
+ * Versão atualizada para usar o arquivo unificado de utilidades de URL
  */
 export const useUrlParamsValidator = () => {
   const [searchParams, setSearchParams] = useSearchParams();

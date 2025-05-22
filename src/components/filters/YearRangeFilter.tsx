@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import SimplifiedRangeFilter from './SimplifiedRangeFilter';
+import RangeFilter from './RangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
 import { ContentType } from '@/types/filters';
 import { defaultRangeValues as propertyDefaultRangeValues } from '@/stores/usePropertyFiltersStore';
@@ -48,7 +48,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
   
   return (
     <div className="space-y-3">
-      <SimplifiedRangeFilter
+      <RangeFilter
         initialValues={filters.year}
         defaultValues={defaultValues}
         onChange={handleRangeChange}

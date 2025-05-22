@@ -27,15 +27,15 @@ export interface RangeFilterProps {
     useThousandSeparator?: boolean;
     formatDisplay?: boolean;
   };
-  id?: string; // Add the id prop to the interface
+  id?: string;
 }
 
 /**
- * Componente simplificado para filtros de intervalo
- * Unifica o comportamento visual e funcional dos filtros de intervalo
+ * Componente unificado para filtros de intervalo
+ * Substitui SimplifiedRangeFilter, FilterRangeInput e AccessibleFilterRangeInput
  * Otimizado para desempenho com grandes conjuntos de dados
  */
-const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
+const RangeFilter: React.FC<RangeFilterProps> = ({
   initialValues,
   defaultValues = { min: '', max: '' },
   onChange,
@@ -52,7 +52,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   className = "",
   isActive = false,
   formatterOptions = {},
-  id // Include the id in the destructured props
+  id
 }) => {
   // Verificar consistência em diferentes tamanhos de tela
   useResponsiveConsistency({ 
@@ -62,7 +62,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
         properties: ['border-color', 'border-radius', 'padding', 'background-color']
       }
     ],
-    logInconsistencies: true
+    logInconsistencies: false // Desativado em produção
   });
   
   const isMobile = useIsMobile();
@@ -162,4 +162,4 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   );
 };
 
-export default React.memo(SimplifiedRangeFilter);
+export default React.memo(RangeFilter);
