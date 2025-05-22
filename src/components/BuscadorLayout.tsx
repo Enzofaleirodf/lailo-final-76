@@ -32,7 +32,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 overflow-x-hidden">
+    <div className="w-full overflow-hidden">
       {/* Barra de filtros móvel */}
       {isMobile && (
         <MobileFilterBar 
@@ -50,9 +50,9 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
         <DesktopFilterBar contentType={contentType} />
       )}
       
-      <div className="flex flex-col md:flex-row gap-6 relative w-full">
+      <div className="flex flex-col md:flex-row gap-4 w-full">
         {/* Área de filtros lateral */}
-        <div className="w-full md:w-1/4 lg:w-1/5 md:sticky md:top-4 md:self-start md:flex-shrink-0">
+        <div className="w-full md:w-auto md:min-w-[240px] md:max-w-[280px] md:sticky md:top-4 md:self-start md:flex-shrink-0">
           {isMobile ? (
             <FilterContent contentType={contentType} />
           ) : (

@@ -20,13 +20,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   // Get responsive padding classes
   const paddingClasses = getPaddingClasses(deviceType);
 
+  // Calcula o espaço disponível para o conteúdo, considerando a sidebar
+  const contentClasses = "flex-1 w-full overflow-x-hidden";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 overflow-x-hidden w-full">
       <div className="flex w-full relative">
         {/* Sidebar is always rendered here, not in each page */}
         <Sidebar />
-        <div className="flex-1 w-full overflow-x-hidden">
-          <div className={`max-w-7xl mx-auto w-full ${paddingClasses}`}>
+        <div className={contentClasses}>
+          <div className={`w-full mx-auto ${paddingClasses}`}>
             <main className={`w-full ${isMobile ? "pb-24" : "pb-20"}`}>
               {children}
             </main>
