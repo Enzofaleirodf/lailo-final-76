@@ -55,18 +55,15 @@ export function useRangeFilter(
   });
 
   // Usar hooks especializados para validação e formatação
-  const { validate, errors } = useRangeValidation({
-    allowDecimals,
-    allowNegative,
+  const { errors, validateValue, correctValue } = useRangeValidation({
     minAllowed,
-    maxAllowed
+    maxAllowed,
+    values
   });
 
-  const { formatValue } = useRangeDisplayFormat({
-    useThousandSeparator,
-    formatDisplay,
-    prefix,
-    suffix
+  const { formatDisplayValue } = useRangeDisplayFormat({
+    allowDecimals,
+    useThousandSeparator
   });
 
   // Formatar valores para exibição com cache
@@ -75,17 +72,17 @@ export function useRangeFilter(
       const cacheKey = `${type}:${value}:${useThousandSeparator}:${formatDisplay}:${prefix}:${suffix}`;
       
       if (!formatCache.current[cacheKey] && value) {
-        formatCache.current[cacheKey] = formatValue(value);
+        formatCache.current[cacheKey] = formatDisplayValue(value);
       }
       
-      return value ? (formatCache.current[cacheKey] || formatValue(value)) : '';
+      return value ? (formatCache.current[cacheKey] || formatDisplayValue(value)) : '';
     };
     
     return {
       min: getCachedFormat(values.min, 'min'),
       max: getCachedFormat(values.max, 'max')
     };
-  }, [values.min, values.max, formatValue, useThousandSeparator, formatDisplay, prefix, suffix]);
+  }, [values.min, values.max, formatDisplayValue, useThousandSeparator, formatDisplay, prefix, suffix]);
 
   // Atualizar o componente pai quando os valores mudarem
   useEffect(() => {
@@ -105,8 +102,19 @@ export function useRangeFilter(
 
   // Validar valores quando o usuário sai do campo
   const handleBlur = useCallback((isMin: boolean) => {
-    validate(values, isMin);
-  }, [validate, values]);
+    const value = isMin ? values.min : values.max;
+    const { error } = validateValue(value, isMin);
+    
+    // Se houver erro, corrigir o valor
+    if (error) {
+      const correctedValue = correctValue(value, isMin);
+      if (isMin) {
+        setValues(prev => ({ ...prev, min: correctedValue }));
+      } else {
+        setValues(prev => ({ ...prev, max: correctedValue }));
+      }
+    }
+  }, [validateValue, correctValue, values]);
 
   // Reset para valores padrão
   const resetToDefaults = useCallback(() => {

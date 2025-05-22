@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 
-interface UseRangeDisplayFormatOptions {
+export interface UseRangeDisplayFormatOptions {
   allowDecimals?: boolean;
   useThousandSeparator?: boolean;
 }
