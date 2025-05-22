@@ -9,6 +9,7 @@ import MobileFilterBar from './mobile-filter/MobileFilterBar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Drawer } from '@/components/ui/drawer';
 import FilterSection from './FilterSection';
+import DesktopFilterBar from './desktop-filter/DesktopFilterBar';
 
 interface BuscadorLayoutProps {
   contentType: ContentType;
@@ -43,6 +44,11 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
       
       {/* Componente de escolha de tipo de conteúdo (imóveis/veículos) */}
       <TopFilters contentType={contentType} />
+      
+      {/* Barra de filtros superior para desktop com formato, origem e etapa */}
+      {!isMobile && (
+        <DesktopFilterBar contentType={contentType} />
+      )}
       
       <div className="flex flex-col md:flex-row gap-6">
         {/* Área de filtros lateral */}
