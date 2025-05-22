@@ -34,8 +34,10 @@ export const useAuctionFilters = (
     // Começamos com todos os itens
     let items = [...rawItems];
     
-    // Aplicar filtro de categoria primeiro (novo)
-    items = applyCategoryFilter(items, filters.category);
+    // Aplicar filtro de categoria somente se uma categoria for selecionada
+    if (filters.category && filters.category !== '') {
+      items = applyCategoryFilter(items, filters.category);
+    }
     
     // Aplicar filtros comuns
     items = applyPriceFilter(

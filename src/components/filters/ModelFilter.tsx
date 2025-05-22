@@ -49,7 +49,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
         </label>
         {isDisabled ? (
           <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
-            {!filters.category ? "Escolha uma categoria antes" : "Selecione uma marca antes"}
+            {!filters.category ? "Escolha uma categoria antes" : "Escolha uma marca antes"}
             <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
           </div>
         ) : (

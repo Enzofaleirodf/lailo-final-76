@@ -1,4 +1,3 @@
-
 /**
  * @fileoverview Utilitários para filtragem de leilões e propriedades
  * Contém funções especializadas para cada tipo de filtro
@@ -88,40 +87,23 @@ export const applyLocationFilter = <T extends GenericItem>(
 
 /**
  * Aplica filtro de categoria aos itens
- * @param items Lista de itens
- * @param category Categoria selecionada
- * @returns Lista filtrada de itens
+ * Mostra todos os itens se nenhuma categoria for selecionada
  */
-export const applyCategoryFilter = <T extends GenericItem>(
-  items: T[],
-  category: string
-): T[] => {
-  // Se não há categoria selecionada ou foi selecionada a opção "Todos", retornar todos os itens
-  if (!category || category === 'Todos') {
+export const applyCategoryFilter = (items: any[], category: string): any[] => {
+  // Se não houver categoria selecionada, retorna todos os itens
+  if (!category || category === '' || category === 'Todos') {
     return items;
   }
   
-  // Filtrar itens por categoria com tratamento seguro para propriedades ausentes
   return items.filter(item => {
-    // Verificar se o item tem a propriedade category
-    if ('category' in item) {
-      const itemCategory = String(item.category || '').toLowerCase();
-      return itemCategory === category.toLowerCase();
-    }
+    // Verificar se o item tem uma propriedade de categoria
+    const itemCategory = item.category || item.categoria;
     
-    // Verificar se há propriedades aninhadas que possam conter a categoria
-    if ('vehicleInfo' in item && item.vehicleInfo && 'category' in item.vehicleInfo) {
-      const itemCategory = String(item.vehicleInfo.category || '').toLowerCase();
-      return itemCategory === category.toLowerCase();
-    }
+    // Se o item não tiver categoria, mantemos ele visível
+    if (!itemCategory) return true;
     
-    if ('propertyInfo' in item && item.propertyInfo && 'category' in item.propertyInfo) {
-      const itemCategory = String(item.propertyInfo.category || '').toLowerCase();
-      return itemCategory === category.toLowerCase();
-    }
-    
-    // Se não encontrar informação de categoria, não filtrar este item
-    return true;
+    // Comparação case-insensitive para maior compatibilidade
+    return itemCategory.toLowerCase() === category.toLowerCase();
   });
 };
 
@@ -295,4 +277,3 @@ export const calculateItemsStatistics = <T extends GenericItem>(
   
   return { totalItems, totalSites, newItems };
 };
-
