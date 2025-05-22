@@ -2,7 +2,6 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSortStore } from '@/stores/useSortStore';
-import { useIsMobile } from './use-mobile';
 import { updateUrlParams, loadFiltersFromUrl } from '@/utils/urlUtils';
 import { useScrollRestoration } from './useScrollRestoration';
 import { useUrlParamsValidator } from './useUrlParamsValidator';
@@ -12,6 +11,7 @@ import { useFilterStoreSelector } from './useFilterStoreSelector';
 
 /**
  * Hook personalizado para sincronizar estado de filtro e classificação com parâmetros de URL
+ * Versão otimizada com remoção de logs e códigos de depuração
  */
 export const useUrlParams = (contentType: ContentType) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,10 +64,9 @@ export const useUrlParams = (contentType: ContentType) => {
         prevFiltersRef.current = { ...filters };
         prevSortOptionRef.current = sortOption;
       } catch (error) {
-        console.error("Erro ao aplicar filtros:", error);
         hasErrorRef.current = true;
         
-        // Notificar usuário sobre o erro
+        // Notificar usuário sobre o erro (sem log de erro)
         toast({
           title: "Erro ao aplicar filtros",
           description: "Ocorreu um problema ao atualizar os filtros",
@@ -108,7 +107,6 @@ export const useUrlParams = (contentType: ContentType) => {
       prevFiltersRef.current = { ...filters };
       prevSortOptionRef.current = sort as any || sortOption;
     } catch (error) {
-      console.error("Erro ao carregar filtros da URL:", error);
       hasErrorRef.current = true;
       
       toast({
@@ -142,7 +140,6 @@ export const useUrlParams = (contentType: ContentType) => {
       
       hasErrorRef.current = false;
     } catch (error) {
-      console.error("Erro ao mudar página:", error);
       hasErrorRef.current = true;
       
       toast({

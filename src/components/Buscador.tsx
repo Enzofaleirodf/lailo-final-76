@@ -20,15 +20,15 @@ const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
   const { initialSetupDone } = useBuscadorSetup(contentType);
   
   // Obter referências às stores (necessário para garantir que elas são inicializadas)
-  const propertyStore = usePropertyFiltersStore();
-  const vehicleStore = useVehicleFiltersStore();
+  const propertyStore = usePropertyFiltersStore(state => state.updateFilter);
+  const vehicleStore = useVehicleFiltersStore(state => state.updateFilter);
   
   // Atualizar o tipo de conteúdo correto na store apropriada
   useEffect(() => {
     if (contentType === 'property') {
-      propertyStore.updateFilter('contentType', 'property');
+      propertyStore('contentType', 'property');
     } else {
-      vehicleStore.updateFilter('contentType', 'vehicle');
+      vehicleStore('contentType', 'vehicle');
     }
   }, [contentType, propertyStore, vehicleStore]); 
   
