@@ -16,20 +16,22 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ contentType, on
   
   // Obter tipos de propriedade com base na categoria selecionada
   const typeOptions = useMemo(() => {
-    return getTypesByCategory(filters.category, 'property');
+    return getTypesByCategory(filters.category, 'property') || [];
   }, [filters.category]);
   
   const isDisabled = !filters.category;
   
   const handleSelectType = useCallback((type: string) => {
+    // Garantir que propertyTypes seja sempre um array
+    const propertyTypes = filters.propertyTypes || [];
     let newTypes: string[];
     
-    if (filters.propertyTypes.includes(type)) {
+    if (propertyTypes.includes(type)) {
       // Se o tipo já está selecionado, remova-o
-      newTypes = filters.propertyTypes.filter(t => t !== type);
+      newTypes = propertyTypes.filter(t => t !== type);
     } else {
       // Caso contrário, adicione-o
-      newTypes = [...filters.propertyTypes, type];
+      newTypes = [...propertyTypes, type];
     }
     
     updateFilter('propertyTypes', newTypes);
@@ -50,7 +52,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ contentType, on
       ) : (
         <VirtualizedFilterOptions
           options={typeOptions}
-          selectedOptions={filters.propertyTypes}
+          selectedOptions={filters.propertyTypes || []}
           onSelectOption={handleSelectType}
           placeholder="Selecione os tipos"
           maxHeight={200}

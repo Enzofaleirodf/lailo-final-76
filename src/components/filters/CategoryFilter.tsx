@@ -28,7 +28,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterCh
   
   // Obter opções de categoria com base no tipo de conteúdo - memoizado
   const categoryOptions = useMemo(() => {
-    const categories = getCategories(contentType);
+    // Garantir que getCategories retorne um array, mesmo que vazio
+    const categories = getCategories(contentType) || [];
     return [
       { value: '', label: 'Selecione uma categoria' },
       ...categories.map(category => ({
