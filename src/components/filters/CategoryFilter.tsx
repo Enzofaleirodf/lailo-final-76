@@ -42,6 +42,14 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
 
   const handleCategoryChange = (value: string) => {
     updateFilter('category', value);
+    
+    // Automaticamente seleciona o tipo "Todos" da categoria escolhida
+    if (contentType === 'vehicle') {
+      updateFilter('vehicleTypes', ['Todos']);
+    } else if (contentType === 'property') {
+      updateFilter('propertyTypes', ['Todos']);
+    }
+    
     if (onFilterChange) {
       onFilterChange();
     }

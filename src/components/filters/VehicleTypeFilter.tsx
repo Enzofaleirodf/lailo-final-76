@@ -1,5 +1,5 @@
 
-import React, { useCallback, useId } from 'react';
+import React, { useCallback, useId, useEffect } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -38,6 +38,13 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   } else {
     availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
   }
+  
+  // Quando a categoria mudar, selecionar automaticamente o tipo "Todos"
+  useEffect(() => {
+    if (category && filters.vehicleTypes.length === 0) {
+      updateFilter('vehicleTypes', ['Todos']);
+    }
+  }, [category, updateFilter, filters.vehicleTypes]);
   
   const handleVehicleTypeChange = useCallback((value: string) => {
     // Convert to array with single value for compatibility with existing filter logic

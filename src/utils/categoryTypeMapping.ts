@@ -6,9 +6,9 @@ export const vehicleCategoryToTypesMap: Record<string, string[]> = {
   'Aéreos': ['Todos', 'Avião', 'Helicóptero', 'Drone'],
   'Náuticos': ['Todos', 'Barco', 'Lancha', 'Jet Ski'],
   'Micro Veículos': ['Todos', 'Bicicleta', 'Ciclomotor', 'Monociclo', 'Patinete', 'Scooter', 'Segway', 'Triciclo'],
-  'Leves': ['Todos', 'Caminhonete', 'Pick-up', 'Van', 'Carro', 'Moto'],
+  'Leves': ['Todos', 'Carro', 'Moto'], // Simplificado para apenas "Carro" e "Moto"
   'Pesados': ['Todos', 'Caminhão', 'Carreta', 'Cavalo Mecânico', 'Micro-ônibus', 'Motorhome', 'Ônibus'],
-  'Auxiliares': ['Todos', 'Reboque', 'Trailer'], // Nova categoria com os itens movidos
+  'Auxiliares': ['Todos', 'Reboque', 'Trailer'],
   'Recreativos': ['Todos', 'Buggy', 'Quadriciclo', 'UTV', 'Kart'],
   'Máquinas Agrícolas': ['Todos', 'Colheitadeira', 'Plantadeira', 'Trator', 'Roçadeira'],
   'Máquinas de Construção': ['Todos', 'Escavadeira', 'Retroescavadeira', 'Motoniveladora', 'Guindaste', 'Pá Carregadeira']
