@@ -98,7 +98,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 <RadioGroupItem id={`${id}-${option}`} value={option} className="order-1 after:absolute after:inset-0" />
                 <Icon className="opacity-60" size={18} strokeWidth={2} aria-hidden="true" />
               </div>
-              <Label htmlFor={`${id}-${option}`} className="text-sm font-normal cursor-pointer text-xs">
+              <Label htmlFor={`${id}-${option}`} className="text-xs font-normal cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis">
                 {option}
               </Label>
             </div>;
