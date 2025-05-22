@@ -126,7 +126,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
   
   return <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-gray-900 font-medium' : 'text-gray-700'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''} font-urbanist`}>
+        <Button variant="outline" role="combobox" aria-expanded={open} className={`w-full justify-between h-10 border rounded-lg px-3 py-2 border-gray-300 ${isFilterActive ? 'text-gray-900 font-medium' : 'text-gray-500'} focus-visible:outline-none ${!open ? 'focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2' : ''} font-urbanist`}>
           <div className="flex items-center gap-2 overflow-hidden">
             <MapPin size={16} className={isFilterActive ? 'text-gray-800' : 'text-gray-500'} />
             <span className="truncate">
@@ -167,6 +167,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleStateChange}
                   options={stateOptions}
                   aria-label="Selecione o estado"
+                  placeholder="Selecione um estado"
                 />
               )}
             </div>
@@ -189,6 +190,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({
                   onChange={handleCityChange}
                   options={cityOptions}
                   aria-label="Selecione a cidade"
+                  placeholder="Selecione uma cidade"
                 />
               )}
             </div>

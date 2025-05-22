@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getBrandsByVehicleType } from '@/utils/brandModelMapping';
+import { ChevronDown } from 'lucide-react';
 
 interface BrandFilterProps {
   onFilterChange?: () => void;
@@ -44,7 +45,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     
     // Resetar modelo quando a marca mudar
     if (value !== filters.brand) {
-      updateFilter('model', 'todos');
+      updateFilter('model', '');
     }
     
     // Notificar o componente pai sobre a mudança
@@ -52,20 +53,31 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
       onFilterChange();
     }
   }, [updateFilter, onFilterChange, filters.brand]);
+
+  // Verificar se o filtro deve estar desativado
+  const isDisabled = filters.category === 'Todos';
   
   return (
     <div>
       <label htmlFor="brand-filter" className="block text-sm font-medium text-gray-700 mb-1">
         Marca
       </label>
-      <FilterDropdown 
-        id="brand-filter" 
-        aria-label="Selecione a marca" 
-        value={filters.brand} 
-        onChange={handleBrandChange} 
-        options={brandOptions} 
-        placeholder="Selecione"
-      />
+      
+      {isDisabled ? (
+        <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
+          Escolha uma categoria antes
+          <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
+        </div>
+      ) : (
+        <FilterDropdown 
+          id="brand-filter" 
+          aria-label="Selecione a marca" 
+          value={filters.brand} 
+          onChange={handleBrandChange} 
+          options={brandOptions} 
+          placeholder="Selecione uma marca"
+        />
+      )}
     </div>
   );
 };

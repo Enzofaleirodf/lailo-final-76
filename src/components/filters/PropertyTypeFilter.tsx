@@ -48,26 +48,34 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   // Get the current single value from the array
   const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 ? filters.propertyTypes[0] : '';
 
-  // Não mostrar nada se não houver categoria selecionada ou se estivermos no modo veículo
-  // Ou se a categoria for 'Todos'
-  if (contentType !== 'property' || !category || category === 'Todos') {
+  // Verificar se os controles devem estar desabilitados
+  const isDisabled = category === 'Todos';
+  
+  // Não mostrar nada se não for o modo imóvel
+  if (contentType !== 'property') {
     return null;
   }
 
   return (
     <fieldset className="space-y-4">
-      <RadioGroup className="flex flex-wrap gap-2" value={currentValue} onValueChange={handlePropertyTypeChange}>
-        {availableTypes.map(type => (
-          <div key={`${id}-${type}`} className="relative flex flex-col items-start gap-2 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50">
-            <div className="flex items-center gap-2">
-              <RadioGroupItem id={`${id}-${type}`} value={type} className="after:absolute after:inset-0" />
-              <Label htmlFor={`${id}-${type}`} className="text-xs font-normal cursor-pointer" aria-label={`Filtrar por ${type}`}>
-                {type}
-              </Label>
+      {isDisabled ? (
+        <div className="text-sm text-gray-400 p-2 bg-gray-50 border border-gray-200 rounded-lg">
+          Escolha uma categoria para ver os tipos de imóveis disponíveis
+        </div>
+      ) : (
+        <RadioGroup className="flex flex-wrap gap-2" value={currentValue} onValueChange={handlePropertyTypeChange}>
+          {availableTypes.map(type => (
+            <div key={`${id}-${type}`} className="relative flex flex-col items-start gap-2 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-blue-300 has-[[data-state=checked]]:bg-blue-50">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem id={`${id}-${type}`} value={type} className="after:absolute after:inset-0" />
+                <Label htmlFor={`${id}-${type}`} className="text-xs font-normal cursor-pointer" aria-label={`Filtrar por ${type}`}>
+                  {type}
+                </Label>
+              </div>
             </div>
-          </div>
-        ))}
-      </RadioGroup>
+          ))}
+        </RadioGroup>
+      )}
     </fieldset>
   );
 };

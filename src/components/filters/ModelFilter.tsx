@@ -36,6 +36,9 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
       onFilterChange();
     }
   }, [updateFilter, onFilterChange]);
+
+  // Verificar se o modelo está desativado (categoria é 'Todos' ou não há marca selecionada)
+  const isDisabled = filters.category === 'Todos' || !filters.brand;
   
   return (
     <div className="space-y-3">
@@ -45,9 +48,9 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
         <label htmlFor="model-filter" className="block text-sm font-medium text-gray-700 mb-1">
           Modelo
         </label>
-        {filters.brand === 'todas' ? (
+        {isDisabled ? (
           <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
-            Selecione uma marca antes
+            {filters.category === 'Todos' ? "Escolha uma categoria antes" : "Selecione uma marca antes"}
             <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
           </div>
         ) : (
@@ -57,7 +60,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
             value={filters.model} 
             onChange={handleModelChange} 
             options={modelOptions} 
-            placeholder="Selecione"
+            placeholder="Selecione um modelo"
           />
         )}
       </div>

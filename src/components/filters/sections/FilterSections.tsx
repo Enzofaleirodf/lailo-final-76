@@ -23,10 +23,8 @@ interface FilterSectionsProps {
 export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
   const { expandedSections, toggleSection, filters } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
-  const { category } = filters;
-  const showTypeFilter = category && category !== 'Todos';
-
-  // Sempre renderizar o filtro de Categoria primeiro
+  
+  // Sempre mostrar filtros de tipo, independentemente da categoria selecionada
   return (
     <>
       <FilterSectionComponent 
@@ -39,15 +37,13 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
 
       {isPropertyMode ? (
         <>
-          {showTypeFilter && (
-            <FilterSectionComponent 
-              title="Tipo de imóvel" 
-              isExpanded={true} 
-              onToggle={() => {}}
-            >
-              <PropertyTypeFilter onFilterChange={onFilterChange} />
-            </FilterSectionComponent>
-          )}
+          <FilterSectionComponent 
+            title="Tipo de imóvel" 
+            isExpanded={true} 
+            onToggle={() => {}}
+          >
+            <PropertyTypeFilter onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
 
           <FilterSectionComponent 
             title="Área útil" 
@@ -59,15 +55,13 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
         </>
       ) : (
         <>
-          {showTypeFilter && (
-            <FilterSectionComponent 
-              title="Tipo de veículo" 
-              isExpanded={true} 
-              onToggle={() => {}}
-            >
-              <VehicleTypeFilter onFilterChange={onFilterChange} />
-            </FilterSectionComponent>
-          )}
+          <FilterSectionComponent 
+            title="Tipo de veículo" 
+            isExpanded={true} 
+            onToggle={() => {}}
+          >
+            <VehicleTypeFilter onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
 
           <FilterSectionComponent 
             title="Características do veículo" 

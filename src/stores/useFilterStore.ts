@@ -51,13 +51,13 @@ const initialFilterState: FilterState = {
     min: '',
     max: ''
   },
-  brand: 'todas',
-  model: 'todos',
-  color: 'todas',
-  format: 'Leilão', // Default visual option changed from 'Todos' to 'Leilão'
-  origin: 'Todas',
-  place: 'Todas',
-  category: 'Todos' // Novo campo de categoria com valor padrão
+  brand: '',
+  model: '',
+  color: '',
+  format: '' as FilterFormat, // Usando string vazia para usar placeholders
+  origin: '' as FilterOrigin,
+  place: '' as FilterPlace,
+  category: 'Todos' // Mantemos o valor padrão para categoria
 };
 
 // Define which filter sections are expanded by default
@@ -73,7 +73,7 @@ const initialExpandedSections: ExpandedSectionsState = {
   format: true,
   origin: true,
   place: true,
-  category: true // Nova seção para categoria
+  category: true 
 };
 
 // Valores padrão para os filtros de intervalo (simulando o que viria do banco)
@@ -128,15 +128,15 @@ const countActiveFilters = (filters: FilterState): number => {
   
   if (!isAreaDefault) count++;
   
-  // Brand, model, color
-  if (filters.brand !== 'todas') count++;
-  if (filters.model !== 'todos') count++;
-  if (filters.color !== 'todas') count++;
+  // Brand, model, color - agora verificando se não estão vazios
+  if (filters.brand !== '') count++;
+  if (filters.model !== '') count++;
+  if (filters.color !== '') count++;
   
-  // Auction format, origin, place - Only count if different from visual defaults
-  if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
-  if (filters.origin !== 'Todas') count++;
-  if (filters.place !== 'Todas') count++;
+  // Auction format, origin, place - agora verificando se não estão vazios
+  if (filters.format !== '') count++;
+  if (filters.origin !== '') count++;
+  if (filters.place !== '') count++;
 
   // Category - conta se for diferente do padrão
   if (filters.category !== 'Todos') count++;

@@ -52,7 +52,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-urbanist"
-        placeholder="Selecione"
+        placeholder="Selecione uma cor"
       />
     </div>
   );

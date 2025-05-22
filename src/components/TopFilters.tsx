@@ -63,6 +63,25 @@ const TopFilters: React.FC = () => {
     };
   };
 
+  // Função para obter texto de placeholder ou valor selecionado
+  const getDisplayText = (filterType: 'format' | 'origin' | 'place') => {
+    let value = '';
+    let placeholder = '';
+    
+    if (filterType === 'format') {
+      value = filters.format;
+      placeholder = 'Selecione um formato';
+    } else if (filterType === 'origin') {
+      value = filters.origin;
+      placeholder = 'Selecione uma origem';
+    } else if (filterType === 'place') {
+      value = filters.place;
+      placeholder = 'Selecione uma etapa';
+    }
+    
+    return value || placeholder;
+  };
+
   return (
     <div 
       className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" 
@@ -116,8 +135,9 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Formato:</span> <span className={filters.format !== 'Todos' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
-                {filters.format || "Selecione"}
+              <span className="text-gray-500 font-normal">Formato:</span> 
+              <span className={filters.format ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
+                {filters.format || getDisplayText('format')}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -146,8 +166,9 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"  
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Origem:</span> <span className={filters.origin !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
-                {filters.origin || "Selecione"}
+              <span className="text-gray-500 font-normal">Origem:</span> 
+              <span className={filters.origin ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
+                {filters.origin || getDisplayText('origin')}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -176,8 +197,9 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              <span className="text-gray-500 font-normal">Etapa:</span> <span className={filters.place !== 'Todas' ? "text-gray-700 font-normal" : "text-gray-800 font-normal"}>
-                {filters.place || "Selecione"}
+              <span className="text-gray-500 font-normal">Etapa:</span> 
+              <span className={filters.place ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
+                {filters.place || getDisplayText('place')}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
