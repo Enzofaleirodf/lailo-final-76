@@ -54,9 +54,9 @@ const initialFilterState: FilterState = {
   brand: '',
   model: '',
   color: '',
-  format: 'Selecione',
-  origin: 'Selecione',
-  place: 'Selecione',
+  format: 'Todos',
+  origin: 'Todas',
+  place: 'Todas',
   category: ''
 };
 
@@ -134,9 +134,9 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.color !== '') count++;
   
   // Auction format, origin, place - verificar se não estão com valor padrão
-  if (filters.format !== 'Selecione') count++;
-  if (filters.origin !== 'Selecione') count++;
-  if (filters.place !== 'Selecione') count++;
+  if (filters.format !== 'Todos') count++;
+  if (filters.origin !== 'Todas') count++;
+  if (filters.place !== 'Todas') count++;
 
   // Category - conta se for diferente do padrão (agora vazio)
   if (filters.category !== '') count++;

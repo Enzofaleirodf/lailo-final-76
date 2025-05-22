@@ -63,25 +63,6 @@ const TopFilters: React.FC = () => {
     };
   };
 
-  // Função para obter texto de placeholder ou valor selecionado
-  const getDisplayText = (filterType: 'format' | 'origin' | 'place') => {
-    let value = '';
-    let placeholder = '';
-    
-    if (filterType === 'format') {
-      value = filters.format === 'Selecione' ? '' : filters.format;
-      placeholder = 'Selecione um formato';
-    } else if (filterType === 'origin') {
-      value = filters.origin === 'Selecione' ? '' : filters.origin;
-      placeholder = 'Selecione uma origem';
-    } else if (filterType === 'place') {
-      value = filters.place === 'Selecione' ? '' : filters.place;
-      placeholder = 'Selecione uma etapa';
-    }
-    
-    return value || placeholder;
-  };
-
   return (
     <div 
       className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" 
@@ -135,11 +116,8 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              {filters.format !== 'Selecione' ? (
-                <>
-                  <span className="text-gray-500 font-normal">Formato:</span>{" "}
-                  <span className="text-gray-700 font-normal">{filters.format}</span>
-                </>
+              {filters.format !== 'Todos' ? (
+                filters.format
               ) : (
                 <span className="text-gray-500 font-normal">Selecione um formato</span>
               )}
@@ -170,11 +148,8 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"  
           >
             <span className="text-sm font-normal text-gray-700">
-              {filters.origin !== 'Selecione' ? (
-                <>
-                  <span className="text-gray-500 font-normal">Origem:</span>{" "}
-                  <span className="text-gray-700 font-normal">{filters.origin}</span>
-                </>
+              {filters.origin !== 'Todas' ? (
+                filters.origin
               ) : (
                 <span className="text-gray-500 font-normal">Selecione uma origem</span>
               )}
@@ -205,11 +180,8 @@ const TopFilters: React.FC = () => {
             aria-expanded="false"
           >
             <span className="text-sm font-normal text-gray-700">
-              {filters.place !== 'Selecione' ? (
-                <>
-                  <span className="text-gray-500 font-normal">Etapa:</span>{" "}
-                  <span className="text-gray-700 font-normal">{filters.place}</span>
-                </>
+              {filters.place !== 'Todas' ? (
+                filters.place
               ) : (
                 <span className="text-gray-500 font-normal">Selecione uma etapa</span>
               )}

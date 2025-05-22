@@ -6,8 +6,7 @@ export const formatOptions = [
   { value: 'Todos', label: 'Todos os formatos' },
   { value: 'Alienação Particular', label: 'Alienação Particular' },
   { value: 'Leilão', label: 'Leilão' },
-  { value: 'Venda Direta', label: 'Venda Direta' },
-  { value: 'Selecione', label: 'Selecione o formato' }
+  { value: 'Venda Direta', label: 'Venda Direta' }
 ];
 
 /**
@@ -18,8 +17,7 @@ export const originOptions = [
   { value: 'Extrajudicial', label: 'Extrajudicial' },
   { value: 'Judicial', label: 'Judicial' },
   { value: 'Particular', label: 'Particular' },
-  { value: 'Público', label: 'Público' },
-  { value: 'Selecione', label: 'Selecione a origem' }
+  { value: 'Público', label: 'Público' }
 ];
 
 /**
@@ -30,8 +28,7 @@ export const placeOptions = [
   { value: 'Praça única', label: 'Praça única' },
   { value: '1ª Praça', label: '1ª Praça' },
   { value: '2ª Praça', label: '2ª Praça' },
-  { value: '3ª Praça', label: '3ª Praça' },
-  { value: 'Selecione', label: 'Selecione a etapa' }
+  { value: '3ª Praça', label: '3ª Praça' }
 ];
 
 /**
@@ -166,4 +163,3 @@ export const getFilterDescription = (filterKey: string, value: any): string => {
   // Para outros tipos de filtros
   return value ? value.toString() : 'Não especificado';
 };
-

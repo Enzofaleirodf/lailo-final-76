@@ -87,6 +87,45 @@ export const applyLocationFilter = <T extends GenericItem>(
 };
 
 /**
+ * Aplica filtro de categoria aos itens
+ * @param items Lista de itens
+ * @param category Categoria selecionada
+ * @returns Lista filtrada de itens
+ */
+export const applyCategoryFilter = <T extends GenericItem>(
+  items: T[],
+  category: string
+): T[] => {
+  // Se não há categoria selecionada ou foi selecionada a opção "Todos", retornar todos os itens
+  if (!category || category === 'Todos') {
+    return items;
+  }
+  
+  // Filtrar itens por categoria com tratamento seguro para propriedades ausentes
+  return items.filter(item => {
+    // Verificar se o item tem a propriedade category
+    if ('category' in item) {
+      const itemCategory = String(item.category || '').toLowerCase();
+      return itemCategory === category.toLowerCase();
+    }
+    
+    // Verificar se há propriedades aninhadas que possam conter a categoria
+    if ('vehicleInfo' in item && item.vehicleInfo && 'category' in item.vehicleInfo) {
+      const itemCategory = String(item.vehicleInfo.category || '').toLowerCase();
+      return itemCategory === category.toLowerCase();
+    }
+    
+    if ('propertyInfo' in item && item.propertyInfo && 'category' in item.propertyInfo) {
+      const itemCategory = String(item.propertyInfo.category || '').toLowerCase();
+      return itemCategory === category.toLowerCase();
+    }
+    
+    // Se não encontrar informação de categoria, não filtrar este item
+    return true;
+  });
+};
+
+/**
  * Aplica filtros de formato, origem e etapa a uma lista de itens
  */
 export const applyAuctionMetadataFilters = <T extends GenericItem>(
@@ -97,8 +136,8 @@ export const applyAuctionMetadataFilters = <T extends GenericItem>(
 ): T[] => {
   let filteredItems = [...items];
   
-  // Aplicar filtro de formato, apenas se não for o valor padrão visual
-  if (format !== 'Leilão') {
+  // Aplicar filtro de formato, apenas se não for o valor padrão
+  if (format !== 'Todos') {
     filteredItems = filteredItems.filter(item => item.format === format);
   }
   
@@ -256,3 +295,4 @@ export const calculateItemsStatistics = <T extends GenericItem>(
   
   return { totalItems, totalSites, newItems };
 };
+
