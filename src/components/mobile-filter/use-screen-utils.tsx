@@ -21,24 +21,24 @@ export function useScreenUtils() {
   }, [isExtraSmallScreen]);
   
   // Classes dinamicamente calculadas com base no tamanho da tela - usando useMemo para caching
-  const getButtonSizeClass = useMemo(() => {
+  const buttonSizeClass = useMemo(() => {
     if (isVerySmallScreen) return "w-9 h-9";
     if (isExtraSmallScreen) return "w-10 h-10";
     return "h-10";
   }, [isVerySmallScreen, isExtraSmallScreen]);
   
-  const getIconSize = useMemo(() => {
+  const iconSize = useMemo(() => {
     return isVerySmallScreen ? 16 : 18;
   }, [isVerySmallScreen]);
   
-  const getFilterBadgeClass = useMemo(() => {
+  const filterBadgeClass = useMemo(() => {
     return cn(
       "absolute flex items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white",
       isVerySmallScreen ? "h-4 w-4 top-0 right-0" : "h-4 w-4 top-0 right-0"
     );
   }, [isVerySmallScreen]);
   
-  const getTextSizeClass = useMemo(() => {
+  const textSizeClass = useMemo(() => {
     return isVerySmallScreen ? "text-xs" : "text-sm";
   }, [isVerySmallScreen]);
   
@@ -46,9 +46,9 @@ export function useScreenUtils() {
     isExtraSmallScreen,
     isVerySmallScreen,
     showLabels,
-    getButtonSizeClass,
-    getIconSize,
-    getFilterBadgeClass,
-    getTextSizeClass
+    buttonSizeClass,
+    iconSize,
+    filterBadgeClass,
+    textSizeClass
   };
 }

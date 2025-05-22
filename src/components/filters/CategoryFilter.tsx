@@ -1,19 +1,32 @@
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, memo } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { ContentType } from '@/types/filters';
 import { getCategories } from '@/utils/categoryTypeMapping';
+import { usePropertyFiltersStore } from '@/stores/usePropertyFiltersStore';
+import { useVehicleFiltersStore } from '@/stores/useVehicleFiltersStore';
 
 interface CategoryFilterProps {
   contentType: ContentType;
   onFilterChange?: () => void;
 }
 
+/**
+ * Componente de filtro de categoria otimizado
+ * Versão melhorada com memoização para reduzir renderizações desnecessárias
+ */
 const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStoreSelector(contentType);
+  // Usar seletores otimizados para o Zustand
+  const filters = contentType === 'property'
+    ? usePropertyFiltersStore(state => state.filters)
+    : useVehicleFiltersStore(state => state.filters);
+    
+  const updateFilter = contentType === 'property'
+    ? usePropertyFiltersStore(state => state.updateFilter)
+    : useVehicleFiltersStore(state => state.updateFilter);
   
-  // Obter opções de categoria com base no tipo de conteúdo
+  // Obter opções de categoria com base no tipo de conteúdo - memoizado
   const categoryOptions = useMemo(() => {
     const categories = getCategories(contentType);
     return [
@@ -25,6 +38,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterCh
     ];
   }, [contentType]);
   
+  // Manipulador de alteração de categoria memoizado
   const handleCategoryChange = useCallback((value: string) => {
     updateFilter('category', value);
     
@@ -63,4 +77,5 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterCh
   );
 };
 
-export default React.memo(CategoryFilter);
+// Usar memo para evitar renderizações desnecessárias
+export default memo(CategoryFilter);
