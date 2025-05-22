@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import * as filterStoreModule from '@/stores/useFilterStore';
+import { mockFilterSectionProps, mockTopFiltersProps } from './mockFilterProps';
 
 // Criar cliente de consulta para testes
 const queryClient = new QueryClient({
@@ -116,7 +117,7 @@ describe('Navegação entre Tipos de Conteúdo', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -138,7 +139,7 @@ describe('Navegação entre Tipos de Conteúdo', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -160,8 +161,8 @@ describe('Navegação entre Tipos de Conteúdo', () => {
     const { rerender } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
-          <FilterSection />
+          <TopFilters {...mockTopFiltersProps} />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -183,8 +184,8 @@ describe('Navegação entre Tipos de Conteúdo', () => {
     rerender(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
-          <FilterSection />
+          <TopFilters {...mockTopFiltersProps} />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -218,8 +219,8 @@ describe('Navegação entre Tipos de Conteúdo', () => {
     const { rerender } = render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
-          <FilterSection />
+          <TopFilters {...mockTopFiltersProps} />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -231,8 +232,8 @@ describe('Navegação entre Tipos de Conteúdo', () => {
     rerender(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <TopFilters />
-          <FilterSection />
+          <TopFilters {...mockTopFiltersProps} />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );

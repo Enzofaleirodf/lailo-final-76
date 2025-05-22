@@ -37,3 +37,29 @@ export const mockMobileFilterBarProps = {
   onFilterClick: jest.fn(),
   onSortClick: jest.fn()
 };
+
+/**
+ * Props para filtros específicos
+ */
+export const mockFilterComponentProps = {
+  contentType: DEFAULT_CONTENT_TYPE,
+  onFilterChange: jest.fn()
+};
+
+/**
+ * Estado expandido padrão para mocks
+ */
+export const mockExpandedSections = {
+  location: true,
+  vehicleType: false,
+  propertyType: true,
+  price: false,
+  year: false,
+  usefulArea: false,
+  model: false,
+  color: false,
+  format: false,
+  origin: false,
+  place: false,
+  category: false
+};

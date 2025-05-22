@@ -8,6 +8,7 @@ import FilterContent from '../FilterContent';
 import FilterSection from '@/components/FilterSection';
 import * as filterStoreModule from '@/stores/useFilterStore';
 import * as uiStoreModule from '@/stores/useUIStore';
+import { mockFilterSectionProps } from './mockFilterProps';
 
 // Create a mock for the window.dispatchEvent
 const mockDispatchEvent = jest.fn();
@@ -104,7 +105,7 @@ describe('Property Filter Flow Integration', () => {
         __esModule: true,
         default: ({ isOpen, onOpenChange }) => (
           <div className="filter-section-mock">
-            <FilterContent />
+            <FilterContent contentType="property" />
             <button data-testid="apply-filters-button">Aplicar filtros</button>
           </div>
         )
@@ -114,7 +115,7 @@ describe('Property Filter Flow Integration', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterSection isOpen={true} onOpenChange={() => {}} />
+          <FilterSection {...mockFilterSectionProps} />
         </BrowserRouter>
       </QueryClientProvider>
     );
@@ -159,7 +160,7 @@ describe('Property Filter Flow Integration', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <FilterContent />
+          <FilterContent contentType="property" />
         </BrowserRouter>
       </QueryClientProvider>
     );
