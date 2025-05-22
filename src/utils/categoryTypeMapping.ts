@@ -19,14 +19,14 @@ export const vehicleCategoryToTypesMap: Record<string, string[]> = {
  */
 export const propertyCategoryToTypesMap: Record<string, string[]> = {
   'Todos': ['Todos'],
-  'Comercial': ['Todos', 'Condomínio Comercial', 'Depósito', 'Escritório', 
-              'Loja', 'Lote Comercial', 'Prédio Comercial', 'Sala', 'Terreno Comercial'],
+  'Comercial': ['Todos', 'Condomínio', 'Depósito', 'Escritório', 
+              'Loja', 'Lote', 'Prédio', 'Sala', 'Terreno'],
   'Hospedagem': ['Todos', 'Hotel', 'Motel', 'Pousada'],
   'Industrial': ['Todos', 'Galpão', 'Industria'],
-  'Residencial': ['Todos', 'Apartamento', 'Casa', 'Cobertura', 'Condomínio Residencial', 'Conjunto Residencial',
-                'Edifício', 'Flat', 'Imóvel Misto', 'Kitnet', 'Loft', 'Lote Residencial',
-                'Prédio Residencial', 'Quitinete', 'Sobrado', 'Studio', 'Terreno Residencial'],
-  'Rural': ['Todos', 'Chácara', 'Fazenda', 'Terreno Rural', 'Sítio']
+  'Residencial': ['Todos', 'Apartamento', 'Casa', 'Cobertura', 'Condomínio', 'Conjunto',
+                'Edifício', 'Flat', 'Imóvel Misto', 'Kitnet', 'Loft', 'Lote',
+                'Prédio', 'Quitinete', 'Sobrado', 'Studio', 'Terreno'],
+  'Rural': ['Todos', 'Chácara', 'Fazenda', 'Terreno', 'Sítio']
 };
 
 /**

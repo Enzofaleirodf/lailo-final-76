@@ -1,10 +1,13 @@
+
 import React, { useCallback, useId } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 interface PropertyTypeFilterProps {
   onFilterChange?: () => void;
 }
+
 const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   onFilterChange
 }) => {
@@ -25,18 +28,17 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   availableTypes = availableTypes.map(type => {
     if (type === 'Todos') return type;
 
-    // Casos especiais
+    // Simplificar os nomes removendo a parte categórica
     if (type === 'Imóvel Misto') return 'Imóveis Mistos';
-    if (type === 'Lote Comercial') return 'Lotes Comerciais';
-    if (type === 'Lote Residencial') return 'Lotes Residenciais';
-    if (type === 'Prédio Comercial') return 'Prédios Comerciais';
-    if (type === 'Prédio Residencial') return 'Prédios Residenciais';
-    if (type === 'Terreno Comercial') return 'Terrenos Comerciais';
-    if (type === 'Terreno Residencial') return 'Terrenos Residenciais';
-    if (type === 'Terreno Rural') return 'Terrenos Rurais';
-    if (type === 'Condomínio Comercial') return 'Condomínios Comerciais';
-    if (type === 'Condomínio Residencial') return 'Condomínios Residenciais';
-    if (type === 'Conjunto Residencial') return 'Conjuntos Residenciais';
+    if (type === 'Lote Comercial') return 'Lotes';
+    if (type === 'Lote Residencial') return 'Lotes';
+    if (type === 'Prédio Comercial') return 'Prédios';
+    if (type === 'Prédio Residencial') return 'Prédios';
+    if (type === 'Terreno Comercial') return 'Terrenos';
+    if (type === 'Terreno Residencial') return 'Terrenos';
+    if (type === 'Terreno Rural') return 'Terrenos';
+    if (type === 'Condomínio Comercial') return 'Condomínios';
+    if (type === 'Condomínio Residencial') return 'Condomínios';
 
     // Casos padrão
     if (type.endsWith('l')) return type.replace(/l$/, 'is');
@@ -44,6 +46,9 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
     if (['a', 'e', 'i', 'o', 'u'].includes(type.slice(-1))) return type + 's';
     return type + 's';
   });
+
+  // Remover duplicatas após a simplificação
+  availableTypes = [...new Set(availableTypes)];
 
   // Ordenar alfabeticamente
   if (availableTypes.includes('Todos')) {
@@ -54,6 +59,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   } else {
     availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
   }
+
   const handlePropertyTypeChange = useCallback((value: string) => {
     // Convert to array with single value for compatibility with existing filter logic
     updateFilter('propertyTypes', value ? [value] : []);
@@ -71,8 +77,8 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   if (contentType !== 'property' || !category) {
     return null;
   }
+  
   return <fieldset className="space-y-4">
-      
       <RadioGroup className="grid grid-cols-3 gap-2" value={currentValue} onValueChange={handlePropertyTypeChange}>
         {availableTypes.map(type => <label key={`${id}-${type}`} className="relative flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-input px-2 py-2 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70" aria-label={`Filtrar por ${type}`}>
             <RadioGroupItem id={`${id}-${type}`} value={type} className="sr-only after:absolute after:inset-0" />
@@ -81,4 +87,5 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
       </RadioGroup>
     </fieldset>;
 };
+
 export default React.memo(PropertyTypeFilter);

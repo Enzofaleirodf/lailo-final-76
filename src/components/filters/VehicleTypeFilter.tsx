@@ -21,7 +21,7 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
     if (type === 'Todos') return type;
     
     // Casos especiais
-    if (type === 'Ônibus' || type === 'Micro-ônibus') return type;
+    if (type === 'Ônibus' || type === 'Micro-ônibus') return type; // Ônibus já é plural
     
     // Regras de pluralização em português
     if (type.endsWith('ão')) return type.replace(/ão$/, 'ões');

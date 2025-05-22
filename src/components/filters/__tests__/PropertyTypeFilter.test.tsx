@@ -51,18 +51,18 @@ describe('PropertyTypeFilter', () => {
     
     // Verificar se os tipos de imóveis para a categoria 'Residencial' estão presentes
     expect(screen.getByLabelText('Filtrar por Todos')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Apartamento')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Casa')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Apartamentos')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Casas')).toBeInTheDocument();
   });
 
   test('seleciona um tipo de imóvel corretamente', () => {
     render(<PropertyTypeFilter onFilterChange={mockOnFilterChange} />);
     
     // Clicar em um tipo de imóvel específico
-    fireEvent.click(screen.getByLabelText('Filtrar por Apartamento'));
+    fireEvent.click(screen.getByLabelText('Filtrar por Apartamentos'));
     
     // Verificar se as funções foram chamadas com valores corretos
-    expect(mockUpdateFilter).toHaveBeenCalledWith('propertyTypes', ['Apartamento']);
+    expect(mockUpdateFilter).toHaveBeenCalledWith('propertyTypes', ['Apartamentos']);
     expect(mockOnFilterChange).toHaveBeenCalled();
   });
 
@@ -70,7 +70,7 @@ describe('PropertyTypeFilter', () => {
     // Configurar o store para ter um tipo selecionado
     mockUseFilterStore.mockReturnValue({
       filters: { 
-        propertyTypes: ['Casa'],
+        propertyTypes: ['Casas'],
         contentType: 'property',
         category: 'Residencial'
       },
@@ -87,13 +87,13 @@ describe('PropertyTypeFilter', () => {
     
     render(<PropertyTypeFilter />);
     
-    // Verificar que o botão para Casa tem o estado "on"
-    const casaButton = screen.getByLabelText('Filtrar por Casa');
-    expect(casaButton).toHaveAttribute('data-state', 'on');
+    // Verificar que o botão para Casa tem o estado "checked"
+    const casaButton = screen.getByLabelText('Filtrar por Casas');
+    expect(casaButton.closest('label')).toHaveClass('has-[[data-state=checked]]:border-purple-300');
     
-    // Outros botões devem ter o estado "off"
-    const apartamentoButton = screen.getByLabelText('Filtrar por Apartamento');
-    expect(apartamentoButton).toHaveAttribute('data-state', 'off');
+    // Outros botões não devem ter o estado "checked"
+    const apartamentoButton = screen.getByLabelText('Filtrar por Apartamentos');
+    expect(apartamentoButton.closest('label')).not.toHaveClass('has-[[data-state=checked]]:bg-purple-50');
   });
 
   test('não renderiza se o tipo de conteúdo não for property', () => {
@@ -122,8 +122,8 @@ describe('PropertyTypeFilter', () => {
     // Primeiro render com categoria 'Residencial'
     const { rerender } = render(<PropertyTypeFilter />);
     
-    expect(screen.getByLabelText('Filtrar por Apartamento')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Casa')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Apartamentos')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Casas')).toBeInTheDocument();
     
     // Mudar a categoria para 'Comercial'
     mockUseFilterStore.mockReturnValue({
@@ -147,8 +147,8 @@ describe('PropertyTypeFilter', () => {
     rerender(<PropertyTypeFilter />);
     
     // Verificar que os tipos mudaram
-    expect(screen.queryByLabelText('Filtrar por Apartamento')).not.toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Loja')).toBeInTheDocument();
-    expect(screen.getByLabelText('Filtrar por Sala')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Filtrar por Apartamentos')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Lojas')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filtrar por Salas')).toBeInTheDocument();
   });
 });
