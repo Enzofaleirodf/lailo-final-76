@@ -32,12 +32,18 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     updateFilter('contentType', contentType);
     
     // Carregar do cache se disponível e não tiver parâmetros na URL
-    if (isInitialized && (window.location.search === '' || window.location.search === '?page=1')) {
+    if (isInitialized && (window.location.search === '' || window.location.search === '?page=1' || window.location.search.includes('contentType='))) {
       const cachedFilters = loadFromCache();
       
       if (cachedFilters) {
-        // Preservar o tipo de conteúdo atual e usar setFilters em vez de updateFilter
-        setFilters({ ...cachedFilters, contentType });
+        // Verificar se os filtros do cache são válidos
+        if (cachedFilters.contentType && cachedFilters.price && cachedFilters.year && cachedFilters.location) {
+          // Preservar o tipo de conteúdo atual e usar setFilters em vez de updateFilter
+          setFilters({ ...cachedFilters, contentType });
+          console.log('Carregou cache de filtros:', cachedFilters);
+        } else {
+          console.warn('Cache de filtros inválido:', cachedFilters);
+        }
       }
     }
     
@@ -50,8 +56,11 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     // Não salvar durante a inicialização
     if (!initialSetupDone.current || !isInitialized) return;
     
-    // Salvar no cache apenas após a primeira renderização
-    saveToCache(filters);
+    // Garantir que os filtros são válidos antes de salvar
+    if (filters && filters.contentType === contentType) {
+      // Salvar no cache apenas após a primeira renderização
+      saveToCache(filters);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]); // Depender dos filtros para salvar quando mudarem
       

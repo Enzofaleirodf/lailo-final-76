@@ -31,6 +31,12 @@ export const useAuctionFilters = (
       return [];
     }
     
+    // Verificar se temos valores válidos em filters
+    if (!filters || !filters.contentType) {
+      console.warn('Filtros não inicializados corretamente', filters);
+      return rawItems;
+    }
+    
     // Começamos com todos os itens
     let items = [...rawItems];
     
@@ -39,24 +45,30 @@ export const useAuctionFilters = (
       items = applyCategoryFilter(items, filters.category);
     }
     
-    // Aplicar filtros comuns
-    items = applyPriceFilter(
-      items,
-      filters.price.range.min,
-      filters.price.range.max
-    );
+    // Aplicar filtros de preço somente se price estiver definido
+    if (filters.price && filters.price.range) {
+      items = applyPriceFilter(
+        items,
+        filters.price.range.min,
+        filters.price.range.max
+      );
+    }
     
-    items = applyLocationFilter(
-      items,
-      filters.location.state,
-      filters.location.city
-    );
+    // Aplicar filtro de localização se location estiver definido
+    if (filters.location) {
+      items = applyLocationFilter(
+        items,
+        filters.location.state,
+        filters.location.city
+      );
+    }
     
+    // Aplicar filtros de metadados se definidos
     items = applyAuctionMetadataFilters(
       items,
-      filters.format,
-      filters.origin,
-      filters.place
+      filters.format || '',
+      filters.origin || '',
+      filters.place || ''
     );
     
     // Aplicar filtros específicos por tipo de conteúdo

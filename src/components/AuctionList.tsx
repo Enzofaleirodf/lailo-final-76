@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AuctionCard from '@/components/AuctionCard';
 import PropertyCard from '@/components/PropertyCard';
 import AuctionCardSkeleton from '@/components/AuctionCardSkeleton';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useAuctionItems } from '@/hooks/useAuctionItems';
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
@@ -19,10 +19,15 @@ const ITEMS_PER_PAGE = 30;
 const SKELETON_COUNT = 6;
 
 const AuctionList: React.FC = () => {
-  const { filters } = useFilterStore();
+  // Obter o tipo de conteúdo da URL
   const [searchParams, setSearchParams] = useSearchParams();
+  const contentType = searchParams.get('contentType') || 'property';
+  
+  // Usar useFilterStoreSelector com o contentType correto
+  const { filters } = useFilterStoreSelector(contentType as 'property' | 'vehicle');
+  
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const { handlePageChange } = useUrlParams(filters.contentType); // Adicionado o parâmetro contentType
+  const { handlePageChange } = useUrlParams(filters.contentType);
 
   // Usar nosso novo hook personalizado para gerenciar itens
   const {
@@ -87,7 +92,7 @@ const AuctionList: React.FC = () => {
           {isChangingPage && renderSkeletons()}
           
           {/* Mostrar a lista de itens */}
-          {!isChangingPage && (
+          {!isChangingPage && items && items.length > 0 && (
             <>
               <div className="sr-only" role="status">
                 {items.length} {filters.contentType === 'property' ? 'imóveis' : 'leilões'} encontrados

@@ -33,6 +33,9 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
   
   // Handle filter value changes - com memoização para prevenir recriação desnecessária
   const handleRangeChange = useCallback((values: RangeValues) => {
+    // Proteção contra valores indefinidos
+    if (!filters?.usefulArea) return;
+    
     // Não atualizar se os valores forem iguais aos atuais
     if (filters?.usefulArea?.min === values.min && 
         filters?.usefulArea?.max === values.max) {
@@ -41,12 +44,15 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
     
     updateFilter('usefulArea', values);
     handleFilterChange();
-  }, [updateFilter, handleFilterChange, filters?.usefulArea?.min, filters?.usefulArea?.max]);
+  }, [updateFilter, handleFilterChange, filters?.usefulArea]);
   
   // Initialize with default values if empty - only on first mount
   useEffect(() => {
     // Garantir que a inicialização aconteça apenas uma vez
     if (initializationDone.current) return;
+    
+    // Proteção contra valores indefinidos
+    if (!filters) return;
     
     // Inicializar apenas se ambos os valores estiverem vazios
     if (!filters?.usefulArea?.min && !filters?.usefulArea?.max) {
@@ -59,7 +65,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
     
     initializationDone.current = true;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, [filters]); 
   
   // Verificação de segurança para evitar erros
   if (!filters?.usefulArea) {

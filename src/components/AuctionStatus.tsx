@@ -1,6 +1,8 @@
-import React, { useMemo } from 'react';
+
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useSearchParams } from 'react-router-dom';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useResultsStore } from '@/stores/useResultsStore';
 import { AuctionItem } from '@/types/auction';
 
@@ -25,10 +27,16 @@ export const calculateNewAuctions = (items: AuctionItem[]): number => {
     return item.vehicleInfo?.year === currentYear;
   }).length;
 };
+
 const AuctionStatus: React.FC = () => {
+  // Obter o tipo de conteúdo da URL
+  const [searchParams] = useSearchParams();
+  const contentType = searchParams.get('contentType') || 'property';
+  
   const {
     filters
-  } = useFilterStore();
+  } = useFilterStoreSelector(contentType as 'property' | 'vehicle');
+  
   const {
     filteredItemsCount,
     totalSites,
@@ -74,4 +82,5 @@ const AuctionStatus: React.FC = () => {
       <span className="font-medium text-accent2-600">{newItems.toLocaleString('pt-BR')}</span> novos hoje
     </motion.div>;
 };
+
 export default React.memo(AuctionStatus);

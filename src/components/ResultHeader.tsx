@@ -3,20 +3,25 @@ import React, { useMemo, useState } from 'react';
 import AuctionStatus from './AuctionStatus';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SortOptions from './filters/SortOptions';
 import { ChevronDown } from 'lucide-react';
 
 const ResultHeader: React.FC = () => {
+  // Obter o tipo de conteúdo da URL
+  const [searchParams] = useSearchParams();
+  const contentType = searchParams.get('contentType') || 'property';
+  
   const {
     filters
-  } = useFilterStore();
+  } = useFilterStoreSelector(contentType as 'property' | 'vehicle');
+  
   const {
     sortOption
   } = useSortStore();
-  const [searchParams] = useSearchParams();
+  
   const isMobile = useIsMobile();
   const [sortDialogOpen, setSortDialogOpen] = useState(false);
 

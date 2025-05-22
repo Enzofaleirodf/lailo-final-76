@@ -1,15 +1,16 @@
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { sampleProperties } from '@/data/sampleProperties';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useSortStore } from '@/stores/useSortStore';
 import { useResultsStore } from '@/stores/useResultsStore';
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { useAuctionFilters } from './useAuctionFilters';
 import { calculateItemsStatistics } from '@/utils/auctionFilterUtils';
-import { logError, getUserFriendlyErrorMessage } from '@/utils/auctionErrorUtils';
+import { logError } from '@/utils/auctionErrorUtils';
 
 interface UseAuctionItemsOptions {
   currentPage: number;
@@ -20,7 +21,13 @@ interface UseAuctionItemsOptions {
  * Hook principal para buscar e gerenciar itens de leilão com base nos filtros e ordenação
  */
 export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOptions) => {
-  const { filters } = useFilterStore();
+  // Obter o tipo de conteúdo da URL
+  const [searchParams] = useSearchParams();
+  const contentType = searchParams.get('contentType') || 'property';
+  
+  // Usar o storeSelector com o contentType correto
+  const { filters } = useFilterStoreSelector(contentType as 'property' | 'vehicle');
+  
   const { sortOption } = useSortStore();
   const { setFilteredResults, setLoading } = useResultsStore();
   const [loading, setLocalLoading] = useState(true);
