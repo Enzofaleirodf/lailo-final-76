@@ -33,11 +33,21 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
     <div className={`mb-4 border rounded-lg overflow-hidden bg-white shadow-sm ${isActive ? 'border-purple-300' : 'border-gray-200'}`}>
       {/* Title section - clickable for both desktop and mobile for consistent interaction */}
       <div className="w-full bg-gradient-to-r from-brand-50 to-white p-3">
-        <h3 className="text-sm text-gray-900 font-urbanist font-semibold">{title}</h3>
+        <h3 
+          className="text-sm text-gray-900 font-urbanist font-semibold"
+          id={`heading-${id}`}
+        >
+          {title}
+        </h3>
       </div>
       
       {/* Content - always expanded - no more accordion */}
-      <div className="p-3" id={id} role="region" aria-labelledby={`heading-${id}`}>
+      <div 
+        className="p-3" 
+        id={id} 
+        role="region" 
+        aria-labelledby={`heading-${id}`}
+      >
         {children}
       </div>
     </div>

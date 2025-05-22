@@ -50,29 +50,25 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
       onToggle={handleSectionToggle}
       isActive={isFilterActive}
     >
-      <div className="space-y-3">
-        <label htmlFor="year-range" className="block text-sm font-medium text-gray-700 mb-1">
-          Ano
-        </label>
-        <SimplifiedRangeFilter
-          initialValues={filters.year}
-          defaultValues={defaultValues}
-          onChange={handleRangeChange}
-          minPlaceholder="Ano min."
-          maxPlaceholder="Ano máx."
-          ariaLabelMin="Ano mínimo"
-          ariaLabelMax="Ano máximo"
-          allowDecimals={false}
-          minAllowed={Number(defaultValues.min)}
-          maxAllowed={Number(defaultValues.max)}
-          isActive={isFilterActive}
-          formatterOptions={{
-            useThousandSeparator: false,
-            formatDisplay: false
-          }}
-          id="year-range"
-        />
-      </div>
+      {/* Removida a label redundante, mantendo apenas o SimplifiedRangeFilter */}
+      <SimplifiedRangeFilter
+        initialValues={filters.year}
+        defaultValues={defaultValues}
+        onChange={handleRangeChange}
+        minPlaceholder="Ano min."
+        maxPlaceholder="Ano máx."
+        ariaLabelMin="Ano mínimo"
+        ariaLabelMax="Ano máximo"
+        allowDecimals={false}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={Number(defaultValues.max)}
+        isActive={isFilterActive}
+        formatterOptions={{
+          useThousandSeparator: false,
+          formatDisplay: false
+        }}
+        id="year-range"
+      />
     </FilterSectionComponent>
   );
 };

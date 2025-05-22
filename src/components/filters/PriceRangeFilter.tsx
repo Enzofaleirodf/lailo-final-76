@@ -56,26 +56,25 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) =
       onToggle={handleSectionToggle}
       isActive={isFilterActive}
     >
-      <div className="space-y-3">
-        <SimplifiedRangeFilter
-          initialValues={filters.price.range}
-          defaultValues={defaultValues}
-          onChange={handleRangeChange}
-          minPlaceholder="Min"
-          maxPlaceholder="Max"
-          ariaLabelMin="Preço mínimo"
-          ariaLabelMax="Preço máximo"
-          allowDecimals={true}
-          minAllowed={Number(defaultValues.min)}
-          maxAllowed={Number(defaultValues.max)}
-          inputPrefix="R$"
-          isActive={isFilterActive}
-          formatterOptions={{
-            useThousandSeparator: true,
-            formatDisplay: true
-          }}
-        />
-      </div>
+      {/* Removida a div de espaçamento e o SimplifiedRangeFilter agora é filho direto */}
+      <SimplifiedRangeFilter
+        initialValues={filters.price.range}
+        defaultValues={defaultValues}
+        onChange={handleRangeChange}
+        minPlaceholder="Min"
+        maxPlaceholder="Max"
+        ariaLabelMin="Preço mínimo"
+        ariaLabelMax="Preço máximo"
+        allowDecimals={true}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={Number(defaultValues.max)}
+        inputPrefix="R$"
+        isActive={isFilterActive}
+        formatterOptions={{
+          useThousandSeparator: true,
+          formatDisplay: true
+        }}
+      />
     </FilterSectionComponent>
   );
 };

@@ -54,26 +54,25 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
       onToggle={handleSectionToggle}
       isActive={isFilterActive}
     >
-      <div className="space-y-3">
-        <SimplifiedRangeFilter
-          initialValues={filters.usefulArea}
-          defaultValues={defaultValues}
-          onChange={handleRangeChange}
-          minPlaceholder="Min"
-          maxPlaceholder="Max"
-          ariaLabelMin="Área útil mínima"
-          ariaLabelMax="Área útil máxima"
-          allowDecimals={true}
-          minAllowed={Number(defaultValues.min)}
-          maxAllowed={Number(defaultValues.max)}
-          inputSuffix="m²"
-          isActive={isFilterActive}
-          formatterOptions={{
-            useThousandSeparator: true,
-            formatDisplay: true
-          }}
-        />
-      </div>
+      {/* Removida a div de espaçamento e a label redundante */}
+      <SimplifiedRangeFilter
+        initialValues={filters.usefulArea}
+        defaultValues={defaultValues}
+        onChange={handleRangeChange}
+        minPlaceholder="Min"
+        maxPlaceholder="Max"
+        ariaLabelMin="Área útil mínima"
+        ariaLabelMax="Área útil máxima"
+        allowDecimals={true}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={Number(defaultValues.max)}
+        inputSuffix="m²"
+        isActive={isFilterActive}
+        formatterOptions={{
+          useThousandSeparator: true,
+          formatDisplay: true
+        }}
+      />
     </FilterSectionComponent>
   );
 };

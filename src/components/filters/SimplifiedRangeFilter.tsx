@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Input } from "@/components/ui/input";
 import { formatNumber } from '@/lib/utils';
@@ -64,7 +65,7 @@ const SimplifiedRangeFilter: React.FC<SimplifiedRangeFilterProps> = ({
   }, [minValue, onChange]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" role="group" aria-label={`Intervalo de ${ariaLabelMin.split(' ')[0]}`}>
       <div className={`flex-1 flex items-center border rounded-md px-2 py-1 focus-within:ring-1 focus-within:ring-brand-300 ${isActive ? 'border-purple-300' : 'border-gray-200'}`}>
         {inputPrefix && <span className="text-gray-500 mr-2">{inputPrefix}</span>}
         <Input
