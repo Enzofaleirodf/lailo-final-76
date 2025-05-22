@@ -22,7 +22,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
     // Obter as marcas disponíveis para o tipo de veículo selecionado
     let brands = getBrandsByVehicleType(vehicleType);
     
-    // Ordenar alfabeticamente, mantendo "Todas" no início
+    // Ordenar alfabeticamente, mantendo "Todas" no início (se existir)
     if (brands.includes('Todas')) {
       const todasIndex = brands.indexOf('Todas');
       brands.splice(todasIndex, 1);
@@ -55,7 +55,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
   }, [updateFilter, onFilterChange, filters.brand]);
 
   // Verificar se o filtro deve estar desativado
-  const isDisabled = filters.category === 'Todos';
+  const isDisabled = !filters.category;
   
   return (
     <div>

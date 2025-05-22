@@ -23,7 +23,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   } = filters;
 
   // Obter os tipos de imóvel disponíveis para a categoria selecionada
-  let availableTypes = getTypesByCategory(category, 'property');
+  let availableTypes = category ? getTypesByCategory(category, 'property') : ['Todos'];
 
   // Ordenar alfabeticamente
   if (availableTypes.includes('Todos')) {
@@ -49,7 +49,7 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 ? filters.propertyTypes[0] : '';
 
   // Verificar se os controles devem estar desabilitados
-  const isDisabled = category === 'Todos';
+  const isDisabled = !category;
   
   // Não mostrar nada se não for o modo imóvel
   if (contentType !== 'property') {
@@ -58,26 +58,48 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
 
   return (
     <fieldset className="space-y-4">
-      {isDisabled ? (
-        <div className="text-sm text-gray-400 p-2 bg-gray-50 border border-gray-200 rounded-lg">
-          Escolha uma categoria para ver os tipos de imóveis disponíveis
-        </div>
-      ) : (
-        <RadioGroup className="flex flex-wrap gap-2" value={currentValue} onValueChange={handlePropertyTypeChange}>
-          {availableTypes.map(type => (
-            <div key={`${id}-${type}`} className="relative flex flex-col items-start gap-2 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-blue-300 has-[[data-state=checked]]:bg-blue-50">
-              <div className="flex items-center gap-2">
-                <RadioGroupItem id={`${id}-${type}`} value={type} className="after:absolute after:inset-0" />
-                <Label htmlFor={`${id}-${type}`} className="text-xs font-normal cursor-pointer" aria-label={`Filtrar por ${type}`}>
-                  {type}
-                </Label>
-              </div>
+      <RadioGroup 
+        className="flex flex-wrap gap-2" 
+        value={currentValue}
+        onValueChange={handlePropertyTypeChange}
+        disabled={isDisabled}
+      >
+        {availableTypes.map((type) => (
+          <div
+            key={`${id}-${type}`}
+            className={cn(
+              "relative flex flex-col items-start gap-2 rounded-lg border border-input p-2 shadow-sm shadow-black/5",
+              isDisabled 
+                ? "opacity-50 cursor-not-allowed border-gray-200 bg-gray-50"
+                : "has-[[data-state=checked]]:border-blue-300 has-[[data-state=checked]]:bg-blue-50"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem
+                id={`${id}-${type}`}
+                value={type}
+                className="after:absolute after:inset-0"
+                disabled={isDisabled}
+              />
+              <Label 
+                htmlFor={`${id}-${type}`} 
+                className={cn(
+                  "text-xs font-normal",
+                  isDisabled ? "cursor-not-allowed text-gray-400" : "cursor-pointer"
+                )}
+                aria-label={`Filtrar por ${type}`}
+              >
+                {type}
+              </Label>
             </div>
-          ))}
-        </RadioGroup>
-      )}
+          </div>
+        ))}
+      </RadioGroup>
     </fieldset>
   );
 };
+
+// Adicionar import do cn que estava faltando
+import { cn } from '@/lib/utils';
 
 export default React.memo(PropertyTypeFilter);

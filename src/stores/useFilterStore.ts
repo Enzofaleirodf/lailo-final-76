@@ -54,10 +54,10 @@ const initialFilterState: FilterState = {
   brand: '',
   model: '',
   color: '',
-  format: '' as FilterFormat, // Usando string vazia para usar placeholders
-  origin: '' as FilterOrigin,
-  place: '' as FilterPlace,
-  category: 'Todos' // Mantemos o valor padrão para categoria
+  format: 'Selecione' as FilterFormat, // Usando string para placeholder
+  origin: 'Selecione' as FilterOrigin,
+  place: 'Selecione' as FilterPlace,
+  category: '' // Agora não terá uma categoria padrão
 };
 
 // Define which filter sections are expanded by default
@@ -133,13 +133,13 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.model !== '') count++;
   if (filters.color !== '') count++;
   
-  // Auction format, origin, place - agora verificando se não estão vazios
-  if (filters.format !== '') count++;
-  if (filters.origin !== '') count++;
-  if (filters.place !== '') count++;
+  // Auction format, origin, place - verificar se não estão com valor padrão
+  if (filters.format !== 'Selecione') count++;
+  if (filters.origin !== 'Selecione') count++;
+  if (filters.place !== 'Selecione') count++;
 
-  // Category - conta se for diferente do padrão
-  if (filters.category !== 'Todos') count++;
+  // Category - conta se for diferente do padrão (agora vazio)
+  if (filters.category !== '') count++;
   
   return count;
 };
@@ -170,9 +170,9 @@ export const useFilterStore = create<FilterStore>()(
             }
           }
           
-          // Se o tipo de conteúdo mudar, redefinir a categoria para "Todos"
+          // Se o tipo de conteúdo mudar, redefinir a categoria para vazio
           if (key === 'contentType') {
-            newFilters.category = 'Todos';
+            newFilters.category = '';
             newFilters.vehicleTypes = [];
             newFilters.propertyTypes = [];
           }

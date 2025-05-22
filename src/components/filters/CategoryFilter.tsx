@@ -91,7 +91,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
   return (
     <div className="space-y-3">
       <RadioGroup 
-        value={category || categoryOptions[0]} 
+        value={category || ""} 
         onValueChange={handleCategoryChange}
         className="grid-cols-3 w-full"
         aria-label="Selecione uma categoria"
@@ -102,7 +102,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
           return (
             <div
               key={`${id}-${option}`}
-              className="relative flex flex-col gap-2 rounded-lg border border-gray-200 p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50"
+              className="relative flex flex-col gap-2 rounded-lg border border-gray-200 p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-blue-300 has-[[data-state=checked]]:bg-blue-50"
             >
               <div className="flex justify-between gap-2">
                 <RadioGroupItem 

@@ -69,13 +69,13 @@ const TopFilters: React.FC = () => {
     let placeholder = '';
     
     if (filterType === 'format') {
-      value = filters.format;
+      value = filters.format === 'Selecione' ? '' : filters.format;
       placeholder = 'Selecione um formato';
     } else if (filterType === 'origin') {
-      value = filters.origin;
+      value = filters.origin === 'Selecione' ? '' : filters.origin;
       placeholder = 'Selecione uma origem';
     } else if (filterType === 'place') {
-      value = filters.place;
+      value = filters.place === 'Selecione' ? '' : filters.place;
       placeholder = 'Selecione uma etapa';
     }
     
@@ -96,7 +96,7 @@ const TopFilters: React.FC = () => {
             className={cn(
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-urbanist",
               filters.contentType === 'property' 
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white" 
+                ? "bg-brand-900 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             )}
@@ -112,7 +112,7 @@ const TopFilters: React.FC = () => {
             className={cn(
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-urbanist",
               filters.contentType === 'vehicle' 
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white" 
+                ? "bg-brand-900 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             )}
@@ -136,8 +136,8 @@ const TopFilters: React.FC = () => {
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Formato:</span> 
-              <span className={filters.format ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
-                {filters.format || getDisplayText('format')}
+              <span className={filters.format !== 'Selecione' ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
+                {filters.format !== 'Selecione' ? filters.format : getDisplayText('format')}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -167,8 +167,8 @@ const TopFilters: React.FC = () => {
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Origem:</span> 
-              <span className={filters.origin ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
-                {filters.origin || getDisplayText('origin')}
+              <span className={filters.origin !== 'Selecione' ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
+                {filters.origin !== 'Selecione' ? filters.origin : getDisplayText('origin')}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
@@ -198,8 +198,8 @@ const TopFilters: React.FC = () => {
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Etapa:</span> 
-              <span className={filters.place ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
-                {filters.place || getDisplayText('place')}
+              <span className={filters.place !== 'Selecione' ? "text-gray-700 font-normal" : "text-gray-500 font-normal"}>
+                {filters.place !== 'Selecione' ? filters.place : getDisplayText('place')}
               </span>
             </span>
             <ChevronDown size={16} className="text-gray-500" aria-hidden="true" />
