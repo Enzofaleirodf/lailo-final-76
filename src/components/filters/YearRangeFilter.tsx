@@ -5,6 +5,8 @@ import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
 import { ContentType } from '@/types/filters';
+import { defaultRangeValues as propertyDefaultRangeValues } from '@/stores/usePropertyFiltersStore';
+import { defaultRangeValues as vehicleDefaultRangeValues } from '@/stores/useVehicleFiltersStore';
 
 interface YearRangeFilterProps {
   contentType: ContentType;
@@ -19,13 +21,10 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
     onChange: onFilterChange
   });
   
-  // Definir os valores padrão baseados na store correta
-  const storeModule = contentType === 'property' ? 
-    require('@/stores/usePropertyFiltersStore') : 
-    require('@/stores/useVehicleFiltersStore');
-  
-  // Define default values
-  const defaultValues = storeModule.defaultRangeValues.year;
+  // Obter valores padrão corretos com base no tipo de conteúdo
+  const defaultValues = contentType === 'property' ? 
+    propertyDefaultRangeValues.year : 
+    vehicleDefaultRangeValues.year;
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
@@ -38,7 +37,7 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilter
     if (!filters.year.min && !filters.year.max) {
       updateFilter('year', defaultValues);
     }
-  }, []);
+  }, [defaultValues]); // Adicionar dependências para evitar loops
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 

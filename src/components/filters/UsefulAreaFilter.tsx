@@ -41,7 +41,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
     if (!filters.usefulArea.min && !filters.usefulArea.max) {
       updateFilter('usefulArea', defaultValues);
     }
-  }, []);
+  }, [defaultValues, filters.usefulArea]); // Adicionar dependências para evitar loops
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 

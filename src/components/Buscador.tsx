@@ -30,7 +30,7 @@ const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
     } else {
       vehicleStore.updateFilter('contentType', 'vehicle');
     }
-  }, [contentType, propertyStore, vehicleStore]);
+  }, [contentType]); // Remova as dependências que causam loops
   
   return <BuscadorLayout contentType={contentType} />;
 };

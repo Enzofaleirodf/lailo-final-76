@@ -9,7 +9,7 @@ import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
  * e configuração para os componentes de buscador de imóveis ou veículos
  */
 export const useBuscadorSetup = (contentType: ContentType) => {
-  const { updateFilter, filters } = useFilterStoreSelector(contentType);
+  const { updateFilter } = useFilterStoreSelector(contentType);
   const initialSetupDone = useRef(false);
   
   // Sincronizar URL com estado de filtros e ordenação
@@ -24,7 +24,7 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     updateFilter('contentType', contentType);
     
     initialSetupDone.current = true;
-  }, [updateFilter, contentType]);
+  }, [contentType, updateFilter]);
       
   return { initialSetupDone };
 };

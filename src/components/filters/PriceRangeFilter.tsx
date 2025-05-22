@@ -43,7 +43,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
         range: defaultValues
       });
     }
-  }, []);
+  }, [defaultValues, filters.price]); // Adicionar dependências para evitar loops
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
