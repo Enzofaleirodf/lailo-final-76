@@ -7,7 +7,7 @@ import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 /**
  * Hook personalizado que encapsula toda a lógica de inicialização
  * e configuração para os componentes de buscador de imóveis ou veículos
- * Versão otimizada com remoção de logs e lógica simplificada
+ * Versão otimizada com remoção de loops de renderização
  */
 export const useBuscadorSetup = (contentType: ContentType) => {
   const { updateFilter } = useFilterStoreSelector(contentType);

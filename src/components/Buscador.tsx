@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import BuscadorLayout from '@/components/BuscadorLayout';
 import { useBuscadorSetup } from '@/hooks/useBuscadorSetup';
 import { ContentType } from '@/types/filters';
@@ -23,14 +23,23 @@ const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
   const propertyStore = usePropertyFiltersStore(state => state.updateFilter);
   const vehicleStore = useVehicleFiltersStore(state => state.updateFilter);
   
+  // Referência para controlar a inicialização única
+  const contentTypeSetRef = useRef(false);
+  
   // Atualizar o tipo de conteúdo correto na store apropriada
   useEffect(() => {
+    // Evitar atualizações repetidas
+    if (contentTypeSetRef.current) return;
+    
     if (contentType === 'property') {
       propertyStore('contentType', 'property');
     } else {
       vehicleStore('contentType', 'vehicle');
     }
-  }, [contentType, propertyStore, vehicleStore]); 
+    
+    contentTypeSetRef.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contentType]); 
   
   return <BuscadorLayout contentType={contentType} />;
 };

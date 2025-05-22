@@ -11,7 +11,7 @@ import { useFilterStoreSelector } from './useFilterStoreSelector';
 
 /**
  * Hook personalizado para sincronizar estado de filtro e classificação com parâmetros de URL
- * Versão otimizada com remoção de logs e códigos de depuração
+ * Versão otimizada para prevenir atualizações recursivas
  */
 export const useUrlParams = (contentType: ContentType) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,9 +32,12 @@ export const useUrlParams = (contentType: ContentType) => {
   const hasErrorRef = useRef(false);
   const prevFiltersRef = useRef(filters);
   const prevSortOptionRef = useRef(sortOption);
+  const eventListenersSetupDoneRef = useRef(false);
   
-  // Manipulador para o evento de aplicação de filtros
+  // Configurar event listeners apenas uma vez
   useEffect(() => {
+    if (eventListenersSetupDoneRef.current) return;
+    
     const handleFiltersApplied = (e: Event) => {
       try {
         const customEvent = e as CustomEvent;
@@ -80,8 +83,14 @@ export const useUrlParams = (contentType: ContentType) => {
     };
     
     window.addEventListener('filters:applied', handleFiltersApplied);
-    return () => window.removeEventListener('filters:applied', handleFiltersApplied);
-  }, [filters, searchParams, setSearchParams, sortOption, captureScrollPosition, restoreScrollPosition, toast]);
+    eventListenersSetupDoneRef.current = true;
+    
+    return () => {
+      window.removeEventListener('filters:applied', handleFiltersApplied);
+      eventListenersSetupDoneRef.current = false;
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Executar apenas uma vez na montagem
 
   // Carregar filtros da URL no carregamento inicial
   useEffect(() => {
@@ -100,8 +109,8 @@ export const useUrlParams = (contentType: ContentType) => {
       const newFilters = loadFiltersFromUrl(searchParams, filters);
       
       // Atualizar filtros se houver mudanças
-      if (newFilters) {
-        setFilters({ ...filters, ...newFilters });
+      if (newFilters && Object.keys(newFilters).length > 0) {
+        setFilters({ ...newFilters });
       }
       
       prevFiltersRef.current = { ...filters };
@@ -120,7 +129,7 @@ export const useUrlParams = (contentType: ContentType) => {
       isUpdatingUrlRef.current = false;
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Removi todas as dependências para executar apenas uma vez, na montagem
+  }, []); // Executar apenas uma vez na montagem
   
   // Função para paginar e atualizar a URL
   const handlePageChange = (page: number) => {

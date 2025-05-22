@@ -44,7 +44,8 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
       updateFilter('usefulArea', defaultValues);
       initializationDone.current = true;
     }
-  }, []); // Removi as dependências para evitar loops, usando ref para controlar
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Dependências removidas para evitar loops, controlando com ref
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 

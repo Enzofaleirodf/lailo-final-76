@@ -47,6 +47,7 @@ export function useRangeFilter(
 
   // Cache de valores processados anteriormente para evitar recálculos
   const formatCache = useRef<Record<string, string>>({});
+  const onChangeCallRef = useRef(false);
   
   // Estado para rastrear valores de entrada
   const [values, setValues] = useState<RangeValues>({
@@ -86,10 +87,17 @@ export function useRangeFilter(
 
   // Atualizar o componente pai quando os valores mudarem
   useEffect(() => {
+    // Evitar a chamada de onChange na primeira renderização
+    if (!onChangeCallRef.current) {
+      onChangeCallRef.current = true;
+      return;
+    }
+    
     if (onChange) {
       onChange(values);
     }
-  }, [values, onChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values]);
 
   // Manipuladores de eventos para campos min/max
   const handleMinChange = useCallback((value: string) => {
