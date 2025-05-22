@@ -8,11 +8,6 @@ import { isValidFormat, isValidOrigin, isValidPlace } from './urlParamsValidator
 
 /**
  * Carrega os valores dos filtros a partir da URL
- * Comportamento melhorado para lidar com valores padrão
- * 
- * @param searchParams - Parâmetros da URL atual
- * @param filters - Estado atual dos filtros
- * @returns Novos filtros baseados na URL ou null se não houver alterações
  */
 export const loadFiltersFromUrl = (
   searchParams: URLSearchParams,
@@ -21,22 +16,10 @@ export const loadFiltersFromUrl = (
   const newFilters = { ...filters };
   let hasChanges = false;
   
-  // Carregar cada grupo de parâmetros
-  if (loadLocationParams(searchParams, newFilters)) {
-    hasChanges = true;
-  }
-  
-  if (loadVehicleAndPropertyParams(searchParams, newFilters)) {
-    hasChanges = true;
-  }
-  
-  if (loadRangeParams(searchParams, newFilters)) {
-    hasChanges = true;
-  }
-  
-  if (loadAuctionParams(searchParams, newFilters)) {
-    hasChanges = true;
-  }
+  if (loadLocationParams(searchParams, newFilters)) hasChanges = true;
+  if (loadVehicleAndPropertyParams(searchParams, newFilters)) hasChanges = true;
+  if (loadRangeParams(searchParams, newFilters)) hasChanges = true;
+  if (loadAuctionParams(searchParams, newFilters)) hasChanges = true;
   
   return hasChanges ? newFilters : null;
 };
@@ -50,32 +33,20 @@ const loadLocationParams = (
 ): boolean => {
   let hasChanges = false;
   
-  // Primeiro verificar os novos parâmetros 'state' e 'city'
   if (searchParams.has('state') || searchParams.has('city')) {
     newFilters.location = {
       state: searchParams.get('state') || '',
       city: searchParams.get('city') || ''
     };
     hasChanges = true;
-  } 
-  // Se não tiver state nem city, mas tiver o parâmetro legado 'location'
-  else if (searchParams.has('location')) {
+  } else if (searchParams.has('location')) {
     const legacyLocation = searchParams.get('location') || '';
     
-    // Tentar determinar se é um estado ou cidade
     if (legacyLocation.length === 2 && legacyLocation === legacyLocation.toUpperCase()) {
-      // Provavelmente é uma sigla de estado
-      newFilters.location = {
-        state: legacyLocation,
-        city: ''
-      };
+      newFilters.location = { state: legacyLocation, city: '' };
       hasChanges = true;
     } else if (legacyLocation !== 'todos') {
-      // Provavelmente é uma cidade ou outro tipo de localização
-      newFilters.location = {
-        state: '',
-        city: legacyLocation
-      };
+      newFilters.location = { state: '', city: legacyLocation };
       hasChanges = true;
     }
   }
@@ -101,19 +72,17 @@ const loadVehicleAndPropertyParams = (
     }
   }
   
-  // Marca do veículo
+  // Marca, modelo e cor
   if (searchParams.has('brand') && searchParams.get('brand') !== 'todas') {
     newFilters.brand = searchParams.get('brand') || 'todas';
     hasChanges = true;
   }
   
-  // Modelo do veículo
   if (searchParams.has('model') && searchParams.get('model') !== 'todos') {
     newFilters.model = searchParams.get('model') || 'todos';
     hasChanges = true;
   }
   
-  // Cor do veículo
   if (searchParams.has('color') && searchParams.get('color') !== 'todas') {
     newFilters.color = searchParams.get('color') || 'todas';
     hasChanges = true;
@@ -131,44 +100,23 @@ const loadRangeParams = (
 ): boolean => {
   let hasChanges = false;
   
-  // Ano
   if (loadRangeParam(
-    searchParams, 
-    'year', 
-    defaultRangeValues.year.min,
-    defaultRangeValues.year.max,
-    (min, max) => {
-      newFilters.year = { min, max };
-    }
+    searchParams, 'year', defaultRangeValues.year.min, defaultRangeValues.year.max,
+    (min, max) => { newFilters.year = { min, max }; }
   )) {
     hasChanges = true;
   }
   
-  // Preço
   if (loadRangeParam(
-    searchParams, 
-    'price', 
-    defaultRangeValues.price.min,
-    defaultRangeValues.price.max,
-    (min, max) => {
-      newFilters.price = {
-        ...newFilters.price,
-        range: { min, max }
-      };
-    }
+    searchParams, 'price', defaultRangeValues.price.min, defaultRangeValues.price.max,
+    (min, max) => { newFilters.price = { ...newFilters.price, range: { min, max } }; }
   )) {
     hasChanges = true;
   }
   
-  // Área útil
   if (loadRangeParam(
-    searchParams, 
-    'usefulArea', 
-    defaultRangeValues.usefulArea.min,
-    defaultRangeValues.usefulArea.max,
-    (min, max) => {
-      newFilters.usefulArea = { min, max };
-    }
+    searchParams, 'usefulArea', defaultRangeValues.usefulArea.min, defaultRangeValues.usefulArea.max,
+    (min, max) => { newFilters.usefulArea = { min, max }; }
   )) {
     hasChanges = true;
   }
@@ -189,12 +137,8 @@ const loadRangeParam = (
   const minParam = searchParams.get(`${paramName}Min`);
   const maxParam = searchParams.get(`${paramName}Max`);
   
-  if ((minParam && minParam !== defaultMin) || 
-      (maxParam && maxParam !== defaultMax)) {
-    updateFilter(
-      minParam || defaultMin,
-      maxParam || defaultMax
-    );
+  if ((minParam && minParam !== defaultMin) || (maxParam && maxParam !== defaultMax)) {
+    updateFilter(minParam || defaultMin, maxParam || defaultMax);
     return true;
   }
   
@@ -214,7 +158,6 @@ const loadAuctionParams = (
   if (searchParams.has('format')) {
     const format = searchParams.get('format');
     if (isValidFormat(format) && format !== 'Leilão') {
-      // Usar type assertion para garantir que o tipo é compatível
       newFilters.format = format as FilterFormat;
       hasChanges = true;
     }
