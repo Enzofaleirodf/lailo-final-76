@@ -24,32 +24,6 @@ const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
   // Obter os tipos de imóvel disponíveis para a categoria selecionada
   let availableTypes = getTypesByCategory(category, 'property');
 
-  // Converter para plural com regras específicas para imóveis
-  availableTypes = availableTypes.map(type => {
-    if (type === 'Todos') return type;
-
-    // Simplificar os nomes removendo a parte categórica
-    if (type === 'Imóvel Misto') return 'Imóveis Mistos';
-    if (type === 'Lote Comercial') return 'Lotes';
-    if (type === 'Lote Residencial') return 'Lotes';
-    if (type === 'Prédio Comercial') return 'Prédios';
-    if (type === 'Prédio Residencial') return 'Prédios';
-    if (type === 'Terreno Comercial') return 'Terrenos';
-    if (type === 'Terreno Residencial') return 'Terrenos';
-    if (type === 'Terreno Rural') return 'Terrenos';
-    if (type === 'Condomínio Comercial') return 'Condomínios';
-    if (type === 'Condomínio Residencial') return 'Condomínios';
-
-    // Casos padrão
-    if (type.endsWith('l')) return type.replace(/l$/, 'is');
-    if (type.endsWith('m')) return type.replace(/m$/, 'ns');
-    if (['a', 'e', 'i', 'o', 'u'].includes(type.slice(-1))) return type + 's';
-    return type + 's';
-  });
-
-  // Remover duplicatas após a simplificação
-  availableTypes = [...new Set(availableTypes)];
-
   // Ordenar alfabeticamente
   if (availableTypes.includes('Todos')) {
     const todosIndex = availableTypes.indexOf('Todos');

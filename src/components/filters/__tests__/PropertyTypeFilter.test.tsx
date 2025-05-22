@@ -8,8 +8,8 @@ import * as filterStoreModule from '@/stores/useFilterStore';
 // Mock do módulo de categorias
 jest.mock('@/utils/categoryTypeMapping', () => ({
   getTypesByCategory: jest.fn().mockImplementation((cat) => {
-    if (cat === 'Residencial') return ['Todos', 'Apartamento', 'Casa'];
-    if (cat === 'Comercial') return ['Todos', 'Loja', 'Sala'];
+    if (cat === 'Residencial') return ['Todos', 'Apartamentos', 'Casas'];
+    if (cat === 'Comercial') return ['Todos', 'Lojas', 'Salas'];
     return ['Todos'];
   })
 }));
