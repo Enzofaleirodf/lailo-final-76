@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -8,7 +7,7 @@ import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import * as filterStoreModule from '@/stores/useFilterStore';
 import * as uiStoreModule from '@/stores/useUIStore';
-import MobileFilterBar from '@/components/MobileFilterBar';
+import MobileFilterBar from '@/components/mobile-filter/MobileFilterBar';
 
 // Criar cliente de consulta para testes
 const queryClient = new QueryClient({
