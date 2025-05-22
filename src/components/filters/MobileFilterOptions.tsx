@@ -36,7 +36,6 @@ const MobileFilterOptions: React.FC<MobileFilterOptionsProps> = ({ contentType }
         title="Formato"
         isExpanded={expandedSections.format}
         onToggle={() => toggleSection('format')}
-        testId="format-filter-section"
       >
         <FilterDropdown
           id="format-filter"
@@ -53,7 +52,6 @@ const MobileFilterOptions: React.FC<MobileFilterOptionsProps> = ({ contentType }
         title="Origem"
         isExpanded={expandedSections.origin}
         onToggle={() => toggleSection('origin')}
-        testId="origin-filter-section"
       >
         <FilterDropdown
           id="origin-filter"
@@ -70,7 +68,6 @@ const MobileFilterOptions: React.FC<MobileFilterOptionsProps> = ({ contentType }
         title="Etapa"
         isExpanded={expandedSections.place}
         onToggle={() => toggleSection('place')}
-        testId="place-filter-section"
       >
         <FilterDropdown
           id="place-filter"

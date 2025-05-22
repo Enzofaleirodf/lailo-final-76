@@ -44,7 +44,7 @@ describe('ColorFilter', () => {
   });
 
   test('renders color dropdown with correct options', () => {
-    render(<ColorFilter />);
+    render(<ColorFilter contentType="vehicle" />);
     
     // Check dropdown is rendered
     const dropdown = screen.getByLabelText('Selecione a cor');
@@ -58,7 +58,7 @@ describe('ColorFilter', () => {
   });
 
   test('selects color correctly', () => {
-    render(<ColorFilter onFilterChange={mockOnFilterChange} />);
+    render(<ColorFilter contentType="vehicle" onFilterChange={mockOnFilterChange} />);
     
     // Get the dropdown
     const dropdown = screen.getByLabelText('Selecione a cor');
@@ -72,7 +72,7 @@ describe('ColorFilter', () => {
   });
 
   test('maintains accessibility requirements', () => {
-    render(<ColorFilter />);
+    render(<ColorFilter contentType="vehicle" />);
     
     const dropdown = screen.getByRole('combobox');
     expect(dropdown).toBeInTheDocument();
@@ -101,7 +101,7 @@ describe('ColorFilter', () => {
       expandAllSections: jest.fn()
     });
     
-    render(<ColorFilter />);
+    render(<ColorFilter contentType="vehicle" />);
     
     // Check if dropdown shows the correct selected value
     const dropdown = screen.getByLabelText('Selecione a cor') as HTMLSelectElement;

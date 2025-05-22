@@ -1,16 +1,39 @@
 
 import { ContentType } from '@/types/filters';
-import { defaultRangeValues } from '@/stores/useFilterStore';
 
 /**
- * Funções e constantes auxiliares para testes
+ * Função auxiliar para adicionar a propriedade contentType a componentes em testes
+ * Evita a necessidade de modificar cada teste manualmente
  */
+export function withContentType<T extends object>(props: T, contentType: ContentType = 'property'): T & { contentType: ContentType } {
+  return {
+    ...props,
+    contentType
+  };
+}
 
-// Adicionar o contentType aos componentes de teste que não têm esta propriedade
-export const mockContentType: ContentType = 'vehicle';
+/**
+ * Mock padrão para o teste do componente FilterContentNavigation 
+ * Ajuda a evitar repetição nos testes
+ */
+export const mockNavigationProps = {
+  contentType: 'property' as ContentType,
+};
 
-// Valores padrão para filtros de intervalo usados nos testes
-export const testDefaultRangeValues = defaultRangeValues;
+/**
+ * Mock padrão para o teste do componente FilterFlow
+ */
+export const mockFilterFlowProps = {
+  contentType: 'property' as ContentType,
+  isOpen: true,
+  onOpenChange: jest.fn()
+};
 
-// Mock para funções de filtragem
-export const mockFilterFunction = jest.fn();
+/**
+ * Mock padrão para o teste do componente MobileFilterBar
+ */
+export const mockMobileFilterBarProps = {
+  contentType: 'property' as ContentType,
+  onFilterClick: jest.fn(),
+  onSortClick: jest.fn()
+};

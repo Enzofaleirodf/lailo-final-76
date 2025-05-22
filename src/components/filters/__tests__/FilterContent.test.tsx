@@ -71,14 +71,14 @@ describe('FilterContent', () => {
   });
 
   test('renders common and content type filters', () => {
-    render(<FilterContent />);
+    render(<FilterContent contentType="property" />);
     
     expect(screen.getByTestId('common-filters')).toBeInTheDocument();
     expect(screen.getByTestId('content-type-filters')).toBeInTheDocument();
   });
 
   test('resets filters when reset button is clicked', () => {
-    render(<FilterContent />);
+    render(<FilterContent contentType="property" />);
     
     const resetButton = screen.getByRole('button', { name: /resetar filtros/i });
     fireEvent.click(resetButton);
@@ -117,14 +117,14 @@ describe('FilterContent', () => {
       expandAllSections: jest.fn()
     });
     
-    render(<FilterContent />);
+    render(<FilterContent contentType="property" />);
     
     const resetButton = screen.getByRole('button', { name: /resetar filtros \(3\)/i });
     expect(resetButton).toBeInTheDocument();
   });
 
   test('cleans up filter consistency hook on unmount', () => {
-    const { unmount } = render(<FilterContent />);
+    const { unmount } = render(<FilterContent contentType="property" />);
     unmount();
     
     expect(mockCleanup).toHaveBeenCalled();
