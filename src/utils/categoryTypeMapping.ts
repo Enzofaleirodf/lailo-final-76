@@ -18,12 +18,12 @@ export const vehicleCategoryToTypesMap: Record<string, string[]> = {
  */
 export const propertyCategoryToTypesMap: Record<string, string[]> = {
   'Todos': ['Todos'],
-  'Comerciais': ['Todos', 'Condomínios', 'Depósitos', 'Escritórios', 
-              'Lojas', 'Lotes', 'Prédios', 'Salas', 'Terrenos'],
+  'Comerciais': ['Todos', 'Conjuntos', 'Condomínios', 'Depósitos', 'Escritórios', 
+              'Garagens', 'Lojas', 'Lotes', 'Prédios', 'Salas', 'Terrenos'],
   'Hospedagens': ['Todos', 'Hotéis', 'Motéis', 'Pousadas'],
   'Industriais': ['Todos', 'Galpões', 'Lotes', 'Terrenos', 'Depósitos'],
-  'Residenciais': ['Todos', 'Apartamentos', 'Casas', 'Condomínios', 
-                'Edifícios', 'Flats', 'Imóveis Mistos', 'Kitnets', 'Lofts', 'Lotes',
+  'Residenciais': ['Todos', 'Apartamentos', 'Casas', 'Condomínios', 'Conjuntos',
+                'Edifícios', 'Flats', 'Garagens', 'Imóveis Mistos', 'Kitnets', 'Lofts', 'Lotes',
                 'Prédios', 'Quitinetes', 'Sobrados', 'Studios', 'Terrenos'],
   'Rurais': ['Todos', 'Chácaras', 'Fazendas', 'Terrenos', 'Sítios']
 };

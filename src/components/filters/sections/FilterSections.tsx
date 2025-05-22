@@ -23,6 +23,8 @@ interface FilterSectionsProps {
 export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
   const { expandedSections, toggleSection, filters } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
+  const { category } = filters;
+  const showTypeFilter = category && category !== 'Todos';
 
   // Sempre renderizar o filtro de Categoria primeiro
   return (
@@ -37,13 +39,15 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
 
       {isPropertyMode ? (
         <>
-          <FilterSectionComponent 
-            title="Tipo de imóvel" 
-            isExpanded={true} 
-            onToggle={() => {}}
-          >
-            <PropertyTypeFilter onFilterChange={onFilterChange} />
-          </FilterSectionComponent>
+          {showTypeFilter && (
+            <FilterSectionComponent 
+              title="Tipo de imóvel" 
+              isExpanded={true} 
+              onToggle={() => {}}
+            >
+              <PropertyTypeFilter onFilterChange={onFilterChange} />
+            </FilterSectionComponent>
+          )}
 
           <FilterSectionComponent 
             title="Área útil" 
@@ -55,13 +59,15 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
         </>
       ) : (
         <>
-          <FilterSectionComponent 
-            title="Tipo de veículo" 
-            isExpanded={true} 
-            onToggle={() => {}}
-          >
-            <VehicleTypeFilter onFilterChange={onFilterChange} />
-          </FilterSectionComponent>
+          {showTypeFilter && (
+            <FilterSectionComponent 
+              title="Tipo de veículo" 
+              isExpanded={true} 
+              onToggle={() => {}}
+            >
+              <VehicleTypeFilter onFilterChange={onFilterChange} />
+            </FilterSectionComponent>
+          )}
 
           <FilterSectionComponent 
             title="Características do veículo" 

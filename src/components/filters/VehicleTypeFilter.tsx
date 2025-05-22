@@ -27,13 +27,6 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
     availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
   }
   
-  // Quando a categoria mudar, selecionar automaticamente o tipo "Todos"
-  useEffect(() => {
-    if (category && filters.vehicleTypes.length === 0) {
-      updateFilter('vehicleTypes', ['Todos']);
-    }
-  }, [category, updateFilter, filters.vehicleTypes]);
-  
   const handleVehicleTypeChange = useCallback((value: string) => {
     // Convert to array with single value for compatibility with existing filter logic
     updateFilter('vehicleTypes', value ? [value] : []);
@@ -50,16 +43,13 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
     : '';
 
   // Não mostrar nada se não houver categoria selecionada ou se estivermos no modo imóvel
-  // Agora também ocultando quando a categoria é 'Todos'
+  // Ou se a categoria for 'Todos'
   if (contentType !== 'vehicle' || !category || category === 'Todos') {
     return null;
   }
 
   return (
     <fieldset className="space-y-4">
-      <legend className="text-sm font-medium leading-none text-foreground">
-        Tipos
-      </legend>
       <RadioGroup 
         className="flex flex-wrap gap-2" 
         value={currentValue}
