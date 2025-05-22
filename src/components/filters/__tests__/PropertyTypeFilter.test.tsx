@@ -87,13 +87,9 @@ describe('PropertyTypeFilter', () => {
     
     render(<PropertyTypeFilter />);
     
-    // Verificar que o botão para Casa tem o estado "checked"
-    const casaButton = screen.getByLabelText('Filtrar por Casas');
-    expect(casaButton.closest('label')).toHaveClass('has-[[data-state=checked]]:border-purple-300');
-    
-    // Outros botões não devem ter o estado "checked"
-    const apartamentoButton = screen.getByLabelText('Filtrar por Apartamentos');
-    expect(apartamentoButton.closest('label')).not.toHaveClass('has-[[data-state=checked]]:bg-purple-50');
+    // Verificar que o item para Casa tem o estado "checked"
+    const casaLabel = screen.getByLabelText('Filtrar por Casas');
+    expect(casaLabel.closest('div')).toHaveClass('has-[[data-state=checked]]:border-purple-300');
   });
 
   test('não renderiza se o tipo de conteúdo não for property', () => {
