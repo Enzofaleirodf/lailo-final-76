@@ -106,27 +106,26 @@ const countActiveFilters = (filters: FilterState): number => {
   // Property types
   if (filters.propertyTypes.length > 0) count++;
   
-  // Price range - só contar se os valores forem significativamente diferentes dos padrões
-  // Verificar se o valor mínimo e máximo são próximos dos padrões (com uma margem de tolerância)
+  // Price range - só contar se os valores forem significativamente diferentes dos padrões e não estiverem vazios
   const isPriceDefault = 
     (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
     (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
   
-  if (!isPriceDefault) count++;
+  if (!isPriceDefault && (filters.price.range.min !== '' || filters.price.range.max !== '')) count++;
   
-  // Year range - só contar se os valores forem significativamente diferentes dos padrões
+  // Year range - só contar se os valores forem significativamente diferentes dos padrões e não estiverem vazios
   const isYearDefault = 
     (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
     (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
   
-  if (!isYearDefault) count++;
+  if (!isYearDefault && (filters.year.min !== '' || filters.year.max !== '')) count++;
   
-  // Useful area range - só contar se os valores forem significativamente diferentes dos padrões
+  // Useful area range - só contar se os valores forem significativamente diferentes dos padrões e não estiverem vazios
   const isAreaDefault = 
     (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
     (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
   
-  if (!isAreaDefault) count++;
+  if (!isAreaDefault && (filters.usefulArea.min !== '' || filters.usefulArea.max !== '')) count++;
   
   // Brand, model, color - agora verificando se não estão vazios
   if (filters.brand !== '') count++;
