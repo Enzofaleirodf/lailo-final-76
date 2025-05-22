@@ -59,7 +59,7 @@ const Sidebar = () => {
           </button>
         </div>
         
-        <TooltipProvider delayDuration={300}>
+        <TooltipProvider>
           <div className="flex flex-col items-center gap-6 w-full">
             <NavButton 
               icon={Home} 
