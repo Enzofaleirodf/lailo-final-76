@@ -103,6 +103,11 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
     return 'border-gray-300 focus-visible:ring-brand-500';
   };
   
+  // Adicionar log para debug
+  useEffect(() => {
+    console.log(`RangeInputField ${id} - isActive: ${isActive}`);
+  }, [isActive, id]);
+  
   return (
     <div 
       className={cn("relative", className)} 
@@ -139,6 +144,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           getBorderStyle(),
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0"
         )}
+        data-active={isActive ? 'true' : 'false'}
       />
       
       {/* Sufixo com espaçamento adequado */}

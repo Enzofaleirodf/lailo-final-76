@@ -93,6 +93,11 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   const minErrorId = `min-error-${filterGroupId}`;
   const maxErrorId = `max-error-${filterGroupId}`;
   
+  // Log para debug
+  console.log('SimplifiedRangeFilter - isActive:', isActive);
+  console.log('values:', values);
+  console.log('defaultValues:', defaultValues);
+  
   // Calcular placeholder específico para dispositivo
   const getResponsivePlaceholder = (placeholder: string) => {
     if (isMobile && placeholder.length > 4) {
