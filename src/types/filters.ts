@@ -1,6 +1,7 @@
+
 export type ContentType = 'property' | 'vehicle';
 
-export type FilterFormat = '' | 'Alienação Particular' | 'Leilão' | 'Venda Direta';
+export type FilterFormat = '' | 'Alienação Particular' | 'Leilão' | 'Venda Direta' | 'Todos';
 export type FilterOrigin = '' | 'Todas' | 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
 export type FilterPlace = '' | 'Todas' | 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
 

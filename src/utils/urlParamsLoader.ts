@@ -1,4 +1,3 @@
-
 /**
  * @fileoverview Funções para carregar valores de filtro da URL
  */
@@ -214,7 +213,8 @@ const loadAuctionParams = (
   if (searchParams.has('format')) {
     const format = searchParams.get('format');
     if (isValidFormat(format) && format !== 'Leilão') {
-      newFilters.format = format;
+      // Usar type assertion para garantir que o tipo é compatível
+      newFilters.format = format as FilterFormat;
       hasChanges = true;
     }
   }

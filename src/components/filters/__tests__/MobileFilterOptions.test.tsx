@@ -23,7 +23,8 @@ const mockFilterStore = {
     usefulArea: { min: '', max: '' },
     brand: 'todas',
     model: 'todos',
-    color: 'todas'
+    color: 'todas',
+    category: '' // Adicionando a propriedade que estava faltando
   } as FilterState,
   updateFilter: mockUpdateFilter,
   expandedSections: {
@@ -37,7 +38,8 @@ const mockFilterStore = {
     year: false,
     usefulArea: false,
     model: false,
-    color: false
+    color: false,
+    category: false // Adicionar esta propriedade também
   } as ExpandedSectionsState,
   toggleSection: mockToggleSection,
   resetFilters: jest.fn(),
