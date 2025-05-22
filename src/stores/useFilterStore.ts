@@ -54,9 +54,9 @@ const initialFilterState: FilterState = {
   brand: '',
   model: '',
   color: '',
-  format: '',
-  origin: '',
-  place: '',
+  format: 'Todos' as FilterFormat,
+  origin: 'Todas' as FilterOrigin,
+  place: 'Todas' as FilterPlace,
   category: ''
 };
 
@@ -131,9 +131,9 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.color) count++;
   
   // Auction format, origin, place
-  if (filters.format) count++;
-  if (filters.origin) count++;
-  if (filters.place) count++;
+  if (filters.format && filters.format !== 'Todos') count++;
+  if (filters.origin && filters.origin !== 'Todas') count++;
+  if (filters.place && filters.place !== 'Todas') count++;
 
   // Category
   if (filters.category) count++;
@@ -176,7 +176,7 @@ export const useFilterStore = create<FilterStore>()(
           
           // Se o formato mudar para "Venda Direta" ou "Alienação Particular", resetar o filtro de etapa
           if (key === 'format' && (value === 'Venda Direta' || value === 'Alienação Particular')) {
-            newFilters.place = '';
+            newFilters.place = 'Todas';
           }
 
           return { 

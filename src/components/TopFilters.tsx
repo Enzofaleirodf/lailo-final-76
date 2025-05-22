@@ -46,7 +46,7 @@ const TopFilters: React.FC = () => {
       
       // Se o formato for "Venda Direta" ou "Alienação Particular", reseta o valor do filtro de etapa
       if (value === 'Venda Direta' || value === 'Alienação Particular') {
-        updateFilter('place', '');
+        updateFilter('place', 'Todas' as FilterPlace);
       }
     } else if (filterType === 'origin') {
       updateFilter('origin', value as FilterOrigin);
@@ -59,9 +59,9 @@ const TopFilters: React.FC = () => {
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
 
   // Verificar se cada filtro está ativo com base no valor selecionado
-  const isFormatActive = !!filters.format && filters.format !== '';
-  const isOriginActive = !!filters.origin && filters.origin !== '';
-  const isPlaceActive = !!filters.place && filters.place !== '' && !isPlaceFilterDisabled;
+  const isFormatActive = !!filters.format && filters.format !== 'Todos';
+  const isOriginActive = !!filters.origin && filters.origin !== 'Todas';
+  const isPlaceActive = !!filters.place && filters.place !== 'Todas' && !isPlaceFilterDisabled;
 
   // Base style for dropdowns with active state
   const getDropdownStyle = (isActive: boolean, isDisabled = false) => cn(
@@ -140,7 +140,7 @@ const TopFilters: React.FC = () => {
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Formato:</span> 
-              <span className={filters.format ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
+              <span className={filters.format && filters.format !== 'Todos' ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
                 {filters.format || "Selecione"}
               </span>
             </span>
@@ -172,7 +172,7 @@ const TopFilters: React.FC = () => {
           >
             <span className="text-sm font-normal text-gray-700">
               <span className="text-gray-500 font-normal">Origem:</span> 
-              <span className={filters.origin ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
+              <span className={filters.origin && filters.origin !== 'Todas' ? "text-gray-800 font-medium ml-1" : "text-gray-500 font-normal ml-1"}>
                 {filters.origin || "Selecione"}
               </span>
             </span>
@@ -209,7 +209,7 @@ const TopFilters: React.FC = () => {
               <span className={
                 isPlaceFilterDisabled 
                   ? "text-gray-400 ml-1" 
-                  : filters.place
+                  : filters.place && filters.place !== 'Todas'
                     ? "text-gray-800 font-medium ml-1" 
                     : "text-gray-500 font-normal ml-1"
               }>
