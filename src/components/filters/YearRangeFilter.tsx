@@ -62,26 +62,18 @@ const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => 
       
       <div className="flex items-center space-x-2 mt-1">
         <FilterRangeInput
-          id="year-min"
-          value={yearMin}
-          onChange={handleMinYearChange}
-          placeholder="Min."
-          maxLength={4}
-          inputMode="numeric"
-          aria-label="Ano mínimo"
-          hasError={!!minError}
-          className="w-full"
-        />
-        <span className="text-gray-400">-</span>
-        <FilterRangeInput
-          id="year-max"
-          value={yearMax}
-          onChange={handleMaxYearChange}
-          placeholder="Max."
-          maxLength={4}
-          inputMode="numeric"
-          aria-label="Ano máximo"
-          hasError={!!maxError}
+          minValue={yearMin}
+          maxValue={yearMax}
+          onMinChange={handleMinYearChange}
+          onMaxChange={handleMaxYearChange}
+          minPlaceholder="Min."
+          maxPlaceholder="Max."
+          ariaLabelMin="Ano mínimo"
+          ariaLabelMax="Ano máximo"
+          allowDecimals={false}
+          allowNegative={false}
+          minAllowed={1900}
+          maxAllowed={currentYear}
           className="w-full"
         />
       </div>
