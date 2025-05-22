@@ -3,21 +3,26 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import FilterWrapper from './FilterWrapper';
 import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import { ContentType } from '@/types/filters';
+
+interface FilterContentProps {
+  contentType: ContentType;
+}
 
 /**
  * FilterContent - Principal componente que renderiza todas as seções de filtros
  * Mantém consistência visual e comportamental entre desktop e mobile
  */
-const FilterContent: React.FC = () => {
+const FilterContent: React.FC<FilterContentProps> = ({ contentType }) => {
   const {
     resetFilters,
     activeFilters,
     expandAllSections
-  } = useFilterStore();
+  } = useFilterStoreSelector(contentType);
   
   const isMobile = useIsMobile();
 
@@ -58,17 +63,17 @@ const FilterContent: React.FC = () => {
       aria-label="Filtros de busca"
     >
       {/* Seleção de tipo de filtro para mobile - mostrada apenas em mobile */}
-      {isMobile && <MobileFilterOptions />}
+      {isMobile && <MobileFilterOptions contentType={contentType} />}
 
       <FilterWrapper>
         {/* Filtros comuns - localização */}
-        <CommonFilters onFilterChange={() => {}} />
+        <CommonFilters contentType={contentType} onFilterChange={() => {}} />
 
         {/* Filtros condicionais com base no tipo de conteúdo */}
-        <ContentTypeFilters onFilterChange={() => {}} />
+        <ContentTypeFilters contentType={contentType} onFilterChange={() => {}} />
         
         {/* Filtro de preço sempre mostrado por último */}
-        <PriceFilter onFilterChange={() => {}} />
+        <PriceFilter contentType={contentType} onFilterChange={() => {}} />
       </FilterWrapper>
 
       {/* Botão de resetar filtros - mesma aparência visual para desktop e mobile */}

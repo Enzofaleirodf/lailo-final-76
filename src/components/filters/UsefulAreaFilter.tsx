@@ -1,11 +1,13 @@
 
 import React, { useCallback, useEffect } from 'react';
-import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
+import { ContentType } from '@/types/filters';
 
 interface UsefulAreaFilterProps {
+  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
@@ -13,16 +15,21 @@ interface UsefulAreaFilterProps {
  * Componente de filtro para área útil de imóveis
  * Melhorado para tratamento adequado do sufixo "m²"
  */
-const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStore();
+const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilterChange }) => {
+  const { filters, updateFilter } = useFilterStoreSelector(contentType);
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
     onChange: onFilterChange
   });
   
-  // Define default values (mocado - normalmente viria do banco)
-  const defaultValues = defaultRangeValues.usefulArea;
+  // Definir os valores padrão baseados na store correta
+  const storeModule = contentType === 'property' ? 
+    require('@/stores/usePropertyFiltersStore') : 
+    require('@/stores/useVehicleFiltersStore');
+  
+  // Define default values
+  const defaultValues = storeModule.defaultRangeValues.usefulArea;
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {

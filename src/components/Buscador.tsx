@@ -1,8 +1,10 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import BuscadorLayout from '@/components/BuscadorLayout';
 import { useBuscadorSetup } from '@/hooks/useBuscadorSetup';
 import { ContentType } from '@/types/filters';
+import { usePropertyFiltersStore } from '@/stores/usePropertyFiltersStore';
+import { useVehicleFiltersStore } from '@/stores/useVehicleFiltersStore';
 
 interface BuscadorProps {
   contentType: ContentType;
@@ -17,7 +19,20 @@ const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
   // Usar o hook personalizado para configurar o tipo de conteúdo
   const { initialSetupDone } = useBuscadorSetup(contentType);
   
-  return <BuscadorLayout />;
+  // Obter referências às stores (necessário para garantir que elas são inicializadas)
+  const propertyStore = usePropertyFiltersStore();
+  const vehicleStore = useVehicleFiltersStore();
+  
+  // Atualizar o tipo de conteúdo correto na store apropriada
+  useEffect(() => {
+    if (contentType === 'property') {
+      propertyStore.updateFilter('contentType', 'property');
+    } else {
+      vehicleStore.updateFilter('contentType', 'vehicle');
+    }
+  }, [contentType, propertyStore, vehicleStore]);
+  
+  return <BuscadorLayout contentType={contentType} />;
 };
 
 export default Buscador;

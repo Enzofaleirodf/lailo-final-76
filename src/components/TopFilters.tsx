@@ -9,17 +9,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+
+interface TopFiltersProps {
+  contentType: ContentType;
+}
 
 /**
  * TopFilters - Barra de filtros rápidos para a versão desktop
  * Implementa filtros de tipo de conteúdo, formato, origem e etapa
  * com visual e comportamento consistentes com a versão mobile
  */
-const TopFilters: React.FC = () => {
-  const { filters, updateFilter } = useFilterStore();
+const TopFilters: React.FC<TopFiltersProps> = ({ contentType }) => {
+  const { filters, updateFilter } = useFilterStoreSelector(contentType);
   const navigate = useNavigate();
 
   // Determina se o filtro de etapa deve estar inativo
@@ -36,10 +40,7 @@ const TopFilters: React.FC = () => {
 
   const handleContentTypeChange = useCallback((type: ContentType) => {
     // Não fazer nada se já estivermos no tipo selecionado
-    if (filters.contentType === type) return;
-    
-    // Atualizar o filtro
-    updateFilter('contentType', type);
+    if (contentType === type) return;
     
     // Navegar para a página apropriada
     if (type === 'property') {
@@ -47,7 +48,7 @@ const TopFilters: React.FC = () => {
     } else {
       navigate('/buscador/veiculos');
     }
-  }, [updateFilter, navigate, filters.contentType]);
+  }, [navigate, contentType]);
 
   const handleFilterChange = useCallback((filterType: 'format' | 'origin' | 'place', value: FilterFormat | FilterOrigin | FilterPlace) => {
     if (filterType === 'format') {
@@ -65,7 +66,7 @@ const TopFilters: React.FC = () => {
 
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
-    const isSelected = filters.contentType === type;
+    const isSelected = contentType === type;
     
     return {
       role: "tab",
@@ -119,7 +120,7 @@ const TopFilters: React.FC = () => {
             onClick={() => handleContentTypeChange('property')}
             className={cn(
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-urbanist",
-              filters.contentType === 'property' 
+              contentType === 'property' 
                 ? "bg-brand-900 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
@@ -135,7 +136,7 @@ const TopFilters: React.FC = () => {
             onClick={() => handleContentTypeChange('vehicle')}
             className={cn(
               "flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-urbanist",
-              filters.contentType === 'vehicle' 
+              contentType === 'vehicle' 
                 ? "bg-brand-900 text-white" 
                 : "text-gray-700 hover:bg-gray-50",
               "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"

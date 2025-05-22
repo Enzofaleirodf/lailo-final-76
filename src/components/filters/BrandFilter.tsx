@@ -1,60 +1,46 @@
 
 import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilterStore } from '@/stores/useFilterStore';
-import { getBrandsByVehicleType } from '@/utils/brandModelMapping';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { ChevronDown } from 'lucide-react';
+import { getBrandsByCategory } from '@/utils/brandModelMapping';
+import { ContentType } from '@/types/filters';
 
 interface BrandFilterProps {
+  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
-const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStore();
+const BrandFilter: React.FC<BrandFilterProps> = ({ contentType, onFilterChange }) => {
+  const { filters, updateFilter } = useFilterStoreSelector(contentType);
   
-  // Obter as opções de marcas com base no tipo de veículo selecionado
+  // Obter opções de marca com base na categoria selecionada
   const brandOptions = useMemo(() => {
-    // Verificar se há um tipo de veículo selecionado
-    const vehicleType = filters.vehicleTypes && filters.vehicleTypes.length > 0 
-      ? filters.vehicleTypes[0] 
-      : '';
-    
-    // Obter as marcas disponíveis para o tipo de veículo selecionado
-    let brands = getBrandsByVehicleType(vehicleType);
-    
-    // Ordenar alfabeticamente, mantendo "Todas" no início (se existir)
-    if (brands.includes('Todas')) {
-      const todasIndex = brands.indexOf('Todas');
-      brands.splice(todasIndex, 1);
-      brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-      brands.unshift('Todas');
-    } else {
-      brands.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-    }
-    
-    // Transformar a lista de marcas em opções para o dropdown
-    return brands.map(brand => ({
-      value: brand.toLowerCase(),
-      label: brand
-    }));
-  }, [filters.vehicleTypes]);
+    const brands = getBrandsByCategory(filters.category);
+    return [
+      { value: '', label: 'Selecione uma marca' },
+      ...brands.map(brand => ({
+        value: brand,
+        label: brand
+      }))
+    ];
+  }, [filters.category]);
   
-  // Manipular a mudança de marca
   const handleBrandChange = useCallback((value: string) => {
     updateFilter('brand', value);
     
-    // Resetar modelo quando a marca mudar
+    // Se a marca mudou, limpar o modelo
     if (value !== filters.brand) {
       updateFilter('model', '');
     }
     
-    // Notificar o componente pai sobre a mudança
+    // Notificar componente pai que o filtro mudou
     if (onFilterChange) {
       onFilterChange();
     }
-  }, [updateFilter, onFilterChange, filters.brand]);
-
-  // Verificar se o filtro deve estar desativado
+  }, [filters.brand, updateFilter, onFilterChange]);
+  
+  // Verificar se a marca está desativada (não há categoria selecionada)
   const isDisabled = !filters.category;
   
   return (
@@ -62,7 +48,6 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
       <label htmlFor="brand-filter" className="block text-sm font-medium text-gray-700 mb-1">
         Marca
       </label>
-      
       {isDisabled ? (
         <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
           Escolha uma categoria antes

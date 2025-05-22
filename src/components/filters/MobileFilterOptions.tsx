@@ -1,104 +1,94 @@
 
-/**
- * @fileoverview Componente de opções de filtros para dispositivos móveis
- * Renderiza as seções de filtros específicas para o modo mobile,
- * garantindo consistência visual e comportamental com a versão desktop
- */
-import React, { memo, useCallback } from 'react';
-import { useFilterStore } from '@/stores/useFilterStore';
-import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+import React from 'react';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import FilterDropdown from './FilterDropdown';
-import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
-import { 
-  formatOptions, 
-  originOptions, 
-  placeOptions 
-} from '@/utils/filterUtils';
+import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
+import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
+import FilterSectionComponent from './FilterSectionComponent';
+
+interface MobileFilterOptionsProps {
+  contentType: ContentType;
+}
 
 /**
- * MobileFilterOptions - Exibe as opções de filtro em formato móvel
- * Implementa os filtros de formato, origem e etapa do leilão com
- * aparência e comportamento consistentes com a versão desktop
+ * Componente que exibe opções de filtro específicas para dispositivos móveis
+ * (formato, origem, etapa)
  */
-const MobileFilterOptions: React.FC = () => {
-  const {
-    filters,
-    updateFilter,
-    expandedSections,
-    toggleSection
-  } = useFilterStore();
-
-  // Handlers memoizados para evitar renderizações desnecessárias
-  const handleFormatChange = useCallback((value: string) => {
-    updateFilter('format', value as FilterFormat);
-  }, [updateFilter]);
-
-  const handleOriginChange = useCallback((value: string) => {
-    updateFilter('origin', value as FilterOrigin);
-  }, [updateFilter]);
-
-  const handlePlaceChange = useCallback((value: string) => {
-    updateFilter('place', value as FilterPlace);
-  }, [updateFilter]);
-
-  // Usando React.memo em conjunto com useCallback para otimizar renderizações
-  const handleToggleFormat = useCallback(() => toggleSection('format'), [toggleSection]);
-  const handleToggleOrigin = useCallback(() => toggleSection('origin'), [toggleSection]);
-  const handleTogglePlace = useCallback(() => toggleSection('place'), [toggleSection]);
+const MobileFilterOptions: React.FC<MobileFilterOptionsProps> = ({ contentType }) => {
+  const { filters, updateFilter, expandedSections, toggleSection } = useFilterStoreSelector(contentType);
+  
+  // Verificar se o filtro de etapa deve estar desativado
+  const isPlaceDisabled = React.useMemo(() => {
+    return filters.format === 'Alienação Particular' || filters.format === 'Venda Direta';
+  }, [filters.format]);
+  
+  // Efeito para resetar etapa quando formato desabilita o filtro
+  React.useEffect(() => {
+    if (isPlaceDisabled && filters.place) {
+      updateFilter('place', '');
+    }
+  }, [isPlaceDisabled, filters.place, updateFilter]);
 
   return (
-    <div 
-      className="grid grid-cols-1 gap-0" 
-      role="region" 
-      aria-label="Filtros básicos"
-    >
-      <FilterSectionComponent 
-        title="Formato" 
-        isExpanded={expandedSections.format} 
-        onToggle={handleToggleFormat}
+    <div className="space-y-1 mb-2">
+      {/* Seção de Formato */}
+      <FilterSectionComponent
+        title="Formato"
+        isExpanded={expandedSections.format}
+        onToggle={() => toggleSection('format')}
+        testId="format-filter-section"
       >
-        <FilterDropdown 
-          id="format-filter-mobile" 
-          aria-label="Selecionar formato" 
-          value={filters.format} 
-          onChange={handleFormatChange} 
-          options={formatOptions} 
-          className="border-gray-200 shadow-sm bg-white" 
+        <FilterDropdown
+          id="format-filter"
+          aria-label="Selecionar formato"
+          value={filters.format}
+          onChange={(value) => updateFilter('format', value as FilterFormat)}
+          options={formatOptions}
+          placeholder="Selecione um formato"
         />
       </FilterSectionComponent>
-
-      <FilterSectionComponent 
-        title="Origem" 
-        isExpanded={expandedSections.origin} 
-        onToggle={handleToggleOrigin}
+      
+      {/* Seção de Origem */}
+      <FilterSectionComponent
+        title="Origem"
+        isExpanded={expandedSections.origin}
+        onToggle={() => toggleSection('origin')}
+        testId="origin-filter-section"
       >
-        <FilterDropdown 
-          id="origin-filter-mobile" 
-          aria-label="Selecionar origem" 
-          value={filters.origin} 
-          onChange={handleOriginChange} 
-          options={originOptions} 
-          className="border-gray-200 shadow-sm bg-white" 
+        <FilterDropdown
+          id="origin-filter"
+          aria-label="Selecionar origem"
+          value={filters.origin}
+          onChange={(value) => updateFilter('origin', value as FilterOrigin)}
+          options={originOptions}
+          placeholder="Selecione uma origem"
         />
       </FilterSectionComponent>
-
-      <FilterSectionComponent 
-        title="Etapa" 
-        isExpanded={expandedSections.place} 
-        onToggle={handleTogglePlace}
+      
+      {/* Seção de Etapa */}
+      <FilterSectionComponent
+        title="Etapa"
+        isExpanded={expandedSections.place}
+        onToggle={() => toggleSection('place')}
+        testId="place-filter-section"
       >
-        <FilterDropdown 
-          id="place-filter-mobile" 
-          aria-label="Selecionar etapa" 
-          value={filters.place} 
-          onChange={handlePlaceChange} 
-          options={placeOptions} 
-          className="border-gray-200 shadow-sm bg-white" 
+        <FilterDropdown
+          id="place-filter"
+          aria-label="Selecionar etapa"
+          value={filters.place}
+          onChange={(value) => updateFilter('place', value as FilterPlace)}
+          options={placeOptions}
+          placeholder="Selecione uma etapa"
+          disabled={isPlaceDisabled}
         />
+        {isPlaceDisabled && (
+          <p className="text-xs text-gray-500 mt-1">
+            Este filtro não está disponível para o formato selecionado.
+          </p>
+        )}
       </FilterSectionComponent>
     </div>
   );
 };
 
-// Usar memo para evitar renderizações desnecessárias quando o componente pai re-renderiza
-export default memo(MobileFilterOptions);
+export default React.memo(MobileFilterOptions);

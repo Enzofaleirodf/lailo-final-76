@@ -1,22 +1,25 @@
 
 import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilterStore } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { ChevronDown } from 'lucide-react';
 import BrandFilter from './BrandFilter';
 import { getModelsByBrand } from '@/utils/brandModelMapping';
+import { ContentType } from '@/types/filters';
 
 interface ModelFilterProps {
+  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
 const ModelFilter: React.FC<ModelFilterProps> = ({
+  contentType,
   onFilterChange
 }) => {
   const {
     filters,
     updateFilter
-  } = useFilterStore();
+  } = useFilterStoreSelector(contentType);
   
   // Obter opções de modelos com base na marca selecionada
   const modelOptions = useMemo(() => {
@@ -41,7 +44,7 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
   
   return (
     <div className="space-y-3">
-      <BrandFilter onFilterChange={onFilterChange} />
+      <BrandFilter contentType={contentType} onFilterChange={onFilterChange} />
       
       <div>
         <label htmlFor="model-filter" className="block text-sm font-medium text-gray-700 mb-1">

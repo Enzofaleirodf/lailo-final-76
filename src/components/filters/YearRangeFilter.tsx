@@ -1,96 +1,71 @@
 
 import React, { useCallback, useEffect } from 'react';
-import { useFilterStore } from '@/stores/useFilterStore';
-import { Label } from "@/components/ui/label";
-import FilterRangeInput from './FilterRangeInput';
-import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
-import { defaultRangeValues } from '@/stores/useFilterStore';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import SimplifiedRangeFilter from './SimplifiedRangeFilter';
+import { RangeValues } from '@/hooks/useRangeFilter';
+import { ContentType } from '@/types/filters';
 
 interface YearRangeFilterProps {
+  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
-const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStore();
-  const { year } = filters;
+const YearRangeFilter: React.FC<YearRangeFilterProps> = ({ contentType, onFilterChange }) => {
+  const { filters, updateFilter } = useFilterStoreSelector(contentType);
   
-  // Usar o hook de validação para gerenciar erros
-  const {
-    minError,
-    maxError,
-    handleMinChange,
-    handleMaxChange,
-    validateRange,
-    clearErrors,
-    hasErrors
-  } = useFilterRangeValidator(
-    year.min,
-    year.max,
-    {
-      minAllowed: Number(defaultRangeValues.year.min),
-      maxAllowed: Number(defaultRangeValues.year.max),
-      onMinChange: (value) => {
-        updateFilter('year', {
-          ...year,
-          min: value
-        });
-        
-        if (onFilterChange) onFilterChange();
-      },
-      onMaxChange: (value) => {
-        updateFilter('year', {
-          ...year,
-          max: value
-        });
-        
-        if (onFilterChange) onFilterChange();
-      }
-    }
-  );
-
-  // Limpar erros ao desmontar o componente
+  // Use our filter consistency hook for unified behavior
+  const { handleFilterChange } = useFilterConsistency({
+    onChange: onFilterChange
+  });
+  
+  // Definir os valores padrão baseados na store correta
+  const storeModule = contentType === 'property' ? 
+    require('@/stores/usePropertyFiltersStore') : 
+    require('@/stores/useVehicleFiltersStore');
+  
+  // Define default values
+  const defaultValues = storeModule.defaultRangeValues.year;
+  
+  // Handle filter value changes
+  const handleRangeChange = useCallback((values: RangeValues) => {
+    updateFilter('year', values);
+    handleFilterChange();
+  }, [updateFilter, handleFilterChange]);
+  
+  // Initialize with default values if empty - only on first mount
   useEffect(() => {
-    return () => {
-      clearErrors();
-    };
-  }, [clearErrors]);
-
-  // Verificar se o filtro está ativo - corrigido para considerar apenas valores não vazios
+    if (!filters.year.min && !filters.year.max) {
+      updateFilter('year', defaultValues);
+    }
+  }, []);
+  
+  // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
-    (year.min !== '' && year.min !== defaultRangeValues.year.min) || 
-    (year.max !== '' && year.max !== defaultRangeValues.year.max);
-
+    filters.year.min !== defaultValues.min || 
+    filters.year.max !== defaultValues.max;
+  
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <div className="space-y-2">
-      <Label htmlFor="year-filter" className="text-sm font-medium text-gray-700">
-        Ano do veículo
-      </Label>
-      
-      <div className="flex items-center gap-2">
-        <FilterRangeInput
-          minValue={year.min}
-          maxValue={year.max}
-          onMinChange={handleMinChange}
-          onMaxChange={handleMaxChange}
-          minPlaceholder="Min"
-          maxPlaceholder="Max"
-          ariaLabelMin="Ano mínimo"
-          ariaLabelMax="Ano máximo"
-          className="flex-1"
-          minAllowed={Number(defaultRangeValues.year.min)}
-          maxAllowed={Number(defaultRangeValues.year.max)}
-          isFilterActive={isFilterActive}
-          defaultMin={defaultRangeValues.year.min}
-          defaultMax={defaultRangeValues.year.max}
-        />
-      </div>
-      
-      {/* Exibir mensagens de erro */}
-      {(minError || maxError) && (
-        <div className="text-xs text-red-500 mt-1">
-          {minError || maxError}
-        </div>
-      )}
+    <div className="space-y-3">
+      <SimplifiedRangeFilter
+        initialValues={filters.year}
+        defaultValues={defaultValues}
+        onChange={handleRangeChange}
+        minPlaceholder="Min"
+        maxPlaceholder="Max"
+        ariaLabelMin="Ano mínimo"
+        ariaLabelMax="Ano máximo"
+        allowDecimals={false}
+        minAllowed={Number(defaultValues.min)}
+        maxAllowed={currentYear}
+        isActive={isFilterActive}
+        formatterOptions={{
+          useThousandSeparator: false,
+          formatDisplay: false
+        }}
+      />
     </div>
   );
 };

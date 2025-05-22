@@ -1,78 +1,121 @@
 
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
-import { useFilterStore } from '@/stores/useFilterStore';
-import VehicleTypeFilter from '../VehicleTypeFilter';
-import PropertyTypeFilter from '../PropertyTypeFilter';
 import LocationFilter from '../LocationFilter';
-import ModelFilter from '../ModelFilter';
-import BrandFilter from '../BrandFilter';
-import ColorFilter from '../ColorFilter';
-import YearRangeFilter from '../YearRangeFilter';
 import PriceRangeFilter from '../PriceRangeFilter';
-import UsefulAreaFilter from '../UsefulAreaFilter';
+import YearRangeFilter from '../YearRangeFilter';
 import CategoryFilter from '../CategoryFilter';
+import PropertyTypeFilter from '../PropertyTypeFilter';
+import VehicleTypeFilter from '../VehicleTypeFilter';
+import ModelFilter from '../ModelFilter';
+import ColorFilter from '../ColorFilter';
+import UsefulAreaFilter from '../UsefulAreaFilter';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { ContentType } from '@/types/filters';
 
-interface FilterSectionsProps {
-  onFilterChange: () => void;
+interface FilterSectionProps {
+  contentType: ContentType;
+  onFilterChange?: () => void;
 }
 
 /**
- * ContentTypeFilters - Conditionally renders filter sections based on content type
+ * Componente para filtros comuns entre imóveis e veículos
  */
-export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { expandedSections, toggleSection, filters } = useFilterStore();
-  const isPropertyMode = filters.contentType === 'property';
-  
-  // Sempre mostrar filtros de tipo, independentemente da categoria selecionada
+export const CommonFilters: React.FC<FilterSectionProps> = ({ contentType, onFilterChange }) => {
+  const { expandedSections, toggleSection } = useFilterStoreSelector(contentType);
+
   return (
     <>
-      <FilterSectionComponent 
-        title="Categoria" 
-        isExpanded={true} 
-        onToggle={() => {}}
+      <FilterSectionComponent
+        title="Localização"
+        isExpanded={expandedSections.location}
+        onToggle={() => toggleSection('location')}
+        testId="location-filter-section"
       >
-        <CategoryFilter onFilterChange={onFilterChange} />
+        <LocationFilter contentType={contentType} onFilterChange={onFilterChange} />
+      </FilterSectionComponent>
+    </>
+  );
+};
+
+/**
+ * Componente para filtros específicos de cada tipo de conteúdo
+ */
+export const ContentTypeFilters: React.FC<FilterSectionProps> = ({ contentType, onFilterChange }) => {
+  const { expandedSections, toggleSection, filters } = useFilterStoreSelector(contentType);
+
+  return (
+    <>
+      {/* Filtro de categoria (comum a ambos os tipos) */}
+      <FilterSectionComponent
+        title="Categoria"
+        isExpanded={expandedSections.category}
+        onToggle={() => toggleSection('category')}
+        testId="category-filter-section"
+      >
+        <CategoryFilter contentType={contentType} onFilterChange={onFilterChange} />
       </FilterSectionComponent>
 
-      {isPropertyMode ? (
+      {/* Filtros específicos para imóveis */}
+      {contentType === 'property' && (
         <>
-          <FilterSectionComponent 
-            title="Tipo de imóvel" 
-            isExpanded={true} 
-            onToggle={() => {}}
+          <FilterSectionComponent
+            title="Tipo de imóvel"
+            isExpanded={expandedSections.propertyType}
+            onToggle={() => toggleSection('propertyType')}
+            testId="property-type-filter-section"
           >
-            <PropertyTypeFilter onFilterChange={onFilterChange} />
+            <PropertyTypeFilter contentType={contentType} onFilterChange={onFilterChange} />
           </FilterSectionComponent>
 
-          <FilterSectionComponent 
-            title="Área útil" 
-            isExpanded={true} 
-            onToggle={() => {}}
+          <FilterSectionComponent
+            title="Área útil"
+            isExpanded={expandedSections.usefulArea}
+            onToggle={() => toggleSection('usefulArea')}
+            testId="useful-area-filter-section"
           >
-            <UsefulAreaFilter onFilterChange={onFilterChange} />
+            <UsefulAreaFilter contentType={contentType} onFilterChange={onFilterChange} />
           </FilterSectionComponent>
         </>
-      ) : (
+      )}
+
+      {/* Filtros específicos para veículos */}
+      {contentType === 'vehicle' && (
         <>
-          <FilterSectionComponent 
-            title="Tipo de veículo" 
-            isExpanded={true} 
-            onToggle={() => {}}
+          <FilterSectionComponent
+            title="Tipo de veículo"
+            isExpanded={expandedSections.vehicleType}
+            onToggle={() => toggleSection('vehicleType')}
+            testId="vehicle-type-filter-section"
           >
-            <VehicleTypeFilter onFilterChange={onFilterChange} />
+            <VehicleTypeFilter contentType={contentType} onFilterChange={onFilterChange} />
           </FilterSectionComponent>
 
-          <FilterSectionComponent 
-            title="Características do veículo" 
-            isExpanded={true} 
-            onToggle={() => {}}
+          <FilterSectionComponent
+            title="Modelo"
+            isExpanded={expandedSections.model}
+            onToggle={() => toggleSection('model')}
+            testId="model-filter-section"
           >
-            <div className="space-y-4">
-              <ModelFilter onFilterChange={onFilterChange} />
-              <ColorFilter onFilterChange={onFilterChange} />
-              <YearRangeFilter onFilterChange={onFilterChange} />
-            </div>
+            <ModelFilter contentType={contentType} onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
+
+          <FilterSectionComponent
+            title="Cor"
+            isExpanded={expandedSections.color}
+            onToggle={() => toggleSection('color')}
+            testId="color-filter-section"
+          >
+            <ColorFilter contentType={contentType} onFilterChange={onFilterChange} />
+          </FilterSectionComponent>
+
+          <FilterSectionComponent
+            title="Ano"
+            isExpanded={expandedSections.year}
+            onToggle={() => toggleSection('year')}
+            testId="year-filter-section"
+          >
+            <YearRangeFilter contentType={contentType} onFilterChange={onFilterChange} />
           </FilterSectionComponent>
         </>
       )}
@@ -81,39 +124,19 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
 };
 
 /**
- * CommonFilters - Renders filter sections common to all content types
+ * Componente para filtro de preço (comum a ambos os tipos)
  */
-export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { expandedSections, toggleSection, filters } = useFilterStore();
-  const isPropertyMode = filters.contentType === 'property';
-  
-  return (
-    <>
-      <FilterSectionComponent 
-        title="Localização" 
-        isExpanded={true} 
-        onToggle={() => {}}
-      >
-        <LocationFilter onFilterChange={onFilterChange} />
-      </FilterSectionComponent>
-    </>
-  );
-};
+export const PriceFilter: React.FC<FilterSectionProps> = ({ contentType, onFilterChange }) => {
+  const { expandedSections, toggleSection } = useFilterStoreSelector(contentType);
 
-/**
- * PriceFilter - Renders the price filter section separately to position it at the end
- * This ensures it appears as the last filter in both property and vehicle modes
- */
-export const PriceFilter: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { expandedSections, toggleSection } = useFilterStore();
-  
   return (
-    <FilterSectionComponent 
-      title="Valor do lance atual" 
-      isExpanded={true} 
-      onToggle={() => {}}
+    <FilterSectionComponent
+      title="Preço"
+      isExpanded={expandedSections.price}
+      onToggle={() => toggleSection('price')}
+      testId="price-filter-section"
     >
-      <PriceRangeFilter onFilterChange={onFilterChange} />
+      <PriceRangeFilter contentType={contentType} onFilterChange={onFilterChange} />
     </FilterSectionComponent>
   );
 };
