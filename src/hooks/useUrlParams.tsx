@@ -119,7 +119,8 @@ export const useUrlParams = (contentType: ContentType) => {
       isInitialLoadRef.current = false;
       isUpdatingUrlRef.current = false;
     }
-  }, [filters, searchParams, setFilters, setSortOption, sortOption, toast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Removi todas as dependências para executar apenas uma vez, na montagem
   
   // Função para paginar e atualizar a URL
   const handlePageChange = (page: number) => {

@@ -25,7 +25,8 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     updateFilter('contentType', contentType);
     
     initialSetupDone.current = true;
-  }, [contentType, updateFilter]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contentType]); // Removido updateFilter das dependências para evitar loops
       
   return { 
     initialSetupDone: initialSetupDone.current,

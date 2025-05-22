@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import RangeFilter from './RangeFilter';
@@ -19,6 +19,7 @@ interface UsefulAreaFilterProps {
  */
 const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilterChange }) => {
   const { filters, updateFilter } = useFilterStoreSelector(contentType);
+  const initializationDone = useRef(false);
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -38,10 +39,12 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
   
   // Initialize with default values if empty - only on first mount
   useEffect(() => {
-    if (!filters.usefulArea.min && !filters.usefulArea.max) {
+    // Apenas inicializa uma vez, quando o componente monta
+    if (!initializationDone.current && !filters.usefulArea.min && !filters.usefulArea.max) {
       updateFilter('usefulArea', defaultValues);
+      initializationDone.current = true;
     }
-  }, [defaultValues, filters.usefulArea]); // Adicionar dependências para evitar loops
+  }, []); // Removi as dependências para evitar loops, usando ref para controlar
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
