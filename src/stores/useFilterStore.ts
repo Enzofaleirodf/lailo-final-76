@@ -51,13 +51,13 @@ const initialFilterState: FilterState = {
     min: '',
     max: ''
   },
-  brand: '',
-  model: '',
-  color: '',
-  format: '', // Valor inicial vazio (não selecionado)
-  origin: '', // Valor inicial vazio (não selecionado)
-  place: '', // Valor inicial vazio (não selecionado)
-  category: ''
+  brand: 'todas',
+  model: 'todos',
+  color: 'todas',
+  format: 'Leilão', // Default visual option changed from 'Todos' to 'Leilão'
+  origin: 'Todas',
+  place: 'Todas',
+  category: 'Todos' // Novo campo de categoria com valor padrão
 };
 
 // Define which filter sections are expanded by default
@@ -73,7 +73,7 @@ const initialExpandedSections: ExpandedSectionsState = {
   format: true,
   origin: true,
   place: true,
-  category: true 
+  category: true // Nova seção para categoria
 };
 
 // Valores padrão para os filtros de intervalo (simulando o que viria do banco)
@@ -106,39 +106,40 @@ const countActiveFilters = (filters: FilterState): number => {
   // Property types
   if (filters.propertyTypes.length > 0) count++;
   
-  // Price range - só contar se os valores forem significativamente diferentes dos padrões e não estiverem vazios
+  // Price range - só contar se os valores forem significativamente diferentes dos padrões
+  // Verificar se o valor mínimo e máximo são próximos dos padrões (com uma margem de tolerância)
   const isPriceDefault = 
     (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
     (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
   
-  if (!isPriceDefault && (filters.price.range.min !== '' || filters.price.range.max !== '')) count++;
+  if (!isPriceDefault) count++;
   
-  // Year range - só contar se os valores forem significativamente diferentes dos padrões e não estiverem vazios
+  // Year range - só contar se os valores forem significativamente diferentes dos padrões
   const isYearDefault = 
     (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
     (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
   
-  if (!isYearDefault && (filters.year.min !== '' || filters.year.max !== '')) count++;
+  if (!isYearDefault) count++;
   
-  // Useful area range - só contar se os valores forem significativamente diferentes dos padrões e não estiverem vazios
+  // Useful area range - só contar se os valores forem significativamente diferentes dos padrões
   const isAreaDefault = 
     (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
     (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
   
-  if (!isAreaDefault && (filters.usefulArea.min !== '' || filters.usefulArea.max !== '')) count++;
+  if (!isAreaDefault) count++;
   
   // Brand, model, color
-  if (filters.brand !== '') count++;
-  if (filters.model !== '') count++;
-  if (filters.color !== '') count++;
+  if (filters.brand !== 'todas') count++;
+  if (filters.model !== 'todos') count++;
+  if (filters.color !== 'todas') count++;
   
-  // Auction format, origin, place
-  if (filters.format !== '') count++; // Considerar vazio como inativo
-  if (filters.origin !== '') count++; // Considerar vazio como inativo
-  if (filters.place !== '') count++; // Considerar vazio como inativo
+  // Auction format, origin, place - Only count if different from visual defaults
+  if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
+  if (filters.origin !== 'Todas') count++;
+  if (filters.place !== 'Todas') count++;
 
-  // Category
-  if (filters.category !== '') count++;
+  // Category - conta se for diferente do padrão
+  if (filters.category !== 'Todos') count++;
   
   return count;
 };
@@ -169,19 +170,11 @@ export const useFilterStore = create<FilterStore>()(
             }
           }
           
-          // Se o tipo de conteúdo mudar, redefinir a categoria para vazio
+          // Se o tipo de conteúdo mudar, redefinir a categoria para "Todos"
           if (key === 'contentType') {
-            newFilters.category = '';
+            newFilters.category = 'Todos';
             newFilters.vehicleTypes = [];
             newFilters.propertyTypes = [];
-          }
-
-          // Se o formato mudar para Alienação Particular ou Venda Direta, 
-          // resetar etapa para vazio pois o filtro é inválido nestes casos
-          if (key === 'format') {
-            if (value === 'Alienação Particular' || value === 'Venda Direta') {
-              newFilters.place = '';
-            }
           }
 
           return { 
@@ -209,13 +202,6 @@ export const useFilterStore = create<FilterStore>()(
       setFilters: (newFilters) => {
         set((state) => {
           const updatedFilters = { ...state.filters, ...newFilters };
-          
-          // Garantir consistência: se o formato for Alienação Particular ou Venda Direta,
-          // etapa deve ser vazia pois o filtro é inválido nestes casos
-          if (updatedFilters.format === 'Alienação Particular' || updatedFilters.format === 'Venda Direta') {
-            updatedFilters.place = '';
-          }
-          
           return { 
             filters: updatedFilters, 
             activeFilters: countActiveFilters(updatedFilters),

@@ -1,12 +1,11 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { useFilterStore } from '@/stores/useFilterStore';
 import { ContentType } from '@/types/filters';
 import ContentTypeTabs from './ContentTypeTabs';
 import ActionButtons from './ActionButtons';
-
 interface MobileFilterBarProps {
-  contentType: ContentType;
   onFilterClick: () => void;
   onSortClick: () => void;
 }
@@ -16,14 +15,13 @@ interface MobileFilterBarProps {
  * Mantém consistência visual e comportamental entre diferentes tamanhos de tela
  */
 const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
-  contentType,
   onFilterClick,
   onSortClick
 }) => {
   return <div role="navigation" aria-label="Opções de filtro e ordenação" className="fixed top-0 left-0 right-0 z-30 w-full pt-4 pb-0 mt-0 bg-[#fbfbfc] px-2">
       <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white" aria-label="Barra de filtros para dispositivos móveis">
         {/* Abas de tipo de conteúdo (imóveis/veículos) com largura aumentada */}
-        <ContentTypeTabs contentType={contentType} />
+        <ContentTypeTabs />
         
         {/* Botões de ação (filtrar/ordenar) */}
         <ActionButtons onFilterClick={onFilterClick} onSortClick={onSortClick} />

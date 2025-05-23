@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview Utilitários para filtragem de leilões e propriedades
  * Contém funções especializadas para cada tipo de filtro
@@ -86,28 +87,6 @@ export const applyLocationFilter = <T extends GenericItem>(
 };
 
 /**
- * Aplica filtro de categoria aos itens
- * Mostra todos os itens se nenhuma categoria for selecionada
- */
-export const applyCategoryFilter = (items: any[], category: string): any[] => {
-  // Se não houver categoria selecionada, retorna todos os itens
-  if (!category || category === '' || category === 'Todos') {
-    return items;
-  }
-  
-  return items.filter(item => {
-    // Verificar se o item tem uma propriedade de categoria
-    const itemCategory = item.category || item.categoria;
-    
-    // Se o item não tiver categoria, mantemos ele visível
-    if (!itemCategory) return true;
-    
-    // Comparação case-insensitive para maior compatibilidade
-    return itemCategory.toLowerCase() === category.toLowerCase();
-  });
-};
-
-/**
  * Aplica filtros de formato, origem e etapa a uma lista de itens
  */
 export const applyAuctionMetadataFilters = <T extends GenericItem>(
@@ -118,8 +97,8 @@ export const applyAuctionMetadataFilters = <T extends GenericItem>(
 ): T[] => {
   let filteredItems = [...items];
   
-  // Aplicar filtro de formato, apenas se não for o valor padrão
-  if (format !== 'Todos') {
+  // Aplicar filtro de formato, apenas se não for o valor padrão visual
+  if (format !== 'Leilão') {
     filteredItems = filteredItems.filter(item => item.format === format);
   }
   

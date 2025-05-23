@@ -44,7 +44,7 @@ describe('FilterApplyButton', () => {
   });
   
   test('renderiza corretamente na versão desktop', () => {
-    render(<FilterApplyButton contentType="property" onApply={mockOnApply} />);
+    render(<FilterApplyButton onApply={mockOnApply} />);
     
     expect(screen.getByText('Aplicar filtros')).toBeInTheDocument();
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Aplicar filtros');
@@ -54,7 +54,7 @@ describe('FilterApplyButton', () => {
     // Alterar para modo mobile
     mockUseIsMobile.mockReturnValue(true);
     
-    render(<FilterApplyButton contentType="property" onApply={mockOnApply} />);
+    render(<FilterApplyButton onApply={mockOnApply} />);
     
     expect(screen.getByText('Aplicar')).toBeInTheDocument();
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Aplicar filtros');
@@ -75,14 +75,14 @@ describe('FilterApplyButton', () => {
       expandAllSections: jest.fn()
     });
     
-    render(<FilterApplyButton contentType="property" onApply={mockOnApply} />);
+    render(<FilterApplyButton onApply={mockOnApply} />);
     
     expect(screen.getByText('Aplicar filtros (3)')).toBeInTheDocument();
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Aplicar 3 filtros');
   });
   
   test('dispara evento e callback ao clicar', () => {
-    render(<FilterApplyButton contentType="property" onApply={mockOnApply} />);
+    render(<FilterApplyButton onApply={mockOnApply} />);
     
     fireEvent.click(screen.getByRole('button'));
     
@@ -95,7 +95,7 @@ describe('FilterApplyButton', () => {
   });
   
   test('aplica variante outline corretamente', () => {
-    render(<FilterApplyButton contentType="property" variant="outline" onApply={mockOnApply} />);
+    render(<FilterApplyButton variant="outline" onApply={mockOnApply} />);
     
     const button = screen.getByRole('button');
     expect(button).toHaveClass('bg-white');
@@ -103,7 +103,7 @@ describe('FilterApplyButton', () => {
   });
   
   test('aplica variante secondary corretamente', () => {
-    render(<FilterApplyButton contentType="property" variant="secondary" onApply={mockOnApply} />);
+    render(<FilterApplyButton variant="secondary" onApply={mockOnApply} />);
     
     const button = screen.getByRole('button');
     expect(button).toHaveClass('bg-gray-100');
@@ -111,7 +111,7 @@ describe('FilterApplyButton', () => {
   });
   
   test('aplica classes customizadas quando fornecidas', () => {
-    render(<FilterApplyButton contentType="property" className="custom-class" onApply={mockOnApply} />);
+    render(<FilterApplyButton className="custom-class" onApply={mockOnApply} />);
     
     expect(screen.getByRole('button')).toHaveClass('custom-class');
   });

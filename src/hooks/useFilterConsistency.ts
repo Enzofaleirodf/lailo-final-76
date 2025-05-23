@@ -1,6 +1,7 @@
 
 import { useCallback, useRef, useEffect } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
 import { FilterState } from '@/types/filters';
 
 export interface UseFilterConsistencyProps {
@@ -10,8 +11,8 @@ export interface UseFilterConsistencyProps {
 }
 
 /**
- * Hook que garante consistência de comportamento dos filtros entre desktop e mobile
- * Também fornece notificações sobre mudanças de filtros
+ * Hook that ensures filter behavior consistency between desktop and mobile
+ * Also provides notifications about filter changes
  */
 export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
   const { 
@@ -22,21 +23,21 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
   const { filters, lastUpdatedFilter } = useFilterStore();
   const prevFilterState = useRef(filters);
   
-  // Rastrear posição de rolagem para evitar saltos
+  // Track scroll position to prevent jumps
   const scrollPositionRef = useRef(0);
   
-  // Lidar com mudanças de filtro de forma consistente
+  // Handle filter changes consistently
   const handleFilterChange = useCallback(() => {
     if (onChange) {
       onChange();
     }
     
-    // Acionar eventos automaticamente apenas se a opção estiver habilitada
+    // Only trigger events automatically if option is enabled
     if (autoTriggerEvents) {
-      // Armazenar posição de rolagem antes de enviar evento
+      // Store scroll position before sending event
       scrollPositionRef.current = window.scrollY;
       
-      // Criar e despachar o evento filters:applied
+      // Create and dispatch the filters:applied event
       const event = new CustomEvent('filters:applied', {
         detail: { 
           scrollPosition: scrollPositionRef.current,
@@ -44,27 +45,26 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
         }
       });
       
-      // Pequeno atraso para garantir que a posição de rolagem seja capturada corretamente
+      // Small delay to ensure scroll position is captured correctly
       setTimeout(() => {
         window.dispatchEvent(event);
       }, 10);
     }
   }, [onChange, autoTriggerEvents]);
   
-  // Armazenar estado anterior do filtro para comparação
+  // Store previous filter state for comparison
   useEffect(() => {
     prevFilterState.current = filters;
   }, [filters]);
   
-  // Função de limpeza para quaisquer listeners
+  // Cleanup function for any listeners
   const cleanup = useCallback(() => {
-    // Adicionar lógica de limpeza aqui, se necessário
+    // Add cleanup logic here if needed
   }, []);
   
-  // Retornar funções e valores
+  // Return functions and values
   return {
     handleFilterChange,
     cleanup
   };
 };
-

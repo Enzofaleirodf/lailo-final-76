@@ -1,66 +1,134 @@
 
-import React, { useCallback, useMemo } from 'react';
-import FilterDropdown from './FilterDropdown';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import React, { useId } from 'react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useFilterStore } from '@/stores/useFilterStore';
 import { ContentType } from '@/types/filters';
-import { getCategories } from '@/utils/categoryTypeMapping';
+import { Label } from "@/components/ui/label";
+import { getVehicleCategories, getPropertyCategories } from '@/utils/filterUtils';
+import { 
+  Car, 
+  Home, 
+  Plane, 
+  Ship, 
+  Truck, 
+  Tractor, 
+  Bike, 
+  CircleDashed, 
+  Building, 
+  Mountain, 
+  Hotel,
+  Warehouse,
+  Caravan,
+  Forklift
+} from 'lucide-react';
 
 interface CategoryFilterProps {
-  contentType: ContentType;
-  onFilterChange?: () => void;
+  onFilterChange: () => void;
 }
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStoreSelector(contentType);
+const CategoryFilter: React.FC<CategoryFilterProps> = ({ onFilterChange }) => {
+  const { filters, updateFilter } = useFilterStore();
+  const { contentType, category } = filters;
+  const id = useId();
+
+  // Determinar opções de categoria baseadas no tipo de conteúdo
+  let categoryOptions = contentType === 'property' 
+    ? getPropertyCategories()
+    : getVehicleCategories();
+    
+  // Ordenar alfabeticamente - mas manter "Todos" no início
+  const todosIndex = categoryOptions.indexOf('Todos');
+  if (todosIndex > -1) {
+    categoryOptions.splice(todosIndex, 1);
+  }
   
-  // Obter opções de categoria com base no tipo de conteúdo
-  const categoryOptions = useMemo(() => {
-    const categories = getCategories(contentType);
-    return [
-      { value: '', label: 'Selecione uma categoria' },
-      ...categories.map(category => ({
-        value: category,
-        label: category
-      }))
-    ];
-  }, [contentType]);
-  
-  const handleCategoryChange = useCallback((value: string) => {
+  categoryOptions.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  categoryOptions.unshift('Todos');
+
+  const handleCategoryChange = (value: string) => {
     updateFilter('category', value);
     
-    // Se estamos mudando a categoria, resetar tipos dependentes
-    if (contentType === 'property') {
-      updateFilter('propertyTypes', []);
-    } else {
-      updateFilter('vehicleTypes', []);
-      updateFilter('brand', '');
-      updateFilter('model', '');
+    // Automaticamente seleciona o tipo "Todos" da categoria escolhida
+    if (contentType === 'vehicle') {
+      updateFilter('vehicleTypes', ['Todos']);
+    } else if (contentType === 'property') {
+      updateFilter('propertyTypes', ['Todos']);
     }
     
-    // Notificar componente pai que o filtro mudou
     if (onFilterChange) {
       onFilterChange();
     }
-  }, [updateFilter, contentType, onFilterChange]);
-  
+  };
+
+  // Função para obter ícone correspondente a cada categoria
+  const getIconForCategory = (categoryName: string) => {
+    if (contentType === 'property') {
+      switch(categoryName) {
+        case 'Comerciais': return Building;
+        case 'Hospedagens': return Hotel;
+        case 'Industriais': return Warehouse;
+        case 'Residenciais': return Home;
+        case 'Rurais': return Mountain;
+        case 'Todos': return CircleDashed;
+        default: return CircleDashed;
+      }
+    } else {
+      switch(categoryName) {
+        case 'Aéreos': return Plane;
+        case 'Náuticos': return Ship;
+        case 'Leves': return Car;
+        case 'Pesados': return Truck;
+        case 'Máquinas Agrícolas': return Tractor;
+        case 'Recreativos': return Bike;
+        case 'Auxiliares': return Caravan;
+        case 'Máquinas de Construção': return Forklift;
+        case 'Todos': return CircleDashed;
+        default: return CircleDashed;
+      }
+    }
+  };
+
   return (
-    <div 
-      role="group" 
-      aria-labelledby="category-filter-label"
-    >
-      <label id="category-filter-label" htmlFor="category-filter" className="block text-sm font-medium text-gray-700 mb-1">
-        Categoria
-      </label>
-      <FilterDropdown
-        id="category-filter"
-        aria-label="Selecione a categoria"
-        value={filters.category}
-        onChange={handleCategoryChange}
-        options={categoryOptions}
-        placeholder="Selecione uma categoria"
-      />
+    <div className="space-y-3">
+      <RadioGroup 
+        value={category || categoryOptions[0]} 
+        onValueChange={handleCategoryChange}
+        className="grid-cols-3 w-full"
+        aria-label="Selecione uma categoria"
+      >
+        {categoryOptions.map((option) => {
+          const Icon = getIconForCategory(option);
+          
+          return (
+            <div
+              key={`${id}-${option}`}
+              className="relative flex flex-col gap-2 rounded-lg border border-gray-200 p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50"
+            >
+              <div className="flex justify-between gap-2">
+                <RadioGroupItem 
+                  id={`${id}-${option}`} 
+                  value={option}
+                  className="order-1 after:absolute after:inset-0"
+                />
+                <Icon 
+                  className="opacity-60" 
+                  size={18} 
+                  strokeWidth={2} 
+                  aria-hidden="true" 
+                />
+              </div>
+              <Label 
+                htmlFor={`${id}-${option}`}
+                className="text-sm font-normal cursor-pointer text-xs"
+              >
+                {option}
+              </Label>
+            </div>
+          );
+        })}
+      </RadioGroup>
     </div>
   );
 };
 
-export default React.memo(CategoryFilter);
+export default CategoryFilter;

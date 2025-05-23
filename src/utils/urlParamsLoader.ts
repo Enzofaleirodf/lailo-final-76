@@ -2,7 +2,7 @@
 /**
  * @fileoverview Funções para carregar valores de filtro da URL
  */
-import { FilterState, FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+import { FilterState } from '@/types/filters';
 import { defaultRangeValues } from '@/stores/useFilterStore';
 import { isValidFormat, isValidOrigin, isValidPlace } from './urlParamsValidator';
 
@@ -214,8 +214,7 @@ const loadAuctionParams = (
   if (searchParams.has('format')) {
     const format = searchParams.get('format');
     if (isValidFormat(format) && format !== 'Leilão') {
-      // Usar type assertion para garantir que o tipo é compatível
-      newFilters.format = format as FilterFormat;
+      newFilters.format = format;
       hasChanges = true;
     }
   }
@@ -224,7 +223,7 @@ const loadAuctionParams = (
   if (searchParams.has('origin')) {
     const origin = searchParams.get('origin');
     if (isValidOrigin(origin) && origin !== 'Todas') {
-      newFilters.origin = origin as FilterOrigin;
+      newFilters.origin = origin;
       hasChanges = true;
     }
   }
@@ -233,7 +232,7 @@ const loadAuctionParams = (
   if (searchParams.has('place')) {
     const place = searchParams.get('place');
     if (isValidPlace(place) && place !== 'Todas') {
-      newFilters.place = place as FilterPlace;
+      newFilters.place = place;
       hasChanges = true;
     }
   }

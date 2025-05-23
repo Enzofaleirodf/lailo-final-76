@@ -1,63 +1,74 @@
 
-import React, { useCallback, useMemo } from 'react';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
-import VirtualizedFilterOptions from './VirtualizedFilterOptions';
-import { ChevronDown } from 'lucide-react';
+import React, { useCallback, useId } from 'react';
+import { useFilterStore } from '@/stores/useFilterStore';
 import { getTypesByCategory } from '@/utils/categoryTypeMapping';
-import { ContentType } from '@/types/filters';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface PropertyTypeFilterProps {
-  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
-const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({ contentType, onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStoreSelector(contentType);
-  
-  // Obter tipos de propriedade com base na categoria selecionada
-  const typeOptions = useMemo(() => {
-    return getTypesByCategory(filters.category, 'property');
-  }, [filters.category]);
-  
-  const isDisabled = !filters.category;
-  
-  const handleSelectType = useCallback((type: string) => {
-    let newTypes: string[];
-    
-    if (filters.propertyTypes.includes(type)) {
-      // Se o tipo já está selecionado, remova-o
-      newTypes = filters.propertyTypes.filter(t => t !== type);
-    } else {
-      // Caso contrário, adicione-o
-      newTypes = [...filters.propertyTypes, type];
-    }
-    
-    updateFilter('propertyTypes', newTypes);
-    
-    // Notificar componente pai sobre a mudança
+const PropertyTypeFilter: React.FC<PropertyTypeFilterProps> = ({
+  onFilterChange
+}) => {
+  const id = useId();
+  const {
+    filters,
+    updateFilter
+  } = useFilterStore();
+  const {
+    category,
+    contentType
+  } = filters;
+
+  // Obter os tipos de imóvel disponíveis para a categoria selecionada
+  let availableTypes = getTypesByCategory(category, 'property');
+
+  // Ordenar alfabeticamente
+  if (availableTypes.includes('Todos')) {
+    const todosIndex = availableTypes.indexOf('Todos');
+    availableTypes.splice(todosIndex, 1);
+    availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    availableTypes.unshift('Todos');
+  } else {
+    availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }
+
+  const handlePropertyTypeChange = useCallback((value: string) => {
+    // Convert to array with single value for compatibility with existing filter logic
+    updateFilter('propertyTypes', value ? [value] : []);
+
+    // Notify parent component that filter has changed
     if (onFilterChange) {
       onFilterChange();
     }
-  }, [filters.propertyTypes, updateFilter, onFilterChange]);
-  
+  }, [updateFilter, onFilterChange]);
+
+  // Get the current single value from the array
+  const currentValue = filters.propertyTypes && filters.propertyTypes.length > 0 ? filters.propertyTypes[0] : '';
+
+  // Não mostrar nada se não houver categoria selecionada ou se estivermos no modo veículo
+  // Ou se a categoria for 'Todos'
+  if (contentType !== 'property' || !category || category === 'Todos') {
+    return null;
+  }
+
   return (
-    <div className="space-y-2">
-      {isDisabled ? (
-        <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
-          Escolha uma categoria antes
-          <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
-        </div>
-      ) : (
-        <VirtualizedFilterOptions
-          options={typeOptions}
-          selectedOptions={filters.propertyTypes}
-          onSelectOption={handleSelectType}
-          placeholder="Selecione os tipos"
-          maxHeight={200}
-          testId="property-type-filter-options"
-        />
-      )}
-    </div>
+    <fieldset className="space-y-4">
+      <RadioGroup className="flex flex-wrap gap-2" value={currentValue} onValueChange={handlePropertyTypeChange}>
+        {availableTypes.map(type => (
+          <div key={`${id}-${type}`} className="relative flex flex-col items-start gap-2 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-purple-300 has-[[data-state=checked]]:bg-purple-50">
+            <div className="flex items-center gap-2">
+              <RadioGroupItem id={`${id}-${type}`} value={type} className="after:absolute after:inset-0" />
+              <Label htmlFor={`${id}-${type}`} className="text-xs font-normal cursor-pointer" aria-label={`Filtrar por ${type}`}>
+                {type}
+              </Label>
+            </div>
+          </div>
+        ))}
+      </RadioGroup>
+    </fieldset>
   );
 };
 

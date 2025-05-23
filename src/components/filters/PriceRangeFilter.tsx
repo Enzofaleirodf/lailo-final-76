@@ -1,30 +1,24 @@
 
 import React, { useCallback, useEffect } from 'react';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
-import { ContentType } from '@/types/filters';
-import { defaultRangeValues as propertyDefaultRangeValues } from '@/stores/usePropertyFiltersStore';
-import { defaultRangeValues as vehicleDefaultRangeValues } from '@/stores/useVehicleFiltersStore';
 
 interface PriceRangeFilterProps {
-  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
-const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStoreSelector(contentType);
+const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ onFilterChange }) => {
+  const { filters, updateFilter } = useFilterStore();
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
     onChange: onFilterChange
   });
   
-  // Obter valores padrão corretos com base no tipo de conteúdo
-  const defaultValues = contentType === 'property' ? 
-    propertyDefaultRangeValues.price : 
-    vehicleDefaultRangeValues.price;
+  // Define default values (mocado - normalmente viria do banco)
+  const defaultValues = defaultRangeValues.price;
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
@@ -43,7 +37,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ contentType, onFilt
         range: defaultValues
       });
     }
-  }, [defaultValues, filters.price]); // Adicionar dependências para evitar loops
+  }, []);
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 

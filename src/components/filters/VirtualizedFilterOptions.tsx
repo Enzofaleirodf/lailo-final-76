@@ -13,21 +13,15 @@ interface FilterItem {
 }
 
 interface VirtualizedFilterOptionsProps {
-  items?: FilterItem[];
-  options?: string[]; // Para compatibilidade com chamadas antigas
-  selectedItems?: string[];
-  selectedOptions?: string[]; // Para compatibilidade com chamadas antigas
-  onChange?: (selectedItems: string[]) => void;
-  onSelectOption?: (option: string) => void; // Para compatibilidade com chamadas antigas
-  title?: string;
+  items: FilterItem[];
+  selectedItems: string[];
+  onChange: (selectedItems: string[]) => void;
+  title: string;
   emptyMessage?: string;
   searchPlaceholder?: string;
   className?: string;
   allowSearch?: boolean;
   itemHeight?: number;
-  placeholder?: string;
-  maxHeight?: number;
-  testId?: string; // Adicionado para suportar testId
 }
 
 /**
@@ -35,36 +29,18 @@ interface VirtualizedFilterOptionsProps {
  * Usa virtualização para melhor desempenho e inclui pesquisa
  */
 const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
-  items: propItems,
-  options,
-  selectedItems: propSelectedItems,
-  selectedOptions,
+  items,
+  selectedItems,
   onChange,
-  onSelectOption,
-  title = "",
+  title,
   emptyMessage = "Nenhuma opção disponível",
   searchPlaceholder = "Pesquisar...",
   className = "",
   allowSearch = true,
   itemHeight = 36,
-  placeholder,
-  maxHeight = 220,
-  testId
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Converter options para o formato de items se necessário
-  const items = React.useMemo(() => {
-    if (propItems) return propItems;
-    return (options || []).map(option => ({
-      id: option,
-      label: option
-    }));
-  }, [propItems, options]);
-  
-  // Usar selectedItems ou selectedOptions conforme o que for fornecido
-  const selectedItemIds = propSelectedItems || selectedOptions || [];
   
   // Filtra itens com base no termo de pesquisa
   const filteredItems = React.useMemo(() => {
@@ -78,22 +54,18 @@ const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
   
   // Manipular mudança de seleção
   const handleItemChange = useCallback((itemId: string, checked: boolean) => {
-    if (onChange) {
-      if (checked) {
-        onChange([...selectedItemIds, itemId]);
-        
-        // Anunciar para leitores de tela
-        announceSelectionChange(items.find(i => i.id === itemId)?.label || '', true);
-      } else {
-        onChange(selectedItemIds.filter(id => id !== itemId));
-        
-        // Anunciar para leitores de tela
-        announceSelectionChange(items.find(i => i.id === itemId)?.label || '', false);
-      }
-    } else if (onSelectOption) {
-      onSelectOption(itemId);
+    if (checked) {
+      onChange([...selectedItems, itemId]);
+      
+      // Anunciar para leitores de tela
+      announceSelectionChange(items.find(i => i.id === itemId)?.label || '', true);
+    } else {
+      onChange(selectedItems.filter(id => id !== itemId));
+      
+      // Anunciar para leitores de tela
+      announceSelectionChange(items.find(i => i.id === itemId)?.label || '', false);
     }
-  }, [selectedItemIds, onChange, onSelectOption, items]);
+  }, [selectedItems, onChange, items]);
   
   // Manipular pesquisa
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +83,7 @@ const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
   
   // Renderizar item individual
   const renderItem = useCallback((item: FilterItem) => {
-    const isSelected = selectedItemIds.includes(item.id);
+    const isSelected = selectedItems.includes(item.id);
     const itemId = `filter-option-${item.id}`;
     
     return (
@@ -134,7 +106,7 @@ const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
         </Label>
       </div>
     );
-  }, [selectedItemIds, handleItemChange]);
+  }, [selectedItems, handleItemChange]);
   
   // Anunciar mudanças para leitores de tela
   const announceSelectionChange = (label: string, isSelected: boolean) => {
@@ -182,9 +154,8 @@ const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
       className={cn("filter-options-container", className)} 
       role="region"
       aria-labelledby="filter-options-heading"
-      data-testid={testId}
     >
-      {title && <h3 id="filter-options-heading" className="text-sm font-medium mb-2">{title}</h3>}
+      <h3 id="filter-options-heading" className="text-sm font-medium mb-2">{title}</h3>
       
       {/* Barra de pesquisa */}
       {allowSearch && (
@@ -204,7 +175,7 @@ const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
       {/* Lista virtualizada de opções */}
       <div 
         className="mt-2 border border-gray-200 rounded bg-white" 
-        style={{ height: `${maxHeight}px` }}
+        style={{ height: '220px' }}
       >
         {isLoading ? (
           <div className="flex items-center justify-center h-full text-sm text-gray-500">
@@ -227,8 +198,8 @@ const VirtualizedFilterOptions: React.FC<VirtualizedFilterOptionsProps> = ({
       
       {/* Status da seleção para feedback do usuário */}
       <div className="mt-1 text-xs text-right text-gray-500">
-        {selectedItemIds.length > 0 ? (
-          <span>{selectedItemIds.length} {selectedItemIds.length === 1 ? 'selecionado' : 'selecionados'}</span>
+        {selectedItems.length > 0 ? (
+          <span>{selectedItems.length} {selectedItems.length === 1 ? 'selecionado' : 'selecionados'}</span>
         ) : null}
       </div>
     </div>

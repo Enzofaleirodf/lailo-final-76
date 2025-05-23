@@ -41,7 +41,7 @@ const EmptyStateMessage: React.FC<EmptyStateMessageProps> = ({
       </div>
       
       <h3 className="text-lg font-medium text-gray-900 mb-1">
-        Nenhum leilão encontrado
+        Nenhum {contentTypeLabel} encontrado
       </h3>
       
       <p className="text-gray-500 mb-4">

@@ -1,12 +1,10 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterStore } from '@/stores/useFilterStore';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ContentType } from '@/types/filters';
 
 interface FilterApplyButtonProps {
-  contentType: ContentType;
   onApply?: () => void;
   className?: string;
   variant?: 'default' | 'outline' | 'secondary';
@@ -18,12 +16,11 @@ interface FilterApplyButtonProps {
  * Implementa acessibilidade aprimorada
  */
 const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
-  contentType,
   onApply,
   className = '',
   variant = 'default'
 }) => {
-  const { activeFilters } = useFilterStoreSelector(contentType);
+  const { activeFilters } = useFilterStore();
   const isMobile = useIsMobile();
   
   const handleClick = () => {

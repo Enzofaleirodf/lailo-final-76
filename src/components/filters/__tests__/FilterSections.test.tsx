@@ -94,14 +94,14 @@ describe('FilterSections', () => {
   
   describe('ContentTypeFilters', () => {
     it('renders category filter for all content types', () => {
-      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} contentType="property" />);
+      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} />);
       
       expect(screen.getByText('Categoria')).toBeInTheDocument();
       expect(screen.getByTestId('category-filter')).toBeInTheDocument();
     });
     
     it('renders property filters when content type is property', () => {
-      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} contentType="property" />);
+      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} />);
       
       expect(screen.getByText('Tipo de imóvel')).toBeInTheDocument();
       expect(screen.getByText('Área útil')).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('FilterSections', () => {
         },
       });
       
-      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} contentType="vehicle" />);
+      render(<ContentTypeFilters onFilterChange={mockOnFilterChange} />);
       
       expect(screen.getByText('Categoria')).toBeInTheDocument();
       expect(screen.getByText('Tipo de veículo')).toBeInTheDocument();
@@ -130,7 +130,7 @@ describe('FilterSections', () => {
   
   describe('CommonFilters', () => {
     it('renders common filter sections', () => {
-      render(<CommonFilters onFilterChange={mockOnFilterChange} contentType="property" />);
+      render(<CommonFilters onFilterChange={mockOnFilterChange} />);
       
       expect(screen.getByText('Localização')).toBeInTheDocument();
       expect(screen.getByText('Valor do lance')).toBeInTheDocument();
@@ -149,7 +149,7 @@ describe('FilterSections', () => {
         },
       });
       
-      render(<CommonFilters onFilterChange={mockOnFilterChange} contentType="property" />);
+      render(<CommonFilters onFilterChange={mockOnFilterChange} />);
       
       expect(screen.getByTestId('location-filter')).toBeInTheDocument();
       expect(screen.getByTestId('price-filter')).toBeInTheDocument();

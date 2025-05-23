@@ -22,7 +22,7 @@ const AuctionList: React.FC = () => {
   const { filters } = useFilterStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const { handlePageChange } = useUrlParams(filters.contentType); // Adicionado o parâmetro contentType
+  const { handlePageChange } = useUrlParams();
 
   // Usar nosso novo hook personalizado para gerenciar itens
   const {

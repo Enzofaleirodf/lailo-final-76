@@ -3,12 +3,11 @@ import React, { useCallback } from 'react';
 import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ContentType } from '@/types/filters';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
 import { useNavigate } from 'react-router-dom';
 
 interface ContentTypeTabsProps {
-  contentType: ContentType;
   onTabChange?: (tab: ContentType) => void;
 }
 
@@ -16,13 +15,17 @@ interface ContentTypeTabsProps {
  * Componente de abas para alternar entre tipos de conteúdo (imóveis/veículos)
  * Mantém consistência visual e comportamental entre desktop e mobile
  */
-const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabChange }) => {
+const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
+  const { filters, updateFilter } = useFilterStore();
   const { getButtonSizeClass, getIconSize } = useScreenUtils();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Add navigation hook
   
-  // Alternar tipo de conteúdo (imóveis/veículos)
+  // Alterar tipo de conteúdo (imóveis/veículos)
   const handleTabChange = useCallback((tab: ContentType) => {
-    if (contentType === tab) return;
+    if (filters.contentType === tab) return;
+    
+    // Update the filter store
+    updateFilter('contentType', tab);
     
     // Navigate to the appropriate page based on content type
     if (tab === 'property') {
@@ -37,11 +40,11 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
     
     // Callback opcional
     if (onTabChange) onTabChange(tab);
-  }, [contentType, onTabChange, navigate]);
+  }, [filters.contentType, updateFilter, onTabChange, navigate]);
   
   // Definir atributos aria para acessibilidade
   const getTabAttributes = (type: ContentType) => {
-    const isSelected = contentType === type;
+    const isSelected = filters.contentType === type;
     
     return {
       role: "tab",
@@ -93,7 +96,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
         className={cn(
           getButtonSizeClass(),
           "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
-          contentType === 'property' 
+          filters.contentType === 'property' 
             ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
             : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
         )} 
@@ -110,7 +113,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabCha
         className={cn(
           getButtonSizeClass(),
           "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
-          contentType === 'vehicle' 
+          filters.contentType === 'vehicle' 
             ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
             : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
         )} 

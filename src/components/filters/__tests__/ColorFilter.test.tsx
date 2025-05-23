@@ -5,7 +5,6 @@ import '@testing-library/jest-dom';
 import ColorFilter from '../ColorFilter';
 import * as filterStoreModule from '@/stores/useFilterStore';
 import * as filterConsistencyModule from '@/hooks/useFilterConsistency';
-import { mockFilterComponentProps } from './mockFilterProps';
 
 // Mock the dependencies
 jest.mock('@/stores/useFilterStore');
@@ -45,7 +44,7 @@ describe('ColorFilter', () => {
   });
 
   test('renders color dropdown with correct options', () => {
-    render(<ColorFilter {...mockFilterComponentProps} />);
+    render(<ColorFilter />);
     
     // Check dropdown is rendered
     const dropdown = screen.getByLabelText('Selecione a cor');
@@ -59,7 +58,7 @@ describe('ColorFilter', () => {
   });
 
   test('selects color correctly', () => {
-    render(<ColorFilter {...mockFilterComponentProps} />);
+    render(<ColorFilter onFilterChange={mockOnFilterChange} />);
     
     // Get the dropdown
     const dropdown = screen.getByLabelText('Selecione a cor');
@@ -73,7 +72,7 @@ describe('ColorFilter', () => {
   });
 
   test('maintains accessibility requirements', () => {
-    render(<ColorFilter {...mockFilterComponentProps} />);
+    render(<ColorFilter />);
     
     const dropdown = screen.getByRole('combobox');
     expect(dropdown).toBeInTheDocument();
@@ -102,7 +101,7 @@ describe('ColorFilter', () => {
       expandAllSections: jest.fn()
     });
     
-    render(<ColorFilter {...mockFilterComponentProps} />);
+    render(<ColorFilter />);
     
     // Check if dropdown shows the correct selected value
     const dropdown = screen.getByLabelText('Selecione a cor') as HTMLSelectElement;

@@ -45,16 +45,3 @@ export const getTypesByCategory = (category: string, contentType: 'property' | '
     return propertyCategoryToTypesMap[category] || ['Todos'];
   }
 };
-
-/**
- * Função para obter as categorias disponíveis com base no tipo de conteúdo
- * @param contentType Tipo de conteúdo ('property' ou 'vehicle')
- * @returns Array de categorias disponíveis
- */
-export const getCategories = (contentType: 'property' | 'vehicle'): string[] => {
-  if (contentType === 'property') {
-    return Object.keys(propertyCategoryToTypesMap);
-  } else {
-    return Object.keys(vehicleCategoryToTypesMap);
-  }
-};

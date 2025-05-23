@@ -3,26 +3,21 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
 import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import { ContentType } from '@/types/filters';
-
-interface FilterContentProps {
-  contentType: ContentType;
-}
 
 /**
  * FilterContent - Principal componente que renderiza todas as seções de filtros
  * Mantém consistência visual e comportamental entre desktop e mobile
  */
-const FilterContent: React.FC<FilterContentProps> = ({ contentType }) => {
+const FilterContent: React.FC = () => {
   const {
     resetFilters,
     activeFilters,
     expandAllSections
-  } = useFilterStoreSelector(contentType);
+  } = useFilterStore();
   
   const isMobile = useIsMobile();
 
@@ -63,24 +58,24 @@ const FilterContent: React.FC<FilterContentProps> = ({ contentType }) => {
       aria-label="Filtros de busca"
     >
       {/* Seleção de tipo de filtro para mobile - mostrada apenas em mobile */}
-      {isMobile && <MobileFilterOptions contentType={contentType} />}
+      {isMobile && <MobileFilterOptions />}
 
       <FilterWrapper>
         {/* Filtros comuns - localização */}
-        <CommonFilters contentType={contentType} onFilterChange={() => {}} />
+        <CommonFilters onFilterChange={() => {}} />
 
         {/* Filtros condicionais com base no tipo de conteúdo */}
-        <ContentTypeFilters contentType={contentType} onFilterChange={() => {}} />
+        <ContentTypeFilters onFilterChange={() => {}} />
         
         {/* Filtro de preço sempre mostrado por último */}
-        <PriceFilter contentType={contentType} onFilterChange={() => {}} />
+        <PriceFilter onFilterChange={() => {}} />
       </FilterWrapper>
 
       {/* Botão de resetar filtros - mesma aparência visual para desktop e mobile */}
       <div className="mt-4 flex flex-col gap-2">
         <Button 
           variant="outline" 
-          className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors font-urbanist" 
+          className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 transition-colors font-urbanist" 
           onClick={handleResetFilters} 
           aria-label="Resetar todos os filtros"
           data-testid="reset-filters-button"

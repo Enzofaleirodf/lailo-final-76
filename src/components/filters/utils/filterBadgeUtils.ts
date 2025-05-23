@@ -1,3 +1,4 @@
+
 import { FilterState, PriceRangeFilter } from '@/types/filters';
 import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 
@@ -174,7 +175,7 @@ export const createFormatBadge = (
   format: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!format || format === '') return null;
+  if (!format || format === 'Todos') return null;
   
   return {
     key: 'format',

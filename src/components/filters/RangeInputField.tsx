@@ -99,6 +99,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
   const getBorderStyle = () => {
     if (isError) return 'border-red-500 focus-visible:ring-red-500';
     if (isFocused) return 'border-brand-500 focus-visible:ring-brand-500';
+    if (isActive) return 'border-purple-300 focus-visible:ring-brand-500'; // Borda roxa para filtros ativos
     return 'border-gray-300 focus-visible:ring-brand-500';
   };
   

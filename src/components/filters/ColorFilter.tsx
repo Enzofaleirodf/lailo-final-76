@@ -1,17 +1,15 @@
 
 import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
+import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import { ContentType } from '@/types/filters';
 
 interface ColorFilterProps {
-  contentType: ContentType;
   onFilterChange?: () => void;
 }
 
 const colorOptions = [
-  { value: '', label: 'Selecione uma cor' },
+  { value: 'todas', label: 'Todas' },
   { value: 'preto', label: 'Preto' },
   { value: 'branco', label: 'Branco' },
   { value: 'prata', label: 'Prata' },
@@ -24,8 +22,8 @@ const colorOptions = [
  * Permite ao usuário selecionar cores para filtragem
  * Mantém consistência visual e comportamental entre desktop e mobile
  */
-const ColorFilter: React.FC<ColorFilterProps> = ({ contentType, onFilterChange }) => {
-  const { filters, updateFilter } = useFilterStoreSelector(contentType);
+const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
+  const { filters, updateFilter } = useFilterStore();
   
   // Use our new hook to ensure filter consistency
   const { handleFilterChange } = useFilterConsistency({
@@ -50,11 +48,10 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ contentType, onFilterChange }
       <FilterDropdown
         id="color-filter"
         aria-label="Selecione a cor"
-        value={filters.color}
+        value={filters.color || 'todas'}
         onChange={handleColorChange}
         options={colorOptions}
         className="border-gray-300 font-urbanist"
-        placeholder="Selecione uma cor"
       />
     </div>
   );

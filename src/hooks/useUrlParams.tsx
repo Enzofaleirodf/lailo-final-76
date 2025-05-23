@@ -1,22 +1,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useFilterStore } from '@/stores/useFilterStore';
 import { useSortStore } from '@/stores/useSortStore';
 import { useIsMobile } from './use-mobile';
 import { updateUrlParams, loadFiltersFromUrl } from '@/utils/urlUtils';
 import { useScrollRestoration } from './useScrollRestoration';
 import { useUrlParamsValidator } from './useUrlParamsValidator';
 import { useToast } from './use-toast';
-import { ContentType, FilterState } from '@/types/filters';
+import { FilterState } from '@/types/filters';
 import { isEqual } from 'lodash';
-import { useFilterStoreSelector } from './useFilterStoreSelector';
 
 /**
  * Hook personalizado para sincronizar estado de filtro e classificação com parâmetros de URL
  */
-export const useUrlParams = (contentType: ContentType) => {
+export const useUrlParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { filters, setFilters } = useFilterStoreSelector(contentType);
+  const { filters, setFilters } = useFilterStore();
   const { sortOption, setSortOption } = useSortStore();
   const isMobile = useIsMobile();
   const { toast } = useToast();

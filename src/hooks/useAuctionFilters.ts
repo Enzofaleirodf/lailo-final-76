@@ -13,8 +13,7 @@ import {
   applyAuctionMetadataFilters,
   applyPropertyFilters,
   applyVehicleFilters,
-  sortItems,
-  applyCategoryFilter
+  sortItems
 } from '@/utils/auctionFilterUtils';
 
 /**
@@ -33,11 +32,6 @@ export const useAuctionFilters = (
     
     // Começamos com todos os itens
     let items = [...rawItems];
-    
-    // Aplicar filtro de categoria somente se uma categoria for selecionada
-    if (filters.category && filters.category !== '') {
-      items = applyCategoryFilter(items, filters.category);
-    }
     
     // Aplicar filtros comuns
     items = applyPriceFilter(
@@ -68,9 +62,6 @@ export const useAuctionFilters = (
     
     // Aplicar ordenação
     items = sortItems(items, sortOption);
-    
-    // Log para debug da filtragem de categorias
-    console.log(`[Filtros] Categoria aplicada: ${filters.category || 'Nenhuma'}, Itens restantes: ${items.length}`);
     
     return items;
   }, [rawItems, filters, sortOption]);

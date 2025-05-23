@@ -14,7 +14,7 @@ import {
   createPlaceBadge,
   generateFilterBadges
 } from '../utils/filterBadgeUtils';
-import { ContentType, FilterState, FilterFormat } from '@/types/filters';
+import { ContentType, FilterState } from '@/types/filters';
 
 describe('Filter Badge Utilities', () => {
   const mockOnRemove = jest.fn();
@@ -98,7 +98,7 @@ describe('Filter Badge Utilities', () => {
         brand: 'Toyota',
         model: 'Corolla',
         color: 'Preta',
-        format: 'Leilão' as FilterFormat,
+        format: 'Leilão',
         origin: 'Judicial',
         place: '2ª Praça',
         category: 'Todos'
@@ -138,7 +138,7 @@ describe('Filter Badge Utilities', () => {
         brand: 'todas',
         model: 'todos',
         color: 'todas',
-        format: '' as FilterFormat,
+        format: 'Todos',
         origin: 'Todas',
         place: 'Todas',
         category: 'Todos'
@@ -160,7 +160,7 @@ describe('Filter Badge Utilities', () => {
         brand: 'todas',
         model: 'todos',
         color: 'todas',
-        format: '' as FilterFormat,
+        format: 'Todos',
         origin: 'Todas',
         place: 'Todas',
         category: 'Todos'

@@ -1,89 +1,104 @@
 
-import React from 'react';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
-import FilterSectionComponent from './FilterSectionComponent';
-import { ContentType, FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+/**
+ * @fileoverview Componente de opções de filtros para dispositivos móveis
+ * Renderiza as seções de filtros específicas para o modo mobile,
+ * garantindo consistência visual e comportamental com a versão desktop
+ */
+import React, { memo, useCallback } from 'react';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import FilterDropdown from './FilterDropdown';
-import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
-
-interface MobileFilterOptionsProps {
-  contentType: ContentType;
-}
+import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
+import { 
+  formatOptions, 
+  originOptions, 
+  placeOptions 
+} from '@/utils/filterUtils';
 
 /**
- * Componente de opções de filtro para exibição em dispositivos móveis
- * Este componente renderiza filtros adicionais específicos para o modo móvel
+ * MobileFilterOptions - Exibe as opções de filtro em formato móvel
+ * Implementa os filtros de formato, origem e etapa do leilão com
+ * aparência e comportamento consistentes com a versão desktop
  */
-const MobileFilterOptions: React.FC<MobileFilterOptionsProps> = ({ contentType }) => {
-  const { filters, updateFilter, toggleSection, expandedSections } = useFilterStoreSelector(contentType);
+const MobileFilterOptions: React.FC = () => {
+  const {
+    filters,
+    updateFilter,
+    expandedSections,
+    toggleSection
+  } = useFilterStore();
 
-  // Manipuladores de alteração
-  const handleFormatChange = (value: string) => {
-    // Garantindo que apenas valores válidos do tipo FilterFormat sejam passados
+  // Handlers memoizados para evitar renderizações desnecessárias
+  const handleFormatChange = useCallback((value: string) => {
     updateFilter('format', value as FilterFormat);
-  };
+  }, [updateFilter]);
 
-  const handleOriginChange = (value: string) => {
-    // Garantindo que apenas valores válidos do tipo FilterOrigin sejam passados
+  const handleOriginChange = useCallback((value: string) => {
     updateFilter('origin', value as FilterOrigin);
-  };
+  }, [updateFilter]);
 
-  const handlePlaceChange = (value: string) => {
-    // Garantindo que apenas valores válidos do tipo FilterPlace sejam passados
+  const handlePlaceChange = useCallback((value: string) => {
     updateFilter('place', value as FilterPlace);
-  };
+  }, [updateFilter]);
+
+  // Usando React.memo em conjunto com useCallback para otimizar renderizações
+  const handleToggleFormat = useCallback(() => toggleSection('format'), [toggleSection]);
+  const handleToggleOrigin = useCallback(() => toggleSection('origin'), [toggleSection]);
+  const handleTogglePlace = useCallback(() => toggleSection('place'), [toggleSection]);
 
   return (
-    <div className="flex flex-col gap-2 mt-2">
-      {/* Seção de formato */}
-      <FilterSectionComponent
-        title="Formato"
-        isExpanded={expandedSections.format}
-        onToggle={() => toggleSection('format')}
+    <div 
+      className="grid grid-cols-1 gap-0" 
+      role="region" 
+      aria-label="Filtros básicos"
+    >
+      <FilterSectionComponent 
+        title="Formato" 
+        isExpanded={expandedSections.format} 
+        onToggle={handleToggleFormat}
       >
-        <FilterDropdown
-          id="format-filter"
-          aria-label="Selecionar formato"
-          value={filters.format}
-          onChange={handleFormatChange}
-          options={formatOptions}
-          placeholder="Selecione um formato"
+        <FilterDropdown 
+          id="format-filter-mobile" 
+          aria-label="Selecionar formato" 
+          value={filters.format} 
+          onChange={handleFormatChange} 
+          options={formatOptions} 
+          className="border-gray-200 shadow-sm bg-white" 
         />
       </FilterSectionComponent>
 
-      {/* Seção de origem */}
-      <FilterSectionComponent
-        title="Origem"
-        isExpanded={expandedSections.origin}
-        onToggle={() => toggleSection('origin')}
+      <FilterSectionComponent 
+        title="Origem" 
+        isExpanded={expandedSections.origin} 
+        onToggle={handleToggleOrigin}
       >
-        <FilterDropdown
-          id="origin-filter"
-          aria-label="Selecionar origem"
-          value={filters.origin}
-          onChange={handleOriginChange}
-          options={originOptions}
-          placeholder="Selecione uma origem"
+        <FilterDropdown 
+          id="origin-filter-mobile" 
+          aria-label="Selecionar origem" 
+          value={filters.origin} 
+          onChange={handleOriginChange} 
+          options={originOptions} 
+          className="border-gray-200 shadow-sm bg-white" 
         />
       </FilterSectionComponent>
 
-      {/* Seção de praça */}
-      <FilterSectionComponent
-        title="Etapa"
-        isExpanded={expandedSections.place}
-        onToggle={() => toggleSection('place')}
+      <FilterSectionComponent 
+        title="Etapa" 
+        isExpanded={expandedSections.place} 
+        onToggle={handleTogglePlace}
       >
-        <FilterDropdown
-          id="place-filter"
-          aria-label="Selecionar etapa"
-          value={filters.place}
-          onChange={handlePlaceChange}
-          options={placeOptions}
-          placeholder="Selecione uma etapa"
+        <FilterDropdown 
+          id="place-filter-mobile" 
+          aria-label="Selecionar etapa" 
+          value={filters.place} 
+          onChange={handlePlaceChange} 
+          options={placeOptions} 
+          className="border-gray-200 shadow-sm bg-white" 
         />
       </FilterSectionComponent>
     </div>
   );
 };
 
-export default React.memo(MobileFilterOptions);
+// Usar memo para evitar renderizações desnecessárias quando o componente pai re-renderiza
+export default memo(MobileFilterOptions);

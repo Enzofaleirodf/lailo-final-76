@@ -1,76 +1,69 @@
 
-import React, { useState } from 'react';
-import { ContentType } from '@/types/filters';
-import FilterContent from './filters/FilterContent';
-import TopFilters from './TopFilters';
-import ResultHeader from './ResultHeader';
-import AuctionList from './AuctionList';
-import MobileFilterBar from './mobile-filter/MobileFilterBar';
+import React, { ReactNode } from 'react';
+import FilterSection from '@/components/FilterSection';
+import TopFilters from '@/components/TopFilters';
+import ResultHeader from '@/components/ResultHeader';
+import AuctionList from '@/components/AuctionList';
+import MobileFilterBar from '@/components/MobileFilterBar';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Drawer } from '@/components/ui/drawer';
-import FilterSection from './FilterSection';
-import DesktopFilterBar from './desktop-filter/DesktopFilterBar';
+import SortOptions from '@/components/filters/SortOptions';
+import { useUIStore } from '@/stores/useUIStore';
 
 interface BuscadorLayoutProps {
-  contentType: ContentType;
+  children?: ReactNode;
 }
 
 /**
- * Layout do buscador com suporte a tipos de conteúdo separados
+ * Componente de layout reutilizável para as páginas de busca
+ * Implementa a estrutura visual compartilhada entre as páginas de busca
  */
-const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ contentType }) => {
+const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
   const isMobile = useIsMobile();
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isSortOpen, setIsSortOpen] = useState(false);
-
+  const {
+    filtersOpen,
+    sortOpen,
+    setFiltersOpen,
+    setSortOpen
+  } = useUIStore();
+  
   const handleFilterClick = () => {
-    setIsFilterOpen(true);
+    setFiltersOpen(true);
   };
-
+  
   const handleSortClick = () => {
-    setIsSortOpen(true);
+    setSortOpen(true);
   };
-
+  
   return (
-    <div className="w-full overflow-hidden">
-      {/* Barra de filtros móvel */}
-      {isMobile && (
-        <MobileFilterBar 
-          contentType={contentType}
-          onFilterClick={handleFilterClick}
-          onSortClick={handleSortClick}
-        />
-      )}
+    <div className={`${isMobile ? 'pt-16' : ''}`}>
+      {/* Renderizar elementos filhos no topo, se houver */}
+      {children}
       
-      {/* Componente de escolha de tipo de conteúdo (imóveis/veículos) */}
-      <TopFilters contentType={contentType} />
+      {/* Top filters bar - desktop only */}
+      {!isMobile && <TopFilters />}
       
-      {/* Barra de filtros superior para desktop com formato, origem e etapa */}
-      {!isMobile && (
-        <DesktopFilterBar contentType={contentType} />
-      )}
+      {/* Mobile filter bar - mobile only */}
+      {isMobile && <MobileFilterBar onFilterClick={handleFilterClick} onSortClick={handleSortClick} />}
       
-      {/* Ajustando o layout para evitar sobreposição */}
-      <div className="flex flex-col md:flex-row md:space-x-4 w-full">
-        {/* Área de filtros lateral com largura fixa e sem flex-shrink */}
-        <div className="w-full md:w-[260px] md:flex-none md:sticky md:top-4 md:self-start">
-          {isMobile ? (
-            <FilterContent contentType={contentType} />
-          ) : (
-            <FilterSection 
-              isOpen={true} 
-              contentType={contentType} 
-              onOpenChange={() => {}}
-            />
-          )}
-        </div>
+      <div className="w-full flex flex-col lg:flex-row lg:gap-6 px-0">
+        {/* Sidebar filter section - desktop only */}
+        {!isMobile && <aside className="shrink-0 w-full lg:w-[448px]">
+            <FilterSection />
+          </aside>}
         
-        {/* Área de resultados com flex-grow e min-width para evitar encolher demais */}
-        <div className="w-full md:flex-1 md:min-w-0 md:max-w-full">
+        {/* Main content area */}
+        <main className="flex-1 min-h-[80vh] w-full mt-4 lg:mt-0">
+          {/* Mobile filter drawer - only rendered on mobile */}
+          {isMobile && <FilterSection isOpen={filtersOpen} onOpenChange={setFiltersOpen} />}
+          
+          {/* Result header and auction list - shown on both mobile and desktop */}
           <ResultHeader />
           <AuctionList />
-        </div>
+        </main>
       </div>
+      
+      {/* Sort options modal - mobile only */}
+      {isMobile && <SortOptions open={sortOpen} onOpenChange={setSortOpen} />}
     </div>
   );
 };
