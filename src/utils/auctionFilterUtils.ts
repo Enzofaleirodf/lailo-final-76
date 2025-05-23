@@ -7,6 +7,7 @@ import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { FilterState } from '@/types/filters';
 import { defaultRangeValues } from '@/stores/useFilterStore';
+import { propertyCategoryToTypesMap } from './categoryTypeMapping';
 
 // Tipo genérico para itens (tanto leilões quanto propriedades)
 export type GenericItem = AuctionItem | PropertyItem;
@@ -124,11 +125,25 @@ export const applyPropertyFilters = (
 ): PropertyItem[] => {
   let filteredItems = [...items];
   
-  // Aplicar filtro de tipo de propriedade, se definido e não for o padrão (vazio)
-  if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos')) {
+  // Primeiro aplicar filtro de categoria
+  if (filters.category && filters.category !== 'Todos') {
+    const categoryTypes = propertyCategoryToTypesMap[filters.category] || [];
+    
+    filteredItems = filteredItems.filter(property => {
+      if (!property.propertyInfo || !property.propertyInfo.type) return false;
+      
+      // Verificar se o tipo da propriedade está na categoria selecionada
+      return categoryTypes.includes(property.propertyInfo.type) || categoryTypes.includes('Todos');
+    });
+  }
+  
+  // Aplicar filtro de tipo de propriedade específico, se definido e não for o padrão
+  if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos') && !filters.propertyTypes.includes('Todos')) {
     filteredItems = filteredItems.filter(property => {
       if (property.propertyInfo && property.propertyInfo.type) {
-        return filters.propertyTypes.includes(property.propertyInfo.type.toLowerCase());
+        return filters.propertyTypes.some(filterType => 
+          property.propertyInfo.type.toLowerCase() === filterType.toLowerCase()
+        );
       }
       return false;
     });

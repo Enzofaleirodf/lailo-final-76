@@ -49,5 +49,75 @@ export const sampleProperties: PropertyItem[] = [
     origin: "Judicial",
     place: "3ª Praça",
     createdAt: new Date(2025, 5, 25)
+  },
+  {
+    id: "prop-007",
+    title: "Casa de Luxo com Piscina",
+    description: "Magnífica casa com 4 suítes, piscina, churrasqueira e jardim",
+    currentBid: 1200000,
+    minBid: 1150000,
+    originalPrice: 1500000,
+    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=500&q=80",
+    endDate: new Date(2025, 8, 5, 15, 0),
+    address: "Condomínio Alphaville, Lote 45",
+    location: "Goiânia, GO",
+    propertyInfo: {
+      type: "Casa",
+      usefulAreaM2: 320,
+      bedrooms: 4,
+      bathrooms: 5,
+      garages: 3
+    },
+    bidCount: 15,
+    format: "Leilão",
+    origin: "Extrajudicial",
+    place: "1ª Praça",
+    createdAt: new Date(2025, 5, 30)
+  },
+  {
+    id: "prop-008",
+    title: "Cobertura Panorâmica",
+    description: "Cobertura com vista 360° da cidade, terraço gourmet e jacuzzi",
+    currentBid: 980000,
+    minBid: 950000,
+    originalPrice: 1200000,
+    imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=500&q=80",
+    endDate: new Date(2025, 7, 28, 17, 30),
+    address: "Edifício Sky Tower, Cobertura",
+    location: "Fortaleza, CE",
+    propertyInfo: {
+      type: "Apartamento",
+      usefulAreaM2: 180,
+      bedrooms: 3,
+      bathrooms: 4,
+      garages: 2
+    },
+    bidCount: 12,
+    format: "Venda Direta",
+    origin: "Particular",
+    place: "Praça única",
+    createdAt: new Date(2025, 6, 5)
+  },
+  {
+    id: "prop-009",
+    title: "Galpão Industrial Moderno",
+    description: "Galpão com pé direito alto, docas de carga e escritórios administrativos",
+    currentBid: 750000,
+    minBid: 720000,
+    originalPrice: 950000,
+    imageUrl: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=500&q=80",
+    endDate: new Date(2025, 8, 12, 14, 0),
+    address: "Distrito Industrial, Quadra 15, Lote 8",
+    location: "Curitiba, PR",
+    propertyInfo: {
+      type: "Galpão",
+      usefulAreaM2: 850,
+      garages: 4
+    },
+    bidCount: 7,
+    format: "Leilão",
+    origin: "Judicial",
+    place: "2ª Praça",
+    createdAt: new Date(2025, 6, 10)
   }
 ];
