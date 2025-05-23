@@ -27,30 +27,6 @@ export const sampleProperties: PropertyItem[] = [
     createdAt: new Date(2025, 5, 1)
   },
   {
-    id: "prop-002",
-    title: "Casa em Condomínio Fechado",
-    description: "Casa em condomínio de alto padrão com 4 suítes e piscina",
-    currentBid: 1250000,
-    minBid: 1200000,
-    originalPrice: 1800000,
-    imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=500&q=80",
-    endDate: new Date(2025, 6, 20, 15, 0),
-    address: "Condomínio Jardins, Rua das Flores, 50",
-    location: "Goiânia, GO",
-    propertyInfo: {
-      type: "Casa",
-      usefulAreaM2: 320,
-      bedrooms: 4,
-      bathrooms: 5,
-      garages: 4
-    },
-    bidCount: 5,
-    format: "Leilão",
-    origin: "Extrajudicial",
-    place: "2ª Praça",
-    createdAt: new Date(2025, 5, 5)
-  },
-  {
     id: "prop-003",
     title: "Loja em Shopping Center",
     description: "Loja comercial pronta para uso em shopping de alto fluxo",
@@ -69,27 +45,6 @@ export const sampleProperties: PropertyItem[] = [
     origin: "Particular",
     place: "Praça única",
     createdAt: new Date(2025, 5, 10)
-  },
-  {
-    id: "prop-004",
-    title: "Terreno em Área Nobre",
-    description: "Terreno plano em localização privilegiada com vista para o mar",
-    currentBid: 950000,
-    minBid: 900000,
-    originalPrice: 1200000,
-    imageUrl: "https://images.unsplash.com/photo-1500076656116-558758c991c1?auto=format&fit=crop&w=500&q=80",
-    endDate: new Date(2025, 7, 5, 10, 0),
-    address: "Alameda das Palmeiras, s/n",
-    location: "Florianópolis, SC",
-    propertyInfo: {
-      type: "Terreno",
-      usefulAreaM2: 500
-    },
-    bidCount: 12,
-    format: "Leilão",
-    origin: "Judicial",
-    place: "1ª Praça",
-    createdAt: new Date(2025, 5, 15)
   },
   {
     id: "prop-005",
