@@ -1,4 +1,3 @@
-
 import { PropertyItem } from '@/types/property';
 
 export const sampleProperties: PropertyItem[] = [
@@ -56,7 +55,7 @@ export const sampleProperties: PropertyItem[] = [
     description: "Loja comercial pronta para uso em shopping de alto fluxo",
     currentBid: 380000,
     minBid: 350000,
-    imageUrl: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=500&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=500&q=80",
     endDate: new Date(2025, 6, 25, 16, 30),
     address: "Shopping Center Norte, Loja 42",
     location: "São Paulo, SP",
@@ -98,7 +97,7 @@ export const sampleProperties: PropertyItem[] = [
     currentBid: 280000,
     minBid: 260000,
     originalPrice: 350000,
-    imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=500&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&w=500&q=80",
     endDate: new Date(2025, 7, 10, 14, 0),
     address: "Edifício Central Business, 15º andar, Sala 1502",
     location: "Rio de Janeiro, RJ",
