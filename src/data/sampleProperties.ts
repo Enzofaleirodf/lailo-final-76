@@ -27,48 +27,6 @@ export const sampleProperties: PropertyItem[] = [
     createdAt: new Date(2025, 5, 1)
   },
   {
-    id: "prop-003",
-    title: "Loja em Shopping Center",
-    description: "Loja comercial pronta para uso em shopping de alto fluxo",
-    currentBid: 380000,
-    minBid: 350000,
-    imageUrl: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop&w=500&q=80",
-    endDate: new Date(2025, 6, 25, 16, 30),
-    address: "Shopping Center Norte, Loja 42",
-    location: "São Paulo, SP",
-    propertyInfo: {
-      type: "Loja",
-      usefulAreaM2: 45
-    },
-    bidCount: 3,
-    format: "Venda Direta",
-    origin: "Particular",
-    place: "Praça única",
-    createdAt: new Date(2025, 5, 10)
-  },
-  {
-    id: "prop-005",
-    title: "Sala Comercial Centro",
-    description: "Sala comercial com recepção, 3 ambientes e garagem",
-    currentBid: 280000,
-    minBid: 260000,
-    originalPrice: 350000,
-    imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80",
-    endDate: new Date(2025, 7, 10, 14, 0),
-    address: "Edifício Central Business, 15º andar, Sala 1502",
-    location: "Rio de Janeiro, RJ",
-    propertyInfo: {
-      type: "Sala",
-      usefulAreaM2: 65,
-      garages: 1
-    },
-    bidCount: 6,
-    format: "Leilão",
-    origin: "Extrajudicial",
-    place: "2ª Praça",
-    createdAt: new Date(2025, 5, 20)
-  },
-  {
     id: "prop-006",
     title: "Apartamento Duplex",
     description: "Apartamento duplex com 3 quartos e terraço",
