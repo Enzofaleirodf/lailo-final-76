@@ -1,5 +1,5 @@
 
-import React, { memo } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -11,10 +11,6 @@ interface FilterSectionComponentProps {
   testId?: string; // Adicionado para suportar testId
 }
 
-/**
- * Componente de seção de filtro otimizado
- * Versão melhorada com memoização para reduzir renderizações desnecessárias
- */
 const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   title,
   isExpanded,
@@ -43,7 +39,7 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
         <h3 className="text-sm text-gray-900 font-urbanist font-semibold">{title}</h3>
       </div>
       
-      {/* Content - sempre visível - sem mais acordeão */}
+      {/* Content - always expanded - no more accordion */}
       <div id={id} role="region" aria-labelledby={`heading-${id}`} className="p-3">
         {children}
       </div>
@@ -51,5 +47,4 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   );
 };
 
-// Usando memo para evitar renderizações desnecessárias
-export default memo(FilterSectionComponent);
+export default FilterSectionComponent;

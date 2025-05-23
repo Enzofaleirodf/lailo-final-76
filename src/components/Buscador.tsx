@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import BuscadorLayout from '@/components/BuscadorLayout';
 import { useBuscadorSetup } from '@/hooks/useBuscadorSetup';
 import { ContentType } from '@/types/filters';
@@ -11,44 +11,28 @@ interface BuscadorProps {
 }
 
 /**
- * Componente genérico de busca com integração de cache
- * e otimizações para evitar loops de renderização
+ * Componente genérico de busca que pode ser usado para diferentes tipos de conteúdo
+ * (imóveis ou veículos) com base no contentType fornecido.
+ * Encapsula toda a lógica comum de busca e filtros.
  */
 const Buscador: React.FC<BuscadorProps> = ({ contentType }) => {
   // Usar o hook personalizado para configurar o tipo de conteúdo
   const { initialSetupDone } = useBuscadorSetup(contentType);
   
-  // Obter referências às stores usando seletores específicos
-  const propertyStore = usePropertyFiltersStore(state => state.updateFilter);
-  const vehicleStore = useVehicleFiltersStore(state => state.updateFilter);
-  
-  // Referência para controlar a inicialização única
-  const contentTypeSetRef = useRef(false);
-  
-  // Memorizar o title da página baseado no tipo de conteúdo
-  const pageTitle = useMemo(() => {
-    return contentType === 'property' ? 'Busca de Imóveis' : 'Busca de Veículos';
-  }, [contentType]);
+  // Obter referências às stores (necessário para garantir que elas são inicializadas)
+  const propertyStore = usePropertyFiltersStore();
+  const vehicleStore = useVehicleFiltersStore();
   
   // Atualizar o tipo de conteúdo correto na store apropriada
   useEffect(() => {
-    // Evitar atualizações repetidas
-    if (contentTypeSetRef.current) return;
-    
     if (contentType === 'property') {
-      propertyStore('contentType', 'property');
+      propertyStore.updateFilter('contentType', 'property');
     } else {
-      vehicleStore('contentType', 'vehicle');
+      vehicleStore.updateFilter('contentType', 'vehicle');
     }
-    
-    // Definir o título da página
-    document.title = pageTitle;
-    
-    contentTypeSetRef.current = true;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentType]); 
+  }, [contentType]); // Remova as dependências que causam loops
   
   return <BuscadorLayout contentType={contentType} />;
 };
 
-export default React.memo(Buscador);
+export default Buscador;

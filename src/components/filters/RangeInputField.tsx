@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
+import { measurePerformance } from '@/utils/performanceUtils';
 
 interface RangeInputFieldProps {
   id: string;
@@ -23,8 +23,8 @@ interface RangeInputFieldProps {
 
 /**
  * Componente de campo de entrada para filtros de intervalo
- * Refatorado para usar classes CSS em vez de estilos inline
- * Otimizado com debounce e requestAnimationFrame
+ * Refatorado para garantir consistência visual entre desktop e mobile
+ * Otimizado para desempenho com grandes conjuntos de dados
  */
 const RangeInputField: React.FC<RangeInputFieldProps> = ({
   id,
@@ -44,50 +44,56 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const animationFrameRef = useRef<number | null>(null);
-  const [paddingClasses, setPaddingClasses] = useState({
-    prefix: inputPrefix ? 'pl-10' : '',
-    suffix: inputSuffix ? 'pr-10' : ''
-  });
   
-  // Usar debounce para evitar cálculos excessivos
-  const updatePaddingClasses = useDebouncedCallback(() => {
-    if (!inputRef.current) return;
-    
-    // Cancelar qualquer animationFrame pendente
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
+  // Performance tracking for padding calculation
+  const paddingPerf = process.env.NODE_ENV === 'development' ? 
+    measurePerformance('RangeInputField-padding') : null;
+  
+  // Calcular tamanho adequado do campo para acomodar prefixo e sufixo
+  const handleInputPadding = () => {
+    if (inputRef.current) {
+      if (inputPrefix) {
+        // Aumentar padding para evitar sobreposição do prefixo
+        const prefixLength = inputPrefix.length;
+        const basePadding = 22; // Aumentado para 22px
+        const charWidth = 8; // Largura média aproximada de um caractere
+        
+        const calculatedPadding = basePadding + (prefixLength * charWidth);
+        inputRef.current.style.paddingLeft = `${calculatedPadding}px`;
+      }
+      
+      if (inputSuffix) {
+        // Aumentar padding para evitar sobreposição do sufixo
+        const suffixLength = inputSuffix.length;
+        const basePadding = 22; // Aumentado para 22px
+        const charWidth = 8;
+        
+        const calculatedPadding = basePadding + (suffixLength * charWidth);
+        inputRef.current.style.paddingRight = `${calculatedPadding}px`;
+      }
     }
     
-    // Usar requestAnimationFrame para cálculos de layout
-    animationFrameRef.current = requestAnimationFrame(() => {
-      if (!inputRef.current) return;
-      
-      const prefixLength = inputPrefix?.length || 0;
-      const suffixLength = inputSuffix?.length || 0;
-      
-      // Usar classes tailwind em vez de estilos inline
-      const prefixClass = prefixLength > 2 ? 'pl-16' : prefixLength > 0 ? 'pl-10' : '';
-      const suffixClass = suffixLength > 2 ? 'pr-16' : suffixLength > 0 ? 'pr-10' : '';
-      
-      setPaddingClasses({
-        prefix: prefixClass,
-        suffix: suffixClass
-      });
-    });
-  }, 100);
+    // Registrar desempenho
+    if (paddingPerf) {
+      paddingPerf.end();
+    }
+  };
   
-  // Atualizar padding quando o componente monta ou quando prefix/suffix mudam
+  // Aplicar padding quando o componente monta e quando prefixo/sufixo muda
   useEffect(() => {
-    updatePaddingClasses();
+    handleInputPadding();
     
-    // Limpar animationFrame quando o componente desmontar
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+    // Reaplicar em resize para garantir consistência entre tamanhos de tela
+    const handleResize = () => {
+      handleInputPadding();
     };
-  }, [inputPrefix, inputSuffix, updatePaddingClasses]);
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [inputPrefix, inputSuffix]);
   
   // Definir estilos condicionais
   const getBorderStyle = () => {
@@ -107,7 +113,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none">{inputPrefix}</span>
+          <span className="text-gray-500 select-none mr-6">{inputPrefix}</span>
         </div>
       )}
       
@@ -130,8 +136,6 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         className={cn(
           "h-10 px-3 text-sm transition-colors bg-white", 
           getBorderStyle(),
-          paddingClasses.prefix,
-          paddingClasses.suffix,
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0"
         )}
       />
@@ -142,7 +146,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
           className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none">{inputSuffix}</span>
+          <span className="text-gray-500 select-none ml-6">{inputSuffix}</span>
         </div>
       )}
     </div>

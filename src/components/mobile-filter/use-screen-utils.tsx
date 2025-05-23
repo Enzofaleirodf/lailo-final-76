@@ -1,6 +1,6 @@
 
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 /**
@@ -20,35 +20,35 @@ export function useScreenUtils() {
     setShowLabels(!isExtraSmallScreen);
   }, [isExtraSmallScreen]);
   
-  // Classes dinamicamente calculadas com base no tamanho da tela - usando useMemo para caching
-  const buttonSizeClass = useMemo(() => {
+  // Classes dinamicamente calculadas com base no tamanho da tela
+  const getButtonSizeClass = () => {
     if (isVerySmallScreen) return "w-9 h-9";
     if (isExtraSmallScreen) return "w-10 h-10";
     return "h-10";
-  }, [isVerySmallScreen, isExtraSmallScreen]);
+  };
   
-  const iconSize = useMemo(() => {
+  const getIconSize = () => {
     return isVerySmallScreen ? 16 : 18;
-  }, [isVerySmallScreen]);
+  };
   
-  const filterBadgeClass = useMemo(() => {
+  const getFilterBadgeClass = () => {
     return cn(
       "absolute flex items-center justify-center rounded-full bg-brand-600 text-[10px] font-medium text-white",
       isVerySmallScreen ? "h-4 w-4 top-0 right-0" : "h-4 w-4 top-0 right-0"
     );
-  }, [isVerySmallScreen]);
+  };
   
-  const textSizeClass = useMemo(() => {
+  const getTextSizeClass = () => {
     return isVerySmallScreen ? "text-xs" : "text-sm";
-  }, [isVerySmallScreen]);
+  };
   
   return {
     isExtraSmallScreen,
     isVerySmallScreen,
     showLabels,
-    buttonSizeClass,
-    iconSize,
-    filterBadgeClass,
-    textSizeClass
+    getButtonSizeClass,
+    getIconSize,
+    getFilterBadgeClass,
+    getTextSizeClass
   };
 }

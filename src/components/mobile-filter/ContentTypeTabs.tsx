@@ -1,37 +1,58 @@
 
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Car, Home } from 'lucide-react';
+import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ContentType } from '@/types/filters';
+import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useScreenUtils } from './use-screen-utils';
+import { useNavigate } from 'react-router-dom';
 
 interface ContentTypeTabsProps {
   contentType: ContentType;
+  onTabChange?: (tab: ContentType) => void;
 }
 
 /**
- * Componente de abas para alternância entre buscas de imóveis e veículos
- * Otimizado para diferentes tamanhos de tela e acessibilidade
+ * Componente de abas para alternar entre tipos de conteúdo (imóveis/veículos)
+ * Mantém consistência visual e comportamental entre desktop e mobile
  */
-const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType }) => {
+const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType, onTabChange }) => {
+  const { getButtonSizeClass, getIconSize } = useScreenUtils();
   const navigate = useNavigate();
-  const { buttonSizeClass, iconSize, textSizeClass, showLabels } = useScreenUtils();
   
-  // Manipuladores otimizados para a navegação
-  const navigateToProperties = useCallback(() => {
-    if (contentType !== 'property') {
+  // Alternar tipo de conteúdo (imóveis/veículos)
+  const handleTabChange = useCallback((tab: ContentType) => {
+    if (contentType === tab) return;
+    
+    // Navigate to the appropriate page based on content type
+    if (tab === 'property') {
       navigate('/buscador/imoveis');
-    }
-  }, [contentType, navigate]);
-  
-  const navigateToVehicles = useCallback(() => {
-    if (contentType !== 'vehicle') {
+    } else {
       navigate('/buscador/veiculos');
     }
-  }, [contentType, navigate]);
+    
+    // Anunciar a mudança para leitores de tela
+    const announcement = tab === 'property' ? 'Filtro alterado para imóveis' : 'Filtro alterado para veículos';
+    announceForScreenReader(announcement);
+    
+    // Callback opcional
+    if (onTabChange) onTabChange(tab);
+  }, [contentType, onTabChange, navigate]);
   
-  // Manipulador de evento de teclado para acessibilidade
+  // Definir atributos aria para acessibilidade
+  const getTabAttributes = (type: ContentType) => {
+    const isSelected = contentType === type;
+    
+    return {
+      role: "tab",
+      "aria-selected": isSelected,
+      "aria-controls": "content-type-selector",
+      tabIndex: isSelected ? 0 : -1,
+      "data-state": isSelected ? "active" : "inactive"
+    };
+  };
+  
+  // Manipuladores de eventos de teclado para acessibilidade
   const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -39,46 +60,67 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ contentType }) => {
     }
   }, []);
   
+  // Função de utilitário para anúncios de leitores de tela
+  const announceForScreenReader = (message: string) => {
+    let announcer = document.getElementById('mobile-filter-announcer');
+    if (!announcer) {
+      announcer = document.createElement('div');
+      announcer.id = 'mobile-filter-announcer';
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.setAttribute('aria-atomic', 'true');
+      announcer.style.position = 'absolute';
+      announcer.style.width = '1px';
+      announcer.style.height = '1px';
+      announcer.style.overflow = 'hidden';
+      announcer.style.clip = 'rect(0, 0, 0, 0)';
+      document.body.appendChild(announcer);
+    }
+    
+    setTimeout(() => {
+      if (announcer) announcer.textContent = message;
+    }, 100);
+  };
+  
   return (
-    <>
-      <button
-        onClick={navigateToProperties}
-        onKeyDown={(e) => handleKeyDown(e, navigateToProperties)}
+    <div 
+      role="tablist" 
+      aria-label="Tipo de conteúdo" 
+      className="flex flex-1"
+    >
+      <button 
+        onClick={() => handleTabChange('property')} 
+        onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
         className={cn(
-          "flex-1 flex items-center justify-center gap-2 text-sm font-medium",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors",
-          buttonSizeClass,
-          contentType === 'property'
-            ? "bg-brand-50 text-brand-700 border-b-2 border-brand-600"
-            : "bg-white text-gray-600 hover:bg-gray-50"
-        )}
-        aria-pressed={contentType === 'property'}
-        aria-label="Buscar imóveis"
+          getButtonSizeClass(),
+          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
+          contentType === 'property' 
+            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
+            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+        )} 
+        aria-label="Filtrar imóveis" 
+        {...getTabAttributes('property')}
       >
-        <Home size={iconSize} className="shrink-0" aria-hidden="true" />
-        {showLabels && <span className={cn("transition-opacity", textSizeClass)}>Imóveis</span>}
+        <Building2 size={getIconSize()} className="shrink-0" aria-hidden="true" />
+        <span className="sr-only">Imóveis</span>
       </button>
-      
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
-      
-      <button
-        onClick={navigateToVehicles}
-        onKeyDown={(e) => handleKeyDown(e, navigateToVehicles)}
+      <button 
+        onClick={() => handleTabChange('vehicle')} 
+        onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('vehicle'))}
         className={cn(
-          "flex-1 flex items-center justify-center gap-2 text-sm font-medium",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors",
-          buttonSizeClass,
-          contentType === 'vehicle'
-            ? "bg-brand-50 text-brand-700 border-b-2 border-brand-600"
-            : "bg-white text-gray-600 hover:bg-gray-50"
-        )}
-        aria-pressed={contentType === 'vehicle'}
-        aria-label="Buscar veículos"
+          getButtonSizeClass(),
+          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
+          contentType === 'vehicle' 
+            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
+            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+        )} 
+        aria-label="Filtrar veículos" 
+        {...getTabAttributes('vehicle')}
       >
-        <Car size={iconSize} className="shrink-0" aria-hidden="true" />
-        {showLabels && <span className={cn("transition-opacity", textSizeClass)}>Veículos</span>}
+        <Car size={getIconSize()} className="shrink-0" aria-hidden="true" />
+        <span className="sr-only">Veículos</span>
       </button>
-    </>
+    </div>
   );
 };
 

@@ -16,7 +16,7 @@ interface ActionButtonsProps {
  */
 const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClick }) => {
   const { activeFilters } = useFilterStore();
-  const { buttonSizeClass, iconSize, isVerySmallScreen, filterBadgeClass, showLabels } = useScreenUtils();
+  const { getButtonSizeClass, getIconSize, isVerySmallScreen, getFilterBadgeClass, showLabels } = useScreenUtils();
   
   // Manipuladores de eventos de teclado para acessibilidade
   const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
@@ -35,17 +35,17 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
         className={cn(
           "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors relative",
-          buttonSizeClass
+          getButtonSizeClass()
         )}
         aria-label={`Abrir filtros${activeFilters > 0 ? ` (${activeFilters} ativos)` : ''}`}
         aria-haspopup="dialog"
         aria-expanded="false"
       >
-        <Filter size={iconSize} className="shrink-0" aria-hidden="true" />
+        <Filter size={getIconSize()} className="shrink-0" aria-hidden="true" />
         {showLabels && <span className="transition-opacity">Filtrar</span>}
         {activeFilters > 0 && (
           <span 
-            className={filterBadgeClass}
+            className={getFilterBadgeClass()}
             aria-label={`${activeFilters} filtros ativos`}
             aria-hidden="true" // Usamos aria-hidden porque já incluímos a contagem no aria-label do botão
           >
@@ -60,13 +60,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
         className={cn(
           "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors",
-          buttonSizeClass
+          getButtonSizeClass()
         )}
         aria-label="Ordenar resultados"
         aria-haspopup="dialog"
         aria-expanded="false"
       >
-        <ArrowUpDown size={iconSize} className="shrink-0" aria-hidden="true" />
+        <ArrowUpDown size={getIconSize()} className="shrink-0" aria-hidden="true" />
         {showLabels && <span className="transition-opacity">Ordenar</span>}
       </button>
     </>

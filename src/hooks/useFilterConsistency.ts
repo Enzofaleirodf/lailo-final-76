@@ -44,7 +44,10 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
         }
       });
       
-      window.dispatchEvent(event);
+      // Pequeno atraso para garantir que a posição de rolagem seja capturada corretamente
+      setTimeout(() => {
+        window.dispatchEvent(event);
+      }, 10);
     }
   }, [onChange, autoTriggerEvents]);
   
@@ -53,13 +56,15 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
     prevFilterState.current = filters;
   }, [filters]);
   
-  // Função simplificada para limpeza (sem logs)
+  // Função de limpeza para quaisquer listeners
   const cleanup = useCallback(() => {
-    // Implementação sem logs ou código de depuração
+    // Adicionar lógica de limpeza aqui, se necessário
   }, []);
   
+  // Retornar funções e valores
   return {
     handleFilterChange,
     cleanup
   };
 };
+

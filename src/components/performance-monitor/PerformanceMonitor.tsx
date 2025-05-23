@@ -29,11 +29,8 @@ const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({ enabled = false
     inconsistencies, 
     testAllScreenSizes 
   } = useResponsiveConsistency({ 
-    targetElements: [
-      { selector: '.test-component', properties: ['font-size', 'margin'] }
-    ],
-    logInconsistencies: enabled,
-    testMode: enabled
+    testMode: enabled,
+    logInconsistencies: enabled
   });
   
   // Monitorar FPS

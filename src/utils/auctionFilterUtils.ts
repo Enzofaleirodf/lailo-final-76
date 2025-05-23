@@ -10,9 +10,6 @@ import { defaultRangeValues } from '@/stores/useFilterStore';
 // Tipo genérico para itens (tanto leilões quanto propriedades)
 export type GenericItem = AuctionItem | PropertyItem;
 
-// Cache para resultados de filtragem para evitar recálculos
-const filterCache: Record<string, any[]> = {};
-
 /**
  * Verificar se um valor de range está usando os valores padrão
  */
@@ -39,14 +36,6 @@ export const applyPriceFilter = <T extends GenericItem>(
   minPrice: string,
   maxPrice: string
 ): T[] => {
-  // Chave de cache para esta filtragem específica
-  const cacheKey = `price:${minPrice}:${maxPrice}:${items.length}`;
-  
-  // Verificar cache antes de processar
-  if (filterCache[cacheKey]) {
-    return filterCache[cacheKey] as T[];
-  }
-  
   let filteredItems = [...items];
   
   // Aplicar filtro de preço mínimo, se definido e não for valor padrão
@@ -60,9 +49,6 @@ export const applyPriceFilter = <T extends GenericItem>(
     const max = Number(maxPrice);
     filteredItems = filteredItems.filter(item => item.currentBid <= max);
   }
-  
-  // Armazenar resultado no cache
-  filterCache[cacheKey] = filteredItems;
   
   return filteredItems;
 };
@@ -250,20 +236,11 @@ export const applyVehicleFilters = (
 
 /**
  * Ordena os itens com base na opção de ordenação selecionada
- * Usa cache para melhorar desempenho
  */
 export const sortItems = <T extends GenericItem>(
   items: T[],
   sortOption: string
 ): T[] => {
-  // Chave de cache para esta operação de ordenação específica
-  const cacheKey = `sort:${sortOption}:${items.length}`;
-  
-  // Verificar cache antes de processar
-  if (filterCache[cacheKey]) {
-    return filterCache[cacheKey] as T[];
-  }
-  
   let sortedItems = [...items];
   
   if (sortOption === 'price-asc') {
@@ -278,9 +255,6 @@ export const sortItems = <T extends GenericItem>(
       return 0;
     });
   }
-  
-  // Armazenar resultado no cache
-  filterCache[cacheKey] = sortedItems;
   
   return sortedItems;
 };
@@ -302,14 +276,4 @@ export const calculateItemsStatistics = <T extends GenericItem>(
   const newItems = Math.ceil(totalItems * (contentType === 'property' ? 0.2 : 0.1));
   
   return { totalItems, totalSites, newItems };
-};
-
-/**
- * Limpar cache de filtragem quando necessário
- * Deve ser chamado quando os dados originais mudam
- */
-export const clearFilterCache = () => {
-  Object.keys(filterCache).forEach(key => {
-    delete filterCache[key];
-  });
 };

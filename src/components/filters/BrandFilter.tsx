@@ -16,8 +16,7 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ contentType, onFilterChange }
   
   // Obter opções de marca com base na categoria selecionada
   const brandOptions = useMemo(() => {
-    // Garantir que getBrandsByCategory retorne um array, mesmo que vazio
-    const brands = getBrandsByCategory(filters.category) || [];
+    const brands = getBrandsByCategory(filters.category);
     return [
       { value: '', label: 'Selecione uma marca' },
       ...brands.map(brand => ({

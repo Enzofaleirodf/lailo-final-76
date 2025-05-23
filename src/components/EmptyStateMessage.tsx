@@ -2,11 +2,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, AlertCircle } from 'lucide-react';
-import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
-import { ContentType } from '@/types/filters';
+import { useFilterStore } from '@/stores/useFilterStore';
 
 interface EmptyStateMessageProps {
-  contentType: ContentType;
+  contentType: 'property' | 'vehicle';
 }
 
 const EmptyStateMessage: React.FC<EmptyStateMessageProps> = ({
@@ -15,7 +14,7 @@ const EmptyStateMessage: React.FC<EmptyStateMessageProps> = ({
   const {
     activeFilters,
     resetFilters
-  } = useFilterStoreSelector(contentType);
+  } = useFilterStore();
   
   const contentTypeLabel = contentType === 'property' ? 'imóveis' : 'leilões';
   

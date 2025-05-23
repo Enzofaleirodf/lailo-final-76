@@ -8,15 +8,7 @@ import FilterSection from '@/components/FilterSection';
 import TopFilters from '@/components/TopFilters';
 import * as filterStoreModule from '@/stores/useFilterStore';
 import * as uiStoreModule from '@/stores/useUIStore';
-import MobileFilterBar from '@/components/mobile-filter/MobileFilterBar';
-import { 
-  TestProviders, 
-  resetAllMocks, 
-  mockDispatchEvent, 
-  createDefaultFilterStoreMock,
-  mockMobileDevice,
-  mockDesktopDevice
-} from './setupFilterTests';
+import MobileFilterBar from '@/components/MobileFilterBar';
 
 // Criar cliente de consulta para testes
 const queryClient = new QueryClient({
@@ -27,7 +19,24 @@ const queryClient = new QueryClient({
   },
 });
 
-// Mock dos componentes de filtro
+// Mock para eventos
+const mockDispatchEvent = jest.fn();
+window.dispatchEvent = mockDispatchEvent;
+
+// Properly mock the stores
+jest.mock('@/stores/useFilterStore');
+jest.mock('@/stores/useUIStore');
+
+// Get the mocked stores with proper typing
+const mockUseFilterStore = filterStoreModule.useFilterStore as jest.MockedFunction<typeof filterStoreModule.useFilterStore>;
+const mockUseUIStore = uiStoreModule.useUIStore as jest.MockedFunction<typeof uiStoreModule.useUIStore>;
+
+// Mock dos hooks de acessibilidade
+jest.mock('@/hooks/use-mobile', () => ({
+  useIsMobile: () => false
+}));
+
+// Mock do componente de opções de filtro
 jest.mock('@/components/filters/ModelFilter', () => ({
   __esModule: true,
   default: () => <div data-testid="model-filter">Modelo e Marca</div>
@@ -44,20 +53,67 @@ jest.mock('@/components/filters/YearRangeFilter', () => ({
 }));
 
 describe('Fluxo de Filtros de Veículos', () => {
-  // Configurar estado inicial para veículos
-  const defaultVehicleStore = createDefaultFilterStoreMock('vehicle');
-  
+  const defaultFilterStore = {
+    filters: {
+      contentType: 'vehicle',
+      location: { state: '', city: '' },
+      vehicleTypes: [],
+      propertyTypes: [],
+      price: { value: [0, 100], range: { min: '', max: '' } },
+      brand: 'todas',
+      model: 'todos',
+      color: 'todas',
+      format: 'Todos',
+      origin: 'Todas',
+      place: 'Todas',
+      year: { min: '', max: '' },
+      usefulArea: { min: '', max: '' }
+    },
+    expandedSections: {
+      location: true,
+      price: false,
+      propertyType: false,
+      vehicleType: true,
+      year: false,
+      usefulArea: false,
+      model: false,
+      color: false,
+      format: false,
+      origin: false,
+      place: false
+    },
+    activeFilters: 0,
+    lastUpdatedFilter: null,
+    updateFilter: jest.fn(),
+    resetFilters: jest.fn(),
+    setFilters: jest.fn(),
+    toggleSection: jest.fn(),
+    collapseAllSections: jest.fn(),
+    expandAllSections: jest.fn()
+  };
+
+  const defaultUIStore = {
+    filtersOpen: true,
+    sortOpen: false,
+    setFiltersOpen: jest.fn(),
+    setSortOpen: jest.fn(),
+    toggleFilters: jest.fn(),
+    toggleSort: jest.fn()
+  };
+
   beforeEach(() => {
-    resetAllMocks();
-    mockDesktopDevice(); // Usar visualização desktop por padrão
-    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue(defaultVehicleStore);
+    jest.clearAllMocks();
+    mockUseFilterStore.mockReturnValue(defaultFilterStore);
+    mockUseUIStore.mockReturnValue(defaultUIStore);
   });
 
   test('Exibe os filtros específicos para veículos', async () => {
     render(
-      <TestProviders filterStoreMock={defaultVehicleStore}>
-        <FilterSection contentType="vehicle" />
-      </TestProviders>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <FilterSection contentType="vehicle" />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
     
     // Verificar se os filtros de veículos estão presentes
@@ -72,9 +128,11 @@ describe('Fluxo de Filtros de Veículos', () => {
 
   test('Navegação entre tipos de conteúdo (veículos e imóveis)', async () => {
     render(
-      <TestProviders filterStoreMock={defaultVehicleStore}>
-        <TopFilters contentType="vehicle" />
-      </TestProviders>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <TopFilters contentType="vehicle" />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
 
     // Verificar se o conteúdo atual é veículos
@@ -86,20 +144,25 @@ describe('Fluxo de Filtros de Veículos', () => {
     fireEvent.click(propertyButton);
     
     // Verificar se updateFilter foi chamado para mudar para imóveis
-    expect(defaultVehicleStore.updateFilter).toHaveBeenCalledWith('contentType', 'property');
+    expect(defaultFilterStore.updateFilter).toHaveBeenCalledWith('contentType', 'property');
   });
   
   test('MobileFilterBar permite alternar entre veículos e imóveis', async () => {
     // Mock mobile view
-    mockMobileDevice();
+    jest.resetModules();
+    jest.mock('@/hooks/use-mobile', () => ({
+      useIsMobile: () => true
+    }));
     
     const mockFilterClick = jest.fn();
     const mockSortClick = jest.fn();
     
     render(
-      <TestProviders filterStoreMock={defaultVehicleStore}>
-        <MobileFilterBar onFilterClick={mockFilterClick} onSortClick={mockSortClick} contentType="vehicle" />
-      </TestProviders>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <MobileFilterBar onFilterClick={mockFilterClick} onSortClick={mockSortClick} contentType="vehicle" />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
 
     // Verificar se os botões de tipo de conteúdo estão presentes
@@ -110,25 +173,33 @@ describe('Fluxo de Filtros de Veículos', () => {
     fireEvent.click(propertyButton);
     
     // Verificar se updateFilter foi chamado
-    expect(defaultVehicleStore.updateFilter).toHaveBeenCalledWith('contentType', 'property');
+    expect(defaultFilterStore.updateFilter).toHaveBeenCalledWith('contentType', 'property');
+    
+    // Resetar mock
+    jest.resetModules();
+    jest.mock('@/hooks/use-mobile', () => ({
+      useIsMobile: () => false
+    }));
   });
 
   test('Aplicar filtro de marca e modelo de veículo', async () => {
     // Configurar mock com seleção de marca
     const vehicleFilterStore = {
-      ...defaultVehicleStore,
+      ...defaultFilterStore,
       filters: {
-        ...defaultVehicleStore.filters,
+        ...defaultFilterStore.filters,
         brand: 'Honda',
         model: 'Civic'
       }
     };
-    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue(vehicleFilterStore);
+    mockUseFilterStore.mockReturnValue(vehicleFilterStore);
     
     render(
-      <TestProviders filterStoreMock={vehicleFilterStore}>
-        <FilterSection contentType="vehicle" />
-      </TestProviders>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <FilterSection contentType="vehicle" />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
     
     // Verificar se os filtros estão presentes
@@ -146,21 +217,23 @@ describe('Fluxo de Filtros de Veículos', () => {
   test('Resetar filtros de veículos', async () => {
     // Configurar mock com filtros ativos
     const activeFilterStore = {
-      ...defaultVehicleStore,
+      ...defaultFilterStore,
       activeFilters: 3,
       filters: {
-        ...defaultVehicleStore.filters,
+        ...defaultFilterStore.filters,
         brand: 'Honda',
         model: 'Civic',
         year: { min: '2018', max: '2022' }
       }
     };
-    jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue(activeFilterStore);
+    mockUseFilterStore.mockReturnValue(activeFilterStore);
     
     render(
-      <TestProviders filterStoreMock={activeFilterStore}>
-        <FilterSection contentType="vehicle" />
-      </TestProviders>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <FilterSection contentType="vehicle" />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
     
     // Encontrar e clicar no botão de resetar filtros
@@ -179,9 +252,11 @@ describe('Fluxo de Filtros de Veículos', () => {
   
   test('Acessibilidade: navegação por teclado em filtros de veículos', async () => {
     render(
-      <TestProviders filterStoreMock={defaultVehicleStore}>
-        <TopFilters contentType="vehicle" />
-      </TestProviders>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <TopFilters contentType="vehicle" />
+        </BrowserRouter>
+      </QueryClientProvider>
     );
     
     // Encontrar o botão de veículos
@@ -192,6 +267,6 @@ describe('Fluxo de Filtros de Veículos', () => {
     fireEvent.keyDown(vehicleButton, { key: 'Enter', code: 'Enter' });
     
     // Verificar se updateFilter foi chamado
-    expect(defaultVehicleStore.updateFilter).toHaveBeenCalledWith('contentType', 'vehicle');
+    expect(defaultFilterStore.updateFilter).toHaveBeenCalledWith('contentType', 'vehicle');
   });
 });

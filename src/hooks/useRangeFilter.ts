@@ -1,12 +1,11 @@
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import { useRangeValues, RangeValues } from './useRangeValues';
+import { useRangeFormatting } from './useRangeFormatting';
 import { useRangeValidation } from './useRangeValidation';
-import { useRangeDisplayFormat } from './useRangeDisplayFormat';
+import { throttle } from '@/utils/performanceUtils';
 
-export interface RangeValues {
-  min: string;
-  max: string;
-}
+export type { RangeValues } from './useRangeValues';
 
 export interface RangeFilterOptions {
   defaultMin?: string;
@@ -23,14 +22,11 @@ export interface RangeFilterOptions {
 }
 
 /**
- * Hook para gerenciar campos de entrada de intervalo com estado, validação e formatação
- * Versão otimizada com memoização e controle para evitar loops de renderização
+ * Hook unificado para gerenciar filtros de intervalo
+ * Combina formatação, validação e gerenciamento de estado
+ * Otimizado para desempenho com grandes conjuntos de dados
  */
-export function useRangeFilter(
-  initialValues: RangeValues,
-  options: RangeFilterOptions = {}
-) {
-  // Desestruturar opções com valores padrão
+export function useRangeFilter(initialValues: RangeValues, options: RangeFilterOptions = {}) {
   const {
     defaultMin = '',
     defaultMax = '',
@@ -41,131 +37,117 @@ export function useRangeFilter(
     onChange,
     formatDisplay = true,
     useThousandSeparator = true,
+    prefix = '',
+    suffix = '',
+  } = options;
+  
+  // Prevent initialization loops
+  const hasInitialized = useRef(false);
+  
+  // Usar hook especializado para gerenciar valores
+  const {
+    values,
+    isActive,
+    editingField,
+    userInteracted,
+    handleMinChange: setMinValue,
+    handleMaxChange: setMaxValue,
+    finishEditing,
+    resetValues,
+    updateValues,
+    hasInteracted
+  } = useRangeValues({
+    defaultMin,
+    defaultMax,
+    onChange,
+    initialMin: initialValues.min,
+    initialMax: initialValues.max
+  });
+  
+  // Usar hook especializado para formatação
+  const { formatValue, sanitizeInput, addAffixes, removeAffixes } = useRangeFormatting({
+    allowDecimals,
+    useThousandSeparator,
+    formatDisplay,
     prefix,
     suffix
-  } = options;
-
-  // Cache de valores processados anteriormente para evitar recálculos
-  const formatCache = useRef<Record<string, string>>({});
-  const onChangeCallRef = useRef(false);
-  const prevValues = useRef<RangeValues>({min: '', max: ''});
-  
-  // Estado para rastrear valores de entrada
-  const [values, setValues] = useState<RangeValues>({
-    min: initialValues.min || defaultMin,
-    max: initialValues.max || defaultMax
   });
-
-  // Usar hooks especializados para validação e formatação
+  
+  // Usar hook especializado para validação
   const { errors, validateValue, correctValue } = useRangeValidation({
     minAllowed,
     maxAllowed,
     values
   });
-
-  const { formatDisplayValue } = useRangeDisplayFormat({
-    allowDecimals,
-    useThousandSeparator
-  });
-
-  // Formatar valores para exibição com cache
-  const displayValues = useMemo(() => {
-    const getCachedFormat = (value: string, type: 'min' | 'max') => {
-      // Se não há valor, retornar string vazia
-      if (!value) return '';
-      
-      // Criar chave única para cache
-      const cacheKey = `${type}:${value}:${useThousandSeparator}:${formatDisplay}:${prefix}:${suffix}`;
-      
-      // Usar valor em cache se existir
-      if (formatCache.current[cacheKey]) {
-        return formatCache.current[cacheKey];
-      }
-      
-      // Caso contrário, calcular e armazenar em cache
-      const formattedValue = formatDisplayValue(value);
-      formatCache.current[cacheKey] = formattedValue;
-      
-      return formattedValue;
-    };
+  
+  // Processar mudança no valor mínimo - otimizado com throttle para melhor desempenho
+  const handleMinChange = useCallback(throttle((newValue: string) => {
+    // Sanitizar o valor antes de atualizar
+    const sanitizedValue = sanitizeInput(newValue, allowNegative);
+    setMinValue(sanitizedValue);
+  }, 16), [sanitizeInput, setMinValue, allowNegative]);
+  
+  // Processar mudança no valor máximo - otimizado com throttle para melhor desempenho
+  const handleMaxChange = useCallback(throttle((newValue: string) => {
+    // Sanitizar o valor antes de atualizar
+    const sanitizedValue = sanitizeInput(newValue, allowNegative);
+    setMaxValue(sanitizedValue);
+  }, 16), [sanitizeInput, setMaxValue, allowNegative]);
+  
+  // Validar e corrigir valores ao sair do campo
+  const handleBlur = useCallback((isMin: boolean) => {
+    // Finalizar edição
+    finishEditing();
     
-    return {
-      min: getCachedFormat(values.min, 'min'),
-      max: getCachedFormat(values.max, 'max')
-    };
-  }, [values.min, values.max, formatDisplayValue, useThousandSeparator, formatDisplay, prefix, suffix]);
-
-  // Handler para evitar chamadas desnecessárias ao onChange
-  const notifyChange = useCallback(() => {
-    if (!onChange) return;
+    const fieldName = isMin ? 'min' : 'max';
+    const valueToValidate = values[fieldName];
     
-    // Verificar se os valores realmente mudaram
-    if (
-      prevValues.current.min !== values.min || 
-      prevValues.current.max !== values.max
-    ) {
-      prevValues.current = {...values};
-      onChange(values);
-    }
-  }, [onChange, values]);
-
-  // Atualizar o componente pai quando os valores mudarem
-  useEffect(() => {
-    // Evitar a chamada de onChange na primeira renderização
-    if (!onChangeCallRef.current) {
-      onChangeCallRef.current = true;
-      prevValues.current = {...values};
+    // Se o campo estiver vazio após a edição, não fazer nada
+    if (!valueToValidate) {
       return;
     }
     
-    // Usar timeout para evitar múltiplas chamadas em sequência
-    const timer = setTimeout(() => {
-      notifyChange();
-    }, 0);
+    // Corrigir o valor se necessário
+    const correctedValue = correctValue(valueToValidate, isMin);
     
-    return () => clearTimeout(timer);
-  }, [values, notifyChange]);
-
-  // Manipuladores de eventos para campos min/max
-  const handleMinChange = useCallback((value: string) => {
-    setValues(prev => ({ ...prev, min: value }));
-  }, []);
-
-  const handleMaxChange = useCallback((value: string) => {
-    setValues(prev => ({ ...prev, max: value }));
-  }, []);
-
-  // Validar valores quando o usuário sai do campo
-  const handleBlur = useCallback((isMin: boolean) => {
-    const value = isMin ? values.min : values.max;
-    const { error } = validateValue(value, isMin);
-    
-    // Se houver erro, corrigir o valor
-    if (error) {
-      const correctedValue = correctValue(value, isMin);
-      if (isMin) {
-        setValues(prev => ({ ...prev, min: correctedValue }));
-      } else {
-        setValues(prev => ({ ...prev, max: correctedValue }));
-      }
+    // Atualizar apenas se o valor foi corrigido
+    if (correctedValue !== valueToValidate) {
+      updateValues({ [fieldName]: correctedValue });
     }
-  }, [validateValue, correctValue, values]);
-
-  // Reset para valores padrão
-  const resetToDefaults = useCallback(() => {
-    setValues({
-      min: defaultMin,
-      max: defaultMax
-    });
-  }, [defaultMin, defaultMax]);
-
+  }, [finishEditing, values, correctValue, updateValues]);
+  
+  // Calcular valores de exibição formatados - não adicionamos afixos durante edição
+  const displayValues = {
+    min: editingField.current === 'min' ? values.min : formatValue(values.min, false),
+    max: editingField.current === 'max' ? values.max : formatValue(values.max, false)
+  };
+  
+  // Inicializar com valores padrão para exibição se os valores iniciais estiverem vazios
+  useEffect(() => {
+    // Prevent initialization loops by only running once
+    if (hasInitialized.current) return;
+    
+    if (!values.min && !values.max && defaultMin && defaultMax) {
+      updateValues({ min: defaultMin, max: defaultMax });
+    }
+    
+    hasInitialized.current = true;
+  }, [defaultMin, defaultMax, values.min, values.max, updateValues]);
+  
   return {
     values,
     displayValues,
     errors,
+    isActive,
     handleMinChange,
     handleMaxChange,
     handleBlur,
-    resetToDefaults
+    resetValues,
+    userHasInteracted: hasInteracted,
+    // Expor métodos de formatação para uso externo se necessário
+    formatValue,
+    sanitizeInput,
+    addAffixes,
+    removeAffixes
   };
 }

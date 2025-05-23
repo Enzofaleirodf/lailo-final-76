@@ -80,6 +80,7 @@ describe('PriceRangeFilter', () => {
         category: false
       },
       activeFilters: 0,
+      lastUpdatedFilter: null,
       toggleSection: jest.fn(),
       collapseAllSections: jest.fn(),
       expandAllSections: jest.fn(),

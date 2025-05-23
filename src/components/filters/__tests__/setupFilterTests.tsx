@@ -1,110 +1,85 @@
 
+/**
+ * Configuração de mocks de componentes para testes
+ * Este arquivo centraliza os mocks comuns usados nos testes
+ */
+
 import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
-import * as filterStoreModule from '@/stores/useFilterStore';
-import * as uiStoreModule from '@/stores/useUIStore';
+import { ContentType } from '@/types/filters';
+import { DEFAULT_CONTENT_TYPE } from './mockFilterProps';
 
-// Configuração padrão para testes de filtros
-export const mockDispatchEvent = jest.fn();
-window.dispatchEvent = mockDispatchEvent;
-
-// Cliente de consulta padrão para testes
-export const createTestQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
-
-// Mock padrão para o useFilterStore
-export const createDefaultFilterStoreMock = (contentType = 'property') => ({
-  filters: {
-    contentType,
-    location: { state: '', city: '' },
-    vehicleTypes: [],
-    propertyTypes: [],
-    price: { value: [0, 100], range: { min: '', max: '' } },
-    year: { min: '', max: '' },
-    usefulArea: { min: '', max: '' },
-    brand: 'todas',
-    model: 'todos',
-    color: 'todas',
-    format: 'Todos',
-    origin: 'Todas',
-    place: 'Todas'
-  },
-  expandedSections: {
-    location: true,
-    price: true,
-    propertyType: true,
-    usefulArea: false,
-    vehicleType: false,
-    year: false,
-    model: false,
-    color: false,
-    format: false,
-    origin: false,
-    place: false
-  },
-  activeFilters: 0,
-  lastUpdatedFilter: null,
-  updateFilter: jest.fn(),
-  resetFilters: jest.fn(),
-  setFilters: jest.fn(),
-  toggleSection: jest.fn(),
-  collapseAllSections: jest.fn(),
-  expandAllSections: jest.fn()
-});
-
-// Mock padrão para o useUIStore
-export const createDefaultUIStoreMock = () => ({
-  filtersOpen: true,
-  sortOpen: false,
-  setFiltersOpen: jest.fn(),
-  setSortOpen: jest.fn(),
-  toggleFilters: jest.fn(),
-  toggleSort: jest.fn()
-});
-
-// Wrapper para componentes de teste
-export const TestProviders: React.FC<{ 
-  children: React.ReactNode;
-  queryClient?: QueryClient;
-  filterStoreMock?: ReturnType<typeof createDefaultFilterStoreMock>;
-  uiStoreMock?: ReturnType<typeof createDefaultUIStoreMock>;
-}> = ({ 
-  children, 
-  queryClient = createTestQueryClient(),
-  filterStoreMock = createDefaultFilterStoreMock(),
-  uiStoreMock = createDefaultUIStoreMock()
-}) => {
-  // Configure mocks
-  jest.spyOn(filterStoreModule, 'useFilterStore').mockReturnValue(filterStoreMock);
-  jest.spyOn(uiStoreModule, 'useUIStore').mockReturnValue(uiStoreMock);
-  
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+/**
+ * Mock para FilterSection
+ */
+jest.mock('@/components/FilterSection', () => {
+  return {
+    __esModule: true,
+    default: ({ children, contentType = DEFAULT_CONTENT_TYPE, ...props }: React.PropsWithChildren<{ contentType: ContentType }>) => (
+      <div data-testid="mock-filter-section" data-content-type={contentType}>
         {children}
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
-};
+      </div>
+    ),
+  };
+});
 
-// Reset all mocks before each test
-export const resetAllMocks = () => {
-  jest.clearAllMocks();
-  mockDispatchEvent.mockClear();
-};
+/**
+ * Mock para TopFilters
+ */
+jest.mock('@/components/TopFilters', () => {
+  return {
+    __esModule: true,
+    default: ({ contentType = DEFAULT_CONTENT_TYPE }: { contentType: ContentType }) => (
+      <div data-testid="mock-top-filters" data-content-type={contentType}>
+        <div role="tablist">
+          <button role="tab" aria-label="Filtrar imóveis" aria-selected={contentType === 'property'}>
+            Imóveis
+          </button>
+          <button role="tab" aria-label="Filtrar veículos" aria-selected={contentType === 'vehicle'}>
+            Veículos
+          </button>
+        </div>
+      </div>
+    ),
+  };
+});
 
-// Mock para dispositivo móvel
-export const mockMobileDevice = (isMobile = true) => {
-  jest.mock('@/hooks/use-mobile', () => ({
-    useIsMobile: () => isMobile
-  }));
-};
+/**
+ * Mock para MobileFilterBar 
+ */
+jest.mock('@/components/MobileFilterBar', () => {
+  return {
+    __esModule: true,
+    default: ({ contentType = DEFAULT_CONTENT_TYPE, onFilterClick, onSortClick }: { 
+      contentType: ContentType; 
+      onFilterClick: () => void; 
+      onSortClick: () => void; 
+    }) => (
+      <div data-testid="mock-mobile-filter-bar" data-content-type={contentType}>
+        <button onClick={onFilterClick} aria-label="Abrir filtros">Filtrar</button>
+        <button onClick={onSortClick} aria-label="Abrir ordenação">Ordenar</button>
+      </div>
+    ),
+  };
+});
 
-// Mock para dispositivo desktop
-export const mockDesktopDevice = () => mockMobileDevice(false);
+/**
+ * Mock para FilterContent
+ */
+jest.mock('@/components/filters/FilterContent', () => {
+  return {
+    __esModule: true,
+    default: ({ contentType = DEFAULT_CONTENT_TYPE }: { contentType: ContentType }) => (
+      <div data-testid="mock-filter-content" data-content-type={contentType}>
+        Filter Content
+      </div>
+    ),
+  };
+});
+
+/**
+ * Mock para pré-carregamento e exportação de utilitários comuns de teste
+ */
+export const setupFilterTests = () => {
+  // Configurações adicionais podem ser adicionadas aqui
+  console.log('Filter test setup initialized');
+}

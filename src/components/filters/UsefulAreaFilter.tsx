@@ -1,8 +1,8 @@
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
-import RangeFilter from './RangeFilter';
+import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
 import { ContentType } from '@/types/filters';
 import { defaultRangeValues as propertyDefaultRangeValues } from '@/stores/usePropertyFiltersStore';
@@ -15,11 +15,10 @@ interface UsefulAreaFilterProps {
 
 /**
  * Componente de filtro para área útil de imóveis
- * Versão otimizada para evitar loops de renderização
+ * Melhorado para tratamento adequado do sufixo "m²"
  */
 const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilterChange }) => {
   const { filters, updateFilter } = useFilterStoreSelector(contentType);
-  const initializationDone = useRef(false);
   
   // Use our filter consistency hook for unified behavior
   const { handleFilterChange } = useFilterConsistency({
@@ -31,46 +30,18 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
     propertyDefaultRangeValues.usefulArea : 
     vehicleDefaultRangeValues.usefulArea;
   
-  // Handle filter value changes - com memoização para prevenir recriação desnecessária
+  // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {
-    // Proteção contra valores indefinidos
-    if (!filters?.usefulArea) return;
-    
-    // Não atualizar se os valores forem iguais aos atuais
-    if (filters?.usefulArea?.min === values.min && 
-        filters?.usefulArea?.max === values.max) {
-      return;
-    }
-    
     updateFilter('usefulArea', values);
     handleFilterChange();
-  }, [updateFilter, handleFilterChange, filters?.usefulArea]);
+  }, [updateFilter, handleFilterChange]);
   
   // Initialize with default values if empty - only on first mount
   useEffect(() => {
-    // Garantir que a inicialização aconteça apenas uma vez
-    if (initializationDone.current) return;
-    
-    // Proteção contra valores indefinidos
-    if (!filters) return;
-    
-    // Inicializar apenas se ambos os valores estiverem vazios
-    if (!filters?.usefulArea?.min && !filters?.usefulArea?.max) {
-      // Apenas atualizar se realmente diferente dos valores padrão
-      if (defaultValues.min !== filters?.usefulArea?.min || 
-          defaultValues.max !== filters?.usefulArea?.max) {
-        updateFilter('usefulArea', defaultValues);
-      }
+    if (!filters.usefulArea.min && !filters.usefulArea.max) {
+      updateFilter('usefulArea', defaultValues);
     }
-    
-    initializationDone.current = true;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]); 
-  
-  // Verificação de segurança para evitar erros
-  if (!filters?.usefulArea) {
-    return null; // Não renderizar nada se os dados não estiverem prontos
-  }
+  }, [defaultValues, filters.usefulArea]); // Adicionar dependências para evitar loops
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
   const isFilterActive = 
@@ -79,7 +50,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ contentType, onFilt
   
   return (
     <div className="space-y-3">
-      <RangeFilter
+      <SimplifiedRangeFilter
         initialValues={filters.usefulArea}
         defaultValues={defaultValues}
         onChange={handleRangeChange}

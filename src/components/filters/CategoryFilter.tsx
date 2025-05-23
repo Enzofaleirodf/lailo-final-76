@@ -1,35 +1,21 @@
 
-import React, { useCallback, useMemo, memo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStoreSelector } from '@/hooks/useFilterStoreSelector';
 import { ContentType } from '@/types/filters';
 import { getCategories } from '@/utils/categoryTypeMapping';
-import { usePropertyFiltersStore } from '@/stores/usePropertyFiltersStore';
-import { useVehicleFiltersStore } from '@/stores/useVehicleFiltersStore';
 
 interface CategoryFilterProps {
   contentType: ContentType;
   onFilterChange?: () => void;
 }
 
-/**
- * Componente de filtro de categoria otimizado
- * Versão melhorada com memoização para reduzir renderizações desnecessárias
- */
 const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterChange }) => {
-  // Usar seletores otimizados para o Zustand
-  const filters = contentType === 'property'
-    ? usePropertyFiltersStore(state => state.filters)
-    : useVehicleFiltersStore(state => state.filters);
-    
-  const updateFilter = contentType === 'property'
-    ? usePropertyFiltersStore(state => state.updateFilter)
-    : useVehicleFiltersStore(state => state.updateFilter);
+  const { filters, updateFilter } = useFilterStoreSelector(contentType);
   
-  // Obter opções de categoria com base no tipo de conteúdo - memoizado
+  // Obter opções de categoria com base no tipo de conteúdo
   const categoryOptions = useMemo(() => {
-    // Garantir que getCategories retorne um array, mesmo que vazio
-    const categories = getCategories(contentType) || [];
+    const categories = getCategories(contentType);
     return [
       { value: '', label: 'Selecione uma categoria' },
       ...categories.map(category => ({
@@ -39,7 +25,6 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterCh
     ];
   }, [contentType]);
   
-  // Manipulador de alteração de categoria memoizado
   const handleCategoryChange = useCallback((value: string) => {
     updateFilter('category', value);
     
@@ -78,5 +63,4 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ contentType, onFilterCh
   );
 };
 
-// Usar memo para evitar renderizações desnecessárias
-export default memo(CategoryFilter);
+export default React.memo(CategoryFilter);
