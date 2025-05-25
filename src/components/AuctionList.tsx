@@ -10,7 +10,6 @@ import { useAuctionItems } from '@/hooks/useAuctionItems';
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { usePagination } from '@/hooks/usePagination';
-import { useUrlParams } from '@/hooks/useUrlParams';
 import AuctionPagination from './pagination/AuctionPagination';
 import EmptyStateMessage from './EmptyStateMessage';
 
@@ -22,7 +21,6 @@ const AuctionList: React.FC = () => {
   const { filters } = useFilterStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const { handlePageChange } = useUrlParams();
 
   // Usar nosso novo hook personalizado para gerenciar itens
   const {
@@ -34,6 +32,9 @@ const AuctionList: React.FC = () => {
     currentPage,
     itemsPerPage: ITEMS_PER_PAGE
   });
+
+  // Usar hook de paginação para navegação
+  const { navigateToPage } = usePagination({ totalPages });
 
   // Garantir que o número da página seja válido
   useEffect(() => {
@@ -145,7 +146,7 @@ const AuctionList: React.FC = () => {
       <AuctionPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        onPageChange={handlePageChange} 
+        onPageChange={navigateToPage} 
       />
     </div>
   );
