@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
@@ -7,6 +7,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
 import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import { handleKeyboardNavigation } from '@/utils/a11yUtils';
 
 /**
  * FilterContent - Principal componente que renderiza todas as seções de filtros
@@ -22,13 +23,12 @@ const FilterContent: React.FC = () => {
   const isMobile = useIsMobile();
 
   // Usar o hook de consistência do filtro com notificação de toast ativada
-  // Isso atua como um único ponto para tratar mudanças de filtro
   const { cleanup } = useFilterConsistency({
-    onChange: () => {
+    onChange: useCallback(() => {
       window.dispatchEvent(new CustomEvent('filters:applied'));
-    },
+    }, []),
     showToasts: true,
-    autoTriggerEvents: false // Não acionar eventos automaticamente, pois já fazemos isso manualmente
+    autoTriggerEvents: false
   });
 
   // Expandir todas as seções por padrão
@@ -37,19 +37,28 @@ const FilterContent: React.FC = () => {
   }, [expandAllSections]);
 
   // Resetar filtros e notificar - comportamento consistente entre dispositivos
-  const handleResetFilters = React.useCallback(() => {
+  const handleResetFilters = useCallback(() => {
     resetFilters();
     
     // Acionar evento de aplicação de filtro
     window.dispatchEvent(new CustomEvent('filters:applied'));
+    
+    // Anunciar para screen readers
+    const announcer = document.getElementById('filter-announcer');
+    if (announcer) {
+      announcer.textContent = 'Todos os filtros foram removidos';
+    }
   }, [resetFilters]);
 
   // Limpar recursos quando o componente é desmontado
   useEffect(() => {
-    return () => {
-      cleanup();
-    };
+    return cleanup;
   }, [cleanup]);
+
+  // Handler para navegação por teclado no botão de reset
+  const handleResetKeyDown = useCallback((event: React.KeyboardEvent) => {
+    handleKeyboardNavigation(event, handleResetFilters, handleResetFilters);
+  }, [handleResetFilters]);
 
   return (
     <div 
@@ -76,8 +85,9 @@ const FilterContent: React.FC = () => {
         <Button 
           variant="outline" 
           className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 transition-colors font-urbanist" 
-          onClick={handleResetFilters} 
-          aria-label="Resetar todos os filtros"
+          onClick={handleResetFilters}
+          onKeyDown={handleResetKeyDown}
+          aria-label={`Resetar todos os filtros${activeFilters > 0 ? ` (${activeFilters} ativos)` : ''}`}
           data-testid="reset-filters-button"
           tabIndex={0}
         >
@@ -85,6 +95,14 @@ const FilterContent: React.FC = () => {
           {activeFilters > 0 ? ` (${activeFilters})` : ''}
         </Button>
       </div>
+
+      {/* Screen reader announcements */}
+      <div 
+        id="filter-announcer"
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+      />
     </div>
   );
 };
