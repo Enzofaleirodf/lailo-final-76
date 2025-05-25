@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { 
@@ -171,5 +170,5 @@ export const useFilterStore = create<FilterStore>()(
   )
 );
 
-// Exportar os valores padrão para uso em outros componentes
-export { DEFAULT_RANGE_VALUES };
+// Export the constants directly from filterConstants
+export { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';

@@ -1,6 +1,6 @@
-
 import React, { useCallback, useEffect } from 'react';
-import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
+import { useFilterStore } from '@/stores/useFilterStore';
+import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 import SimplifiedRangeFilter from './SimplifiedRangeFilter';
 import { RangeValues } from '@/hooks/useRangeFilter';
@@ -22,7 +22,7 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
   });
   
   // Define default values (mocado - normalmente viria do banco)
-  const defaultValues = defaultRangeValues.usefulArea;
+  const defaultValues = DEFAULT_RANGE_VALUES.usefulArea;
   
   // Handle filter value changes
   const handleRangeChange = useCallback((values: RangeValues) => {

@@ -1,4 +1,3 @@
-
 import { FilterState } from '@/types/filters';
 import { SortOption } from '@/stores/useSortStore';
 import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
