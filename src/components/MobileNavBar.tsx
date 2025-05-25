@@ -4,8 +4,6 @@ import { Home, Search, Heart, Gavel } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import UserAvatar from './UserAvatar';
-import { Z_INDEX } from '@/constants/layout';
-import { getAriaAttributes } from '@/utils/a11yUtils';
 
 const MobileNavBar: React.FC = () => {
   const location = useLocation();
@@ -42,12 +40,7 @@ const MobileNavBar: React.FC = () => {
   ];
 
   return (
-    <nav 
-      className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center shadow-md mobile-nav-bar"
-      style={{ zIndex: Z_INDEX.MOBILE_NAV_BAR }}
-      role="navigation"
-      aria-label="Navegação principal móvel"
-    >
+    <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center z-50 shadow-md mobile-nav-bar">
       {navItems.map((item, index) => {
         const isActive = isActiveRoute(item.href);
         return (
@@ -55,13 +48,12 @@ const MobileNavBar: React.FC = () => {
             key={index}
             to={item.href}
             className={cn(
-              "flex flex-col items-center justify-center w-full h-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-inset",
-              isActive ? "text-brand-600" : "text-gray-500 hover:text-gray-700"
+              "flex flex-col items-center justify-center w-full h-full",
+              isActive ? "text-brand-600" : "text-gray-500"
             )}
-            {...getAriaAttributes('tab', `Ir para ${item.label}`, isActive)}
             aria-current={isActive ? "page" : undefined}
           >
-            <item.icon className="h-5 w-5 mb-1" aria-hidden="true" />
+            <item.icon className="h-5 w-5 mb-1" />
             <span className="text-xs">{item.label}</span>
           </Link>
         );
@@ -70,16 +62,15 @@ const MobileNavBar: React.FC = () => {
       <Link
         to="/perfil"
         className={cn(
-          "flex flex-col items-center justify-center w-full h-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-inset",
-          isActiveRoute('/perfil') ? "text-brand-600" : "text-gray-500 hover:text-gray-700"
+          "flex flex-col items-center justify-center w-full h-full",
+          isActiveRoute('/perfil') ? "text-brand-600" : "text-gray-500"
         )}
-        {...getAriaAttributes('tab', 'Ir para Perfil', isActiveRoute('/perfil'))}
         aria-current={isActiveRoute('/perfil') ? "page" : undefined}
       >
         <UserAvatar mobile={true} />
         <span className="text-xs mt-1">Perfil</span>
       </Link>
-    </nav>
+    </div>
   );
 };
 
