@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import RangeInputField from './RangeInputField';
 import { useRangeFilter, RangeValues } from '@/hooks/useRangeFilter';
 import { cn } from '@/lib/utils';
+import { COLORS } from '@/constants/designSystem';
 import RangeErrorMessages from './RangeErrorMessages';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useResponsiveConsistency } from '@/hooks/useResponsiveConsistency';
@@ -57,7 +58,7 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   // Verificar consistência em diferentes tamanhos de tela
   useResponsiveConsistency({ 
     targetElements: [
-      {
+      { 
         selector: '[data-testid="range-filter"] input',
         properties: ['border-color', 'border-radius', 'padding', 'background-color']
       }

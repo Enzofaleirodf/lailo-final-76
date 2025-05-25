@@ -2,6 +2,8 @@
 import React from 'react';
 import { PropertyItem } from '@/types/property';
 import { formatUsefulArea } from '@/utils/auctionUtils';
+import { handleError } from '@/utils/errorUtils';
+import ErrorBoundary from './ErrorBoundary';
 import BaseCard from './BaseCard';
 
 interface PropertyCardProps {
@@ -18,7 +20,7 @@ interface PropertyCardProps {
 const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
   // Guard clause para evitar renderização se property for undefined
   if (!property) {
-    console.error('PropertyCard received undefined property data');
+    handleError(new Error('PropertyCard received undefined property data'), 'PropertyCard');
     return null;
   }
   
@@ -52,20 +54,22 @@ const PropertyCard: React.FC<PropertyCardProps> = React.memo(({ property }) => {
   );
   
   return (
-    <BaseCard 
-      id={property.id}
-      title={`${propertyType} • ${formattedArea}`}
-      price={{
-        current: property.currentBid,
-        original: property.originalPrice
-      }}
-      extraInfo={extraInfo}
-      imageUrl={property.imageUrl}
-      location={property.location}
-      origin={property.origin}
-      place={property.place}
-      endDate={property.endDate}
-    />
+    <ErrorBoundary componentName="PropertyCard">
+      <BaseCard 
+        id={property.id}
+        title={`${propertyType} • ${formattedArea}`}
+        price={{
+          current: property.currentBid,
+          original: property.originalPrice
+        }}
+        extraInfo={extraInfo}
+        imageUrl={property.imageUrl}
+        location={property.location}
+        origin={property.origin}
+        place={property.place}
+        endDate={property.endDate}
+      />
+    </ErrorBoundary>
   );
 });
 

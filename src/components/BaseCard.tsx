@@ -5,6 +5,8 @@ import { Calendar } from 'lucide-react';
 import { formatCurrency } from '@/utils/auctionUtils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
+import { getCardStyles } from '@/utils/styleUtils';
 import { Separator } from "@/components/ui/separator";
 import FavoriteButton from './FavoriteButton';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -110,7 +112,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
   return (
     <motion.div 
       whileHover={{
-        y: -4,
+        y: -4, 
         transition: { duration: 0.2 }
       }} 
       whileTap={{ scale: 0.98 }}
@@ -119,7 +121,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
     >
       {/* Card Container - Definindo altura fixa para padronização */}
       <div 
-        className="rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 w-full flex flex-row overflow-hidden"
+        className={cn(getCardStyles(true), "w-full flex flex-row overflow-hidden")}
         style={{ height: cardHeight }}
       >
         {/* Área da imagem - posicionada à esquerda COM PADDING, exceto no lado direito */}
@@ -127,7 +129,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
           <div className={`relative w-1/3 h-full bg-white overflow-hidden ${isMobile ? 'pt-3 pl-3 pb-3 pr-0' : 'pt-4 pl-4 pb-4 pr-0'}`}>
             {!imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-white">
-                <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div> 
               </div>
             )}
             <img 
@@ -142,7 +144,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
             
             {/* Indicador de "terminando em breve" */}
             {isEndingSoon() && (
-              <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+              <div className={`absolute top-2 left-2 ${COLORS.bg.error} ${COLORS.text.white} px-2 py-0.5 rounded text-xs font-medium`}>
                 Termina em breve
               </div>
             )}
@@ -160,7 +162,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
             <div>
               {/* Linha 1 - título e botão favorito */}
               <div className="flex justify-between items-start gap-2 mb-1 w-full items-center">
-                <h3 className={`font-semibold text-gray-900 line-clamp-1 tracking-tight ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} font-urbanist`}>
+                <h3 className={`${TYPOGRAPHY.weight.semibold} ${COLORS.text.gray[900]} line-clamp-1 ${TYPOGRAPHY.tracking.tight} ${isMobile ? 'text-sm leading-tight' : 'text-lg leading-tight'} ${TYPOGRAPHY.family.urbanist}`}>
                   {title}
                 </h3>
                 <FavoriteButton 
@@ -172,13 +174,13 @@ const BaseCard: React.FC<BaseCardProps> = ({
               </div>
               
               {/* Linha 2 - ExtraInfo específico para cada tipo de conteúdo */}
-              <div className={`flex items-center text-gray-600 ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} font-urbanist`}>
+              <div className={`flex items-center ${COLORS.text.gray[600]} ${isMobile ? 'text-xs mb-2' : 'text-sm mb-3'} ${TYPOGRAPHY.family.urbanist}`}>
                 {extraInfo}
               </div>
               
               {/* Linha 3 - Preço e desconto */}
               <div className={`flex items-center flex-wrap gap-2 ${isMobile ? 'mb-2' : 'mb-3'} w-full`}>
-                <span className={`font-bold text-gray-900 ${isMobile ? 'text-base' : 'text-xl'} leading-none font-urbanist`}>
+                <span className={`${TYPOGRAPHY.weight.bold} ${COLORS.text.gray[900]} ${isMobile ? 'text-base' : 'text-xl'} ${TYPOGRAPHY.leading.none} ${TYPOGRAPHY.family.urbanist}`}>
                   {formatCurrency(price.current)}
                 </span>
                 {price.original && (
@@ -186,10 +188,10 @@ const BaseCard: React.FC<BaseCardProps> = ({
                     {discount && (
                       <span className="bg-accent2-400 px-2 py-0.5 rounded-md text-xs font-medium text-inherit font-urbanist">
                         {discount}% OFF
-                      </span>
+                      </span> 
                     )}
-                    <span className="text-gray-500 line-through text-xs font-urbanist">
-                      {formatCurrency(price.original)}
+                    <span className={`${COLORS.text.gray[500]} line-through text-xs ${TYPOGRAPHY.family.urbanist}`}>
+                      {formatCurrency(price.original)} 
                     </span>
                   </div>
                 )}
@@ -197,7 +199,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
             </div>
             
             {/* Divisor */}
-            <Separator className={`${isMobile ? 'my-2' : 'my-3'} bg-gray-100`} />
+            <Separator className={`${isMobile ? 'my-2' : 'my-3'} ${COLORS.bg.gray[100]}`} />
             
             {/* Linha 4 - Detalhes do leilão */}
             <div className="flex justify-between items-center w-full">

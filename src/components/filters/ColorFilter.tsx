@@ -3,19 +3,12 @@ import React, { useCallback } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';
+import { COLOR_OPTIONS } from '@/constants/filterConstants';
+import { TYPOGRAPHY, COLORS } from '@/constants/designSystem';
 
 interface ColorFilterProps {
   onFilterChange?: () => void;
 }
-
-const colorOptions = [
-  { value: 'todas', label: 'Todas' },
-  { value: 'preto', label: 'Preto' },
-  { value: 'branco', label: 'Branco' },
-  { value: 'prata', label: 'Prata' },
-  { value: 'azul', label: 'Azul' },
-  { value: 'vermelho', label: 'Vermelho' }
-];
 
 /**
  * Componente de filtro de cor
@@ -39,7 +32,7 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
       role="group" 
       aria-labelledby="color-filter-label"
     >
-      <label id="color-filter-label" htmlFor="color-filter" className="block text-sm font-medium text-gray-700 mb-1 font-urbanist">
+      <label id="color-filter-label" htmlFor="color-filter" className={`block ${TYPOGRAPHY.size.sm} ${TYPOGRAPHY.weight.medium} ${COLORS.text.gray[700]} mb-1 ${TYPOGRAPHY.family.urbanist}`}>
         Cor
       </label>
       <FilterDropdown
@@ -47,8 +40,8 @@ const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
         aria-label="Selecione a cor"
         value={filters.color || 'todas'}
         onChange={handleColorChange}
-        options={colorOptions}
-        className="border-gray-300 font-urbanist"
+        options={COLOR_OPTIONS}
+        className={`${COLORS.border.gray[300]} ${TYPOGRAPHY.family.urbanist}`}
       />
     </div>
   );

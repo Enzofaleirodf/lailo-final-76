@@ -1,7 +1,7 @@
 
 import { FilterState } from '@/types/filters';
 import { SortOption } from '@/stores/useSortStore';
-import { defaultRangeValues } from '@/stores/useFilterStore';
+import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 
 export const hasFilterChanged = (currentFilters: FilterState, params: URLSearchParams): boolean => {
   if ((params.get('state') || '') !== currentFilters.location.state) return true;
@@ -44,25 +44,25 @@ const hasRangeChanged = (
       minParam = params.get('yearMin');
       maxParam = params.get('yearMax');
       currentMin = currentFilters.year.min;
-      currentMax = currentFilters.year.max;
-      defaultMin = defaultRangeValues.year.min;
-      defaultMax = defaultRangeValues.year.max;
+      currentMax = currentFilters.year.max; 
+      defaultMin = DEFAULT_RANGE_VALUES.year.min;
+      defaultMax = DEFAULT_RANGE_VALUES.year.max;
       break;
     case 'price':
       minParam = params.get('priceMin');
       maxParam = params.get('priceMax');
       currentMin = currentFilters.price.range.min;
       currentMax = currentFilters.price.range.max;
-      defaultMin = defaultRangeValues.price.min;
-      defaultMax = defaultRangeValues.price.max;
+      defaultMin = DEFAULT_RANGE_VALUES.price.min;
+      defaultMax = DEFAULT_RANGE_VALUES.price.max;
       break;
     case 'usefulArea':
       minParam = params.get('usefulAreaMin');
       maxParam = params.get('usefulAreaMax');
       currentMin = currentFilters.usefulArea.min;
       currentMax = currentFilters.usefulArea.max;
-      defaultMin = defaultRangeValues.usefulArea.min;
-      defaultMax = defaultRangeValues.usefulArea.max;
+      defaultMin = DEFAULT_RANGE_VALUES.usefulArea.min;
+      defaultMax = DEFAULT_RANGE_VALUES.usefulArea.max;
       break;
   }
   
@@ -151,9 +151,9 @@ const updateVehicleAndPropertyParams = (params: URLSearchParams, filters: Filter
 };
 
 const updateRangeParams = (params: URLSearchParams, filters: FilterState): void => {
-  updateRangeParam(params, 'year', filters.year.min, filters.year.max, defaultRangeValues.year.min, defaultRangeValues.year.max);
-  updateRangeParam(params, 'price', filters.price.range.min, filters.price.range.max, defaultRangeValues.price.min, defaultRangeValues.price.max);
-  updateRangeParam(params, 'usefulArea', filters.usefulArea.min, filters.usefulArea.max, defaultRangeValues.usefulArea.min, defaultRangeValues.usefulArea.max);
+  updateRangeParam(params, 'year', filters.year.min, filters.year.max, DEFAULT_RANGE_VALUES.year.min, DEFAULT_RANGE_VALUES.year.max);
+  updateRangeParam(params, 'price', filters.price.range.min, filters.price.range.max, DEFAULT_RANGE_VALUES.price.min, DEFAULT_RANGE_VALUES.price.max);
+  updateRangeParam(params, 'usefulArea', filters.usefulArea.min, filters.usefulArea.max, DEFAULT_RANGE_VALUES.usefulArea.min, DEFAULT_RANGE_VALUES.usefulArea.max);
 };
 
 const updateRangeParam = (

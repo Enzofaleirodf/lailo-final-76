@@ -1,9 +1,10 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { useFilterRangeValidator } from '@/hooks/useFilterRangeValidator';
 import { useRangeDisplayFormat } from '@/hooks/useRangeDisplayFormat';
 import { cn } from '@/lib/utils';
+import { COLORS, COMPONENT_STYLES } from '@/constants/designSystem';
+import { getInputStyles } from '@/utils/styleUtils';
 import { Badge } from '@/components/ui/badge';
 
 interface FilterRangeInputProps {
@@ -78,7 +79,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
   const suffixPaddingClass = inputSuffix ? "pr-12" : "";
 
   return (
-    <div 
+    <div
       className="space-y-1"
       role="group"
       aria-label="Intervalo de valores"
@@ -88,13 +89,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           <Input 
             type="text" 
             placeholder={inputPrefix ? `${inputPrefix} ${minPlaceholder}` : minPlaceholder} 
-            className={cn(
-              "h-10 text-sm",
-              prefixPaddingClass,
-              suffixPaddingClass,
-              minError ? "border-red-300 focus-visible:ring-red-500" : 
-              isFilterActive ? "border-brand-300 focus-visible:ring-brand-500" : "border-gray-300 focus-visible:ring-brand-500"
-            )}
+            className={cn(getInputStyles(!!minError, isFilterActive), prefixPaddingClass, suffixPaddingClass)}
             value={formatDisplayValue(minValue)}
             onChange={(e) => handleMinChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMin}
@@ -106,13 +101,13 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           />
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm font-medium mr-2">{inputPrefix}</span>
+              <span className={`${COLORS.text.gray[500]} text-sm font-medium mr-2`}>{inputPrefix}</span>
             </div>
           )}
           
           {inputSuffix && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm ml-3">{inputSuffix}</span>
+              <span className={`${COLORS.text.gray[500]} text-sm ml-3`}>{inputSuffix}</span>
             </div>
           )}
         </div>
@@ -121,13 +116,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           <Input 
             type="text" 
             placeholder={inputPrefix ? `${inputPrefix} ${maxPlaceholder}` : maxPlaceholder}
-            className={cn(
-              "h-10 text-sm",
-              prefixPaddingClass,
-              suffixPaddingClass,
-              maxError ? "border-red-300 focus-visible:ring-red-500" : 
-              isFilterActive ? "border-brand-300 focus-visible:ring-brand-500" : "border-gray-300 focus-visible:ring-brand-500"
-            )}
+            className={cn(getInputStyles(!!maxError, isFilterActive), prefixPaddingClass, suffixPaddingClass)}
             value={formatDisplayValue(maxValue)}
             onChange={(e) => handleMaxChange(e.target.value.replace(/[^\d.,\-]/g, ''))}
             aria-label={ariaLabelMax}
@@ -139,21 +128,21 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
           />
           {inputPrefix && (
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <span className="text-gray-500 text-sm font-medium mr-2">{inputPrefix}</span>
+              <span className={`${COLORS.text.gray[500]} text-sm font-medium mr-2`}>{inputPrefix}</span>
             </div>
           )}
           
           {inputSuffix && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <span className="text-gray-500 text-sm ml-3">{inputSuffix}</span>
+              <span className={`${COLORS.text.gray[500]} text-sm ml-3`}>{inputSuffix}</span>
             </div>
           )}
         </div>
 
         {isFilterActive && (
           <Badge 
-            variant="outline" 
-            className="bg-brand-50 text-brand-700 border-brand-200 h-10 flex items-center"
+            variant="outline"
+            className={`${COLORS.bg.brand[50]} ${COLORS.text.brand[700]} ${COLORS.border.brand[200]} h-10 flex items-center`}
             aria-label="Filtro ativo"
           >
             Ativo
@@ -165,12 +154,12 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
       {(minError || maxError) && (
         <div className="flex justify-between text-xs">
           {minError && (
-            <p id="min-error" className="text-red-500" role="alert">
+            <p id="min-error" className={COLORS.text.error} role="alert">
               {minError}
             </p>
           )}
           {maxError && (
-            <p id="max-error" className="text-red-500 ml-auto" role="alert">
+            <p id="max-error" className={`${COLORS.text.error} ml-auto`} role="alert">
               {maxError}
             </p>
           )}
@@ -179,7 +168,7 @@ const FilterRangeInput: React.FC<FilterRangeInputProps> = ({
 
       {/* Indicador visual de range ativo */}
       {isFilterActive && defaultMin && defaultMax && (
-        <div className="text-xs text-brand-600 mt-1">
+        <div className={`text-xs ${COLORS.text.brand[600]} mt-1`}>
           <p>
             {minValue !== defaultMin || maxValue !== defaultMax ? 
               "Filtro personalizado aplicado" : 

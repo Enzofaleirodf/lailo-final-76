@@ -2,16 +2,10 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { 
-  ContentType, 
-  FilterState, 
-  LocationFilter, 
-  ExpandedSectionsState,
-  FilterFormat,
-  FilterOrigin,
-  FilterPlace,
-  FilterStoreState,
-  PriceRangeFilter
+  ContentType, FilterState, LocationFilter, ExpandedSectionsState,
+  FilterFormat, FilterOrigin, FilterPlace, FilterStoreState, PriceRangeFilter
 } from '@/types/filters';
+import { DEFAULT_FILTER_VALUES, DEFAULT_EXPANDED_SECTIONS, DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 
 // Define the shape of our store
 interface FilterStore extends FilterStoreState {
@@ -26,71 +20,6 @@ interface FilterStore extends FilterStoreState {
   collapseAllSections: () => void;
   expandAllSections: () => void;
 }
-
-// Define the initial state for filters with default values that match UI appearance
-const initialFilterState: FilterState = {
-  contentType: 'property',
-  location: {
-    state: '',
-    city: ''
-  },
-  vehicleTypes: [],
-  propertyTypes: [],
-  price: {
-    value: [0, 100],
-    range: {
-      min: '',
-      max: ''
-    }
-  },
-  year: {
-    min: '',
-    max: ''
-  },
-  usefulArea: {
-    min: '',
-    max: ''
-  },
-  brand: 'todas',
-  model: 'todos',
-  color: 'todas',
-  format: 'Leilão', // Default visual option changed from 'Todos' to 'Leilão'
-  origin: 'Todas',
-  place: 'Todas',
-  category: 'Todos' // Novo campo de categoria com valor padrão
-};
-
-// Define which filter sections are expanded by default
-const initialExpandedSections: ExpandedSectionsState = {
-  location: true,
-  vehicleType: true,
-  propertyType: true,
-  price: true,
-  year: true,
-  usefulArea: true,
-  model: true,
-  color: true,
-  format: true,
-  origin: true,
-  place: true,
-  category: true // Nova seção para categoria
-};
-
-// Valores padrão para os filtros de intervalo (simulando o que viria do banco)
-const defaultRangeValues = {
-  price: {
-    min: "10000",
-    max: "1000000"
-  },
-  year: {
-    min: "2000",
-    max: new Date().getFullYear().toString()
-  },
-  usefulArea: {
-    min: "30",
-    max: "500"
-  }
-};
 
 // Count active filters to show in badge
 // Improved to only count filters that differ from default values or initial state
@@ -109,22 +38,22 @@ const countActiveFilters = (filters: FilterState): number => {
   // Price range - só contar se os valores forem significativamente diferentes dos padrões
   // Verificar se o valor mínimo e máximo são próximos dos padrões (com uma margem de tolerância)
   const isPriceDefault = 
-    (!filters.price.range.min || filters.price.range.min === defaultRangeValues.price.min) && 
-    (!filters.price.range.max || filters.price.range.max === defaultRangeValues.price.max);
+    (!filters.price.range.min || filters.price.range.min === DEFAULT_RANGE_VALUES.price.min) && 
+    (!filters.price.range.max || filters.price.range.max === DEFAULT_RANGE_VALUES.price.max);
   
   if (!isPriceDefault) count++;
   
   // Year range - só contar se os valores forem significativamente diferentes dos padrões
   const isYearDefault = 
-    (!filters.year.min || filters.year.min === defaultRangeValues.year.min) && 
-    (!filters.year.max || filters.year.max === defaultRangeValues.year.max);
+    (!filters.year.min || filters.year.min === DEFAULT_RANGE_VALUES.year.min) && 
+    (!filters.year.max || filters.year.max === DEFAULT_RANGE_VALUES.year.max);
   
   if (!isYearDefault) count++;
   
   // Useful area range - só contar se os valores forem significativamente diferentes dos padrões
   const isAreaDefault = 
-    (!filters.usefulArea.min || filters.usefulArea.min === defaultRangeValues.usefulArea.min) && 
-    (!filters.usefulArea.max || filters.usefulArea.max === defaultRangeValues.usefulArea.max);
+    (!filters.usefulArea.min || filters.usefulArea.min === DEFAULT_RANGE_VALUES.usefulArea.min) && 
+    (!filters.usefulArea.max || filters.usefulArea.max === DEFAULT_RANGE_VALUES.usefulArea.max);
   
   if (!isAreaDefault) count++;
   
@@ -148,8 +77,8 @@ const countActiveFilters = (filters: FilterState): number => {
 export const useFilterStore = create<FilterStore>()(
   devtools(
     (set, get) => ({
-      filters: initialFilterState,
-      expandedSections: initialExpandedSections,
+      filters: DEFAULT_FILTER_VALUES,
+      expandedSections: DEFAULT_EXPANDED_SECTIONS,
       activeFilters: 0,
       lastUpdatedFilter: 'initial',
       
@@ -189,7 +118,7 @@ export const useFilterStore = create<FilterStore>()(
       resetFilters: () => {
         set((state) => ({ 
           filters: { 
-            ...initialFilterState,
+            ...DEFAULT_FILTER_VALUES,
             // Preserve content type when resetting
             contentType: state.filters.contentType
           }, 
@@ -213,7 +142,7 @@ export const useFilterStore = create<FilterStore>()(
       // Toggle expanded/collapsed state of filter sections
       toggleSection: (section) => {
         set((state) => ({
-          expandedSections: {
+          expandedSections: { 
             ...state.expandedSections,
             [section]: !state.expandedSections[section]
           }
@@ -222,7 +151,7 @@ export const useFilterStore = create<FilterStore>()(
       
       // Collapse all filter sections
       collapseAllSections: () => {
-        const sections = { ...initialExpandedSections };
+        const sections = { ...DEFAULT_EXPANDED_SECTIONS };
         Object.keys(sections).forEach((key) => {
           sections[key as keyof ExpandedSectionsState] = false;
         });
@@ -231,7 +160,7 @@ export const useFilterStore = create<FilterStore>()(
       
       // Expand all filter sections
       expandAllSections: () => {
-        const sections = { ...initialExpandedSections };
+        const sections = { ...DEFAULT_EXPANDED_SECTIONS };
         Object.keys(sections).forEach((key) => {
           sections[key as keyof ExpandedSectionsState] = true;
         });
@@ -243,4 +172,4 @@ export const useFilterStore = create<FilterStore>()(
 );
 
 // Exportar os valores padrão para uso em outros componentes
-export { defaultRangeValues };
+export { DEFAULT_RANGE_VALUES };

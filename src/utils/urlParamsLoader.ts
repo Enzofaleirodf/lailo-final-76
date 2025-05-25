@@ -1,6 +1,6 @@
 
 import { FilterState } from '@/types/filters';
-import { defaultRangeValues } from '@/stores/useFilterStore';
+import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 import { isValidFormat, isValidOrigin, isValidPlace } from './urlParamsValidator';
 
 /**
@@ -83,18 +83,18 @@ const loadVehicleAndPropertyParams = (
 const loadRangeParams = (
   searchParams: URLSearchParams,
   newFilters: FilterState
-): boolean => {
+): boolean => { 
   let hasChanges = false;
   
-  if (loadRangeParam(searchParams, 'year', defaultRangeValues.year.min, defaultRangeValues.year.max, (min, max) => {
+  if (loadRangeParam(searchParams, 'year', DEFAULT_RANGE_VALUES.year.min, DEFAULT_RANGE_VALUES.year.max, (min, max) => {
     newFilters.year = { min, max };
   })) hasChanges = true;
   
-  if (loadRangeParam(searchParams, 'price', defaultRangeValues.price.min, defaultRangeValues.price.max, (min, max) => {
+  if (loadRangeParam(searchParams, 'price', DEFAULT_RANGE_VALUES.price.min, DEFAULT_RANGE_VALUES.price.max, (min, max) => {
     newFilters.price = { ...newFilters.price, range: { min, max } };
   })) hasChanges = true;
   
-  if (loadRangeParam(searchParams, 'usefulArea', defaultRangeValues.usefulArea.min, defaultRangeValues.usefulArea.max, (min, max) => {
+  if (loadRangeParam(searchParams, 'usefulArea', DEFAULT_RANGE_VALUES.usefulArea.min, DEFAULT_RANGE_VALUES.usefulArea.max, (min, max) => {
     newFilters.usefulArea = { min, max };
   })) hasChanges = true;
   
@@ -104,8 +104,8 @@ const loadRangeParams = (
 const loadRangeParam = (
   searchParams: URLSearchParams,
   paramName: string,
-  defaultMin: string,
-  defaultMax: string,
+  defaultMin: string, 
+  defaultMax: string, 
   updateFilter: (min: string, max: string) => void
 ): boolean => {
   const minParam = searchParams.get(`${paramName}Min`);

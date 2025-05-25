@@ -4,6 +4,7 @@ import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { LightLogin } from '@/components/ui/sign-in';
+import { COLORS } from '@/constants/designSystem';
 import { useAuth } from '@/hooks/useAuth';
 
 interface FavoriteButtonProps {
@@ -39,13 +40,13 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   return (
     <>
       <Button
-        variant="ghost"
-        className={`h-6 w-6 min-h-0 min-w-0 p-0 hover:bg-transparent ${className}`}
+        variant="ghost" 
+        className={`h-6 w-6 min-h-0 min-w-0 p-0 hover:bg-transparent ${className}`} 
         onClick={handleClick}
         aria-label={isFavorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
       >
         <Heart 
-          className={`h-5 w-5 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-500'}`} 
+          className={`h-5 w-5 ${isFavorited ? `fill-red-500 ${COLORS.text.error}` : COLORS.text.gray[500]}`} 
         />
       </Button>
       

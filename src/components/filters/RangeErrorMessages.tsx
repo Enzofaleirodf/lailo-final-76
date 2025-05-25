@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { COLORS } from '@/constants/designSystem';
 
 interface RangeErrorMessagesProps {
   minError: string | null;
@@ -27,7 +28,7 @@ const RangeErrorMessages: React.FC<RangeErrorMessagesProps> = ({
   }
   
   // Classes para garantir consistência visual entre dispositivos
-  const errorClasses = "text-xs text-red-600 animate-fadeIn";
+  const errorClasses = `text-xs ${COLORS.text.error} animate-fadeIn`;
   
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between gap-1">

@@ -2,6 +2,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { COLORS, TYPOGRAPHY, COMPONENT_STYLES } from '@/constants/designSystem';
+import { getDropdownStyles } from '@/utils/styleUtils';
 
 interface FilterDropdownProps {
   value: string;
@@ -35,7 +37,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   // Verificar se o valor não está vazio e não é um valor padrão como "Todas", "Todos"
   const isValueSelected = value && value !== "todas" && value !== "Todas" && value !== "todos" && value !== "Todos";
   
-  // Handler para mudança com prevenção de efeitos colaterais de rolagem
+  // Handler para mudança com prevenção de efeitos colaterais de rolagem 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // Capturar a posição de rolagem atual
     const scrollPosition = window.scrollY;
@@ -120,14 +122,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         ref={selectRef}
         id={id || `filter-dropdown-${Math.random().toString(36).substring(2, 9)}`}
         aria-label={ariaLabel}
-        className={cn(
-          "w-full border rounded-lg h-10 pl-3 pr-10 text-sm appearance-none font-urbanist",
-          isValueSelected ? "text-gray-800 font-medium" : "text-gray-600",
-          "border-gray-300",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
-          disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white cursor-pointer",
-          className
-        )}
+        className={cn(getDropdownStyles(isValueSelected, disabled), className)}
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -152,8 +147,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       <ChevronDown 
         size={16} 
         className={cn(
-          "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none",
-          disabled ? "text-gray-400" : "text-gray-500"
+          "absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none", 
+          disabled ? COLORS.text.gray[400] : COLORS.text.gray[500]
         )} 
         aria-hidden="true"
       />

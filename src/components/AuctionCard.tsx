@@ -3,6 +3,8 @@ import React from 'react';
 import { AuctionItem } from '@/types/auction';
 import BaseCard from './BaseCard';
 import { useIsMobile } from '@/hooks/use-mobile';
+import ErrorBoundary from './ErrorBoundary';
+import { handleError } from '@/utils/errorUtils';
 
 interface AuctionCardProps {
   auction: AuctionItem;
@@ -18,7 +20,7 @@ interface AuctionCardProps {
 const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   // Guard clause para evitar renderização se auction for undefined
   if (!auction) {
-    console.error('AuctionCard received undefined auction data');
+    handleError(new Error('AuctionCard received undefined auction data'), 'AuctionCard');
     return null;
   }
   
@@ -66,20 +68,22 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   ) : <span>Informações não disponíveis</span>;
   
   return (
-    <BaseCard 
-      id={auction.id}
-      title={getVehicleTitle()}
-      price={{
-        current: auction.currentBid,
-        original: auction.originalPrice
-      }}
-      extraInfo={extraInfo}
-      imageUrl={auction.imageUrl}
-      location={auction.location}
-      origin={auction.origin}
-      place={auction.place}
-      endDate={auction.endDate}
-    />
+    <ErrorBoundary componentName="AuctionCard">
+      <BaseCard 
+        id={auction.id}
+        title={getVehicleTitle()}
+        price={{
+          current: auction.currentBid,
+          original: auction.originalPrice
+        }}
+        extraInfo={extraInfo}
+        imageUrl={auction.imageUrl}
+        location={auction.location}
+        origin={auction.origin}
+        place={auction.place}
+        endDate={auction.endDate}
+      />
+    </ErrorBoundary>
   );
 });
 

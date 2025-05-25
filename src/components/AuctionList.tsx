@@ -9,13 +9,16 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useAuctionItems } from '@/hooks/useAuctionItems';
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
+import { MAGIC_NUMBERS } from '@/constants/designSystem';
+import ErrorBoundary from './ErrorBoundary';
+import { handleError } from '@/utils/errorUtils';
 import { usePagination } from '@/hooks/usePagination';
 import AuctionPagination from './pagination/AuctionPagination';
 import EmptyStateMessage from './EmptyStateMessage';
 
 // Definimos 30 itens por página conforme requisito
-const ITEMS_PER_PAGE = 30;
-const SKELETON_COUNT = 6;
+const ITEMS_PER_PAGE = MAGIC_NUMBERS.itemsPerPage;
+const SKELETON_COUNT = MAGIC_NUMBERS.skeletonCount;
 
 const AuctionList: React.FC = () => {
   const { filters } = useFilterStore();
@@ -96,7 +99,7 @@ const AuctionList: React.FC = () => {
               
               {items.map(item => {
                 if (!item) {
-                  console.error('Null item found in items array');
+                  handleError(new Error('Null item found in items array'), 'AuctionList');
                   return null;
                 }
 
@@ -105,35 +108,39 @@ const AuctionList: React.FC = () => {
                   // Type guard para garantir que este é um PropertyItem com os campos necessários
                   const property = item as PropertyItem;
                   return (
-                    <motion.div 
-                      key={property.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: Math.random() * 0.2
-                      }} 
-                      className="mt-0 pt-0 mb-2"
-                    >
-                      <PropertyCard property={property} />
-                    </motion.div>
+                    <ErrorBoundary key={property.id} componentName={`PropertyCard-${property.id}`}>
+                      <motion.div 
+                        key={property.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: Math.random() * 0.2
+                        }} 
+                        className="mt-0 pt-0 mb-2"
+                      >
+                        <PropertyCard property={property} />
+                      </motion.div>
+                    </ErrorBoundary>
                   );
                 } else {
                   // Para leilões de veículos, usar o AuctionCard existente
                   const auction = item as AuctionItem;
                   return (
-                    <motion.div 
-                      key={auction.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: Math.random() * 0.2
-                      }} 
-                      className="mt-0 pt-0 mb-2"
-                    >
-                      <AuctionCard auction={auction} />
-                    </motion.div>
+                    <ErrorBoundary key={auction.id} componentName={`AuctionCard-${auction.id}`}>
+                      <motion.div 
+                        key={auction.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: Math.random() * 0.2
+                        }} 
+                        className="mt-0 pt-0 mb-2"
+                      >
+                        <AuctionCard auction={auction} />
+                      </motion.div>
+                    </ErrorBoundary>
                   );
                 }
               })}

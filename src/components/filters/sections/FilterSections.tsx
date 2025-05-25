@@ -1,6 +1,7 @@
 
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { useFilterStore } from '@/stores/useFilterStore';
 import VehicleTypeFilter from '../VehicleTypeFilter';
 import PropertyTypeFilter from '../PropertyTypeFilter';
@@ -29,57 +30,73 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
   // Sempre renderizar o filtro de Categoria primeiro
   return (
     <>
-      <FilterSectionComponent 
-        title="Categoria" 
-        isExpanded={true} 
-        onToggle={() => {}}
-      >
-        <CategoryFilter onFilterChange={onFilterChange} />
-      </FilterSectionComponent>
+      <ErrorBoundary componentName="CategoryFilter">
+        <FilterSectionComponent 
+          title="Categoria" 
+          isExpanded={true} 
+          onToggle={() => {}}
+        >
+          <CategoryFilter onFilterChange={onFilterChange} />
+        </FilterSectionComponent>
+      </ErrorBoundary>
 
       {isPropertyMode ? (
         <>
           {showTypeFilter && (
+            <ErrorBoundary componentName="PropertyTypeFilter">
+              <FilterSectionComponent 
+                title="Tipo de imóvel" 
+                isExpanded={true} 
+                onToggle={() => {}}
+              >
+                <PropertyTypeFilter onFilterChange={onFilterChange} />
+              </FilterSectionComponent>
+            </ErrorBoundary>
+          )}
+
+          <ErrorBoundary componentName="UsefulAreaFilter">
             <FilterSectionComponent 
-              title="Tipo de imóvel" 
+              title="Área útil" 
               isExpanded={true} 
               onToggle={() => {}}
             >
-              <PropertyTypeFilter onFilterChange={onFilterChange} />
+              <UsefulAreaFilter onFilterChange={onFilterChange} />
             </FilterSectionComponent>
-          )}
-
-          <FilterSectionComponent 
-            title="Área útil" 
-            isExpanded={true} 
-            onToggle={() => {}}
-          >
-            <UsefulAreaFilter onFilterChange={onFilterChange} />
-          </FilterSectionComponent>
+          </ErrorBoundary>
         </>
       ) : (
         <>
           {showTypeFilter && (
+            <ErrorBoundary componentName="VehicleTypeFilter">
+              <FilterSectionComponent 
+                title="Tipo de veículo" 
+                isExpanded={true} 
+                onToggle={() => {}}
+              >
+                <VehicleTypeFilter onFilterChange={onFilterChange} />
+              </FilterSectionComponent>
+            </ErrorBoundary>
+          )}
+
+          <ErrorBoundary componentName="VehicleCharacteristics">
             <FilterSectionComponent 
-              title="Tipo de veículo" 
+              title="Características do veículo" 
               isExpanded={true} 
               onToggle={() => {}}
             >
-              <VehicleTypeFilter onFilterChange={onFilterChange} />
+              <div className="space-y-4">
+                <ErrorBoundary componentName="ModelFilter">
+                  <ModelFilter onFilterChange={onFilterChange} />
+                </ErrorBoundary>
+                <ErrorBoundary componentName="ColorFilter">
+                  <ColorFilter onFilterChange={onFilterChange} />
+                </ErrorBoundary>
+                <ErrorBoundary componentName="YearRangeFilter">
+                  <YearRangeFilter onFilterChange={onFilterChange} />
+                </ErrorBoundary>
+              </div>
             </FilterSectionComponent>
-          )}
-
-          <FilterSectionComponent 
-            title="Características do veículo" 
-            isExpanded={true} 
-            onToggle={() => {}}
-          >
-            <div className="space-y-4">
-              <ModelFilter onFilterChange={onFilterChange} />
-              <ColorFilter onFilterChange={onFilterChange} />
-              <YearRangeFilter onFilterChange={onFilterChange} />
-            </div>
-          </FilterSectionComponent>
+          </ErrorBoundary>
         </>
       )}
     </>
@@ -95,13 +112,15 @@ export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange })
   
   return (
     <>
-      <FilterSectionComponent 
-        title="Localização" 
-        isExpanded={true} 
-        onToggle={() => {}}
-      >
-        <LocationFilter onFilterChange={onFilterChange} />
-      </FilterSectionComponent>
+      <ErrorBoundary componentName="LocationFilter">
+        <FilterSectionComponent 
+          title="Localização" 
+          isExpanded={true} 
+          onToggle={() => {}}
+        >
+          <LocationFilter onFilterChange={onFilterChange} />
+        </FilterSectionComponent>
+      </ErrorBoundary>
     </>
   );
 };
@@ -113,13 +132,15 @@ export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange })
 export const PriceFilter: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
   const { expandedSections, toggleSection } = useFilterStore();
   
-  return (
-    <FilterSectionComponent 
-      title="Valor do lance atual" 
-      isExpanded={true} 
-      onToggle={() => {}}
-    >
-      <PriceRangeFilter onFilterChange={onFilterChange} />
-    </FilterSectionComponent>
+  return ( 
+    <ErrorBoundary componentName="PriceRangeFilter">
+      <FilterSectionComponent 
+        title="Valor do lance atual" 
+        isExpanded={true} 
+        onToggle={() => {}}
+      >
+        <PriceRangeFilter onFilterChange={onFilterChange} />
+      </FilterSectionComponent>
+    </ErrorBoundary>
   );
 };

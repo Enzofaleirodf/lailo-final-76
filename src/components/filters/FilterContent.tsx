@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import MobileFilterOptions from './MobileFilterOptions';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { useFilterStore } from '@/stores/useFilterStore';
 import FilterWrapper from './FilterWrapper';
 import { CommonFilters, ContentTypeFilters, PriceFilter } from './sections/FilterSections';
@@ -52,40 +53,52 @@ const FilterContent: React.FC = () => {
   }, [cleanup]);
 
   return (
-    <div 
-      className="flex flex-col gap-0" 
-      role="region" 
-      aria-label="Filtros de busca"
-    >
-      {/* Seleção de tipo de filtro para mobile - mostrada apenas em mobile */}
-      {isMobile && <MobileFilterOptions />}
+    <ErrorBoundary componentName="FilterContent">
+      <div 
+        className="flex flex-col gap-0" 
+        role="region" 
+        aria-label="Filtros de busca"
+      >
+        {/* Seleção de tipo de filtro para mobile - mostrada apenas em mobile */}
+        {isMobile && (
+          <ErrorBoundary componentName="MobileFilterOptions">
+            <MobileFilterOptions />
+          </ErrorBoundary>
+        )}
 
-      <FilterWrapper>
-        {/* Filtros comuns - localização */}
-        <CommonFilters onFilterChange={() => {}} />
+        <FilterWrapper>
+          {/* Filtros comuns - localização */}
+          <ErrorBoundary componentName="CommonFilters">
+            <CommonFilters onFilterChange={() => {}} />
+          </ErrorBoundary>
 
-        {/* Filtros condicionais com base no tipo de conteúdo */}
-        <ContentTypeFilters onFilterChange={() => {}} />
-        
-        {/* Filtro de preço sempre mostrado por último */}
-        <PriceFilter onFilterChange={() => {}} />
-      </FilterWrapper>
+          {/* Filtros condicionais com base no tipo de conteúdo */}
+          <ErrorBoundary componentName="ContentTypeFilters">
+            <ContentTypeFilters onFilterChange={() => {}} />
+          </ErrorBoundary>
+          
+          {/* Filtro de preço sempre mostrado por último */}
+          <ErrorBoundary componentName="PriceFilter">
+            <PriceFilter onFilterChange={() => {}} />
+          </ErrorBoundary>
+        </FilterWrapper>
 
-      {/* Botão de resetar filtros - mesma aparência visual para desktop e mobile */}
-      <div className="mt-4 flex flex-col gap-2">
-        <Button 
-          variant="outline" 
-          className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 transition-colors font-urbanist" 
-          onClick={handleResetFilters} 
-          aria-label="Resetar todos os filtros"
-          data-testid="reset-filters-button"
-          tabIndex={0}
-        >
-          Resetar filtros
-          {activeFilters > 0 ? ` (${activeFilters})` : ''}
-        </Button>
+        {/* Botão de resetar filtros - mesma aparência visual para desktop e mobile */}
+        <div className="mt-4 flex flex-col gap-2">
+          <Button 
+            variant="outline" 
+            className="w-full h-10 text-sm font-medium border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 transition-colors font-urbanist" 
+            onClick={handleResetFilters} 
+            aria-label="Resetar todos os filtros"
+            data-testid="reset-filters-button"
+            tabIndex={0}
+          >
+            Resetar filtros
+            {activeFilters > 0 ? ` (${activeFilters})` : ''}
+          </Button>
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 

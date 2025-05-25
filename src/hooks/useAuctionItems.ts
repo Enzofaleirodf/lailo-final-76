@@ -7,9 +7,10 @@ import { useSortStore } from '@/stores/useSortStore';
 import { useResultsStore } from '@/stores/useResultsStore';
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
+import { TIMING } from '@/constants/designSystem';
 import { useAuctionFilters } from './useAuctionFilters';
 import { calculateItemsStatistics } from '@/utils/auctionFilterUtils';
-import { logError, getUserFriendlyErrorMessage } from '@/utils/auctionErrorUtils';
+import { handleError } from '@/utils/errorUtils';
 
 interface UseAuctionItemsOptions {
   currentPage: number;
@@ -49,13 +50,13 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       setLoading(true);
       setLocalLoading(true);
       
-      // Verificar mudança no tipo de conteúdo para logging
+      // Verificar mudança no tipo de conteúdo para logging 
       if (lastContentType !== null && lastContentType !== filters.contentType) {
         console.log(`Content type changed from ${lastContentType} to ${filters.contentType}`);
       }
       
       // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, TIMING.apiDelay));
       
       // Calcular estatísticas para o componente AuctionStatus
       const { totalItems, totalSites, newItems } = calculateItemsStatistics(
@@ -81,10 +82,10 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       setItems(paginatedItems);
       setLocalLoading(false);
       setLoading(false);
-      setTimeout(() => setIsChangingPage(false), 300); // Pequeno atraso para animação mais suave
+      setTimeout(() => setIsChangingPage(false), TIMING.animationDelay); // Pequeno atraso para animação mais suave
     } catch (error) {
       // Usar utilitários de erro
-      logError(error, 'useAuctionItems.fetchItems', {
+      handleError(error, 'useAuctionItems.fetchItems', filters.contentType, {
         contentType: filters.contentType,
         currentPage,
         filtersApplied: Object.keys(filters).length

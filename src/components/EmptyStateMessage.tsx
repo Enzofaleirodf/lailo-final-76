@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, AlertCircle } from 'lucide-react';
+import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
 import { useFilterStore } from '@/stores/useFilterStore';
 
 interface EmptyStateMessageProps {
@@ -32,19 +33,19 @@ const EmptyStateMessage: React.FC<EmptyStateMessageProps> = ({
       role="status"
       aria-live="polite"
     >
-      <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-brand-50">
+      <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${COLORS.bg.brand[50]}`}>
         {activeFilters > 0 ? (
-          <Search aria-hidden="true" className="w-8 h-8 text-brand-500 bg-transparent" />
+          <Search aria-hidden="true" className={`w-8 h-8 ${COLORS.text.brand[500]} bg-transparent`} />
         ) : (
           <AlertCircle className="w-8 h-8 text-purple-600" aria-hidden="true" />
         )}
       </div>
       
-      <h3 className="text-lg font-medium text-gray-900 mb-1">
+      <h3 className={`text-lg ${TYPOGRAPHY.weight.medium} ${COLORS.text.gray[900]} mb-1`}>
         Nenhum {contentTypeLabel} encontrado
       </h3>
       
-      <p className="text-gray-500 mb-4">
+      <p className={`${COLORS.text.gray[500]} mb-4`}>
         {activeFilters > 0 
           ? `Tente ajustar os filtros aplicados para ampliar sua busca.`
           : `Não encontramos ${contentTypeLabel} disponíveis no momento.`
@@ -56,8 +57,8 @@ const EmptyStateMessage: React.FC<EmptyStateMessageProps> = ({
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           whileHover={{ scale: 1.05 }}
-          onClick={resetFilters}
-          className="px-4 py-2 text-white rounded-md transition-colors bg-brand-500 hover:bg-brand-400"
+          onClick={resetFilters} 
+          className={`px-4 py-2 ${COLORS.text.white} rounded-md transition-colors ${COLORS.bg.brand[500]} hover:bg-brand-400`}
         >
           Limpar todos os filtros
         </motion.button>

@@ -1,39 +1,24 @@
 
 import { FilterState, ContentType } from '@/types/filters';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
-import { defaultRangeValues } from '@/stores/useFilterStore';
+import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 import { vehicleCategoryToTypesMap, propertyCategoryToTypesMap } from './categoryTypeMapping';
+import { FORMAT_OPTIONS, ORIGIN_OPTIONS, PLACE_OPTIONS } from '@/constants/filterConstants';
 
 /**
  * Format options for filter dropdowns
  */
-export const formatOptions = [
-  { value: 'Alienação Particular', label: 'Alienação Particular' },
-  { value: 'Leilão', label: 'Leilão' },
-  { value: 'Venda Direta', label: 'Venda Direta' }
-];
+export const formatOptions = FORMAT_OPTIONS;
 
 /**
  * Origin options for filter dropdowns
  */
-export const originOptions = [
-  { value: 'Todas', label: 'Todas' },
-  { value: 'Extrajudicial', label: 'Extrajudicial' },
-  { value: 'Judicial', label: 'Judicial' },
-  { value: 'Particular', label: 'Particular' },
-  { value: 'Público', label: 'Público' }
-];
+export const originOptions = ORIGIN_OPTIONS;
 
 /**
  * Place options for filter dropdowns
  */
-export const placeOptions = [
-  { value: 'Todas', label: 'Todas' },
-  { value: 'Praça única', label: 'Praça única' },
-  { value: '1ª Praça', label: '1ª Praça' },
-  { value: '2ª Praça', label: '2ª Praça' },
-  { value: '3ª Praça', label: '3ª Praça' }
-];
+export const placeOptions = PLACE_OPTIONS;
 
 /**
  * Obter todas as categorias de veículo disponíveis
@@ -55,12 +40,12 @@ export const getPropertyCategories = (): string[] => {
  * @param key The filter key
  * @param value The filter value
  * @param defaultValues Valores padrão de referência
- * @returns boolean indicating if the filter is set to its default value
+ * @returns boolean indicating if the filter is set to its default value 
  */
 export const isDefaultFilterValue = (
   key: keyof FilterState, 
   value: any, 
-  defaultValues: any = defaultRangeValues
+  defaultValues: any = DEFAULT_RANGE_VALUES
 ): boolean => {
   switch (key) {
     case 'format':
@@ -88,24 +73,24 @@ export const isDefaultFilterValue = (
       if (!value || !value.range) return true;
       
       // Checar se os valores são iguais aos padrões, tratando vazios como padrão
-      const isPriceMinDefault = !value.range.min || value.range.min === defaultValues.price.min;
-      const isPriceMaxDefault = !value.range.max || value.range.max === defaultValues.price.max;
+      const isPriceMinDefault = !value.range.min || value.range.min === DEFAULT_RANGE_VALUES.price.min;
+      const isPriceMaxDefault = !value.range.max || value.range.max === DEFAULT_RANGE_VALUES.price.max;
       return isPriceMinDefault && isPriceMaxDefault;
       
     case 'year':
       if (!value) return true;
       
       // Checar se os valores são iguais aos padrões, tratando vazios como padrão
-      const isYearMinDefault = !value.min || value.min === defaultValues.year.min;
-      const isYearMaxDefault = !value.max || value.max === defaultValues.year.max;
+      const isYearMinDefault = !value.min || value.min === DEFAULT_RANGE_VALUES.year.min;
+      const isYearMaxDefault = !value.max || value.max === DEFAULT_RANGE_VALUES.year.max;
       return isYearMinDefault && isYearMaxDefault;
       
     case 'usefulArea':
       if (!value) return true;
       
       // Checar se os valores são iguais aos padrões, tratando vazios como padrão
-      const isAreaMinDefault = !value.min || value.min === defaultValues.usefulArea.min;
-      const isAreaMaxDefault = !value.max || value.max === defaultValues.usefulArea.max;
+      const isAreaMinDefault = !value.min || value.min === DEFAULT_RANGE_VALUES.usefulArea.min;
+      const isAreaMaxDefault = !value.max || value.max === DEFAULT_RANGE_VALUES.usefulArea.max;
       return isAreaMinDefault && isAreaMaxDefault;
       
     default:
@@ -355,7 +340,7 @@ export const validateFilterValue = (key: keyof FilterState, value: any): any => 
 export const getResponsivePadding = (isMobile: boolean, isExtraSmall: boolean = false): {
   paddingX: string;
   paddingY: string;
-  gapSize: string;
+  gapSize: string; 
 } => {
   if (isExtraSmall) {
     return {

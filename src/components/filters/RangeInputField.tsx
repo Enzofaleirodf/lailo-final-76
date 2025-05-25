@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { COLORS } from '@/constants/designSystem';
+import { getInputStyles } from '@/utils/styleUtils';
 import { measurePerformance } from '@/utils/performanceUtils';
 
 interface RangeInputFieldProps {
@@ -98,9 +100,9 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
   // Definir estilos condicionais
   const getBorderStyle = () => {
     if (isError) return 'border-red-500 focus-visible:ring-red-500';
-    if (isFocused) return 'border-brand-500 focus-visible:ring-brand-500';
-    if (isActive) return 'border-purple-300 focus-visible:ring-brand-500'; // Borda roxa para filtros ativos
-    return 'border-gray-300 focus-visible:ring-brand-500';
+    if (isFocused) return `${COLORS.border.brand[500]} focus-visible:ring-brand-500`;
+    if (isActive) return 'border-purple-300 focus-visible:ring-brand-500';
+    return `${COLORS.border.gray[300]} focus-visible:ring-brand-500`;
   };
   
   return (
@@ -111,10 +113,10 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       {/* Prefixo com espaçamento adequado */}
       {inputPrefix && (
         <div 
-          className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" 
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none mr-6">{inputPrefix}</span>
+          <span className={`${COLORS.text.gray[500]} select-none mr-6`}>{inputPrefix}</span>
         </div>
       )}
       
@@ -129,7 +131,7 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
           setIsFocused(false);
-          onBlur();
+          onBlur(); 
         }}
         aria-label={ariaLabel}
         aria-invalid={ariaInvalid}
@@ -144,10 +146,10 @@ const RangeInputField: React.FC<RangeInputFieldProps> = ({
       {/* Sufixo com espaçamento adequado */}
       {inputSuffix && (
         <div 
-          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+          className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none" 
           aria-hidden="true"
         >
-          <span className="text-gray-500 select-none ml-6">{inputSuffix}</span>
+          <span className={`${COLORS.text.gray[500]} select-none ml-6`}>{inputSuffix}</span>
         </div>
       )}
     </div>

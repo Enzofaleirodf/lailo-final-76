@@ -3,6 +3,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { COLORS } from '@/constants/designSystem';
+import { getButtonStyles } from '@/utils/styleUtils';
 
 interface FilterApplyButtonProps {
   onApply?: () => void;
@@ -36,12 +38,12 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   // Customize style based on variant
   const getButtonStyle = () => {
     switch (variant) {
-      case 'outline':
-        return 'bg-white border-gray-300 hover:bg-gray-50 hover:text-gray-700 text-gray-700';
-      case 'secondary':
-        return 'bg-gray-100 border-gray-200 hover:bg-gray-200 text-gray-800';
-      default:
-        return 'bg-brand-600 hover:bg-brand-700 text-white';
+      case 'outline': 
+        return getButtonStyles('outline');
+      case 'secondary': 
+        return getButtonStyles('secondary');
+      default: 
+        return getButtonStyles('primary');
     }
   };
   
@@ -54,7 +56,7 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   
   return (
     <Button 
-      className={`h-10 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ${getButtonStyle()} ${className}`}
+      className={`${getButtonStyle()} ${className}`}
       onClick={handleClick}
       aria-label={ariaLabel}
       data-testid="apply-filters-button"
