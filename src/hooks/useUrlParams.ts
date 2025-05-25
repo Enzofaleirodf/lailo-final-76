@@ -11,14 +11,14 @@ import { updateUrlParams } from '@/utils/urlParamsHandler';
  */
 export const useUrlParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { filters, updateMultipleFilters } = useFilterStore();
+  const { filters, setFilters } = useFilterStore();
   const { sortOption, setSortOption } = useSortStore();
 
   // Carregar filtros da URL na inicialização
   useEffect(() => {
     const urlFilters = loadFiltersFromUrl(searchParams, filters);
     if (urlFilters) {
-      updateMultipleFilters(urlFilters);
+      setFilters(urlFilters);
     }
 
     // Carregar ordenação da URL
