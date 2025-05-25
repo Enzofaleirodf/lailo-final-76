@@ -2,11 +2,12 @@
 import React, { useMemo } from 'react';
 import RangeInputField from './RangeInputField';
 import { useRangeFilter, RangeValues } from '@/hooks/useRangeFilter';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'; 
 import { COLORS } from '@/constants/designSystem';
 import RangeErrorMessages from './RangeErrorMessages';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useResponsiveConsistency } from '@/hooks/useResponsiveConsistency';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 export interface RangeFilterProps {
   initialValues: RangeValues;
@@ -115,51 +116,53 @@ const SimplifiedRangeFilter: React.FC<RangeFilterProps> = ({
   );
   
   return (
-    <div className="space-y-2" data-testid="range-filter">
-      <div className={cn("flex gap-2 items-center", className)}>
-        <RangeInputField
-          id={`min-${filterGroupId}`}
-          value={displayValues.min}
-          placeholder={responsiveMinPlaceholder}
-          onChange={(e) => handleMinChange(e.target.value)}
-          onBlur={() => handleBlur(true)}
-          ariaLabel={ariaLabelMin}
-          ariaInvalid={!!errors.min}
-          ariaDescribedBy={errors.min ? minErrorId : undefined}
-          isError={!!errors.min}
-          isActive={isActive}
-          inputPrefix={inputPrefix}
-          inputSuffix={inputSuffix}
-          className="flex-1"
-          dataTestId="range-input-min"
-        />
+    <ErrorBoundary componentName="SimplifiedRangeFilter">
+      <div className="space-y-2" data-testid="range-filter">
+        <div className={cn("flex gap-2 items-center", className)}>
+          <RangeInputField
+            id={`min-${filterGroupId}`}
+            value={displayValues.min}
+            placeholder={responsiveMinPlaceholder}
+            onChange={(e) => handleMinChange(e.target.value)}
+            onBlur={() => handleBlur(true)}
+            ariaLabel={ariaLabelMin}
+            ariaInvalid={!!errors.min}
+            ariaDescribedBy={errors.min ? minErrorId : undefined}
+            isError={!!errors.min}
+            isActive={isActive}
+            inputPrefix={inputPrefix}
+            inputSuffix={inputSuffix}
+            className="flex-1"
+            dataTestId="range-input-min"
+          />
+          
+          <RangeInputField
+            id={`max-${filterGroupId}`}
+            value={displayValues.max}
+            placeholder={responsiveMaxPlaceholder}
+            onChange={(e) => handleMaxChange(e.target.value)}
+            onBlur={() => handleBlur(false)}
+            ariaLabel={ariaLabelMax}
+            ariaInvalid={!!errors.max}
+            ariaDescribedBy={errors.max ? maxErrorId : undefined}
+            isError={!!errors.max}
+            isActive={isActive}
+            inputPrefix={inputPrefix}
+            inputSuffix={inputSuffix}
+            className="flex-1"
+            dataTestId="range-input-max"
+          />
+        </div>
         
-        <RangeInputField
-          id={`max-${filterGroupId}`}
-          value={displayValues.max}
-          placeholder={responsiveMaxPlaceholder}
-          onChange={(e) => handleMaxChange(e.target.value)}
-          onBlur={() => handleBlur(false)}
-          ariaLabel={ariaLabelMax}
-          ariaInvalid={!!errors.max}
-          ariaDescribedBy={errors.max ? maxErrorId : undefined}
-          isError={!!errors.max}
-          isActive={isActive}
-          inputPrefix={inputPrefix}
-          inputSuffix={inputSuffix}
-          className="flex-1"
-          dataTestId="range-input-max"
+        {/* Mensagens de erro */}
+        <RangeErrorMessages 
+          minError={errors.min}
+          maxError={errors.max}
+          minErrorId={minErrorId}
+          maxErrorId={maxErrorId}
         />
       </div>
-      
-      {/* Mensagens de erro */}
-      <RangeErrorMessages 
-        minError={errors.min}
-        maxError={errors.max}
-        minErrorId={minErrorId}
-        maxErrorId={maxErrorId}
-      />
-    </div>
+    </ErrorBoundary>
   );
 };
 

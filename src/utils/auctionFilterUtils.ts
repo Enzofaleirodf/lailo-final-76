@@ -2,7 +2,7 @@
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { FilterState } from '@/types/filters';
-import { defaultRangeValues } from '@/stores/useFilterStore';
+import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 import { propertyCategoryToTypesMap } from './categoryTypeMapping';
 
 export type GenericItem = AuctionItem | PropertyItem;
@@ -10,14 +10,11 @@ export type GenericItem = AuctionItem | PropertyItem;
 export const isDefaultRangeValue = (filterKey: string, value: string, isMin: boolean): boolean => {
   if (!value) return true;
   
-  // @ts-ignore
-  if (!defaultRangeValues[filterKey]) return false;
+  if (!DEFAULT_RANGE_VALUES[filterKey as keyof typeof DEFAULT_RANGE_VALUES]) return false;
   
   const defaultValue = isMin 
-    // @ts-ignore
-    ? defaultRangeValues[filterKey].min 
-    // @ts-ignore
-    : defaultRangeValues[filterKey].max;
+    ? DEFAULT_RANGE_VALUES[filterKey as keyof typeof DEFAULT_RANGE_VALUES].min 
+    : DEFAULT_RANGE_VALUES[filterKey as keyof typeof DEFAULT_RANGE_VALUES].max;
   
   return value === defaultValue;
 };

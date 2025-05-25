@@ -7,6 +7,7 @@
 import React, { memo, useCallback } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
+import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
 import FilterDropdown from './FilterDropdown';
 import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
 import { 
@@ -55,7 +56,7 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Formato" 
         isExpanded={expandedSections.format} 
-        onToggle={handleToggleFormat}
+        onToggle={() => {}}
       >
         <FilterDropdown 
           id="format-filter-mobile" 
@@ -63,14 +64,14 @@ const MobileFilterOptions: React.FC = () => {
           value={filters.format} 
           onChange={handleFormatChange} 
           options={formatOptions} 
-          className="border-gray-200 shadow-sm bg-white" 
+          className={`${COLORS.border.gray[200]} shadow-sm ${COLORS.bg.white}`} 
         />
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Origem" 
         isExpanded={expandedSections.origin} 
-        onToggle={handleToggleOrigin}
+        onToggle={() => {}}
       >
         <FilterDropdown 
           id="origin-filter-mobile" 
@@ -78,14 +79,14 @@ const MobileFilterOptions: React.FC = () => {
           value={filters.origin} 
           onChange={handleOriginChange} 
           options={originOptions} 
-          className="border-gray-200 shadow-sm bg-white" 
+          className={`${COLORS.border.gray[200]} shadow-sm ${COLORS.bg.white}`} 
         />
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Etapa" 
         isExpanded={expandedSections.place} 
-        onToggle={handleTogglePlace}
+        onToggle={() => {}}
       >
         <FilterDropdown 
           id="place-filter-mobile" 
@@ -93,7 +94,7 @@ const MobileFilterOptions: React.FC = () => {
           value={filters.place} 
           onChange={handlePlaceChange} 
           options={placeOptions} 
-          className="border-gray-200 shadow-sm bg-white" 
+          className={`${COLORS.border.gray[200]} shadow-sm ${COLORS.bg.white}`} 
         />
       </FilterSectionComponent>
     </div>

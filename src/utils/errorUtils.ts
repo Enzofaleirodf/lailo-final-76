@@ -5,6 +5,7 @@
  */
 
 import { ErrorType, ERROR_MESSAGES, CONTENT_TYPE_ERROR_MESSAGES, LogLevel } from '@/constants/errorConstants';
+import { sendToErrorTrackingService } from './sendToErrorTrackingService';
 
 /**
  * Logs an error to the console with additional information
@@ -31,7 +32,7 @@ export const logError = (
   
   // In a production environment, we might want to send this to an error tracking service
   if (process.env.NODE_ENV === 'production') {
-    // Example: sendToErrorTrackingService(error, source, additionalInfo);
+    sendToErrorTrackingService(error, source, additionalInfo);
   }
 };
 

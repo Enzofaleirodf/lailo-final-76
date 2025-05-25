@@ -3,7 +3,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { COLORS, TYPOGRAPHY, COMPONENT_STYLES } from '@/constants/designSystem';
-import { getDropdownStyles } from '@/utils/styleUtils';
+import { getDropdownStyles } from '@/utils/styleUtils'; 
+import { logUserAction } from '@/utils/loggingUtils';
 
 interface FilterDropdownProps {
   value: string;
@@ -44,6 +45,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     
     // Marcar como tocado
     setIsTouched(true);
+    
+    // Log user action
+    logUserAction('change_filter_dropdown', {
+      id: id || 'unknown',
+      previousValue: value,
+      newValue: e.target.value
+    });
     
     // Chamar o callback de onChange
     onChange(e.target.value);
@@ -121,7 +129,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       <select
         ref={selectRef}
         id={id || `filter-dropdown-${Math.random().toString(36).substring(2, 9)}`}
-        aria-label={ariaLabel}
+        aria-label={ariaLabel} 
         className={cn(getDropdownStyles(isValueSelected, disabled), className)}
         value={value}
         onChange={handleChange}
@@ -137,7 +145,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         {options.map((option) => (
           <option 
             key={`${option.value}-${option.label}`}
-            value={option.value} 
+            value={option.value}
             className={`${option.value === value ? 'text-gray-800 font-medium' : 'text-gray-600 font-normal'} font-urbanist`}
           >
             {option.label}

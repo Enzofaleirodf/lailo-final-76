@@ -1,5 +1,17 @@
 # Welcome to your Lovable project
 
+## Code Quality Improvements
+
+This project has been enhanced with several code quality improvements:
+
+- **Design System Constants**: Centralized design tokens in `src/constants/designSystem.ts`
+- **Error Handling**: Improved error handling with `ErrorBoundary` components and error tracking utilities
+- **Unit Tests**: Added comprehensive test coverage for utility functions
+- **Accessibility**: Enhanced accessibility with proper ARIA attributes and keyboard navigation
+- **Performance Optimizations**: Implemented memoization and throttling for better performance
+- **Consistent Styling**: Ensured consistent styling across different screen sizes
+- **Code Organization**: Refactored components to be smaller and more reusable
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/b57b3136-150d-4ba0-84a0-d349a0e5d695
@@ -59,6 +71,7 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Vitest (for testing)
 
 ## How can I deploy this project?
 

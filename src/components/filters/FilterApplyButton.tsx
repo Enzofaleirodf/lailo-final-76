@@ -3,8 +3,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { COLORS } from '@/constants/designSystem';
+import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
 import { getButtonStyles } from '@/utils/styleUtils';
+import { logUserAction } from '@/utils/loggingUtils';
 
 interface FilterApplyButtonProps {
   onApply?: () => void;
@@ -26,6 +27,13 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   const isMobile = useIsMobile();
   
   const handleClick = () => {
+    // Log user action
+    logUserAction('apply_filters', { 
+      activeFilters, 
+      isMobile,
+      variant
+    });
+    
     // Trigger the filters:applied event for consistent behavior
     window.dispatchEvent(new CustomEvent('filters:applied'));
     
@@ -57,12 +65,12 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   return (
     <Button 
       className={`${getButtonStyle()} ${className}`}
-      onClick={handleClick}
+      onClick={handleClick} 
       aria-label={ariaLabel}
       data-testid="apply-filters-button"
       type="button"
     >
-      <span>{buttonText}{filterCountText}</span>
+      <span className={TYPOGRAPHY.family.urbanist}>{buttonText}{filterCountText}</span>
     </Button>
   );
 };
