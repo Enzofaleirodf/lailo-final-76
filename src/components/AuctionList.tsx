@@ -28,7 +28,7 @@ const AuctionList: React.FC = () => {
     loading,
     isChangingPage,
     totalPages,
-    fetchItems
+    error
   } = useAuctionItems({
     currentPage,
     itemsPerPage: ITEMS_PER_PAGE
@@ -60,6 +60,21 @@ const AuctionList: React.FC = () => {
       setSearchParams(params);
     }
   }, [totalPages, currentPage, searchParams, setSearchParams]);
+
+  // Tratar estado de erro
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-600 mb-4">{error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="text-brand-600 hover:text-brand-700 underline"
+        >
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
 
   // Mostrar loading state durante o carregamento inicial
   if (loading && !isChangingPage) {
@@ -105,9 +120,6 @@ const AuctionList: React.FC = () => {
 
                   const perf = measurePerformance(`Render item ${index}`);
                   
-                  // Mapear o contentType correto para o LazyAuctionCard
-                  const cardContentType = filters.contentType === 'vehicle' ? 'auction' : filters.contentType;
-                  
                   const result = (
                     <motion.div 
                       key={item.id}
@@ -121,7 +133,7 @@ const AuctionList: React.FC = () => {
                     >
                       <LazyAuctionCard 
                         item={item} 
-                        contentType={cardContentType}
+                        contentType={filters.contentType} 
                       />
                     </motion.div>
                   );
