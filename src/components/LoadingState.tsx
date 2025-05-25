@@ -11,8 +11,7 @@ interface LoadingStateProps {
 }
 
 /**
- * Componente de estado de carregamento consistente
- * Oferece diferentes tamanhos e opções de layout
+ * Componente de estado de carregamento otimizado
  */
 const LoadingState: React.FC<LoadingStateProps> = ({
   size = 'md',
@@ -65,4 +64,4 @@ const LoadingState: React.FC<LoadingStateProps> = ({
   );
 };
 
-export default LoadingState;
+export default React.memo(LoadingState);

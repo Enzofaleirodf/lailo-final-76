@@ -27,12 +27,12 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
   const [items, setItems] = useState<(AuctionItem | PropertyItem)[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isChangingPage, setIsChangingPage] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [lastContentType, setLastContentType] = useState<string | null>(null);
   const [rawData, setRawData] = useState<(AuctionItem | PropertyItem)[]>([]);
   
   // Buscar dados quando o tipo de conteúdo muda
   useEffect(() => {
-    // Se o tipo de conteúdo mudou, atualizar os dados brutos
     if (lastContentType !== filters.contentType) {
       setRawData(filters.contentType === 'property' ? sampleProperties : sampleAuctions);
       setLastContentType(filters.contentType);
@@ -42,9 +42,9 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
   // Aplicar filtros aos dados brutos usando o hook especializado
   const filteredItems = useAuctionFilters(rawData, filters, sortOption);
   
-  // Use callback to prevent recreation on each render
   const fetchItems = useCallback(async () => {
     try {
+      setError(null);
       setIsChangingPage(true);
       setLoading(true);
       setLocalLoading(true);
@@ -55,7 +55,7 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       }
       
       // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 300));
       
       // Calcular estatísticas para o componente AuctionStatus
       const { totalItems, totalSites, newItems } = calculateItemsStatistics(
@@ -63,7 +63,6 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
         filters.contentType
       );
       
-      // Atualizar a store de resultados com os valores calculados
       setFilteredResults(totalItems, totalSites, newItems);
       
       // Calcular total de páginas
@@ -75,21 +74,19 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       const end = start + itemsPerPage;
       const paginatedItems = filteredItems.slice(start, end);
       
-      // Debug dos itens renderizados
-      console.log(`[AuctionList] Content type: ${filters.contentType}, Items count: ${paginatedItems.length}`);
-      
       setItems(paginatedItems);
       setLocalLoading(false);
       setLoading(false);
-      setTimeout(() => setIsChangingPage(false), 300); // Pequeno atraso para animação mais suave
+      setTimeout(() => setIsChangingPage(false), 200);
     } catch (error) {
-      // Usar utilitários de erro
+      const errorMessage = getUserFriendlyErrorMessage(error, filters.contentType);
       logError(error, 'useAuctionItems.fetchItems', {
         contentType: filters.contentType,
         currentPage,
         filtersApplied: Object.keys(filters).length
       });
       
+      setError(errorMessage);
       setLocalLoading(false);
       setLoading(false);
       setIsChangingPage(false);
@@ -106,7 +103,6 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
     filteredItems
   ]);
   
-  // Atualizar a lista quando qualquer dependência mudar
   useEffect(() => {
     fetchItems();
   }, [fetchItems]);
@@ -116,6 +112,7 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
     loading: loading || isChangingPage,
     isChangingPage,
     totalPages,
+    error,
     fetchItems
   };
 };
