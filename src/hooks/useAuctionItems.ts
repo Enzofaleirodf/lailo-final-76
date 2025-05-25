@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { sampleAuctions } from '@/data/sampleAuctions';
 import { sampleProperties } from '@/data/sampleProperties';
@@ -9,7 +8,6 @@ import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { TIMING } from '@/constants/designSystem';
 import { useAuctionFilters } from './useAuctionFilters';
-import { TIMING } from '@/constants/designSystem';
 import { calculateItemsStatistics } from '@/utils/auctionFilterUtils';
 import { handleError } from '@/utils/errorUtils';
 import { logUserAction } from '@/utils/loggingUtils';
