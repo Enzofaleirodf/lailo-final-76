@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect } from 'react';
 import { useFilterStore, defaultRangeValues } from '@/stores/useFilterStore';
 import { useFilterConsistency } from '@/hooks/useFilterConsistency';

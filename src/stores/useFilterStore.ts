@@ -6,6 +6,9 @@ import {
 } from '@/types/filters';
 import { DEFAULT_FILTER_VALUES, DEFAULT_EXPANDED_SECTIONS, DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
 
+// Export the default range values with the correct name
+export const defaultRangeValues = DEFAULT_RANGE_VALUES;
+
 // Define the shape of our store
 interface FilterStore extends FilterStoreState {
   // Actions
@@ -169,6 +172,3 @@ export const useFilterStore = create<FilterStore>()(
     { name: 'filter-store' }
   )
 );
-
-// Export the constants directly from filterConstants
-export { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
