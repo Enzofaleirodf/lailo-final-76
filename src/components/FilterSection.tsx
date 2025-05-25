@@ -124,6 +124,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
       </Drawer>
     </ErrorBoundary>
           >
+  )
 };
 
 export default FilterSection;
