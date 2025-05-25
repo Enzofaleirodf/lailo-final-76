@@ -3,15 +3,50 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { handleError } from '@/utils/errorUtils';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { signIn } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  // Get the redirect path from location state or default to home
+  const from = location.state?.from?.pathname || '/';
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui será implementado a autenticação com Supabase
-    alert('Funcionalidade de login será implementada com Supabase');
+    
+    if (!email || !password) {
+      setError('Por favor, preencha todos os campos');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      
+      // Redirect to the page they were trying to access or home
+      navigate(from, { replace: true });
+    } catch (err) {
+      handleError(err, 'Login.handleSubmit');
+      setError('Ocorreu um erro ao fazer login. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
   
   return (
@@ -29,7 +64,14 @@ const Login = () => {
               <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
-              <Input id="email" type="email" placeholder="seu@email.com" required />
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="seu@email.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+              />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -40,10 +82,21 @@ const Login = () => {
                   Esqueceu a senha?
                 </Button>
               </div>
-              <Input id="password" type="password" required />
+              <Input 
+                id="password" 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required 
+              />
             </div>
-            <Button type="submit" className="w-full">
-              Entrar
+            {error && (
+              <div className="text-sm text-red-500 bg-red-50 p-2 rounded border border-red-200">
+                {error}
+              </div>
+            )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
           

@@ -16,7 +16,7 @@ interface UserAvatarProps {
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,6 +39,15 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ className, mobile = false }) =>
       setOpenDialog(true);
     }
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className={`flex items-center justify-center ${className}`}>
+        <div className={`${mobile ? 'h-5 w-5' : 'h-6 w-6'} border-2 border-gray-200 border-t-brand-500 rounded-full animate-spin`}></div>
+      </div>
+    );
+  }
 
   return (
     <>

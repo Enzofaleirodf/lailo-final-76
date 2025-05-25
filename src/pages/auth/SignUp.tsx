@@ -3,15 +3,68 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { handleError } from '@/utils/errorUtils';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { signUp } = useAuth();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  // Get the redirect path from location state or default to home
+  const from = location.state?.from?.pathname || '/';
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui será implementado a criação de conta com Supabase
-    alert('Funcionalidade de cadastro será implementada com Supabase');
+    
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Por favor, preencha todos os campos');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem');
+      return;
+    }
+    
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { error } = await signUp(email, password, name);
+      
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      
+      // Show success message
+      setSuccess(true);
+      
+      // Redirect to login page after a delay
+      setTimeout(() => {
+        navigate('/auth/login', { state: { from: location.state?.from } });
+      }, 3000);
+    } catch (err) {
+      handleError(err, 'SignUp.handleSubmit');
+      setError('Ocorreu um erro ao criar sua conta. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
   
   return (
@@ -21,38 +74,76 @@ const SignUp = () => {
           <CardTitle className="text-2xl font-bold">Criar Conta</CardTitle>
           <CardDescription>
             Crie sua conta para salvar favoritos e receber alertas
-          </CardDescription>
+          </CardDescription> 
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {success ? (
+            <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-md mb-4">
+              <h3 className="font-medium mb-2">Conta criada com sucesso!</h3>
+              <p>Verifique seu email para confirmar sua conta. Você será redirecionado para a página de login em instantes.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
                 Nome
               </label>
-              <Input id="name" type="text" placeholder="Seu nome" required />
+              <Input 
+                id="name" 
+                type="text" 
+                placeholder="Seu nome" 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required 
+              />
             </div>
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
               </label>
-              <Input id="email" type="email" placeholder="seu@email.com" required />
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="seu@email.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+              />
             </div>
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
                 Senha
               </label>
-              <Input id="password" type="password" required />
+              <Input 
+                id="password" 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required 
+              />
             </div>
             <div className="space-y-2">
               <label htmlFor="confirm-password" className="text-sm font-medium">
                 Confirmar Senha
               </label>
-              <Input id="confirm-password" type="password" required />
+              <Input 
+                id="confirm-password" 
+                type="password" 
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required 
+              />
             </div>
-            <Button type="submit" className="w-full">
-              Criar Conta
+            {error && (
+              <div className="text-sm text-red-500 bg-red-50 p-2 rounded border border-red-200">
+                {error}
+              </div>
+            )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Criando conta...' : 'Criar Conta'}
             </Button>
           </form>
+          )}
           
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">

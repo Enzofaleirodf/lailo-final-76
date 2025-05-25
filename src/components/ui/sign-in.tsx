@@ -4,6 +4,9 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Dialog, DialogClose } from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { handleError } from "@/utils/errorUtils";
 
 interface LightLoginProps {
   isInDialog?: boolean;
@@ -12,6 +15,69 @@ interface LightLoginProps {
 
 export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hideCloseButton = false }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      setError('Por favor, preencha todos os campos');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      
+      // Close dialog if in dialog mode
+      if (isInDialog) {
+        // The dialog will be closed by the parent component
+      } else {
+        // Navigate to home page
+        navigate('/');
+      }
+    } catch (err) {
+      handleError(err, 'LightLogin.handleSubmit');
+      setError('Ocorreu um erro ao fazer login. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+      
+      if (error) {
+        setError(error.message);
+      }
+    } catch (err) {
+      handleError(err, 'LightLogin.handleGoogleSignIn');
+      setError('Ocorreu um erro ao fazer login com Google. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
   
   return <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50\n">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 relative">
@@ -46,27 +112,59 @@ export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hide
           </div>
 
           <div className="space-y-6 p-0">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Email</label>
-              <input className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 h-12 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-500/50 focus:border-blue-500 w-full px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="Digite seu email" />
-            </div>
-
-            <div className="space-y-1">
-              <div className="flex justify-between items-center">
-                <label className="text-sm font-medium text-gray-700">Senha</label>
-                <a href="#" className="text-xs text-blue-600 hover:underline">
-                  Esqueceu a senha?
-                </a>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700">Email</label>
+                <input 
+                  className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 h-12 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-500/50 focus:border-blue-500 w-full px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" 
+                  placeholder="Digite seu email" 
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
-              <div className="relative">
-                <input type={showPassword ? "text" : "password"} className="bg-gray-50 border-gray-200 text-gray-900 pr-12 h-12 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-500/50 focus:border-blue-500 w-full px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="••••••••" />
-                <button type="button" className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 hover:bg-gray-100 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? "Hide" : "Mostrar"}
-                </button>
-              </div>
-            </div>
 
-            <button className="w-full h-12 bg-gradient-to-t from-brand-600 via-brand-500 to-brand-400 hover:from-brand-700 hover:via-brand-600 hover:to-brand-500 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-brand-100 active:scale-[0.98] inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">Entrar</button>
+              <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                  <label className="text-sm font-medium text-gray-700">Senha</label>
+                  <a href="#" className="text-xs text-blue-600 hover:underline">
+                    Esqueceu a senha?
+                  </a>
+                </div>
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    className="bg-gray-50 border-gray-200 text-gray-900 pr-12 h-12 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-500/50 focus:border-blue-500 w-full px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" 
+                    placeholder="••••••••" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button 
+                    type="button" 
+                    className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 hover:bg-gray-100 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-3" 
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Mostrar"}
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="text-sm text-red-500 bg-red-50 p-2 rounded border border-red-200 mt-2">
+                  {error}
+                </div>
+              )}
+
+              <button 
+                type="submit"
+                disabled={loading}
+                className="w-full h-12 bg-gradient-to-t from-brand-600 via-brand-500 to-brand-400 hover:from-brand-700 hover:via-brand-600 hover:to-brand-500 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-brand-100 active:scale-[0.98] inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 mt-6"
+              >
+                {loading ? 'Entrando...' : 'Entrar'}
+              </button>
+            </form>
 
             <div className="flex items-center my-4">
               <div className="flex-1 h-px bg-gray-200"></div>
@@ -75,7 +173,11 @@ export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hide
             </div>
 
             <div className="grid grid-cols-1 gap-3">
-              <button className="h-12 bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg flex items-center justify-center gap-2 border bg-background inline-flex whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+              <button 
+                className="h-12 bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg flex items-center justify-center gap-2 border bg-background inline-flex whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-gray-700">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -90,7 +192,7 @@ export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hide
           <div className="p-0 mt-6">
             <p className="text-sm text-center text-gray-500 w-full">
               Não tem uma conta?{" "}
-              <a href="#" className="text-blue-600 hover:underline font-medium">
+              <a href="/auth/sign-up" className="text-blue-600 hover:underline font-medium">
                 Cadastre-se
               </a>
             </p>
