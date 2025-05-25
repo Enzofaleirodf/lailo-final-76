@@ -2,7 +2,6 @@
 import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronDown } from 'lucide-react';
 import BrandFilter from './BrandFilter';
 import { getModelsByBrand } from '@/utils/brandModelMapping';
@@ -14,12 +13,8 @@ interface ModelFilterProps {
 const ModelFilter: React.FC<ModelFilterProps> = ({
   onFilterChange
 }) => {
-  const {
-    filters,
-    updateFilter
-  } = useFilterStore();
+  const { filters, updateFilter } = useFilterStore();
   
-  // Obter opções de modelos com base na marca selecionada
   const modelOptions = useMemo(() => {
     const models = getModelsByBrand(filters.brand);
     return models.map(model => ({
@@ -31,7 +26,6 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
   const handleModelChange = useCallback((value: string) => {
     updateFilter('model', value);
 
-    // Notify parent component that filter has changed
     if (onFilterChange) {
       onFilterChange();
     }

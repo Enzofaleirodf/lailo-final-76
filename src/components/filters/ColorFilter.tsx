@@ -25,15 +25,12 @@ const colorOptions = [
 const ColorFilter: React.FC<ColorFilterProps> = ({ onFilterChange }) => {
   const { filters, updateFilter } = useFilterStore();
   
-  // Use our new hook to ensure filter consistency
   const { handleFilterChange } = useFilterConsistency({
     onChange: onFilterChange
   });
   
   const handleColorChange = useCallback((value: string) => {
     updateFilter('color', value);
-    
-    // Notify parent component that filter has changed
     handleFilterChange();
   }, [updateFilter, handleFilterChange]);
 
