@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Utilitários para melhorar o desempenho com grandes conjuntos de dados
  */
