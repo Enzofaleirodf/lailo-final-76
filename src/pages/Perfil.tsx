@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -96,7 +95,6 @@ const Perfil = () => {
                 </p>
               </CardContent>
             </Card>
-            </div>
           </div>
         </div>
       </div>
