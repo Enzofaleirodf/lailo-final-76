@@ -47,9 +47,7 @@ export const applyLocationFilter = <T extends GenericItem>(
   state: string,
   city: string
 ): T[] => {
-  if (!state && !city) {
-    return items;
-  }
+  if (!state && !city) return items;
   
   return items.filter(item => {
     let matchState = !state;

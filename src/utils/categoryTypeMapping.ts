@@ -30,9 +30,6 @@ export const propertyCategoryToTypesMap: Record<string, string[]> = {
 
 /**
  * Obter os tipos disponíveis com base na categoria selecionada
- * @param category Categoria selecionada
- * @param contentType Tipo de conteúdo (veículo ou imóvel)
- * @returns Array de tipos disponíveis
  */
 export const getTypesByCategory = (category: string, contentType: 'property' | 'vehicle'): string[] => {
   if (!category || category === 'Todos') {
