@@ -1,7 +1,7 @@
 
 /**
  * Utility functions for layout and responsive design
- * Otimizado para todos os tamanhos de tela
+ * Otimizado para todos os tamanhos de tela com suporte a elementos fixos
  */
 
 // Definindo breakpoints localmente em vez de importar
@@ -60,7 +60,7 @@ export const getContainerClasses = (deviceType: DeviceType): string => {
 };
 
 /**
- * Get responsive padding classes based on device type
+ * Get responsive padding classes based on device type with fixed elements consideration
  * @param deviceType Current device type
  * @returns Tailwind classes for appropriate padding
  */
@@ -112,6 +112,24 @@ export const getGridClasses = (deviceType: DeviceType): string => {
     case 'largeDesktop':
     default:
       return 'grid grid-cols-4 gap-6';
+  }
+};
+
+/**
+ * Get margin classes for content to avoid sidebar overlap
+ * @param deviceType Current device type
+ * @param sidebarExpanded Whether sidebar is expanded (desktop only)
+ * @returns Tailwind classes for appropriate margin
+ */
+export const getContentMarginClasses = (deviceType: DeviceType, sidebarExpanded = false): string => {
+  switch (deviceType) {
+    case 'mobile':
+    case 'tablet':
+      return '';
+    case 'desktop':
+    case 'largeDesktop':
+    default:
+      return sidebarExpanded ? 'ml-48' : 'ml-16';
   }
 };
 

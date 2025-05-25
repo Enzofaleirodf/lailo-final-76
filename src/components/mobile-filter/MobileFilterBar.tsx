@@ -19,8 +19,8 @@ const MobileFilterBar: React.FC<MobileFilterBarProps> = ({
   onSortClick
 }) => {
   return (
-    <div role="navigation" aria-label="Opções de filtro e ordenação" className="fixed top-0 left-0 right-0 z-30 w-full pt-4 pb-0 mt-0 bg-[#fbfbfc] px-2">
-      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white" aria-label="Barra de filtros para dispositivos móveis">
+    <div role="navigation" aria-label="Opções de filtro e ordenação" className="fixed top-0 left-0 right-0 z-30 w-full h-16 bg-[#fbfbfc] px-2 pt-2">
+      <div className="flex rounded-lg border border-gray-200 shadow-sm overflow-hidden w-full bg-white h-12" aria-label="Barra de filtros para dispositivos móveis">
         <ContentTypeTabs />
         <ActionButtons onFilterClick={onFilterClick} onSortClick={onSortClick} />
       </div>

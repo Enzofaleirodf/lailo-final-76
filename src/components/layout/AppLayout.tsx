@@ -25,13 +25,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       <div className="flex w-full relative">
         {/* Sidebar is always rendered here, not in each page */}
         <Sidebar />
-        <div className="flex-1 w-full overflow-x-hidden">
+        
+        {/* Main content area with responsive margin for sidebar */}
+        <div className={`flex-1 w-full overflow-x-hidden transition-all duration-300 ${!isMobile ? 'ml-16' : ''}`}>
           <div className={`max-w-7xl mx-auto w-full ${paddingClasses}`}>
-            <main className={`w-full ${isMobile ? "pb-24" : "pb-20"}`}>
+            <main className={`w-full ${isMobile ? "pb-20" : "pb-8"}`}>
               {children}
             </main>
           </div>
         </div>
+        
+        {/* Mobile navigation bar */}
         {isMobile && <MobileNavBar />}
       </div>
     </div>

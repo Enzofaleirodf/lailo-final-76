@@ -35,7 +35,7 @@ const BuscadorLayout: React.FC<BuscadorLayoutProps> = ({ children }) => {
   };
   
   return (
-    <div className={`${isMobile ? 'pt-16' : ''}`}>
+    <div className={`${isMobile ? 'pt-20' : 'pt-4'} relative`}>
       {/* Renderizar elementos filhos no topo, se houver */}
       {children}
       
