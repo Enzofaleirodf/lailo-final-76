@@ -9,8 +9,10 @@ import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { TIMING } from '@/constants/designSystem';
 import { useAuctionFilters } from './useAuctionFilters';
+import { TIMING } from '@/constants/designSystem';
 import { calculateItemsStatistics } from '@/utils/auctionFilterUtils';
 import { handleError } from '@/utils/errorUtils';
+import { logUserAction } from '@/utils/loggingUtils';
 
 interface UseAuctionItemsOptions {
   currentPage: number;
@@ -52,7 +54,10 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       
       // Verificar mudança no tipo de conteúdo para logging 
       if (lastContentType !== null && lastContentType !== filters.contentType) {
-        console.log(`Content type changed from ${lastContentType} to ${filters.contentType}`);
+        logUserAction('content_type_changed', {
+          from: lastContentType,
+          to: filters.contentType
+        });
       }
       
       // Simular delay de API
@@ -76,8 +81,13 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       const end = start + itemsPerPage;
       const paginatedItems = filteredItems.slice(start, end);
       
-      // Debug dos itens renderizados
-      console.log(`[AuctionList] Content type: ${filters.contentType}, Items count: ${paginatedItems.length}`);
+      // Log the results
+      logUserAction('items_loaded', {
+        contentType: filters.contentType,
+        count: paginatedItems.length,
+        page: currentPage,
+        totalPages: total
+      });
       
       setItems(paginatedItems);
       setLocalLoading(false);
@@ -95,6 +105,12 @@ export const useAuctionItems = ({ currentPage, itemsPerPage }: UseAuctionItemsOp
       setLoading(false);
       setIsChangingPage(false);
       setFilteredResults(0, 0, 0);
+      
+      // Log the error
+      logUserAction('items_load_error', {
+        contentType: filters.contentType,
+        page: currentPage
+      });
     }
   }, [
     filters, 

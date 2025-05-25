@@ -1,5 +1,6 @@
 
 import { useRef, useEffect } from 'react';
+import { TIMING } from '@/constants/designSystem';
 
 interface ScrollRestorationOptions {
   preventBrowserScroll?: boolean;
@@ -61,10 +62,12 @@ export const useScrollRestoration = () => {
     const attemptRestoreScroll = () => {
       // Verificar se ainda estamos na mesma atualização
       if (originalTimestamp === lastScrollUpdateRef.current && preventBrowserScrollRef.current) {
-        window.scrollTo({
-          top: originalScrollPos,
-          behavior: 'instant'
-        });
+        setTimeout(() => {
+          window.scrollTo({
+            top: originalScrollPos,
+            behavior: 'instant'
+          });
+        }, 0);
         
         // Verificar se a rolagem foi efetivamente aplicada
         if (Math.abs(window.scrollY - originalScrollPos) < 5 || attempts >= maxAttempts - 1) {
@@ -90,10 +93,12 @@ export const useScrollRestoration = () => {
   
   // Função para rolar para o topo
   const scrollToTop = (smooth = true) => {
-    window.scrollTo({
-      top: 0,
-      behavior: smooth ? 'smooth' : 'instant'
-    });
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: smooth ? 'smooth' : 'instant'
+      });
+    }, TIMING.animationDelay / 3);
   };
   
   return {

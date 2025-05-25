@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { ContentType } from '@/types/filters';
 import { useUrlParams } from '@/hooks/useUrlParams';
+import { logUserAction } from '@/utils/loggingUtils';
 
 /**
  * Hook personalizado que encapsula toda a lógica de inicialização
@@ -20,27 +21,26 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     // Evitar inicialização duplicada
     if (initialSetupDone.current) return;
 
-    // Verificar se acabamos de navegar para esta página (não se já estávamos nela)
-    const needsUpdate = filters.contentType !== contentType;
-    
-    if (needsUpdate) {
-      console.log(`Buscador: Setting content type to ${contentType}`);
+    // Always update the content type to ensure consistency
+    if (filters.contentType !== contentType) {
+      logUserAction('buscador_setup', { contentType });
       updateFilter('contentType', contentType);
 
       // Limpar filtros específicos com base no tipo de conteúdo
       if (contentType === 'property') {
         // Limpar quaisquer filtros específicos de veículos
         if (filters.vehicleTypes.length > 0 || filters.brand !== 'todas' || filters.model !== 'todos') {
-          console.log('Cleaning vehicle-specific filters');
+          logUserAction('clean_vehicle_filters');
           updateFilter('vehicleTypes', []);
           updateFilter('brand', 'todas');
           updateFilter('model', 'todos');
           updateFilter('color', 'todas');
+          updateFilter('year', { min: '', max: '' });
         }
       } else if (contentType === 'vehicle') {
         // Limpar quaisquer filtros específicos de imóveis
         if (filters.propertyTypes.length > 0 || filters.usefulArea.min !== '' || filters.usefulArea.max !== '') {
-          console.log('Cleaning property-specific filters');
+          logUserAction('clean_property_filters');
           updateFilter('propertyTypes', []);
           updateFilter('usefulArea', {
             min: '',
@@ -51,8 +51,7 @@ export const useBuscadorSetup = (contentType: ContentType) => {
     }
     
     initialSetupDone.current = true;
-  }, [updateFilter, filters.contentType, filters.vehicleTypes, filters.brand, filters.model, 
-      filters.propertyTypes, filters.usefulArea, contentType, filters]);
+  }, [updateFilter, filters, contentType]);
       
   return { initialSetupDone };
 };
