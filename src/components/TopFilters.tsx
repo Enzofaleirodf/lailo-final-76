@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { COLORS } from '@/constants/designSystem';
+import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
 import { Button } from '@/components/ui/button';
 import { logUserAction } from '@/utils/loggingUtils';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -10,6 +10,7 @@ import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/fi
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
 import ErrorBoundary from './ErrorBoundary';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Separator } from '@/components/ui/separator';
 
 /**
  * TopFilters - Barra de filtros rápidos para a versão desktop
@@ -121,7 +122,7 @@ const TopFilters: React.FC = () => {
     <ErrorBoundary componentName="TopFilters">
       <div className="mb-6" role="navigation" aria-label="Filtros rápidos">
         {/* Filter Groups Row - All in one row */}
-        <div className="flex flex-wrap gap-4 items-center">
+        <div className="flex flex-wrap items-center">
           {/* Content Type Buttons */}
           <div className={`${baseContainerStyle} h-10 flex w-auto`} role="tablist" aria-label="Tipo de conteúdo">
             <button 
@@ -157,101 +158,101 @@ const TopFilters: React.FC = () => {
             </button>
           </div>
           
+          <Separator orientation="vertical" className="h-10 mx-4" />
+          
           {/* Format Filter Group */}
-          <div className="flex items-center h-auto">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Formato:</span>
-            <div className="w-auto">
-              <ToggleGroup 
-                type="single" 
-                value={filters.format} 
-                onValueChange={handleFormatChange}
-                className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
-                variant="brand"
-              >
-                {formatOptions.map(option => (
-                  <ToggleGroupItem 
-                    key={option.value} 
-                    value={option.value}
-                    className="text-sm whitespace-nowrap px-4 rounded-md"
-                    aria-label={`Formato: ${option.label}`}
-                  >
-                    {option.label}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
+          <div className="w-auto">
+            <ToggleGroup 
+              type="single" 
+              value={filters.format} 
+              onValueChange={handleFormatChange}
+              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              variant="brand"
+            >
+              {formatOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-sm whitespace-nowrap px-4 rounded-md"
+                  aria-label={`Formato: ${option.label}`}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
           </div>
     
+          <Separator orientation="vertical" className="h-10 mx-4" />
+          
           {/* Origin Filter Group */}
-          <div className="flex items-center h-auto">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Origem:</span>
-            <div className="w-auto">
-              <ToggleGroup 
-                type="multiple" 
-                value={selectedOrigins} 
-                onValueChange={handleOriginChange}
-                className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
-                variant="multi"
-              >
-                {originOptions.map(option => (
+          <div className="w-auto">
+            <ToggleGroup 
+              type="multiple" 
+              value={selectedOrigins} 
+              onValueChange={handleOriginChange}
+              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              variant="multi"
+            >
+              {originOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-sm whitespace-nowrap px-4 rounded-md"
+                  aria-label={`Origem: ${option.label}`}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+    
+          <Separator orientation="vertical" className="h-10 mx-4" />
+          
+          {/* Place Filter Group */}
+          <div className="w-auto">
+            <ToggleGroup 
+              type="multiple" 
+              value={selectedPlaces} 
+              onValueChange={handlePlaceChange}
+              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              variant="multi"
+              disabled={filters.format === 'Venda Direta'}
+            >
+              {placeOptions.map(option => {
+                // Simplify the display text for place options
+                const displayText = option.value === 'Praça Única' ? 'Única' : 
+                                   option.value === '1ª Praça' ? '1ª' :
+                                   option.value === '2ª Praça' ? '2ª' :
+                                   option.value === '3ª Praça' ? '3ª' : option.label;
+                
+                return (
                   <ToggleGroupItem 
                     key={option.value} 
                     value={option.value}
                     className="text-sm whitespace-nowrap px-4 rounded-md"
-                    aria-label={`Origem: ${option.label}`}
+                    aria-label={`Praça: ${option.label}`}
+                    disabled={filters.format === 'Venda Direta'}
                   >
-                    {option.label}
+                    {displayText}
                   </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
-          </div>
-    
-          {/* Place Filter Group */}
-          <div className="flex items-center h-auto">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Praça:</span>
-            <div className="w-auto">
-              <ToggleGroup 
-                type="multiple" 
-                value={selectedPlaces} 
-                onValueChange={handlePlaceChange}
-                className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
-                variant="multi"
-                disabled={filters.format === 'Venda Direta'}
-              >
-                {placeOptions.map(option => {
-                  // Simplify the display text for place options
-                  const displayText = option.value === 'Praça Única' ? 'Única' : 
-                                     option.value === '1ª Praça' ? '1ª' :
-                                     option.value === '2ª Praça' ? '2ª' :
-                                     option.value === '3ª Praça' ? '3ª' : option.label;
-                  
-                  return (
-                    <ToggleGroupItem 
-                      key={option.value} 
-                      value={option.value}
-                      className="text-sm whitespace-nowrap px-4 rounded-md"
-                      aria-label={`Praça: ${option.label}`}
-                      disabled={filters.format === 'Venda Direta'}
-                    >
-                      {displayText}
-                    </ToggleGroupItem>
-                  );
-                })}
-              </ToggleGroup>
-            </div>
+                );
+              })}
+            </ToggleGroup>
           </div>
           
           {/* Reset Filters Button - Only show when filters are active */}
           {hasActiveTopFilters && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleResetFilters}
-              className="text-xs ml-auto"
-            >
-              Limpar filtros
-            </Button>
+            <>
+              <Separator orientation="vertical" className="h-10 mx-4" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleResetFilters}
+                className="text-xs"
+              >
+                Limpar filtros
+              </Button>
+            </>
           )}
         </div>
       </div>
