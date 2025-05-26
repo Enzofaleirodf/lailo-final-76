@@ -95,8 +95,8 @@ export const applyPropertyFilters = (
     
     filteredItems = filteredItems.filter(property => {
       if (!property.propertyInfo || !property.propertyInfo.type) return false;
-      // Check if the property type is included in the category types or if the category includes 'Todos'
-      return categoryTypes.includes('Todos') || categoryTypes.includes(property.propertyInfo.type);
+      // Check if the property's type is included in the selected category's types
+      return categoryTypes.includes(property.propertyInfo.type);
     });
   }
   
@@ -144,9 +144,12 @@ export const applyVehicleFilters = (
     
     filteredItems = filteredItems.filter(auction => {
       if (!auction.vehicleInfo || !auction.vehicleInfo.type) return false;
-      // If 'Todos' is in the category types, include all vehicles of this category
-      return categoryTypes.includes('Todos') || 
-             categoryTypes.some(type => 
+      // Check if the vehicle's type is included in the selected category's types
+      // We need to exclude 'Todos' from the comparison
+      const typesToCheck = categoryTypes.filter(type => type !== 'Todos');
+      return typesToCheck.length === 0 || 
+             typesToCheck.some(type => 
+               auction.vehicleInfo.type === type || 
                auction.vehicleInfo.type.toLowerCase() === type.toLowerCase()
              );
     });
