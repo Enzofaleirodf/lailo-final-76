@@ -8,6 +8,7 @@ import React, { memo, useCallback } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
+import { Button } from '@/components/ui/button';
 import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
 import { 
   formatOptions, 
@@ -31,21 +32,37 @@ const MobileFilterOptions: React.FC = () => {
 
   // Handlers memoizados para evitar renderizações desnecessárias
   const handleFormatChange = useCallback((value: string) => {
+    if (!value) return;
     updateFilter('format', value as FilterFormat);
   }, [updateFilter]);
 
-  const handleOriginChange = useCallback((value: string) => {
-    updateFilter('origin', value as FilterOrigin);
+  const handleOriginChange = useCallback((values: string[]) => {
+    if (values.length === 0) return;
+    updateFilter('origin', values[0] as FilterOrigin);
   }, [updateFilter]);
 
-  const handlePlaceChange = useCallback((value: string) => {
-    updateFilter('place', value as FilterPlace);
+  const handlePlaceChange = useCallback((values: string[]) => {
+    if (values.length === 0) return;
+    updateFilter('place', values[0] as FilterPlace);
   }, [updateFilter]);
 
   // Usando React.memo em conjunto com useCallback para otimizar renderizações
   const handleToggleFormat = useCallback(() => toggleSection('format'), [toggleSection]);
   const handleToggleOrigin = useCallback(() => toggleSection('origin'), [toggleSection]);
   const handleTogglePlace = useCallback(() => toggleSection('place'), [toggleSection]);
+
+  // Reset filters to default values
+  const handleResetFilters = useCallback(() => {
+    updateFilter('format', 'Leilão');
+    updateFilter('origin', 'Extrajudicial');
+    updateFilter('place', 'Praça Única');
+  }, [updateFilter]);
+
+  // Check if any filters are active
+  const hasActiveFilters = 
+    filters.format !== 'Leilão' || 
+    filters.origin !== 'Extrajudicial' || 
+    filters.place !== 'Praça Única';
 
   return (
     <div 
@@ -56,7 +73,7 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Formato" 
         isExpanded={expandedSections.format} 
-        onToggle={handleToggleFormat}
+        onToggle={() => {}}
       >
         <ToggleGroup 
           type="single" 
@@ -64,13 +81,14 @@ const MobileFilterOptions: React.FC = () => {
           onValueChange={(value) => {
             if (value) handleFormatChange(value);
           }}
-          className="flex flex-wrap gap-2"
+          className="flex flex-wrap gap-2 w-full"
+          variant="brand"
         >
           {formatOptions.map(option => (
             <ToggleGroupItem 
               key={option.value} 
               value={option.value}
-              className="text-sm"
+              className="text-sm flex-1 whitespace-nowrap"
               aria-label={`Formato: ${option.label}`}
             >
               {option.label}
@@ -82,21 +100,20 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Origem" 
         isExpanded={expandedSections.origin} 
-        onToggle={handleToggleOrigin}
+        onToggle={() => {}}
       >
         <ToggleGroup 
           type="multiple" 
           value={[filters.origin]} 
-          onValueChange={(value) => {
-            if (value.length > 0) handleOriginChange(value[0]);
-          }}
-          className="flex flex-wrap gap-2"
+          onValueChange={handleOriginChange}
+          className="flex flex-wrap gap-2 w-full"
+          variant="multi"
         >
           {originOptions.map(option => (
             <ToggleGroupItem 
               key={option.value} 
               value={option.value}
-              className="text-sm"
+              className="text-sm flex-1 whitespace-nowrap"
               aria-label={`Origem: ${option.label}`}
             >
               {option.label}
@@ -108,15 +125,14 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Praça" 
         isExpanded={expandedSections.place} 
-        onToggle={handleTogglePlace}
+        onToggle={() => {}}
       >
         <ToggleGroup 
           type="multiple" 
           value={[filters.place]} 
-          onValueChange={(value) => {
-            if (value.length > 0) handlePlaceChange(value[0]);
-          }}
-          className="flex flex-wrap gap-2"
+          onValueChange={handlePlaceChange}
+          className="flex flex-wrap gap-2 w-full"
+          variant="multi"
           disabled={filters.format === 'Venda Direta'}
         >
           {placeOptions.map(option => {
@@ -130,7 +146,7 @@ const MobileFilterOptions: React.FC = () => {
               <ToggleGroupItem 
                 key={option.value} 
                 value={option.value}
-                className="text-sm"
+                className="text-sm flex-1 whitespace-nowrap"
                 aria-label={`Praça: ${option.label}`}
                 disabled={filters.format === 'Venda Direta'}
               >
@@ -140,6 +156,20 @@ const MobileFilterOptions: React.FC = () => {
           })}
         </ToggleGroup>
       </FilterSectionComponent>
+      
+      {/* Reset Filters Button - Only show when filters are active */}
+      {hasActiveFilters && (
+        <div className="p-3 flex justify-end">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleResetFilters}
+            className="text-xs"
+          >
+            Limpar filtros
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

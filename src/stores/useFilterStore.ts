@@ -22,6 +22,10 @@ interface FilterStore extends FilterStoreState {
   collapseAllSections: () => void;
   expandAllSections: () => void;
   getActiveFiltersCount: () => number;
+  getSelectedOrigins: () => FilterOrigin[];
+  getSelectedPlaces: () => FilterPlace[];
+  updateMultipleOrigins: (origins: FilterOrigin[]) => void;
+  updateMultiplePlaces: (places: FilterPlace[]) => void;
 }
 
 // Count active filters to show in badge
@@ -187,6 +191,54 @@ export const useFilterStore = create<FilterStore>()(
       getActiveFiltersCount: () => {
         const { filters } = get();
         return countActiveFilters(filters);
+      }
+      
+      // Get selected origins (for multi-select)
+      getSelectedOrigins: () => {
+        const { filters } = get();
+        return [filters.origin];
+      },
+      
+      // Get selected places (for multi-select)
+      getSelectedPlaces: () => {
+        const { filters } = get();
+        return [filters.place];
+      },
+      
+      // Update multiple origins
+      updateMultipleOrigins: (origins) => {
+        if (origins.length === 0) return;
+        
+        set((state) => {
+          const newFilters = { 
+            ...state.filters, 
+            origin: origins[0] 
+          };
+          
+          return { 
+            filters: newFilters, 
+            activeFilters: countActiveFilters(newFilters),
+            lastUpdatedFilter: 'origin'
+          };
+        });
+      },
+      
+      // Update multiple places
+      updateMultiplePlaces: (places) => {
+        if (places.length === 0) return;
+        
+        set((state) => {
+          const newFilters = { 
+            ...state.filters, 
+            place: places[0] 
+          };
+          
+          return { 
+            filters: newFilters, 
+            activeFilters: countActiveFilters(newFilters),
+            lastUpdatedFilter: 'place'
+          };
+        });
       }
     }),
     { name: 'filter-store' }
