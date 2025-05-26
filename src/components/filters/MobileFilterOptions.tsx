@@ -73,103 +73,88 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Formato" 
         isExpanded={expandedSections.format} 
-        onToggle={handleToggleFormat}
+        onToggle={() => {}}
       >
-        <div className="flex items-center">
-          <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Formato:</span>
-          <div className="w-auto">
-            <ToggleGroup 
-              type="single" 
-              value={filters.format} 
-              onValueChange={(value) => {
-                if (value) handleFormatChange(value);
-              }}
-              className="flex flex-wrap gap-2 p-1"
-              variant="brand"
+        <ToggleGroup 
+          type="single" 
+          value={filters.format} 
+          onValueChange={(value) => {
+            if (value) handleFormatChange(value);
+          }}
+          className="flex flex-wrap gap-2 w-full"
+          variant="brand"
+        >
+          {formatOptions.map(option => (
+            <ToggleGroupItem 
+              key={option.value} 
+              value={option.value}
+              className="text-sm flex-1 whitespace-nowrap"
+              aria-label={`Formato: ${option.label}`}
             >
-              {formatOptions.map(option => (
-                <ToggleGroupItem 
-                  key={option.value} 
-                  value={option.value}
-                  className="text-sm whitespace-nowrap px-4 rounded-md"
-                  aria-label={`Formato: ${option.label}`}
-                >
-                  {option.label}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
-        </div>
+              {option.label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Origem" 
         isExpanded={expandedSections.origin} 
-        onToggle={handleToggleOrigin}
+        onToggle={() => {}}
       >
-        <div className="flex items-center">
-          <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Origem:</span>
-          <div className="w-auto">
-            <ToggleGroup 
-              type="multiple" 
-              value={selectedOrigins} 
-              onValueChange={handleOriginChange}
-              className="flex flex-wrap gap-2 p-1"
-              variant="multi"
+        <ToggleGroup 
+          type="multiple" 
+          value={[filters.origin]} 
+          onValueChange={handleOriginChange}
+          className="flex flex-wrap gap-2 w-full"
+          variant="multi"
+        >
+          {originOptions.map(option => (
+            <ToggleGroupItem 
+              key={option.value} 
+              value={option.value}
+              className="text-sm flex-1 whitespace-nowrap"
+              aria-label={`Origem: ${option.label}`}
             >
-              {originOptions.map(option => (
-                <ToggleGroupItem 
-                  key={option.value} 
-                  value={option.value}
-                  className="text-sm whitespace-nowrap px-4 rounded-md"
-                  aria-label={`Origem: ${option.label}`}
-                >
-                  {option.label}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
-        </div>
+              {option.label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Praça" 
         isExpanded={expandedSections.place} 
-        onToggle={handleTogglePraça}
+        onToggle={() => {}}
       >
-        <div className="flex items-center">
-          <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Praça:</span>
-          <div className="w-auto">
-            <ToggleGroup 
-              type="multiple" 
-              value={selectedPlaces} 
-              onValueChange={handlePlaceChange}
-              className="flex flex-wrap gap-2 p-1"
-              variant="multi"
-              disabled={filters.format === 'Venda Direta'}
-            >
-              {placeOptions.map(option => {
-                // Simplify the display text for place options
-                const displayText = option.value === 'Praça Única' ? 'Única' : 
-                                   option.value === '1ª Praça' ? '1ª' :
-                                   option.value === '2ª Praça' ? '2ª' :
-                                   option.value === '3ª Praça' ? '3ª' : option.label;
-                
-                return (
-                  <ToggleGroupItem 
-                    key={option.value} 
-                    value={option.value}
-                    className="text-sm whitespace-nowrap px-4 rounded-md"
-                    aria-label={`Praça: ${option.label}`}
-                    disabled={filters.format === 'Venda Direta'}
-                  >
-                    {displayText}
-                  </ToggleGroupItem>
-                );
-              })}
-            </ToggleGroup>
-          </div>
-        </div>
+        <ToggleGroup 
+          type="multiple" 
+          value={[filters.place]} 
+          onValueChange={handlePlaceChange}
+          className="flex flex-wrap gap-2 w-full"
+          variant="multi"
+          disabled={filters.format === 'Venda Direta'}
+        >
+          {placeOptions.map(option => {
+            // Simplify the display text for place options
+            const displayText = option.value === 'Praça Única' ? 'Única' : 
+                               option.value === '1ª Praça' ? '1ª' :
+                               option.value === '2ª Praça' ? '2ª' :
+                               option.value === '3ª Praça' ? '3ª' : option.label;
+            
+            return (
+              <ToggleGroupItem 
+                key={option.value} 
+                value={option.value}
+                className="text-sm flex-1 whitespace-nowrap"
+                aria-label={`Praça: ${option.label}`}
+                disabled={filters.format === 'Venda Direta'}
+              >
+                {displayText}
+              </ToggleGroupItem>
+            );
+          })}
+        </ToggleGroup>
       </FilterSectionComponent>
       
       {/* Reset Filters Button - Only show when filters are active */}

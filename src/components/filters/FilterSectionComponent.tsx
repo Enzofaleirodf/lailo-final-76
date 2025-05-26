@@ -27,14 +27,14 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   };
   
   return (
-    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all duration-200 w-full">
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all duration-200">
       {/* Title section */}
       <div className={`w-full bg-gradient-to-r from-brand-50 to-white p-3 border-b border-gray-100`}>
         <h3 className={`text-sm ${COLORS.text.gray[900]} font-urbanist font-semibold tracking-wide`}>{title}</h3>
       </div>
       
       {/* Content - always expanded */}
-      <div className="p-3" id={id} role="region" aria-labelledby={`heading-${id}`}>
+      <div className="p-4" id={id} role="region" aria-labelledby={`heading-${id}`}>
         {children}
       </div>
     </div>
@@ -42,5 +42,3 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
 };
 
 export default FilterSectionComponent;
-
-export { FilterSectionComponent }

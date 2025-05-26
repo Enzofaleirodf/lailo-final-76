@@ -3,8 +3,8 @@ import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { COLORS } from '@/constants/designSystem';
-import { Button } from '@/components/ui/button';
 import { logUserAction } from '@/utils/loggingUtils';
+import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
@@ -123,7 +123,7 @@ const TopFilters: React.FC = () => {
         {/* Filter Groups Row - All in one row */}
         <div className="flex flex-wrap gap-4 items-center">
           {/* Content Type Buttons */}
-          <div className={`${baseContainerStyle} h-10 flex w-auto`} role="tablist" aria-label="Tipo de conteúdo">
+          <div className={`${baseContainerStyle} h-10 flex`} role="tablist" aria-label="Tipo de conteúdo">
             <button 
               onClick={() => handleContentTypeChange('property')}
               className={cn(
@@ -158,88 +158,82 @@ const TopFilters: React.FC = () => {
           </div>
           
           {/* Format Filter Group */}
-          <div className="flex items-center h-auto">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Formato:</span>
-            <div className="w-auto">
-              <ToggleGroup 
-                type="single" 
-                value={filters.format} 
-                onValueChange={handleFormatChange}
-                className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
-                variant="brand"
-              >
-                {formatOptions.map(option => (
-                  <ToggleGroupItem 
-                    key={option.value} 
-                    value={option.value}
-                    className="text-sm whitespace-nowrap px-4 rounded-md"
-                    aria-label={`Formato: ${option.label}`}
-                  >
-                    {option.label}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
+          <div className="flex items-center gap-2 h-10">
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16 mb-0">Formato:</span>
+            <ToggleGroup 
+              type="single" 
+              value={filters.format} 
+              onValueChange={handleFormatChange}
+              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              variant="brand"
+            >
+              {formatOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-sm whitespace-nowrap px-4 rounded-md"
+                  aria-label={`Formato: ${option.label}`}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
           </div>
     
           {/* Origin Filter Group */}
-          <div className="flex items-center h-auto">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Origem:</span>
-            <div className="w-auto">
-              <ToggleGroup 
-                type="multiple" 
-                value={selectedOrigins} 
-                onValueChange={handleOriginChange}
-                className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
-                variant="multi"
-              >
-                {originOptions.map(option => (
+          <div className="flex items-center gap-2 h-10">
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16 mb-0">Origem:</span>
+            <ToggleGroup 
+              type="multiple" 
+              value={selectedOrigins} 
+              onValueChange={handleOriginChange}
+              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              variant="multi"
+            >
+              {originOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-sm whitespace-nowrap px-4 rounded-md"
+                  aria-label={`Origem: ${option.label}`}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+    
+          {/* Place Filter Group */}
+          <div className="flex items-center gap-2 h-10">
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16 mb-0">Praça:</span>
+            <ToggleGroup 
+              type="multiple" 
+              value={selectedPlaces} 
+              onValueChange={handlePlaceChange}
+              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              variant="multi"
+              disabled={filters.format === 'Venda Direta'}
+            >
+              {placeOptions.map(option => {
+                // Simplify the display text for place options
+                const displayText = option.value === 'Praça Única' ? 'Única' : 
+                                   option.value === '1ª Praça' ? '1ª' :
+                                   option.value === '2ª Praça' ? '2ª' :
+                                   option.value === '3ª Praça' ? '3ª' : option.label;
+                
+                return (
                   <ToggleGroupItem 
                     key={option.value} 
                     value={option.value}
                     className="text-sm whitespace-nowrap px-4 rounded-md"
-                    aria-label={`Origem: ${option.label}`}
+                    aria-label={`Praça: ${option.label}`}
+                    disabled={filters.format === 'Venda Direta'}
                   >
-                    {option.label}
+                    {displayText}
                   </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
-          </div>
-    
-          {/* Place Filter Group */}
-          <div className="flex items-center h-auto">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Praça:</span>
-            <div className="w-auto">
-              <ToggleGroup 
-                type="multiple" 
-                value={selectedPlaces} 
-                onValueChange={handlePlaceChange}
-                className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
-                variant="multi"
-                disabled={filters.format === 'Venda Direta'}
-              >
-                {placeOptions.map(option => {
-                  // Simplify the display text for place options
-                  const displayText = option.value === 'Praça Única' ? 'Única' : 
-                                     option.value === '1ª Praça' ? '1ª' :
-                                     option.value === '2ª Praça' ? '2ª' :
-                                     option.value === '3ª Praça' ? '3ª' : option.label;
-                  
-                  return (
-                    <ToggleGroupItem 
-                      key={option.value} 
-                      value={option.value}
-                      className="text-sm whitespace-nowrap px-4 rounded-md"
-                      aria-label={`Praça: ${option.label}`}
-                      disabled={filters.format === 'Venda Direta'}
-                    >
-                      {displayText}
-                    </ToggleGroupItem>
-                  );
-                })}
-              </ToggleGroup>
-            </div>
+                );
+              })}
+            </ToggleGroup>
           </div>
           
           {/* Reset Filters Button - Only show when filters are active */}
@@ -248,7 +242,7 @@ const TopFilters: React.FC = () => {
               variant="outline" 
               size="sm" 
               onClick={handleResetFilters}
-              className="text-xs ml-auto"
+              className="ml-auto text-xs"
             >
               Limpar filtros
             </Button>

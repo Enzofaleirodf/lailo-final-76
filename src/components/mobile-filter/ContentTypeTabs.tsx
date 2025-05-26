@@ -7,7 +7,6 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
 import { useNavigate } from 'react-router-dom';
 import { logUserAction } from '@/utils/loggingUtils';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface ContentTypeTabsProps {
   onTabChange?: (tab: ContentType) => void;
@@ -21,7 +20,6 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { getButtonSizeClass, getIconSize } = useScreenUtils();
   const navigate = useNavigate(); // Add navigation hook
-  const isMobileOrTablet = useMediaQuery('mdMax');
   const activeButtonClass = "bg-gradient-to-r from-brand-600 to-brand-700 text-white shadow-sm";
   const inactiveButtonClass = "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500";
   
@@ -112,10 +110,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
         {...getTabAttributes('property')}
       >
         <Building2 size={getIconSize()} className={`shrink-0 ${filters.contentType === 'property' ? 'text-white' : 'text-gray-600'}`} aria-hidden="true" />
-        {!isMobileOrTablet && (
-          <span className={`ml-1.5 ${filters.contentType === 'property' ? 'text-white' : 'text-gray-700'}`}>Imóveis</span>
-        )}
-        <span className="sr-only">Imóveis</span>
+        <span className={`ml-1.5 ${filters.contentType === 'property' ? 'text-white' : 'text-gray-700'}`}>Imóveis</span>
       </button>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
       <button 
@@ -129,10 +124,7 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
         {...getTabAttributes('vehicle')}
       >
         <Car size={getIconSize()} className={`shrink-0 ${filters.contentType === 'vehicle' ? 'text-white' : 'text-gray-600'}`} aria-hidden="true" />
-        {!isMobileOrTablet && (
-          <span className={`ml-1.5 ${filters.contentType === 'vehicle' ? 'text-white' : 'text-gray-700'}`}>Veículos</span>
-        )}
-        <span className="sr-only">Veículos</span>
+        <span className={`ml-1.5 ${filters.contentType === 'vehicle' ? 'text-white' : 'text-gray-700'}`}>Veículos</span>
       </button>
     </div>
   );

@@ -37,10 +37,12 @@ const UsefulAreaFilter: React.FC<UsefulAreaFilterProps> = ({ onFilterChange }) =
   }, []);
   
   // Verificar se o filtro está ativo (não está usando valores padrão)
-  const isFilterActive = filters.usefulArea.min !== defaultValues.min || filters.usefulArea.max !== defaultValues.max;
+  const isFilterActive = 
+    filters.usefulArea.min !== defaultValues.min || 
+    filters.usefulArea.max !== defaultValues.max;
   
   return (
-    <div className="w-full">
+    <div className="space-y-3">
       <SimplifiedRangeFilter
         initialValues={filters.usefulArea}
         defaultValues={defaultValues}
