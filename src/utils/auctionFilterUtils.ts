@@ -1,4 +1,3 @@
-
 import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { FilterState } from '@/types/filters';
@@ -50,12 +49,12 @@ export const applyLocationFilter = <T extends GenericItem>(
     let matchState = !state;
     let matchCity = !city;
     
-    if (state && 'stateCode' in item && typeof item.stateCode === 'string') {
-      matchState = item.stateCode.toLowerCase() === state.toLowerCase();
+    if (state) {
+      matchState = item.location.includes(state);
     }
     
-    if (city && 'city' in item && typeof item.city === 'string') {
-      matchCity = item.city.toLowerCase() === city.toLowerCase();
+    if (city) {
+      matchCity = item.location.toLowerCase().includes(city.toLowerCase());
     }
     
     return matchState && matchCity;
@@ -208,8 +207,8 @@ export const calculateItemsStatistics = <T extends GenericItem>(
   contentType: string
 ): { totalItems: number, totalSites: number, newItems: number } => {
   const totalItems = items.length;
-  const uniqueLocations = new Set(items.map(item => item.location));
-  const totalSites = uniqueLocations.size > 0 ? uniqueLocations.size : 1;
+  const uniqueWebsites = new Set(items.map(item => item.website));
+  const totalSites = uniqueWebsites.size;
   const newItems = Math.ceil(totalItems * (contentType === 'property' ? 0.2 : 0.1));
   
   return { totalItems, totalSites, newItems };
