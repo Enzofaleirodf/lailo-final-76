@@ -75,8 +75,8 @@ const countActiveFilters = (filters: FilterState): number => {
   
   // Auction format, origin, place - Only count if different from visual defaults
   if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
-  if (filters.origin !== 'Todas') count++;
-  if (filters.place !== 'Todas') count++;
+  if (filters.origin !== 'Extrajudicial') count++;
+  if (filters.place !== 'Praça única') count++;
 
   // Category - conta se for diferente do padrão
   if (filters.category !== 'Todos') count++;
@@ -97,7 +97,7 @@ export const useFilterStore = create<FilterStore>()(
       activeFilters: 0,
       lastUpdatedFilter: 'initial',
       selectedOrigins: ['Extrajudicial'],
-      selectedPlaces: ['Praça Única'],
+      selectedPlaces: ['Praça única'],
       
       // Update a specific filter value
       updateFilter: (key, value) => {
@@ -144,7 +144,7 @@ export const useFilterStore = create<FilterStore>()(
           activeFilters: 0,
           lastUpdatedFilter: 'reset',
           selectedOrigins: ['Extrajudicial'],
-          selectedPlaces: ['Praça Única']
+          selectedPlaces: ['Praça única']
         }));
       },
       

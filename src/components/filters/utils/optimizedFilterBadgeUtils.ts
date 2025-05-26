@@ -1,4 +1,3 @@
-
 import { FilterState, PriceRangeFilter } from '@/types/filters';
 import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 import { useMemo } from 'react';
@@ -246,13 +245,13 @@ export const createColorBadge = (color: string, onRemove: () => void): FilterBad
   createSimpleBadge('color', color, 'todas', 'Cor', onRemove);
 
 export const createFormatBadge = (format: string, onRemove: () => void): FilterBadge | null => 
-  createSimpleBadge('format', format, 'Todos', 'Formato', onRemove);
+  createSimpleBadge('format', format, 'Leilão', 'Formato', onRemove);
 
 export const createOriginBadge = (origin: string, onRemove: () => void): FilterBadge | null => 
   createSimpleBadge('origin', origin, 'Extrajudicial', 'Origem', onRemove);
 
 export const createPlaceBadge = (place: string, onRemove: () => void): FilterBadge | null => 
-  createSimpleBadge('place', place, 'Praça Única', 'Praça', onRemove);
+  createSimpleBadge('place', place, 'Praça única', 'Praça', onRemove);
 
 /**
  * Generate all filter badges based on current filter state with optimized caching
@@ -336,7 +335,7 @@ export const generateFilterBadges = (
   // Add format badge
   const formatBadge = createFormatBadge(
     filters.format,
-    () => updateFilter('format', 'Todos')
+    () => updateFilter('format', 'Leilão')
   );
   if (formatBadge) badges.push(formatBadge);
   

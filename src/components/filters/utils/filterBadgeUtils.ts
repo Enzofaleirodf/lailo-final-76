@@ -1,4 +1,3 @@
-
 import { FilterState, PriceRangeFilter } from '@/types/filters';
 import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 
@@ -175,7 +174,7 @@ export const createFormatBadge = (
   format: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!format || format === 'Todos') return null;
+  if (!format || format === 'Leilão') return null;
   
   return {
     key: 'format',
@@ -207,7 +206,7 @@ export const createPlaceBadge = (
   place: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!place || place === 'Praça Única') return null;
+  if (!place || place === 'Praça única') return null;
   
   return {
     key: 'place',
@@ -298,7 +297,7 @@ export const generateFilterBadges = (
   // Add format badge
   const formatBadge = createFormatBadge(
     filters.format,
-    () => updateFilter('format', 'Todos')
+    () => updateFilter('format', 'Leilão')
   );
   if (formatBadge) badges.push(formatBadge);
   

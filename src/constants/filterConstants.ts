@@ -22,7 +22,7 @@ export const ORIGIN_OPTIONS = [
 
 // Place options for filter dropdowns
 export const PLACE_OPTIONS = [
-  { value: 'Praça Única', label: 'Praça Única' },
+  { value: 'Praça única', label: 'Praça única' },
   { value: '1ª Praça', label: '1ª Praça' },
   { value: '2ª Praça', label: '2ª Praça' },
   { value: '3ª Praça', label: '3ª Praça' }
@@ -95,7 +95,7 @@ export const DEFAULT_FILTER_VALUES = {
   color: 'todas',
   format: 'Leilão',
   origin: 'Extrajudicial',
-  place: 'Praça Única',
+  place: 'Praça única',
   category: 'Todos'
 };
 
