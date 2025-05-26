@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { setLocalStorageItem, getLocalStorageItem } from '@/services/localStorageService';
 import { logError } from '@/utils/errorUtils';
 
 // Define explicit type for accessibility issues
