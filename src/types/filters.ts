@@ -3,7 +3,7 @@ export type ContentType = 'property' | 'vehicle';
 
 export type FilterFormat = 'Leilão' | 'Venda Direta';
 export type FilterOrigin = 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
-export type FilterPlace = 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
+export type FilterPlace = 'Praça Única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
 
 export interface LocationFilter {
   state: string;
@@ -66,12 +66,4 @@ export interface FilterStoreState {
   expandedSections: ExpandedSectionsState;
   activeFilters: number;
   lastUpdatedFilter: string | null;
-}
-
-// Interface para badges de filtros ativos
-export interface ActiveFilterBadge {
-  id: string;
-  label: string;
-  type: string;
-  onRemove: () => void;
 }

@@ -75,8 +75,8 @@ const countActiveFilters = (filters: FilterState): number => {
   
   // Auction format, origin, place - Only count if different from visual defaults
   if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
-  if (filters.origin !== 'Extrajudicial') count++;
-  if (filters.place !== 'Praça única') count++;
+  if (filters.origin !== 'Todas') count++;
+  if (filters.place !== 'Todas') count++;
 
   // Category - conta se for diferente do padrão
   if (filters.category !== 'Todos') count++;
@@ -97,7 +97,7 @@ export const useFilterStore = create<FilterStore>()(
       activeFilters: 0,
       lastUpdatedFilter: 'initial',
       selectedOrigins: ['Extrajudicial'],
-      selectedPlaces: ['Praça única'],
+      selectedPlaces: ['Praça Única'],
       
       // Update a specific filter value
       updateFilter: (key, value) => {
@@ -144,14 +144,14 @@ export const useFilterStore = create<FilterStore>()(
           activeFilters: 0,
           lastUpdatedFilter: 'reset',
           selectedOrigins: ['Extrajudicial'],
-          selectedPlaces: ['Praça única']
+          selectedPlaces: ['Praça Única']
         }));
       },
       
       // Set multiple filters at once (used for URL sync)
       setFilters: (newFilters) => {
         set((state) => {
-          const updatedFilters: FilterState = { 
+          const updatedFilters = { 
             ...state.filters, 
             ...newFilters,
             vehicleTypes: newFilters.vehicleTypes || [], // Ensure arrays are initialized

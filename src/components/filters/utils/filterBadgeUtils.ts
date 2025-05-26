@@ -1,12 +1,6 @@
 
-import { cn } from '@/lib/utils';
-import { 
-  FilterState, 
-  FilterFormat, 
-  FilterOrigin, 
-  FilterPlace,
-  ActiveFilterBadge 
-} from '@/types/filters';
+import { FilterState, PriceRangeFilter } from '@/types/filters';
+import { formatCurrency, formatUsefulArea } from '@/utils/auctionUtils';
 
 export interface FilterBadge {
   key: string;
@@ -15,159 +9,312 @@ export interface FilterBadge {
 }
 
 /**
- * Creates badges for active filters
+ * Generate badge for location filter
+ */
+export const createLocationBadge = (
+  location: { state: string; city: string }, 
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!location.state && !location.city) return null;
+  
+  const locationText = [];
+  if (location.city) locationText.push(location.city);
+  if (location.state) locationText.push(location.state);
+  
+  return {
+    key: 'location',
+    label: `Localização: ${locationText.join(', ')}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badges for vehicle types filter
+ */
+export const createVehicleTypeBadges = (
+  types: string[], 
+  onRemoveType: (type: string) => void
+): FilterBadge[] => {
+  const nonDefaultTypes = types.filter(type => type !== 'todos');
+  
+  return nonDefaultTypes.map(type => ({
+    key: `vehicle-${type}`,
+    label: `Tipo: ${type}`,
+    onRemove: () => onRemoveType(type)
+  }));
+};
+
+/**
+ * Generate badges for property types filter
+ */
+export const createPropertyTypeBadges = (
+  types: string[], 
+  onRemoveType: (type: string) => void
+): FilterBadge[] => {
+  const nonDefaultTypes = types.filter(type => type !== 'todos');
+  
+  return nonDefaultTypes.map(type => ({
+    key: `property-${type}`,
+    label: `Tipo de imóvel: ${type}`,
+    onRemove: () => onRemoveType(type)
+  }));
+};
+
+/**
+ * Generate badge for useful area filter
+ */
+export const createUsefulAreaBadge = (
+  area: { min: string; max: string }, 
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!area.min && !area.max) return null;
+  
+  const minArea = area.min ? parseInt(area.min) : null;
+  const maxArea = area.max ? parseInt(area.max) : null;
+  
+  const minLabel = minArea !== null ? formatUsefulArea(minArea) : '-';
+  const maxLabel = maxArea !== null ? formatUsefulArea(maxArea) : '-';
+  
+  return {
+    key: 'usefulArea',
+    label: `Área: ${minLabel} a ${maxLabel}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for brand filter
+ */
+export const createBrandBadge = (
+  brand: string,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!brand || brand === 'todas') return null;
+  
+  return {
+    key: 'brand',
+    label: `Marca: ${brand}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for model filter
+ */
+export const createModelBadge = (
+  model: string,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!model || model === 'todos') return null;
+  
+  return {
+    key: 'model',
+    label: `Modelo: ${model}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for color filter
+ */
+export const createColorBadge = (
+  color: string,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!color || color === 'todas') return null;
+  
+  return {
+    key: 'color',
+    label: `Cor: ${color}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for year range filter
+ */
+export const createYearBadge = (
+  year: { min: string; max: string },
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!year.min && !year.max) return null;
+  
+  return {
+    key: 'year',
+    label: `Ano: ${year.min || '-'} a ${year.max || '-'}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for price range filter
+ */
+export const createPriceBadge = (
+  price: PriceRangeFilter,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!price.range.min && !price.range.max) return null;
+  
+  const minPrice = price.range.min ? parseInt(price.range.min) : null;
+  const maxPrice = price.range.max ? parseInt(price.range.max) : null;
+  
+  const minLabel = minPrice !== null ? formatCurrency(minPrice) : '-';
+  const maxLabel = maxPrice !== null ? formatCurrency(maxPrice) : '-';
+  
+  return {
+    key: 'price',
+    label: `Preço: ${minLabel} a ${maxLabel}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for format filter
+ */
+export const createFormatBadge = (
+  format: string,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!format || format === 'Todos') return null;
+  
+  return {
+    key: 'format',
+    label: `Formato: ${format}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for origin filter
+ */
+export const createOriginBadge = (
+  origin: string,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!origin || origin === 'Extrajudicial') return null;
+  
+  return {
+    key: 'origin',
+    label: `Origem: ${origin}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate badge for place filter
+ */
+export const createPlaceBadge = (
+  place: string,
+  onRemove: () => void
+): FilterBadge | null => {
+  if (!place || place === 'Praça Única') return null;
+  
+  return {
+    key: 'place',
+    label: `Praça: ${place}`,
+    onRemove
+  };
+};
+
+/**
+ * Generate all filter badges based on current filter state
  */
 export const generateFilterBadges = (
-  filters: FilterState, 
-  updateFilter: (key: keyof FilterState, value: any) => void
+  filters: FilterState,
+  updateFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void
 ): FilterBadge[] => {
   const badges: FilterBadge[] = [];
   
-  // Location filters
-  if (filters.location?.state) {
-    badges.push({
-      key: 'location-state',
-      label: `Estado: ${filters.location.state}`,
-      onRemove: () => updateFilter('location', { ...filters.location, state: '' })
-    });
+  // Add location badge
+  const locationBadge = createLocationBadge(
+    filters.location, 
+    () => updateFilter('location', { state: '', city: '' })
+  );
+  if (locationBadge) badges.push(locationBadge);
+  
+  // Add vehicle type badges
+  if (filters.vehicleTypes.length > 0) {
+    const vehicleBadges = createVehicleTypeBadges(
+      filters.vehicleTypes,
+      (type) => updateFilter('vehicleTypes', filters.vehicleTypes.filter(t => t !== type))
+    );
+    badges.push(...vehicleBadges);
   }
   
-  if (filters.location?.city) {
-    badges.push({
-      key: 'location-city', 
-      label: `Cidade: ${filters.location.city}`,
-      onRemove: () => updateFilter('location', { ...filters.location, city: '' })
-    });
+  // Add property type badges
+  if (filters.propertyTypes.length > 0) {
+    const propertyBadges = createPropertyTypeBadges(
+      filters.propertyTypes,
+      (type) => updateFilter('propertyTypes', filters.propertyTypes.filter(t => t !== type))
+    );
+    badges.push(...propertyBadges);
   }
   
-  // Vehicle types
-  if (filters.vehicleTypes && filters.vehicleTypes.length > 0) {
-    filters.vehicleTypes.forEach((type, index) => {
-      badges.push({
-        key: `vehicle-type-${index}`,
-        label: `Tipo: ${type}`,
-        onRemove: () => {
-          const newTypes = filters.vehicleTypes.filter((_, i) => i !== index);
-          updateFilter('vehicleTypes', newTypes);
-        }
-      });
-    });
-  }
+  // Add useful area badge
+  const usefulAreaBadge = createUsefulAreaBadge(
+    filters.usefulArea,
+    () => updateFilter('usefulArea', { min: '', max: '' })
+  );
+  if (usefulAreaBadge) badges.push(usefulAreaBadge);
   
-  // Property types
-  if (filters.propertyTypes && filters.propertyTypes.length > 0) {
-    filters.propertyTypes.forEach((type, index) => {
-      badges.push({
-        key: `property-type-${index}`,
-        label: `Tipo: ${type}`,
-        onRemove: () => {
-          const newTypes = filters.propertyTypes.filter((_, i) => i !== index);
-          updateFilter('propertyTypes', newTypes);
-        }
-      });
-    });
-  }
+  // Add brand badge
+  const brandBadge = createBrandBadge(
+    filters.brand,
+    () => updateFilter('brand', 'todas')
+  );
+  if (brandBadge) badges.push(brandBadge);
   
-  // Brand filter
-  if (filters.brand && filters.brand !== 'todas') {
-    badges.push({
-      key: 'brand',
-      label: `Marca: ${filters.brand}`,
-      onRemove: () => updateFilter('brand', 'todas')
-    });
-  }
+  // Add model badge
+  const modelBadge = createModelBadge(
+    filters.model,
+    () => updateFilter('model', 'todos')
+  );
+  if (modelBadge) badges.push(modelBadge);
   
-  // Model filter
-  if (filters.model && filters.model !== 'todos') {
-    badges.push({
-      key: 'model',
-      label: `Modelo: ${filters.model}`,
-      onRemove: () => updateFilter('model', 'todos')
-    });
-  }
+  // Add color badge
+  const colorBadge = createColorBadge(
+    filters.color,
+    () => updateFilter('color', 'todas')
+  );
+  if (colorBadge) badges.push(colorBadge);
   
-  // Color filter
-  if (filters.color && filters.color !== 'todas') {
-    badges.push({
-      key: 'color',
-      label: `Cor: ${filters.color}`,
-      onRemove: () => updateFilter('color', 'todas')
-    });
-  }
+  // Add year badge
+  const yearBadge = createYearBadge(
+    filters.year,
+    () => updateFilter('year', { min: '', max: '' })
+  );
+  if (yearBadge) badges.push(yearBadge);
   
-  // Format filter
-  if (filters.format && filters.format !== 'Leilão') {
-    badges.push({
-      key: 'format',
-      label: `Formato: ${filters.format}`,
-      onRemove: () => updateFilter('format', 'Leilão' as FilterFormat)
-    });
-  }
+  // Add price badge
+  const priceBadge = createPriceBadge(
+    filters.price,
+    () => updateFilter('price', { 
+      value: [0, 100],
+      range: { min: '', max: '' }
+    } as PriceRangeFilter)
+  );
+  if (priceBadge) badges.push(priceBadge);
   
-  // Origin filter
-  if (filters.origin && filters.origin !== 'Extrajudicial') {
-    badges.push({
-      key: 'origin',
-      label: `Origem: ${filters.origin}`,
-      onRemove: () => updateFilter('origin', 'Extrajudicial' as FilterOrigin)
-    });
-  }
+  // Add format badge
+  const formatBadge = createFormatBadge(
+    filters.format,
+    () => updateFilter('format', 'Todos')
+  );
+  if (formatBadge) badges.push(formatBadge);
   
-  // Place filter
-  if (filters.place && filters.place !== 'Praça única') {
-    badges.push({
-      key: 'place',
-      label: `Praça: ${filters.place}`,
-      onRemove: () => updateFilter('place', 'Praça única' as FilterPlace)
-    });
-  }
+  // Add origin badge
+  const originBadge = createOriginBadge(
+    filters.origin,
+    () => updateFilter('origin', 'Extrajudicial')
+  );
+  if (originBadge) badges.push(originBadge);
   
-  // Category filter
-  if (filters.category && filters.category !== 'Todos') {
-    badges.push({
-      key: 'category',
-      label: `Categoria: ${filters.category}`,
-      onRemove: () => updateFilter('category', 'Todos')
-    });
-  }
+  // Add place badge
+  const placeBadge = createPlaceBadge(
+    filters.place,
+    () => updateFilter('place', 'Praça Única')
+  );
+  if (placeBadge) badges.push(placeBadge);
   
   return badges;
-};
-
-// Helper functions for specific filter types
-export const getFormatDisplayText = (format: FilterFormat): string => {
-  switch (format) {
-    case 'Leilão':
-      return 'Leilão';
-    case 'Venda Direta':
-      return 'Venda Direta';
-    default:
-      return format;
-  }
-};
-
-export const getOriginDisplayText = (origin: FilterOrigin): string => {
-  switch (origin) {
-    case 'Extrajudicial':
-      return 'Extrajudicial';
-    case 'Judicial':
-      return 'Judicial';
-    default:
-      return origin;
-  }
-};
-
-export const getPlaceDisplayText = (place: FilterPlace): string => {
-  switch (place) {
-    case 'Praça única':
-      return 'Praça única';
-    case '1ª Praça':
-      return '1ª Praça';
-    case '2ª Praça':
-      return '2ª Praça';
-    case '3ª Praça':
-      return '3ª Praça';
-    default:
-      return place;
-  }
 };

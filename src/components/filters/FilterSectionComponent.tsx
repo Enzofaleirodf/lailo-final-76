@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -10,7 +9,6 @@ interface FilterSectionComponentProps {
   onToggle: () => void;
   children: React.ReactNode;
 }
-
 const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   title,
   isExpanded,
@@ -30,15 +28,13 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
   
   return (
     <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm transition-all duration-200 w-full">
-      {/* Header with beautiful gradient */}
-      <div className="bg-gradient-to-r from-brand-600 via-brand-700 to-brand-800 p-3">
-        <h3 className="text-sm font-semibold text-white tracking-wide">
-          {title}
-        </h3>
+      {/* Title section */}
+      <div className={`w-full bg-gradient-to-r from-brand-50 to-white p-3 border-b border-gray-100`}>
+        <h3 className={`text-sm ${COLORS.text.gray[900]} font-urbanist font-semibold tracking-wide`}>{title}</h3>
       </div>
       
-      {/* Content */}
-      <div className="p-3" id={id} role="region" aria-label={title}>
+      {/* Content - always expanded */}
+      <div className="p-3" id={id} role="region" aria-labelledby={`heading-${id}`}>
         {children}
       </div>
     </div>
