@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from 'lucide-react';
@@ -10,6 +9,7 @@ import { getCardStyles } from '@/utils/styleUtils';
 import { Separator } from "@/components/ui/separator";
 import FavoriteButton from './FavoriteButton';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { cn } from '@/lib/utils';
 
 export interface BaseCardProps {
   id: string;
