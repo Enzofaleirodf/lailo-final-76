@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { getCardStyles } from '@/utils/styleUtils';
+import { COMPONENT_STYLES } from '@/constants/designSystem';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 interface FilterWrapperProps {
@@ -16,7 +16,7 @@ const FilterWrapper: React.FC<FilterWrapperProps> = ({ children, className }) =>
     <ErrorBoundary componentName="FilterWrapper">
       <div 
         className={cn(
-          "space-y-4",
+          "space-y-4 filter-wrapper",
           className
         )}
         role="region"

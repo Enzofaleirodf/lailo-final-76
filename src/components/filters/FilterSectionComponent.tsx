@@ -1,6 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { COLORS } from '@/constants/designSystem';
+
 interface FilterSectionComponentProps {
   title: string;
   isExpanded: boolean;
@@ -23,16 +25,20 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
     e.stopPropagation();
     onToggle();
   };
-  return <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
-      {/* Title section - clickable for both desktop and mobile for consistent interaction */}
-      <div className="w-full bg-gradient-to-r from-brand-50 to-white p-3">
-        <h3 className="text-sm text-gray-900 font-urbanist font-semibold">{title}</h3>
+  
+  return (
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+      {/* Title section */}
+      <div className={`w-full bg-gradient-to-r from-brand-50 to-white p-3`}>
+        <h3 className={`text-sm ${COLORS.text.gray[900]} font-urbanist font-semibold`}>{title}</h3>
       </div>
       
-      {/* Content - always expanded - no more accordion */}
+      {/* Content - always expanded */}
       <div className="p-3" id={id} role="region" aria-labelledby={`heading-${id}`}>
         {children}
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default FilterSectionComponent;

@@ -1,8 +1,7 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from './use-mobile';
 import { useMediaQuery } from './useMediaQuery';
-import { useToast } from './use-toast';
+import { logWarn } from '@/utils/loggingUtils';
 
 interface UseResponsiveConsistencyOptions {
   applyCorrections?: boolean;
@@ -32,7 +31,6 @@ export function useResponsiveConsistency(options: UseResponsiveConsistencyOption
   const isVerySmall = useMediaQuery('(max-width: 320px)');
   const isTablet = useMediaQuery('tablet');
   const isDesktop = useMediaQuery('desktop');
-  const { toast } = useToast();
   
   // Estado para armazenar inconsistências encontradas
   const [inconsistencies, setInconsistencies] = useState<Array<{
@@ -117,10 +115,14 @@ export function useResponsiveConsistency(options: UseResponsiveConsistencyOption
             
             if (applyCorrections) {
               try {
-                (elements[i] as HTMLElement).style.setProperty(prop, refValue);
-                console.info(`Correção aplicada para ${prop}`);
+                const element = elements[i] as HTMLElement;
+                element.style.setProperty(prop, refValue);
+                logWarn(`Correção aplicada para ${prop} em ${item.selector}`, {
+                  from: curValue,
+                  to: refValue
+                });
               } catch (error) {
-                console.error(`Erro ao aplicar correção:`, error);
+                logWarn(`Erro ao aplicar correção para ${prop} em ${item.selector}`, { error });
               }
             }
           }
@@ -130,15 +132,6 @@ export function useResponsiveConsistency(options: UseResponsiveConsistencyOption
     
     if (newInconsistencies.length > 0) {
       setInconsistencies(prev => [...prev, ...newInconsistencies]);
-      
-      if (testMode && newInconsistencies.length > 3) {
-        toast({
-          title: "Problemas de consistência visual",
-          description: `${newInconsistencies.length} inconsistências visuais detectadas`,
-          variant: "destructive",
-          duration: 5000
-        });
-      }
     }
   };
   
@@ -199,12 +192,6 @@ export function useResponsiveConsistency(options: UseResponsiveConsistencyOption
     
     // Mostrar relatório
     console.log(`Teste completo. ${inconsistencies.length} inconsistências encontradas.`);
-    
-    toast({
-      title: "Teste de tamanhos completo",
-      description: `${inconsistencies.length} inconsistências encontradas em ${widthsToTest.length} tamanhos de tela`,
-      duration: 3000
-    });
     
     return inconsistencies;
   };

@@ -1,11 +1,11 @@
 import React from 'react';
-import BuscadorPage from '../BuscadorPage';
+import Buscador from '@/components/Buscador';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
 
 /**
  * BuscadorImoveis page component
- * Uses the shared BuscadorPage component with 'property' content type
+ * Uses the shared Buscador component with 'property' content type
  */
 const BuscadorImoveis: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ const BuscadorImoveis: React.FC = () => {
         <title>Busca de Imóveis em Leilão | Lailo</title>
         <meta name="description" content="Encontre imóveis em leilão com os melhores preços. Apartamentos, casas, terrenos e muito mais." />
       </Helmet>
-      <BuscadorPage contentType="property" />
+      <Buscador contentType="property" />
     </ErrorBoundary>
   );
 };

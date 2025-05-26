@@ -2,6 +2,7 @@
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { logUserAction } from '@/utils/loggingUtils';
 import { useFilterStore } from '@/stores/useFilterStore';
 import VehicleTypeFilter from '../VehicleTypeFilter';
 import PropertyTypeFilter from '../PropertyTypeFilter';
@@ -25,7 +26,16 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
   const { expandedSections, toggleSection, filters } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
   const { category } = filters;
-  const showTypeFilter = category && category !== 'Todos';
+  const showTypeFilter = category && category !== 'Todos'; 
+  
+  // Log which filters are being shown
+  React.useEffect(() => {
+    logUserAction('content_type_filters_rendered', {
+      contentType: filters.contentType,
+      category,
+      showTypeFilter
+    });
+  }, [filters.contentType, category, showTypeFilter]);
 
   // Sempre renderizar o filtro de Categoria primeiro
   return (

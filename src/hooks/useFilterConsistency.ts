@@ -1,8 +1,10 @@
 
 import { useCallback, useRef, useEffect } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { getFilterName, getFilterDescription } from '@/utils/filterUtils';
+import { FILTER_NAMES } from '@/constants/filterConstants';
+import { getFilterDescription } from '@/utils/filterUtils';
 import { FilterState } from '@/types/filters';
+import { logUserAction } from '@/utils/loggingUtils';
 
 export interface UseFilterConsistencyProps {
   onChange?: () => void;
@@ -37,6 +39,12 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
       // Store scroll position before sending event
       scrollPositionRef.current = window.scrollY;
       
+      // Log the filter change
+      logUserAction('apply_filters', {
+        filterCount: activeFilters,
+        contentType: filters.contentType
+      });
+      
       // Create and dispatch the filters:applied event
       const event = new CustomEvent('filters:applied', {
         detail: { 
@@ -55,6 +63,16 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
   // Store previous filter state for comparison
   useEffect(() => {
     prevFilterState.current = filters;
+    
+    // Log filter changes
+    if (lastUpdatedFilter && lastUpdatedFilter !== 'initial') {
+      const filterName = FILTER_NAMES[lastUpdatedFilter as keyof typeof FILTER_NAMES] || lastUpdatedFilter;
+      logUserAction('filter_changed', {
+        filter: lastUpdatedFilter,
+        filterName,
+        contentType: filters.contentType
+      });
+    }
   }, [filters]);
   
   // Cleanup function for any listeners

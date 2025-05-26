@@ -1,4 +1,3 @@
-
 /**
  * @fileoverview Hook personalizado para gerenciar filtros de leilão
  * Encapsula a lógica de filtragem para useAuctionItems
@@ -15,6 +14,7 @@ import {
   applyVehicleFilters,
   sortItems
 } from '@/utils/auctionFilterUtils';
+import { logPerformance } from '@/utils/loggingUtils';
 
 /**
  * Hook para aplicar filtros em leilões ou propriedades
@@ -26,6 +26,9 @@ export const useAuctionFilters = (
 ) => {
   // Aplicar todos os filtros de forma memoizada para evitar recálculos desnecessários
   const filteredItems = useMemo(() => {
+    // Start performance measurement
+    const perfMark = performance.mark('filter-start');
+    
     if (!rawItems || rawItems.length === 0) {
       return [];
     }
@@ -62,6 +65,19 @@ export const useAuctionFilters = (
     
     // Aplicar ordenação
     items = sortItems(items, sortOption);
+    
+    // End performance measurement
+    performance.mark('filter-end');
+    performance.measure('filter-total', 'filter-start', 'filter-end');
+    const measure = performance.getEntriesByName('filter-total').pop();
+    
+    if (measure) {
+      logPerformance('filter-execution', measure.duration, {
+        itemCount: rawItems.length,
+        filteredCount: items.length,
+        contentType: filters.contentType
+      });
+    }
     
     return items;
   }, [rawItems, filters, sortOption]);

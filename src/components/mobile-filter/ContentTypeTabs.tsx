@@ -3,9 +3,11 @@ import React, { useCallback } from 'react';
 import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ContentType } from '@/types/filters';
+import { COLORS } from '@/constants/designSystem';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
 import { useNavigate } from 'react-router-dom';
+import { logUserAction } from '@/utils/loggingUtils';
 
 interface ContentTypeTabsProps {
   onTabChange?: (tab: ContentType) => void;
@@ -26,6 +28,12 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
     
     // Update the filter store
     updateFilter('contentType', tab);
+    
+    // Log the tab change
+    logUserAction('content_type_tab_change', { 
+      from: filters.contentType, 
+      to: tab 
+    });
     
     // Navigate to the appropriate page based on content type
     if (tab === 'property') {
@@ -94,11 +102,11 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
         onClick={() => handleTabChange('property')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
         className={cn(
-          getButtonSizeClass(),
+          getButtonSizeClass(), 
           "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
           filters.contentType === 'property' 
-            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+            ? `bg-gradient-to-r ${COLORS.bg.brand[600]} to-brand-700 text-white` 
+            : `${COLORS.bg.white} ${COLORS.text.gray[700]} hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500`
         )} 
         aria-label="Filtrar imóveis" 
         {...getTabAttributes('property')}
@@ -111,11 +119,11 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
         onClick={() => handleTabChange('vehicle')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('vehicle'))}
         className={cn(
-          getButtonSizeClass(),
+          getButtonSizeClass(), 
           "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
           filters.contentType === 'vehicle' 
-            ? "bg-gradient-to-r from-brand-600 to-brand-700 text-white" 
-            : "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+            ? `bg-gradient-to-r ${COLORS.bg.brand[600]} to-brand-700 text-white` 
+            : `${COLORS.bg.white} ${COLORS.text.gray[700]} hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500`
         )} 
         aria-label="Filtrar veículos" 
         {...getTabAttributes('vehicle')}

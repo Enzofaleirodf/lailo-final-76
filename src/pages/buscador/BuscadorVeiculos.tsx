@@ -1,11 +1,11 @@
 import React from 'react';
-import BuscadorPage from '../BuscadorPage';
+import Buscador from '@/components/Buscador';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Helmet } from 'react-helmet-async';
 
 /**
  * BuscadorVeiculos page component
- * Uses the shared BuscadorPage component with 'vehicle' content type
+ * Uses the shared Buscador component with 'vehicle' content type
  */
 const BuscadorVeiculos: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ const BuscadorVeiculos: React.FC = () => {
         <title>Busca de Veículos em Leilão | Lailo</title>
         <meta name="description" content="Encontre veículos em leilão com os melhores preços. Carros, motos, caminhões e muito mais." />
       </Helmet>
-      <BuscadorPage contentType="vehicle" />
+      <Buscador contentType="vehicle" />
     </ErrorBoundary>
   );
 };

@@ -2,8 +2,10 @@
 import React, { useCallback } from 'react';
 import { Filter, ArrowUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { COLORS } from '@/constants/designSystem';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
+import { logUserAction } from '@/utils/loggingUtils';
 
 interface ActionButtonsProps {
   onFilterClick: () => void;
@@ -18,6 +20,17 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
   const { activeFilters } = useFilterStore();
   const { getButtonSizeClass, getIconSize, isVerySmallScreen, getFilterBadgeClass, showLabels } = useScreenUtils();
   
+  // Log button clicks
+  const handleFilterClick = useCallback(() => {
+    logUserAction('mobile_filter_button_click');
+    onFilterClick();
+  }, [onFilterClick]);
+  
+  const handleSortClick = useCallback(() => {
+    logUserAction('mobile_sort_button_click');
+    onSortClick();
+  }, [onSortClick]);
+  
   // Manipuladores de eventos de teclado para acessibilidade
   const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -30,8 +43,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
     <>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
       <button 
-        onClick={onFilterClick} 
-        onKeyDown={(e) => handleKeyDown(e, onFilterClick)}
+        onClick={handleFilterClick} 
+        onKeyDown={(e) => handleKeyDown(e, handleFilterClick)}
         className={cn(
           "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors relative",
@@ -55,8 +68,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
       </button>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
       <button 
-        onClick={onSortClick} 
-        onKeyDown={(e) => handleKeyDown(e, onSortClick)}
+        onClick={handleSortClick} 
+        onKeyDown={(e) => handleKeyDown(e, handleSortClick)}
         className={cn(
           "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors",
