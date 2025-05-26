@@ -178,7 +178,7 @@ const TopFilters: React.FC = () => {
           
           {/* Reset Filters Button - Only show when filters are active */}
           {hasActiveTopFilters && <>
-              <Separator orientation="vertical" className="h-10 mx-4" />
+              
               
             </>}
         </div>
