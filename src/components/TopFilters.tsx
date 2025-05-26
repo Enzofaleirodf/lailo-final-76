@@ -119,9 +119,9 @@ const TopFilters: React.FC = () => {
 
   return (
     <ErrorBoundary componentName="TopFilters">
-      <div className="mb-6" role="navigation" aria-label="Filtros rápidos">
+      <div className="mb-6 grid grid-cols-1 gap-4" role="navigation" aria-label="Filtros rápidos">
         {/* Filter Groups Row - All in one row */}
-        <div className="flex flex-wrap gap-4 items-center">
+        <div className="grid grid-cols-4 gap-4 items-center">
           {/* Content Type Buttons */}
           <div className={`${baseContainerStyle} h-10 flex`} role="tablist" aria-label="Tipo de conteúdo">
             <button 
@@ -158,8 +158,8 @@ const TopFilters: React.FC = () => {
           </div>
           
           {/* Format Filter Group */}
-          <div className="flex items-center gap-2 h-10">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16 mb-0">Formato:</span>
+          <div className="flex flex-col gap-1 h-auto">
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mb-1">Formato:</span>
             <ToggleGroup 
               type="single" 
               value={filters.format} 
@@ -181,8 +181,8 @@ const TopFilters: React.FC = () => {
           </div>
     
           {/* Origin Filter Group */}
-          <div className="flex items-center gap-2 h-10">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16 mb-0">Origem:</span>
+          <div className="flex flex-col gap-1 h-auto">
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mb-1">Origem:</span>
             <ToggleGroup 
               type="multiple" 
               value={selectedOrigins} 
@@ -204,8 +204,8 @@ const TopFilters: React.FC = () => {
           </div>
     
           {/* Place Filter Group */}
-          <div className="flex items-center gap-2 h-10">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16 mb-0">Praça:</span>
+          <div className="flex flex-col gap-1 h-auto">
+            <span className="text-sm font-medium text-gray-700 whitespace-nowrap mb-1">Praça:</span>
             <ToggleGroup 
               type="multiple" 
               value={selectedPlaces} 
