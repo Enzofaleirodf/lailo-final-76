@@ -107,7 +107,7 @@ const BaseCard: React.FC<BaseCardProps> = ({
   };
   
   // Altura fixa padrão para todos os cards
-  const cardHeight = isMobile ? '138px' : '180px';
+  const cardHeight = isMobile ? '150px' : '180px';
   
   return (
     <motion.div 

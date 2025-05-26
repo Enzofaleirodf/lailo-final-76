@@ -33,17 +33,13 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
   };
 
   // Verificar se este é um item de veículo e se vehicleInfo existe
-  const isVehicleItem = auction.vehicleInfo && (
-    auction.vehicleInfo.type === 'car' || 
-    auction.vehicleInfo.type === 'motorcycle' || 
-    auction.vehicleInfo.type === 'truck'
-  );
+  const isVehicleItem = auction.vehicleInfo && auction.vehicleInfo.type;
   
   // Construir o componente de informações extras específico para veículos
   const extraInfo = isVehicleItem && auction.vehicleInfo ? (
     <div 
       className="flex items-center gap-1 mb-1"
-      aria-label={`Detalhes do veículo: ${auction.vehicleInfo.color || ''} ${auction.vehicleInfo.year || ''}`}
+      aria-label={`Detalhes do veículo: ${auction.vehicleInfo.color || ''} ${auction.vehicleInfo.year || ''} ${auction.location || ''}`}
     >
       {auction.vehicleInfo.color && (
         <span>{auction.vehicleInfo.color}</span>
@@ -65,7 +61,11 @@ const AuctionCard: React.FC<AuctionCardProps> = React.memo(({ auction }) => {
         <span>{auction.location || 'Localização não disponível'}</span>
       )}
     </div>
-  ) : <span>Informações não disponíveis</span>;
+  ) : (
+    <div className="flex items-center gap-1 mb-1">
+      <span>{auction.location || 'Localização não disponível'}</span>
+    </div>
+  );
   
   return (
     <ErrorBoundary componentName="AuctionCard">
