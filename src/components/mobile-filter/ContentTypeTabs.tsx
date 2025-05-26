@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -8,7 +7,6 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
 import { useNavigate } from 'react-router-dom';
 import { logUserAction } from '@/utils/loggingUtils';
-import { cn } from '@/lib/utils';
 
 interface ContentTypeTabsProps {
   onTabChange?: (tab: ContentType) => void;
