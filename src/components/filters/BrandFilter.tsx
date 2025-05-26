@@ -1,4 +1,3 @@
-
 import React, { useCallback, useMemo } from 'react';
 import FilterDropdown from './FilterDropdown';
 import { useFilterStore } from '@/stores/useFilterStore';
@@ -14,12 +13,14 @@ const BrandFilter: React.FC<BrandFilterProps> = ({ onFilterChange }) => {
   // Obter as opções de marcas com base no tipo de veículo selecionado
   const brandOptions = useMemo(() => {
     // Verificar se há um tipo de veículo selecionado
-    const vehicleType = filters.vehicleTypes && filters.vehicleTypes.length > 0 
-      ? filters.vehicleTypes[0] 
-      : '';
+    const vehicleTypes = filters.vehicleTypes || [];
+    const vehicleType = vehicleTypes.length > 0 ? vehicleTypes[0] : '';
     
     // Obter as marcas disponíveis para o tipo de veículo selecionado
     let brands = getBrandsByVehicleType(vehicleType);
+    
+    // Garantir que brands é sempre um array
+    brands = Array.isArray(brands) ? brands : [];
     
     // Ordenar alfabeticamente, mantendo "Todas" no início
     if (brands.includes('Todas')) {

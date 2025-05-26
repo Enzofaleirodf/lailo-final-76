@@ -30,33 +30,35 @@ const countActiveFilters = (filters: FilterState): number => {
   let count = 0;
   
   // Location filters (state or city)
-  if (filters.location.state || filters.location.city) count++;
+  if (filters.location?.state || filters.location?.city) count++;
   
-  // Vehicle types
-  if (filters.vehicleTypes.length > 0) count++;
+  // Vehicle types - ensure it's an array before checking length
+  const vehicleTypes = filters.vehicleTypes || [];
+  if (vehicleTypes.length > 0) count++;
   
-  // Property types
-  if (filters.propertyTypes.length > 0) count++;
+  // Property types - ensure it's an array before checking length
+  const propertyTypes = filters.propertyTypes || [];
+  if (propertyTypes.length > 0) count++;
   
   // Price range - só contar se os valores forem significativamente diferentes dos padrões
   // Verificar se o valor mínimo e máximo são próximos dos padrões (com uma margem de tolerância)
   const isPriceDefault = 
-    (!filters.price.range.min || filters.price.range.min === DEFAULT_RANGE_VALUES.price.min) && 
-    (!filters.price.range.max || filters.price.range.max === DEFAULT_RANGE_VALUES.price.max);
+    (!filters.price?.range?.min || filters.price.range.min === DEFAULT_RANGE_VALUES.price.min) && 
+    (!filters.price?.range?.max || filters.price.range.max === DEFAULT_RANGE_VALUES.price.max);
   
   if (!isPriceDefault) count++;
   
   // Year range - só contar se os valores forem significativamente diferentes dos padrões
   const isYearDefault = 
-    (!filters.year.min || filters.year.min === DEFAULT_RANGE_VALUES.year.min) && 
-    (!filters.year.max || filters.year.max === DEFAULT_RANGE_VALUES.year.max);
+    (!filters.year?.min || filters.year.min === DEFAULT_RANGE_VALUES.year.min) && 
+    (!filters.year?.max || filters.year.max === DEFAULT_RANGE_VALUES.year.max);
   
   if (!isYearDefault) count++;
   
   // Useful area range - só contar se os valores forem significativamente diferentes dos padrões
   const isAreaDefault = 
-    (!filters.usefulArea.min || filters.usefulArea.min === DEFAULT_RANGE_VALUES.usefulArea.min) && 
-    (!filters.usefulArea.max || filters.usefulArea.max === DEFAULT_RANGE_VALUES.usefulArea.max);
+    (!filters.usefulArea?.min || filters.usefulArea.min === DEFAULT_RANGE_VALUES.usefulArea.min) && 
+    (!filters.usefulArea?.max || filters.usefulArea.max === DEFAULT_RANGE_VALUES.usefulArea.max);
   
   if (!isAreaDefault) count++;
   
@@ -80,7 +82,11 @@ const countActiveFilters = (filters: FilterState): number => {
 export const useFilterStore = create<FilterStore>()(
   devtools(
     (set, get) => ({
-      filters: DEFAULT_FILTER_VALUES,
+      filters: {
+        ...DEFAULT_FILTER_VALUES,
+        vehicleTypes: [], // Ensure vehicleTypes is initialized as an empty array
+        propertyTypes: [], // Ensure propertyTypes is initialized as an empty array
+      },
       expandedSections: DEFAULT_EXPANDED_SECTIONS,
       activeFilters: 0,
       lastUpdatedFilter: 'initial',
@@ -123,7 +129,9 @@ export const useFilterStore = create<FilterStore>()(
           filters: { 
             ...DEFAULT_FILTER_VALUES,
             // Preserve content type when resetting
-            contentType: state.filters.contentType
+            contentType: state.filters.contentType,
+            vehicleTypes: [], // Ensure arrays are initialized
+            propertyTypes: [],
           }, 
           activeFilters: 0,
           lastUpdatedFilter: 'reset'
@@ -133,7 +141,12 @@ export const useFilterStore = create<FilterStore>()(
       // Set multiple filters at once (used for URL sync)
       setFilters: (newFilters) => {
         set((state) => {
-          const updatedFilters = { ...state.filters, ...newFilters };
+          const updatedFilters = { 
+            ...state.filters, 
+            ...newFilters,
+            vehicleTypes: newFilters.vehicleTypes || [], // Ensure arrays are initialized
+            propertyTypes: newFilters.propertyTypes || [],
+          };
           return { 
             filters: updatedFilters, 
             activeFilters: countActiveFilters(updatedFilters),
@@ -168,7 +181,7 @@ export const useFilterStore = create<FilterStore>()(
           sections[key as keyof ExpandedSectionsState] = true;
         });
         set({ expandedSections: sections });
-      }
+      },
       
       // Get the count of active filters
       getActiveFiltersCount: () => {
