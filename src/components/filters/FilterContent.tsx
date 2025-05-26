@@ -16,7 +16,7 @@ import { useFilterConsistency } from '@/hooks/useFilterConsistency';
 const FilterContent: React.FC = () => {
   const {
     resetFilters,
-    activeFilters,
+    getActiveFiltersCount,
     expandAllSections
   } = useFilterStore();
   
@@ -51,6 +51,9 @@ const FilterContent: React.FC = () => {
       cleanup();
     };
   }, [cleanup]);
+
+  // Get the active filters count
+  const activeFilters = getActiveFiltersCount();
 
   return (
     <ErrorBoundary componentName="FilterContent">

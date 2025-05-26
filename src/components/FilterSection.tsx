@@ -27,7 +27,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
     setFiltersOpen
   } = useUIStore();
   const {
-    activeFilters
+    getActiveFiltersCount
   } = useFilterStore();
   const isMobile = useIsMobile();
 

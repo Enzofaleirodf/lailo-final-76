@@ -17,7 +17,7 @@ interface ActionButtonsProps {
  * Mantém consistência visual e comportamental entre desktop e mobile
  */
 const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClick }) => {
-  const { activeFilters } = useFilterStore();
+  const { getActiveFiltersCount } = useFilterStore();
   const { getButtonSizeClass, getIconSize, isVerySmallScreen, getFilterBadgeClass, showLabels } = useScreenUtils();
   
   // Log button clicks
@@ -38,6 +38,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
       action();
     }
   }, []);
+  
+  // Get the active filters count
+  const activeFilters = getActiveFiltersCount();
   
   return (
     <>

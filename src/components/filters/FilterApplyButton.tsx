@@ -23,10 +23,12 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   className = '',
   variant = 'default'
 }) => {
-  const { activeFilters } = useFilterStore();
+  const { getActiveFiltersCount } = useFilterStore();
   const isMobile = useIsMobile();
   
   const handleClick = () => {
+    const activeFilters = getActiveFiltersCount();
+    
     // Log user action
     logUserAction('apply_filters', { 
       activeFilters, 
@@ -56,6 +58,7 @@ const FilterApplyButton: React.FC<FilterApplyButtonProps> = ({
   };
   
   // Determine o texto e aria-label com base no número de filtros ativos
+  const activeFilters = getActiveFiltersCount();
   const buttonText = isMobile ? 'Aplicar' : 'Aplicar filtros';
   const filterCountText = activeFilters > 0 ? ` (${activeFilters})` : '';
   const ariaLabel = activeFilters > 0 

@@ -21,6 +21,7 @@ interface FilterStore extends FilterStoreState {
   toggleSection: (section: keyof ExpandedSectionsState) => void;
   collapseAllSections: () => void;
   expandAllSections: () => void;
+  getActiveFiltersCount: () => number;
 }
 
 // Count active filters to show in badge
@@ -167,6 +168,12 @@ export const useFilterStore = create<FilterStore>()(
           sections[key as keyof ExpandedSectionsState] = true;
         });
         set({ expandedSections: sections });
+      }
+      
+      // Get the count of active filters
+      getActiveFiltersCount: () => {
+        const { filters } = get();
+        return countActiveFilters(filters);
       }
     }),
     { name: 'filter-store' }
