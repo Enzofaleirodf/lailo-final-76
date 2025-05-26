@@ -151,7 +151,7 @@ export const useFilterStore = create<FilterStore>()(
       // Set multiple filters at once (used for URL sync)
       setFilters: (newFilters) => {
         set((state) => {
-          const updatedFilters = { 
+          const updatedFilters: FilterState = { 
             ...state.filters, 
             ...newFilters,
             vehicleTypes: newFilters.vehicleTypes || [], // Ensure arrays are initialized
