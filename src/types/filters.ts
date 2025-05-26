@@ -1,3 +1,4 @@
+
 export type ContentType = 'property' | 'vehicle';
 
 export type FilterFormat = 'Leilão' | 'Venda Direta';
@@ -65,4 +66,12 @@ export interface FilterStoreState {
   expandedSections: ExpandedSectionsState;
   activeFilters: number;
   lastUpdatedFilter: string | null;
+}
+
+// Interface para badges de filtros ativos
+export interface ActiveFilterBadge {
+  id: string;
+  label: string;
+  type: string;
+  onRemove: () => void;
 }

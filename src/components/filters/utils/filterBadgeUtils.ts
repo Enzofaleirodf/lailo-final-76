@@ -1,3 +1,4 @@
+
 import { cn } from '@/lib/utils';
 import { 
   FilterState, 
@@ -7,28 +8,35 @@ import {
   ActiveFilterBadge 
 } from '@/types/filters';
 
+export interface FilterBadge {
+  key: string;
+  label: string;
+  onRemove: () => void;
+}
+
 /**
  * Creates badges for active filters
  */
-export const createActiveFilterBadges = (filters: FilterState): ActiveFilterBadge[] => {
-  const badges: ActiveFilterBadge[] = [];
+export const generateFilterBadges = (
+  filters: FilterState, 
+  updateFilter: (key: keyof FilterState, value: any) => void
+): FilterBadge[] => {
+  const badges: FilterBadge[] = [];
   
   // Location filters
   if (filters.location?.state) {
     badges.push({
-      id: 'location-state',
+      key: 'location-state',
       label: `Estado: ${filters.location.state}`,
-      type: 'location',
-      onRemove: () => console.log('Remove state filter')
+      onRemove: () => updateFilter('location', { ...filters.location, state: '' })
     });
   }
   
   if (filters.location?.city) {
     badges.push({
-      id: 'location-city', 
+      key: 'location-city', 
       label: `Cidade: ${filters.location.city}`,
-      type: 'location',
-      onRemove: () => console.log('Remove city filter')
+      onRemove: () => updateFilter('location', { ...filters.location, city: '' })
     });
   }
   
@@ -36,10 +44,12 @@ export const createActiveFilterBadges = (filters: FilterState): ActiveFilterBadg
   if (filters.vehicleTypes && filters.vehicleTypes.length > 0) {
     filters.vehicleTypes.forEach((type, index) => {
       badges.push({
-        id: `vehicle-type-${index}`,
+        key: `vehicle-type-${index}`,
         label: `Tipo: ${type}`,
-        type: 'vehicleType',
-        onRemove: () => console.log(`Remove vehicle type: ${type}`)
+        onRemove: () => {
+          const newTypes = filters.vehicleTypes.filter((_, i) => i !== index);
+          updateFilter('vehicleTypes', newTypes);
+        }
       });
     });
   }
@@ -48,10 +58,12 @@ export const createActiveFilterBadges = (filters: FilterState): ActiveFilterBadg
   if (filters.propertyTypes && filters.propertyTypes.length > 0) {
     filters.propertyTypes.forEach((type, index) => {
       badges.push({
-        id: `property-type-${index}`,
+        key: `property-type-${index}`,
         label: `Tipo: ${type}`,
-        type: 'propertyType',
-        onRemove: () => console.log(`Remove property type: ${type}`)
+        onRemove: () => {
+          const newTypes = filters.propertyTypes.filter((_, i) => i !== index);
+          updateFilter('propertyTypes', newTypes);
+        }
       });
     });
   }
@@ -59,70 +71,63 @@ export const createActiveFilterBadges = (filters: FilterState): ActiveFilterBadg
   // Brand filter
   if (filters.brand && filters.brand !== 'todas') {
     badges.push({
-      id: 'brand',
+      key: 'brand',
       label: `Marca: ${filters.brand}`,
-      type: 'brand',
-      onRemove: () => console.log('Remove brand filter')
+      onRemove: () => updateFilter('brand', 'todas')
     });
   }
   
   // Model filter
   if (filters.model && filters.model !== 'todos') {
     badges.push({
-      id: 'model',
+      key: 'model',
       label: `Modelo: ${filters.model}`,
-      type: 'model',
-      onRemove: () => console.log('Remove model filter')
+      onRemove: () => updateFilter('model', 'todos')
     });
   }
   
   // Color filter
   if (filters.color && filters.color !== 'todas') {
     badges.push({
-      id: 'color',
+      key: 'color',
       label: `Cor: ${filters.color}`,
-      type: 'color',
-      onRemove: () => console.log('Remove color filter')
+      onRemove: () => updateFilter('color', 'todas')
     });
   }
   
   // Format filter
   if (filters.format && filters.format !== 'Leilão') {
     badges.push({
-      id: 'format',
+      key: 'format',
       label: `Formato: ${filters.format}`,
-      type: 'format',
-      onRemove: () => console.log('Remove format filter')
+      onRemove: () => updateFilter('format', 'Leilão' as FilterFormat)
     });
   }
   
   // Origin filter
   if (filters.origin && filters.origin !== 'Extrajudicial') {
     badges.push({
-      id: 'origin',
+      key: 'origin',
       label: `Origem: ${filters.origin}`,
-      type: 'origin',
-      onRemove: () => console.log('Remove origin filter')
+      onRemove: () => updateFilter('origin', 'Extrajudicial' as FilterOrigin)
     });
   }
   
-  // Place filter - corrigir para usar "Praça única"
+  // Place filter
   if (filters.place && filters.place !== 'Praça única') {
     badges.push({
-      id: 'place',
+      key: 'place',
       label: `Praça: ${filters.place}`,
-      type: 'place',
-      onRemove: () => console.log('Remove place filter')
+      onRemove: () => updateFilter('place', 'Praça única' as FilterPlace)
     });
   }
   
   // Category filter
   if (filters.category && filters.category !== 'Todos') {
     badges.push({
-      id: 'category',
+      key: 'category',
       label: `Categoria: ${filters.category}`,
-      type: 'category',
-      onRemove: () => console.log('Remove category filter')
+      onRemove: () => updateFilter('category', 'Todos')
     });
   }
   

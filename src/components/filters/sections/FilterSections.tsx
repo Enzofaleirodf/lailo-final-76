@@ -1,3 +1,4 @@
+
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -13,6 +14,7 @@ import YearRangeFilter from '../YearRangeFilter';
 import PriceRangeFilter from '../PriceRangeFilter';
 import UsefulAreaFilter from '../UsefulAreaFilter';
 import CategoryFilter from '../CategoryFilter';
+
 interface FilterSectionsProps {
   onFilterChange: () => void;
 }
@@ -47,7 +49,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
   return <>
       <FilterSectionComponent title="Categoria" isExpanded={true} onToggle={() => {}}>
         <div className="flex items-center">
-          
+          <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Categoria:</span>
           <div className="w-auto flex-1">
             <ErrorBoundary componentName="CategoryFilter">
               <CategoryFilter onFilterChange={onFilterChange} />
@@ -70,7 +72,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
 
           <FilterSectionComponent title="Área útil" isExpanded={true} onToggle={() => {}}>
             <div className="flex items-center">
-              
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Área:</span>
               <div className="w-auto flex-1">
                 <ErrorBoundary componentName="UsefulAreaFilter">
                   <UsefulAreaFilter onFilterChange={onFilterChange} />
@@ -93,7 +95,15 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
           <FilterSectionComponent title="Características do veículo" isExpanded={true} onToggle={() => {}}>
             <div className="space-y-4">
               <div className="flex items-center">
-                
+                <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Marca:</span>
+                <div className="w-auto flex-1">
+                  <ErrorBoundary componentName="BrandFilter">
+                    <BrandFilter onFilterChange={onFilterChange} />
+                  </ErrorBoundary>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Modelo:</span>
                 <div className="w-auto flex-1">
                   <ErrorBoundary componentName="ModelFilter">
                     <ModelFilter onFilterChange={onFilterChange} />
@@ -101,7 +111,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
                 </div>
               </div>
               <div className="flex items-center">
-                
+                <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Cor:</span>
                 <div className="w-auto flex-1">
                   <ErrorBoundary componentName="ColorFilter">
                     <ColorFilter onFilterChange={onFilterChange} />
@@ -109,7 +119,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
                 </div>
               </div>
               <div className="flex items-center">
-                
+                <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Ano:</span>
                 <div className="w-auto flex-1">
                   <ErrorBoundary componentName="YearRangeFilter">
                     <YearRangeFilter onFilterChange={onFilterChange} />
@@ -137,7 +147,7 @@ export const CommonFilters: React.FC<FilterSectionsProps> = ({
   return <>
       <FilterSectionComponent title="Localização" isExpanded={true} onToggle={() => {}}>
         <div className="flex items-center">
-          
+          <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Local:</span>
           <div className="w-auto flex-1">
             <ErrorBoundary componentName="LocationFilter">
               <LocationFilter onFilterChange={onFilterChange} />
@@ -161,7 +171,7 @@ export const PriceFilter: React.FC<FilterSectionsProps> = ({
   } = useFilterStore();
   return <FilterSectionComponent title="Valor do lance atual" isExpanded={true} onToggle={() => {}}>
       <div className="flex items-center">
-        
+        <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Valor:</span>
         <div className="w-auto flex-1">
           <ErrorBoundary componentName="PriceRangeFilter">
             <PriceRangeFilter onFilterChange={onFilterChange} />
