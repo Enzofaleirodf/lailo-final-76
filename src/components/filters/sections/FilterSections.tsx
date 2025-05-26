@@ -47,7 +47,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
   return <>
       <FilterSectionComponent title="Categoria" isExpanded={true} onToggle={() => {}}>
         <div className="flex items-center">
-          <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Categoria:</span>
+          
           <div className="w-auto flex-1">
             <ErrorBoundary componentName="CategoryFilter">
               <CategoryFilter onFilterChange={onFilterChange} />
