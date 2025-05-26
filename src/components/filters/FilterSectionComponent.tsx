@@ -42,3 +42,5 @@ const FilterSectionComponent: React.FC<FilterSectionComponentProps> = ({
 };
 
 export default FilterSectionComponent;
+
+export { FilterSectionComponent }
