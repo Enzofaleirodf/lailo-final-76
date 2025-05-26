@@ -109,7 +109,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
                 </div>
               </div>
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Ano:</span>
+                
                 <div className="w-auto flex-1">
                   <ErrorBoundary componentName="YearRangeFilter">
                     <YearRangeFilter onFilterChange={onFilterChange} />
