@@ -7,6 +7,13 @@ export interface FilterBadge {
   onRemove: () => void;
 }
 
+export interface ActiveFilterBadge {
+  type: string;
+  label: string;
+  value: any;
+  removeFilter: () => any;
+}
+
 /**
  * Generate badge for location filter
  */
@@ -315,5 +322,158 @@ export const generateFilterBadges = (
   );
   if (placeBadge) badges.push(placeBadge);
   
+  return badges;
+};
+
+export const createActiveFilterBadges = (filters: FilterState): ActiveFilterBadge[] => {
+  const badges: ActiveFilterBadge[] = [];
+
+  // Handle location filter
+  if (filters.location?.state || filters.location?.city) {
+    const locationText = filters.location.city 
+      ? `${filters.location.city}, ${filters.location.state}` 
+      : filters.location.state;
+    
+    badges.push({
+      type: 'location',
+      label: locationText,
+      value: filters.location,
+      removeFilter: () => ({
+        type: 'updateFilter',
+        key: 'location',
+        value: { state: '', city: '' }
+      })
+    });
+  }
+
+  // Handle price range filter
+  if (filters.price?.range?.min || filters.price?.range?.max) {
+    const minPrice = filters.price.range.min ? formatCurrency(parseFloat(filters.price.range.min)) : '';
+    const maxPrice = filters.price.range.max ? formatCurrency(parseFloat(filters.price.range.max)) : '';
+    
+    let priceText = '';
+    if (minPrice && maxPrice) {
+      priceText = `${minPrice} - ${maxPrice}`;
+    } else if (minPrice) {
+      priceText = `A partir de ${minPrice}`;
+    } else if (maxPrice) {
+      priceText = `Até ${maxPrice}`;
+    }
+
+    if (priceText) {
+      badges.push({
+        type: 'price',
+        label: priceText,
+        value: filters.price,
+        removeFilter: () => ({
+          type: 'updateFilter',
+          key: 'price',
+          value: {
+            value: [0, 100],
+            range: { min: '', max: '' }
+          }
+        })
+      });
+    }
+  }
+
+  // Handle year range filter (for vehicles)
+  if (filters.year?.min || filters.year?.max) {
+    const minYear = filters.year.min;
+    const maxYear = filters.year.max;
+    
+    let yearText = '';
+    if (minYear && maxYear) {
+      yearText = `${minYear} - ${maxYear}`;
+    } else if (minYear) {
+      yearText = `A partir de ${minYear}`;
+    } else if (maxYear) {
+      yearText = `Até ${maxYear}`;
+    }
+
+    if (yearText) {
+      badges.push({
+        type: 'year',
+        label: yearText,
+        value: filters.year,
+        removeFilter: () => ({
+          type: 'updateFilter',
+          key: 'year',
+          value: { min: '', max: '' }
+        })
+      });
+    }
+  }
+
+  // Handle useful area filter (for properties)
+  if (filters.usefulArea?.min || filters.usefulArea?.max) {
+    const minArea = filters.usefulArea.min;
+    const maxArea = filters.usefulArea.max;
+    
+    let areaText = '';
+    if (minArea && maxArea) {
+      areaText = `${minArea}m² - ${maxArea}m²`;
+    } else if (minArea) {
+      areaText = `A partir de ${minArea}m²`;
+    } else if (maxArea) {
+      areaText = `Até ${maxArea}m²`;
+    }
+
+    if (areaText) {
+      badges.push({
+        type: 'usefulArea',
+        label: areaText,
+        value: filters.usefulArea,
+        removeFilter: () => ({
+          type: 'updateFilter',
+          key: 'usefulArea',
+          value: { min: '', max: '' }
+        })
+      });
+    }
+  }
+
+  // Handle format filter (only if not default)
+  if (filters.format && filters.format !== 'Leilão') {
+    badges.push({
+      type: 'format',
+      label: filters.format,
+      value: filters.format,
+      removeFilter: () => ({
+        type: 'updateFilter',
+        key: 'format',
+        value: 'Leilão' as FilterFormat
+      })
+    });
+  }
+
+  // Handle origin filter (only if not default)
+  if (filters.origin && filters.origin !== 'Extrajudicial') {
+    badges.push({
+      type: 'origin',
+      label: filters.origin,
+      value: filters.origin,
+      removeFilter: () => ({
+        type: 'updateFilter',
+        key: 'origin',
+        value: 'Extrajudicial' as FilterOrigin
+      })
+    });
+  }
+
+  // Handle place filter (only if not default)
+  if (filters.place && filters.place !== 'Praça única') {
+    badges.push({
+      type: 'place',
+      label: filters.place,
+      value: filters.place,
+      removeFilter: () => ({
+        type: 'updateFilter',
+        key: 'place',
+        value: 'Praça única' as FilterPlace
+      })
+    });
+  }
+
   return badges;
 };

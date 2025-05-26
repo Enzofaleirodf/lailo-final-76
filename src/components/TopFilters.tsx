@@ -1,5 +1,5 @@
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useId } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils'
 import ErrorBoundary from './ErrorBoundary';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Separator } from '@/components/ui/separator';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 /**
  * TopFilters - Barra de filtros rápidos para a versão desktop
@@ -21,6 +22,7 @@ import { Separator } from '@/components/ui/separator';
 const TopFilters: React.FC = () => {
   const { filters, updateFilter, getSelectedOrigins, getSelectedPlaces, updateMultipleOrigins, updateMultiplePlaces } = useFilterStore();
   const navigate = useNavigate();
+  const radioId = useId();
 
   const handleContentTypeChange = useCallback((type: ContentType) => {
     // Não fazer nada se já estivermos no tipo selecionado
@@ -87,7 +89,7 @@ const TopFilters: React.FC = () => {
     // Reset origin to default
     updateFilter('origin', 'Extrajudicial');
     // Reset place to default
-    updateFilter('place', 'Praça Única');
+    updateFilter('place', 'Praça única');
     
     // Log the reset action
     logUserAction('reset_top_filters', {});
@@ -97,7 +99,7 @@ const TopFilters: React.FC = () => {
   const hasActiveTopFilters = useMemo(() => {
     return filters.format !== 'Leilão' || 
            filters.origin !== 'Extrajudicial' || 
-           filters.place !== 'Praça Única';
+           filters.place !== 'Praça única';
   }, [filters.format, filters.origin, filters.place]);
   
   // Get selected origins and places for multi-select
@@ -161,26 +163,23 @@ const TopFilters: React.FC = () => {
           
           <Separator orientation="vertical" className="h-10 mx-4" />
           
-          {/* Format Filter Group */}
-          <div className="w-auto">
-            <ToggleGroup 
-              type="single" 
-              value={filters.format} 
+          {/* Format Filter Group - Using RadioGroup */}
+          <div className="inline-flex h-9 rounded-lg bg-input/50 p-0.5 max-w-[400px]">
+            <RadioGroup
+              value={filters.format}
               onValueChange={handleFormatChange}
-              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
-              variant="brand"
+              className="group relative inline-grid grid-cols-[1fr_1fr] items-center gap-0 text-sm font-medium after:absolute after:inset-y-0 after:w-1/2 after:rounded-md after:bg-background after:shadow-sm after:shadow-black/5 after:outline-offset-2 after:transition-transform after:duration-300 after:[transition-timing-function:cubic-bezier(0.16,1,0.3,1)] has-[:focus-visible]:after:outline has-[:focus-visible]:after:outline-2 has-[:focus-visible]:after:outline-ring/70 data-[state=Leilão]:after:translate-x-0 data-[state=Venda Direta]:after:translate-x-full"
+              data-state={filters.format.replace(' ', '')}
             >
-              {formatOptions.map(option => (
-                <ToggleGroupItem 
-                  key={option.value} 
-                  value={option.value}
-                  className="text-sm whitespace-nowrap px-4 rounded-md"
-                  aria-label={`Formato: ${option.label}`}
-                >
-                  {option.label}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
+              <label className="relative z-10 inline-flex h-full min-w-8 cursor-pointer select-none items-center justify-center whitespace-nowrap px-4 transition-colors group-data-[state=VendaDireta]:text-muted-foreground/70">
+                Leilão
+                <RadioGroupItem id={`${radioId}-leilao`} value="Leilão" className="sr-only" />
+              </label>
+              <label className="relative z-10 inline-flex h-full min-w-8 cursor-pointer select-none items-center justify-center whitespace-nowrap px-4 transition-colors group-data-[state=Leilão]:text-muted-foreground/70">
+                Venda Direta
+                <RadioGroupItem id={`${radioId}-venda`} value="Venda Direta" className="sr-only" />
+              </label>
+            </RadioGroup>
           </div>
     
           <Separator orientation="vertical" className="h-10 mx-4" />
@@ -198,7 +197,7 @@ const TopFilters: React.FC = () => {
                 <ToggleGroupItem 
                   key={option.value} 
                   value={option.value}
-                  className="text-sm whitespace-nowrap px-4 rounded-md"
+                  className="text-sm whitespace-nowrap px-4 rounded-md data-[state=on]:bg-brand-500 data-[state=on]:text-white border-brand-300 hover:bg-brand-50"
                   aria-label={`Origem: ${option.label}`}
                 >
                   {option.label}
@@ -227,7 +226,7 @@ const TopFilters: React.FC = () => {
                   <ToggleGroupItem 
                     key={option.value} 
                     value={option.value}
-                    className="text-sm whitespace-nowrap px-4 rounded-md"
+                    className="text-sm whitespace-nowrap px-4 rounded-md data-[state=on]:bg-brand-500 data-[state=on]:text-white border-brand-300 hover:bg-brand-50"
                     aria-label={`Praça: ${option.label}`}
                     disabled={filters.format === 'Venda Direta'}
                   >
