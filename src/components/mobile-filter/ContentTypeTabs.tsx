@@ -8,6 +8,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
 import { useNavigate } from 'react-router-dom';
 import { logUserAction } from '@/utils/loggingUtils';
+import { cn } from '@/lib/utils';
 
 interface ContentTypeTabsProps {
   onTabChange?: (tab: ContentType) => void;
@@ -21,6 +22,8 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
   const { filters, updateFilter } = useFilterStore();
   const { getButtonSizeClass, getIconSize } = useScreenUtils();
   const navigate = useNavigate(); // Add navigation hook
+  const activeButtonClass = "bg-gradient-to-r from-brand-600 to-brand-700 text-white shadow-sm";
+  const inactiveButtonClass = "bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500";
   
   // Alterar tipo de conteúdo (imóveis/veículos)
   const handleTabChange = useCallback((tab: ContentType) => {
@@ -101,35 +104,29 @@ const ContentTypeTabs: React.FC<ContentTypeTabsProps> = ({ onTabChange }) => {
       <button 
         onClick={() => handleTabChange('property')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('property'))}
-        className={cn(
-          getButtonSizeClass(), 
-          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
-          filters.contentType === 'property' 
-            ? `bg-gradient-to-r ${COLORS.bg.brand[600]} to-brand-700 text-white` 
-            : `${COLORS.bg.white} ${COLORS.text.gray[700]} hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500`
-        )} 
+        className={cn(getButtonSizeClass(), 
+          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-all duration-200",
+          filters.contentType === 'property' ? activeButtonClass : inactiveButtonClass
+        )}
         aria-label="Filtrar imóveis" 
         {...getTabAttributes('property')}
       >
-        <Building2 size={getIconSize()} className="shrink-0" aria-hidden="true" />
-        <span className="sr-only">Imóveis</span>
+        <Building2 size={getIconSize()} className={`shrink-0 ${filters.contentType === 'property' ? 'text-white' : 'text-gray-600'}`} aria-hidden="true" />
+        <span className={`ml-1.5 ${filters.contentType === 'property' ? 'text-white' : 'text-gray-700'}`}>Imóveis</span>
       </button>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
       <button 
         onClick={() => handleTabChange('vehicle')} 
         onKeyDown={(e) => handleKeyDown(e, () => handleTabChange('vehicle'))}
-        className={cn(
-          getButtonSizeClass(), 
-          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-colors",
-          filters.contentType === 'vehicle' 
-            ? `bg-gradient-to-r ${COLORS.bg.brand[600]} to-brand-700 text-white` 
-            : `${COLORS.bg.white} ${COLORS.text.gray[700]} hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500`
-        )} 
+        className={cn(getButtonSizeClass(), 
+          "flex-1 min-w-[60px] flex items-center justify-center text-sm font-medium transition-all duration-200",
+          filters.contentType === 'vehicle' ? activeButtonClass : inactiveButtonClass
+        )}
         aria-label="Filtrar veículos" 
         {...getTabAttributes('vehicle')}
       >
-        <Car size={getIconSize()} className="shrink-0" aria-hidden="true" />
-        <span className="sr-only">Veículos</span>
+        <Car size={getIconSize()} className={`shrink-0 ${filters.contentType === 'vehicle' ? 'text-white' : 'text-gray-600'}`} aria-hidden="true" />
+        <span className={`ml-1.5 ${filters.contentType === 'vehicle' ? 'text-white' : 'text-gray-700'}`}>Veículos</span>
       </button>
     </div>
   );
