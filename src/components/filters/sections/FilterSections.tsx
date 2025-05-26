@@ -167,7 +167,7 @@ export const PriceFilter: React.FC<FilterSectionsProps> = ({
     toggleSection
   } = useFilterStore();
   return <div className="flex items-start">
-      <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Valor:</span>
+      
       <div className="w-auto flex-1">
         <ErrorBoundary componentName="PriceRangeFilter">
           <FilterSectionComponent title="Valor do lance atual" isExpanded={true} onToggle={() => {}}>
