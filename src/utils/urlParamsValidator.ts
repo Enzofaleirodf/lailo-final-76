@@ -7,28 +7,28 @@ import { FilterState } from '@/types/filters';
 /**
  * Verifica se um valor é um formato válido
  */
-export type ValidFormat = 'Todos' | 'Alienação Particular' | 'Leilão' | 'Venda Direta';
+export type ValidFormat = 'Leilão' | 'Venda Direta';
 export const isValidFormat = (format: string | null): format is ValidFormat => {
   if (!format) return false;
-  return ['Todos', 'Alienação Particular', 'Leilão', 'Venda Direta'].includes(format);
+  return ['Leilão', 'Venda Direta'].includes(format);
 };
 
 /**
  * Verifica se um valor é uma origem válida
  */
-export type ValidOrigin = 'Todas' | 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
+export type ValidOrigin = 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
 export const isValidOrigin = (origin: string | null): origin is ValidOrigin => {
   if (!origin) return false;
-  return ['Todas', 'Extrajudicial', 'Judicial', 'Particular', 'Público'].includes(origin);
+  return ['Extrajudicial', 'Judicial', 'Particular', 'Público'].includes(origin);
 };
 
 /**
  * Verifica se um valor é uma etapa válida
  */
-export type ValidPlace = 'Todas' | 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
+export type ValidPlace = 'Praça Única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
 export const isValidPlace = (place: string | null): place is ValidPlace => {
   if (!place) return false;
-  return ['Todas', 'Praça única', '1ª Praça', '2ª Praça', '3ª Praça'].includes(place);
+  return ['Praça Única', '1ª Praça', '2ª Praça', '3ª Praça'].includes(place);
 };
 
 /**

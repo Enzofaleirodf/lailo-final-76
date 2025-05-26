@@ -8,13 +8,13 @@ import React, { memo, useCallback } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
-import FilterDropdown from './FilterDropdown';
 import FilterSectionComponent from '@/components/filters/FilterSectionComponent';
 import { 
   formatOptions, 
   originOptions, 
   placeOptions 
 } from '@/utils/filterUtils';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 /**
  * MobileFilterOptions - Exibe as opções de filtro em formato móvel
@@ -56,46 +56,81 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Formato" 
         isExpanded={expandedSections.format} 
-        onToggle={() => {}}
+        onToggle={handleToggleFormat}
       >
-        <FilterDropdown 
-          id="format-filter-mobile" 
-          aria-label="Selecionar formato" 
+        <ToggleGroup 
+          type="single" 
           value={filters.format} 
-          onChange={handleFormatChange} 
-          options={formatOptions} 
-          className={`${COLORS.border.gray[200]} shadow-sm ${COLORS.bg.white}`} 
-        />
+          onValueChange={(value) => {
+            if (value) handleFormatChange(value);
+          }}
+          className="flex flex-wrap gap-2"
+        >
+          {formatOptions.map(option => (
+            <ToggleGroupItem 
+              key={option.value} 
+              value={option.value}
+              className="text-sm"
+              aria-label={`Formato: ${option.label}`}
+            >
+              {option.label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Origem" 
         isExpanded={expandedSections.origin} 
-        onToggle={() => {}}
+        onToggle={handleToggleOrigin}
       >
-        <FilterDropdown 
-          id="origin-filter-mobile" 
-          aria-label="Selecionar origem" 
-          value={filters.origin} 
-          onChange={handleOriginChange} 
-          options={originOptions} 
-          className={`${COLORS.border.gray[200]} shadow-sm ${COLORS.bg.white}`} 
-        />
+        <ToggleGroup 
+          type="multiple" 
+          value={[filters.origin]} 
+          onValueChange={(value) => {
+            if (value.length > 0) handleOriginChange(value[0]);
+          }}
+          className="flex flex-wrap gap-2"
+        >
+          {originOptions.map(option => (
+            <ToggleGroupItem 
+              key={option.value} 
+              value={option.value}
+              className="text-sm"
+              aria-label={`Origem: ${option.label}`}
+            >
+              {option.label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </FilterSectionComponent>
 
       <FilterSectionComponent 
         title="Etapa" 
         isExpanded={expandedSections.place} 
-        onToggle={() => {}}
+        onToggle={handleTogglePlace}
       >
-        <FilterDropdown 
-          id="place-filter-mobile" 
-          aria-label="Selecionar etapa" 
-          value={filters.place} 
-          onChange={handlePlaceChange} 
-          options={placeOptions} 
-          className={`${COLORS.border.gray[200]} shadow-sm ${COLORS.bg.white}`} 
-        />
+        <ToggleGroup 
+          type="multiple" 
+          value={[filters.place]} 
+          onValueChange={(value) => {
+            if (value.length > 0) handlePlaceChange(value[0]);
+          }}
+          className="flex flex-wrap gap-2"
+          disabled={filters.format === 'Venda Direta'}
+        >
+          {placeOptions.map(option => (
+            <ToggleGroupItem 
+              key={option.value} 
+              value={option.value}
+              className="text-sm"
+              aria-label={`Etapa: ${option.label}`}
+              disabled={filters.format === 'Venda Direta'}
+            >
+              {option.label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </FilterSectionComponent>
     </div>
   );

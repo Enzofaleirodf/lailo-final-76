@@ -8,14 +8,12 @@
 
 // Format options for filter dropdowns
 export const FORMAT_OPTIONS = [
-  { value: 'Alienação Particular', label: 'Alienação Particular' },
   { value: 'Leilão', label: 'Leilão' },
   { value: 'Venda Direta', label: 'Venda Direta' }
 ];
 
 // Origin options for filter dropdowns
 export const ORIGIN_OPTIONS = [
-  { value: 'Todas', label: 'Todas' },
   { value: 'Extrajudicial', label: 'Extrajudicial' },
   { value: 'Judicial', label: 'Judicial' },
   { value: 'Particular', label: 'Particular' },
@@ -24,8 +22,7 @@ export const ORIGIN_OPTIONS = [
 
 // Place options for filter dropdowns
 export const PLACE_OPTIONS = [
-  { value: 'Todas', label: 'Todas' },
-  { value: 'Praça única', label: 'Praça única' },
+  { value: 'Praça Única', label: 'Praça Única' },
   { value: '1ª Praça', label: '1ª Praça' },
   { value: '2ª Praça', label: '2ª Praça' },
   { value: '3ª Praça', label: '3ª Praça' }
@@ -34,11 +31,23 @@ export const PLACE_OPTIONS = [
 // Color options for filter dropdowns
 export const COLOR_OPTIONS = [
   { value: 'todas', label: 'Todas' },
-  { value: 'preto', label: 'Preto' },
-  { value: 'branco', label: 'Branco' },
-  { value: 'prata', label: 'Prata' },
-  { value: 'azul', label: 'Azul' },
-  { value: 'vermelho', label: 'Vermelho' }
+  { value: 'Amarelo', label: 'Amarelo' },
+  { value: 'Azul', label: 'Azul' },
+  { value: 'Bege', label: 'Bege' },
+  { value: 'Branco', label: 'Branco' },
+  { value: 'Bronze', label: 'Bronze' },
+  { value: 'Cinza', label: 'Cinza' },
+  { value: 'Dourado', label: 'Dourado' },
+  { value: 'Grafite', label: 'Grafite' },
+  { value: 'Laranja', label: 'Laranja' },
+  { value: 'Marrom', label: 'Marrom' },
+  { value: 'Prata', label: 'Prata' },
+  { value: 'Preto', label: 'Preto' },
+  { value: 'Rosa', label: 'Rosa' },
+  { value: 'Roxo', label: 'Roxo' },
+  { value: 'Verde', label: 'Verde' },
+  { value: 'Vermelho', label: 'Vermelho' },
+  { value: 'Vinho', label: 'Vinho' }
 ];
 
 // Default range values for filters
@@ -85,8 +94,8 @@ export const DEFAULT_FILTER_VALUES = {
   model: 'todos',
   color: 'todas',
   format: 'Leilão',
-  origin: 'Todas',
-  place: 'Todas',
+  origin: 'Extrajudicial',
+  place: 'Praça Única',
   category: 'Todos'
 };
 

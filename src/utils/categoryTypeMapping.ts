@@ -1,17 +1,16 @@
-
 /**
  * Mapeamento de categorias de veículos para seus tipos correspondentes
  */
 export const vehicleCategoryToTypesMap: Record<string, string[]> = {
   'Todos': ['Todos'],
-  'Aéreos': ['Todos', 'Aviões', 'Helicópteros', 'Drones'],
-  'Náuticos': ['Todos', 'Barcos', 'Lanchas', 'Jet Skis'],
-  'Recreativos': ['Todos', 'Buggies', 'Quadriciclos', 'UTVs', 'Karts', 'Bicicletas', 'Patinetes', 'Triciclos'],
-  'Leves': ['Todos', 'Carros', 'Motos'], 
-  'Pesados': ['Todos', 'Caminhões', 'Carretas', 'Cavalos Mecânicos', 'Micro-ônibus', 'Motorhomes', 'Ônibus'],
+  'Aéreos': ['Todos', 'Aviões', 'Drones', 'Helicópteros'],
   'Auxiliares': ['Todos', 'Reboques', 'Trailers'],
-  'Máquinas Agrícolas': ['Todos', 'Colheitadeiras', 'Plantadeiras', 'Tratores', 'Roçadeiras'],
-  'Máquinas de Construção': ['Todos', 'Escavadeiras', 'Retroescavadeiras', 'Motoniveladoras', 'Guindastes', 'Pás Carregadeiras']
+  'Embarcações': ['Todos', 'Barcos', 'Jet Skis', 'Lanchas'],
+  'Leves': ['Todos', 'Carros', 'Motos'],
+  'Máquinas Agrícolas': ['Todos', 'Colheitadeiras', 'Plantadeiras', 'Roçadeiras', 'Tratores'],
+  'Máquinas de Construção': ['Todos', 'Escavadeiras', 'Guindastes', 'Motoniveladoras', 'Pás Carregadeiras', 'Retroescavadeiras'],
+  'Pesados': ['Todos', 'Caminhões', 'Carretas', 'Cavalos Mecânicos', 'Micro-ônibus', 'Motorhomes', 'Ônibus'],
+  'Recreativos': ['Todos', 'Bicicletas', 'Bugges', 'Karts', 'Patinetes', 'Quadriciclos', 'Triciclos', 'UTVs']
 };
 
 /**
@@ -19,14 +18,14 @@ export const vehicleCategoryToTypesMap: Record<string, string[]> = {
  */
 export const propertyCategoryToTypesMap: Record<string, string[]> = {
   'Todos': ['Todos'],
-  'Comerciais': ['Todos', 'Conjuntos', 'Condomínios', 'Depósitos', 'Escritórios', 
+  'Comerciais': ['Todos', 'Condomínios', 'Conjuntos', 'Depósitos', 'Escritórios', 
               'Garagens', 'Lojas', 'Lotes', 'Prédios', 'Salas', 'Terrenos'],
   'Hospedagens': ['Todos', 'Hotéis', 'Motéis', 'Pousadas'],
-  'Industriais': ['Todos', 'Galpões', 'Lotes', 'Terrenos', 'Depósitos'],
+  'Industriais': ['Todos', 'Galpões', 'Lotes', 'Terrenos'],
   'Residenciais': ['Todos', 'Apartamentos', 'Casas', 'Condomínios', 'Conjuntos',
-                'Edifícios', 'Flats', 'Garagens', 'Imóveis Mistos', 'Kitnets', 'Lofts', 'Lotes',
-                'Prédios', 'Quitinetes', 'Sobrados', 'Studios', 'Terrenos'],
-  'Rurais': ['Todos', 'Chácaras', 'Fazendas', 'Terrenos', 'Sítios']
+                'Edifícios', 'Flats', 'Garagens', 'Mistos', 'Kitnets', 'Lofts', 'Lotes',
+                'Prédios', 'Sobrados', 'Studios', 'Terrenos'],
+  'Rurais': ['Todos', 'Chácaras', 'Fazendas', 'Sítios', 'Terrenos']
 };
 
 /**

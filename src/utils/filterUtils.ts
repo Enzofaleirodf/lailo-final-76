@@ -24,14 +24,14 @@ export const placeOptions = PLACE_OPTIONS;
  * Obter todas as categorias de veículo disponíveis
  */
 export const getVehicleCategories = (): string[] => {
-  return Object.keys(vehicleCategoryToTypesMap);
+  return ['Todos', 'Aéreos', 'Auxiliares', 'Embarcações', 'Leves', 'Máquinas Agrícolas', 'Máquinas de Construção', 'Pesados', 'Recreativos'];
 };
 
 /**
  * Obter todas as categorias de imóvel disponíveis
  */
 export const getPropertyCategories = (): string[] => {
-  return ['Todos', ...Object.keys(propertyCategoryToTypesMap).filter(cat => cat !== 'Todos')];
+  return ['Todos', 'Comerciais', 'Hospedagens', 'Industriais', 'Residenciais', 'Rurais'];
 };
 
 /**
@@ -52,8 +52,10 @@ export const isDefaultFilterValue = (
       return value === 'Leilão'; // Visual default is now 'Leilão' not 'Todos'
       
     case 'origin':
+      return value === 'Extrajudicial';
+      
     case 'place':
-      return value === 'Todas';
+      return value === 'Praça Única';
       
     case 'brand':
     case 'color':

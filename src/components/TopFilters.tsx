@@ -15,6 +15,7 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
 import ErrorBoundary from './ErrorBoundary';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 /**
  * TopFilters - Barra de filtros rápidos para a versão desktop
@@ -123,94 +124,78 @@ const TopFilters: React.FC = () => {
         </div>
         
         {/* Format Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button 
-              className={baseDropdownStyle}
-              aria-label="Selecionar formato"
-              aria-haspopup="listbox"
-              aria-expanded="false"
-            >
-              <span className={`text-sm ${TYPOGRAPHY.weight.normal} ${COLORS.text.gray[700]}`}>
-                <span className={`${COLORS.text.gray[500]} ${TYPOGRAPHY.weight.normal}`}>Formato:</span> <span className={filters.format !== 'Todos' ? `${COLORS.text.gray[700]} ${TYPOGRAPHY.weight.normal}` : `${COLORS.text.gray[800]} ${TYPOGRAPHY.weight.normal}`}>
-                  {filters.format}
-                </span>
-              </span>
-              <ChevronDown size={16} className={COLORS.text.gray[500]} aria-hidden="true" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className={`w-full min-w-[200px] ${COLORS.bg.white} shadow-md rounded-md z-50 ${TYPOGRAPHY.family.urbanist}`}>
+        <div className="flex flex-col">
+          <label className="text-sm text-gray-500 mb-1">Formato:</label>
+          <ToggleGroup 
+            type="single" 
+            value={filters.format} 
+            onValueChange={(value) => {
+              if (value) handleFilterChange('format', value as FilterFormat);
+            }}
+            className="flex"
+          >
             {formatOptions.map(option => (
-              <DropdownMenuItem 
-                key={option.value}
-                onClick={() => handleFilterChange('format', option.value as FilterFormat)} 
-                className={`cursor-pointer hover:bg-brand-50 hover:${COLORS.text.gray[800]} ${TYPOGRAPHY.weight.normal} ${TYPOGRAPHY.family.urbanist}`}
+              <ToggleGroupItem 
+                key={option.value} 
+                value={option.value}
+                className="text-sm"
+                aria-label={`Formato: ${option.label}`}
               >
                 {option.label}
-              </DropdownMenuItem>
+              </ToggleGroupItem>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </ToggleGroup>
+        </div>
   
         {/* Origin Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button 
-              className={baseDropdownStyle}
-              aria-label="Selecionar origem"
-              aria-haspopup="listbox"
-              aria-expanded="false"  
-            >
-              <span className={`text-sm ${TYPOGRAPHY.weight.normal} ${COLORS.text.gray[700]}`}>
-                <span className={`${COLORS.text.gray[500]} ${TYPOGRAPHY.weight.normal}`}>Origem:</span> <span className={filters.origin !== 'Todas' ? `${COLORS.text.gray[700]} ${TYPOGRAPHY.weight.normal}` : `${COLORS.text.gray[800]} ${TYPOGRAPHY.weight.normal}`}>
-                  {filters.origin}
-                </span>
-              </span>
-              <ChevronDown size={16} className={COLORS.text.gray[500]} aria-hidden="true" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className={`w-full min-w-[200px] ${COLORS.bg.white} shadow-md rounded-md z-50 ${TYPOGRAPHY.family.urbanist}`}>
+        <div className="flex flex-col">
+          <label className="text-sm text-gray-500 mb-1">Origem:</label>
+          <ToggleGroup 
+            type="multiple" 
+            value={[filters.origin]} 
+            onValueChange={(value) => {
+              if (value.length > 0) handleFilterChange('origin', value[0] as FilterOrigin);
+            }}
+            className="flex"
+          >
             {originOptions.map(option => (
-              <DropdownMenuItem 
-                key={option.value}
-                onClick={() => handleFilterChange('origin', option.value as FilterOrigin)} 
-                className={`cursor-pointer hover:bg-brand-50 hover:${COLORS.text.gray[800]} ${TYPOGRAPHY.weight.normal} ${TYPOGRAPHY.family.urbanist}`}
+              <ToggleGroupItem 
+                key={option.value} 
+                value={option.value}
+                className="text-sm"
+                aria-label={`Origem: ${option.label}`}
               >
                 {option.label}
-              </DropdownMenuItem>
+              </ToggleGroupItem>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </ToggleGroup>
+        </div>
   
         {/* Place options */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button 
-              className={baseDropdownStyle}
-              aria-label="Selecionar etapa"
-              aria-haspopup="listbox"
-              aria-expanded="false"
-            >
-              <span className={`text-sm ${TYPOGRAPHY.weight.normal} ${COLORS.text.gray[700]}`}>
-                <span className={`${COLORS.text.gray[500]} ${TYPOGRAPHY.weight.normal}`}>Etapa:</span> <span className={filters.place !== 'Todas' ? `${COLORS.text.gray[700]} ${TYPOGRAPHY.weight.normal}` : `${COLORS.text.gray[800]} ${TYPOGRAPHY.weight.normal}`}>
-                  {filters.place}
-                </span>
-              </span>
-              <ChevronDown size={16} className={COLORS.text.gray[500]} aria-hidden="true" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className={`w-full min-w-[200px] ${COLORS.bg.white} shadow-md rounded-md z-50 ${TYPOGRAPHY.family.urbanist}`}>
+        <div className="flex flex-col">
+          <label className="text-sm text-gray-500 mb-1">Etapa:</label>
+          <ToggleGroup 
+            type="multiple" 
+            value={[filters.place]} 
+            onValueChange={(value) => {
+              if (value.length > 0) handleFilterChange('place', value[0] as FilterPlace);
+            }}
+            className="flex"
+            disabled={filters.format === 'Venda Direta'}
+          >
             {placeOptions.map(option => (
-              <DropdownMenuItem 
-                key={option.value}
-                onClick={() => handleFilterChange('place', option.value as FilterPlace)} 
-                className={`cursor-pointer hover:bg-brand-50 hover:${COLORS.text.gray[800]} ${TYPOGRAPHY.weight.normal} ${TYPOGRAPHY.family.urbanist}`}
+              <ToggleGroupItem 
+                key={option.value} 
+                value={option.value}
+                className="text-sm"
+                aria-label={`Etapa: ${option.label}`}
+                disabled={filters.format === 'Venda Direta'}
               >
                 {option.label}
-              </DropdownMenuItem>
+              </ToggleGroupItem>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </ToggleGroup>
+        </div>
       </div>
     </ErrorBoundary>
   );

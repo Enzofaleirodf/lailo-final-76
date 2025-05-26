@@ -1,9 +1,9 @@
 
 export type ContentType = 'property' | 'vehicle';
 
-export type FilterFormat = 'Todos' | 'Alienação Particular' | 'Leilão' | 'Venda Direta';
-export type FilterOrigin = 'Todas' | 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
-export type FilterPlace = 'Todas' | 'Praça única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
+export type FilterFormat = 'Leilão' | 'Venda Direta';
+export type FilterOrigin = 'Extrajudicial' | 'Judicial' | 'Particular' | 'Público';
+export type FilterPlace = 'Praça Única' | '1ª Praça' | '2ª Praça' | '3ª Praça';
 
 export interface LocationFilter {
   state: string;
