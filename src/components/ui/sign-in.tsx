@@ -128,7 +128,7 @@ export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hide
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
                   <label className="text-sm font-medium text-gray-700">Senha</label>
-                  <a href="#" className="text-xs text-blue-600 hover:underline">
+                  <a href="/auth/reset-password" className="text-xs text-blue-600 hover:underline">
                     Esqueceu a senha?
                   </a>
                 </div>

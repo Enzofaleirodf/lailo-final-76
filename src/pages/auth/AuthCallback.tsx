@@ -1,8 +1,11 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { handleError } from '@/utils/errorUtils';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { logUserAction } from '@/utils/loggingUtils';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -13,13 +16,16 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        logUserAction('auth_callback_started');
         setLoading(true);
         
         // Get the auth code from the URL
         const code = searchParams.get('code');
+        const type = searchParams.get('type');
         
         if (!code) {
           setError('Código de autenticação não encontrado');
+          logUserAction('auth_callback_error', { error: 'No code found' });
           return;
         }
         
@@ -28,8 +34,11 @@ const AuthCallback = () => {
         
         if (error) {
           setError(error.message);
+          logUserAction('auth_callback_error', { error: error.message });
           return;
         }
+        
+        logUserAction('auth_callback_success', { type });
         
         // Redirect to home page
         navigate('/', { replace: true });

@@ -78,7 +78,12 @@ const Login = () => {
                 <label htmlFor="password" className="text-sm font-medium">
                   Senha
                 </label>
-                <Button variant="link" className="text-xs p-0 h-auto" type="button">
+                <Button 
+                  variant="link" 
+                  className="text-xs p-0 h-auto" 
+                  type="button"
+                  onClick={() => navigate('/auth/reset-password')}
+                >
                   Esqueceu a senha?
                 </Button>
               </div>

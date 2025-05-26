@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +18,7 @@ import Perfil from "./pages/Perfil";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import AuthCallback from "./pages/auth/AuthCallback";
+import ResetPassword from "./pages/auth/ResetPassword";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -57,6 +57,7 @@ const App = () => {
                     <Route path="/auth/login" element={<Login />} />
                     <Route path="/auth/sign-up" element={<SignUp />} />
                     <Route path="/auth/callback" element={<AuthCallback />} />
+                    <Route path="/auth/reset-password" element={<ResetPassword />} />
                     
                     {/* Main Application Routes - With AppLayout */}
                     <Route element={<MainLayout />}>
