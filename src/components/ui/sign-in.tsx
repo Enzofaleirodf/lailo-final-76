@@ -6,7 +6,6 @@ import { X } from "lucide-react";
 import { Dialog, DialogClose } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { handleError } from "@/utils/errorUtils";
 
 interface LightLoginProps {
   isInDialog?: boolean;
@@ -49,7 +48,7 @@ export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hide
         navigate('/');
       }
     } catch (err) {
-      handleError(err, 'LightLogin.handleSubmit');
+      console.error('Error during login:', err);
       setError('Ocorreu um erro ao fazer login. Tente novamente.');
     } finally {
       setLoading(false);
@@ -61,18 +60,11 @@ export const LightLogin: React.FC<LightLoginProps> = ({ isInDialog = false, hide
       setLoading(true);
       setError(null);
       
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
-      });
-      
-      if (error) {
-        setError(error.message);
-      }
+      // Mock Google sign in
+      console.log('Google sign in attempt');
+      setError('Google sign in not implemented yet');
     } catch (err) {
-      handleError(err, 'LightLogin.handleGoogleSignIn');
+      console.error('Error during Google sign in:', err);
       setError('Ocorreu um erro ao fazer login com Google. Tente novamente.');
     } finally {
       setLoading(false);

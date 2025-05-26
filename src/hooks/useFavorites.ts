@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from './useAuth';
-import { handleError } from '@/utils/errorUtils';
-import { logUserAction } from '@/utils/loggingUtils';
 
 export interface FavoriteItem {
   id: string;
@@ -28,20 +25,38 @@ export const useFavorites = () => {
       try {
         setLoading(true);
         
-        const { data, error } = await supabase
-          .from('favorites')
-          .select('*')
-          .eq('user_id', user.id);
-          
-        if (error) {
-          throw error;
-        }
+        // Mock data for development
+        const mockFavorites: FavoriteItem[] = [
+          {
+            id: '1',
+            item_id: '1',
+            item_type: 'vehicle',
+            created_at: new Date().toISOString()
+          },
+          {
+            id: '2',
+            item_id: '2',
+            item_type: 'vehicle',
+            created_at: new Date().toISOString()
+          },
+          {
+            id: '3',
+            item_id: 'prop-001',
+            item_type: 'property',
+            created_at: new Date().toISOString()
+          }
+        ];
         
-        setFavorites(data || []);
+        // Simulate API delay
+        setTimeout(() => {
+          setFavorites(mockFavorites);
+          setLoading(false);
+        }, 500);
       } catch (error) {
-        handleError(error, 'useFavorites.fetchFavorites');
-      } finally {
+        console.error('Error fetching favorites:', error);
         setLoading(false);
+      } finally {
+        // Loading is set to false in the setTimeout or catch block
       }
     };
 
@@ -55,28 +70,20 @@ export const useFavorites = () => {
     }
 
     try {
-      logUserAction('add_favorite', { itemId, itemType });
+      console.log('Adding favorite:', { itemId, itemType });
       
-      const { data, error } = await supabase
-        .from('favorites')
-        .insert([
-          {
-            user_id: user.id,
-            item_id: itemId,
-            item_type: itemType,
-          },
-        ])
-        .select()
-        .single();
-        
-      if (error) {
-        throw error;
-      }
+      // Mock adding a favorite
+      const newFavorite: FavoriteItem = {
+        id: Math.random().toString(),
+        item_id: itemId,
+        item_type: itemType,
+        created_at: new Date().toISOString()
+      };
       
-      setFavorites([...favorites, data]);
+      setFavorites([...favorites, newFavorite]);
       return { success: true, error: null };
     } catch (error) {
-      handleError(error, 'useFavorites.addFavorite');
+      console.error('Error adding favorite:', error);
       return { success: false, error: error as Error };
     }
   };
@@ -88,22 +95,13 @@ export const useFavorites = () => {
     }
 
     try {
-      logUserAction('remove_favorite', { itemId });
+      console.log('Removing favorite:', itemId);
       
-      const { error } = await supabase
-        .from('favorites')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('item_id', itemId);
-        
-      if (error) {
-        throw error;
-      }
-      
+      // Mock removing a favorite
       setFavorites(favorites.filter(fav => fav.item_id !== itemId));
       return { success: true, error: null };
     } catch (error) {
-      handleError(error, 'useFavorites.removeFavorite');
+      console.error('Error removing favorite:', error);
       return { success: false, error: error as Error };
     }
   };

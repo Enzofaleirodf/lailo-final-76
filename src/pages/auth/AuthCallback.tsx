@@ -1,11 +1,8 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
-import { handleError } from '@/utils/errorUtils';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { logUserAction } from '@/utils/loggingUtils';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -16,7 +13,7 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        logUserAction('auth_callback_started');
+        console.log('Auth callback started');
         setLoading(true);
         
         // Get the auth code from the URL
@@ -25,25 +22,19 @@ const AuthCallback = () => {
         
         if (!code) {
           setError('Código de autenticação não encontrado');
-          logUserAction('auth_callback_error', { error: 'No code found' });
+          console.error('Auth callback error: No code found');
           return;
         }
         
-        // Exchange the code for a session
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        
-        if (error) {
-          setError(error.message);
-          logUserAction('auth_callback_error', { error: error.message });
-          return;
-        }
-        
-        logUserAction('auth_callback_success', { type });
+        // Mock successful authentication
+        console.log('Auth callback success:', { type });
         
         // Redirect to home page
-        navigate('/', { replace: true });
+        setTimeout(() => {
+          navigate('/', { replace: true });
+        }, 1000);
       } catch (err) {
-        handleError(err, 'AuthCallback.handleAuthCallback');
+        console.error('Error in auth callback:', err);
         setError('Ocorreu um erro durante a autenticação');
       } finally {
         setLoading(false);

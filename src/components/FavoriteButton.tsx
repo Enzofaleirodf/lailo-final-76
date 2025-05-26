@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
