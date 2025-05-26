@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -104,7 +105,7 @@ const TopFilters: React.FC = () => {
   const selectedPlaces = getSelectedPlaces();
 
   // Estilo base comum para todos os componentes de filtro
-  const baseContainerStyle = "shadow-sm rounded-lg overflow-hidden border border-gray-200";
+  const baseContainerStyle = "shadow-sm rounded-lg overflow-hidden";
 
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
@@ -124,7 +125,7 @@ const TopFilters: React.FC = () => {
         {/* Filter Groups Row - All in one row */}
         <div className="flex flex-wrap items-center">
           {/* Content Type Buttons */}
-          <div className={`${baseContainerStyle} h-10 flex w-auto`} role="tablist" aria-label="Tipo de conteúdo">
+          <div className={`${baseContainerStyle} h-10 flex w-auto border border-gray-200`} role="tablist" aria-label="Tipo de conteúdo">
             <button 
               onClick={() => handleContentTypeChange('property')}
               className={cn(
@@ -166,7 +167,7 @@ const TopFilters: React.FC = () => {
               type="single" 
               value={filters.format} 
               onValueChange={handleFormatChange}
-              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
               variant="brand"
             >
               {formatOptions.map(option => (
@@ -190,7 +191,7 @@ const TopFilters: React.FC = () => {
               type="multiple" 
               value={selectedOrigins} 
               onValueChange={handleOriginChange}
-              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
               variant="multi"
             >
               {originOptions.map(option => (
@@ -214,16 +215,13 @@ const TopFilters: React.FC = () => {
               type="multiple" 
               value={selectedPlaces} 
               onValueChange={handlePlaceChange}
-              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm gap-1 p-1"
+              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
               variant="multi"
               disabled={filters.format === 'Venda Direta'}
             >
               {placeOptions.map(option => {
-                // Simplify the display text for place options
-                const displayText = option.value === 'Praça Única' ? 'Única' : 
-                                   option.value === '1ª Praça' ? '1ª' :
-                                   option.value === '2ª Praça' ? '2ª' :
-                                   option.value === '3ª Praça' ? '3ª' : option.label;
+                // Display the full text for place options
+                const displayText = option.label;
                 
                 return (
                   <ToggleGroupItem 
