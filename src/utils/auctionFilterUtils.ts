@@ -2,7 +2,7 @@ import { AuctionItem } from '@/types/auction';
 import { PropertyItem } from '@/types/property';
 import { FilterState } from '@/types/filters';
 import { DEFAULT_RANGE_VALUES } from '@/constants/filterConstants';
-import { propertyCategoryToTypesMap } from './categoryTypeMapping';
+import { propertyCategoryToTypesMap, vehicleCategoryToTypesMap } from './categoryTypeMapping';
 
 export type GenericItem = AuctionItem | PropertyItem;
 
