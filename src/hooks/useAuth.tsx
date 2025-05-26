@@ -20,7 +20,6 @@ interface AuthContextType {
   signUp: (email: string, password: string, name: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
-  resetPassword: (email: string) => Promise<{ error: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -68,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser({
             id: session.user.id,
             email: session.user.email || '',
-            name: profile?.full_name || session.user.email?.split('@')[0] || 'User',
+            name: profile?.full_name || (session.user.email ? session.user.email.split('@')[0] : 'User'),
             photoUrl: profile?.avatar_url || undefined
           });
         }
@@ -101,7 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser({
               id: newSession.user.id,
               email: newSession.user.email || '',
-              name: profile?.full_name || newSession.user.email?.split('@')[0] || 'User',
+              name: profile?.full_name || (newSession.user.email ? newSession.user.email.split('@')[0] : 'User'),
               photoUrl: profile?.avatar_url || undefined
             });
           } catch (error) {
@@ -207,28 +206,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       logUserAction('reset_password_attempt', { email });
       
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
-      
-      if (error) {
-        logUserAction('reset_password_error', { error: error.message });
-        return { error };
-      }
-      
-      logUserAction('reset_password_email_sent', { email });
-      return { error: null };
-    } catch (error) {
-      handleError(error, 'useAuth.resetPassword');
-      return { error: error as Error };
-    }
-  };
-
-  // Reset password
-  const resetPassword = async (email: string) => {
-    try {
-      logUserAction('reset_password_attempt', { email });
-      
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
       });
       
@@ -255,7 +232,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn,
         signUp,
         signOut,
-        resetPassword,
         resetPassword,
       }}
     >
