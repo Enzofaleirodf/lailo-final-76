@@ -3,6 +3,7 @@
  * Mapeamento de categorias de veículos para seus tipos correspondentes
  */
 export const vehicleCategoryToTypesMap: Record<string, string[]> = {
+  'Todos': ['Todos'],
   'Aéreos': ['Todos', 'Aviões', 'Helicópteros', 'Drones'],
   'Náuticos': ['Todos', 'Barcos', 'Lanchas', 'Jet Skis'],
   'Recreativos': ['Todos', 'Buggies', 'Quadriciclos', 'UTVs', 'Karts', 'Bicicletas', 'Patinetes', 'Triciclos'],
@@ -37,8 +38,10 @@ export const getTypesByCategory = (category: string, contentType: 'property' | '
   }
   
   if (contentType === 'vehicle') {
-    return vehicleCategoryToTypesMap[category] || ['Todos'];
+    // Make sure we return a copy of the array to avoid modifying the original
+    return [...(vehicleCategoryToTypesMap[category] || ['Todos'])];
   } else {
-    return propertyCategoryToTypesMap[category] || ['Todos'];
+    // Make sure we return a copy of the array to avoid modifying the original
+    return [...(propertyCategoryToTypesMap[category] || ['Todos'])];
   }
 };

@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -103,45 +102,58 @@ const AuctionList: React.FC = () => {
                   return null;
                 }
 
-                // Determinar qual componente de card usar com base no tipo de conteúdo
+                // Use type guard to determine the item type
+                const isPropertyItem = (item: AuctionItem | PropertyItem): item is PropertyItem => {
+                  return 'propertyInfo' in item && !!item.propertyInfo;
+                };
+
+                // Render the appropriate card based on the item type, not just contentType
                 if (filters.contentType === 'property') {
-                  // Type guard para garantir que este é um PropertyItem com os campos necessários
-                  const property = item as PropertyItem;
-                  return (
-                    <ErrorBoundary key={property.id} componentName={`PropertyCard-${property.id}`}>
-                      <motion.div 
-                        key={property.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.3,
-                          delay: Math.random() * 0.2
-                        }} 
-                        className="mt-0 pt-0 mb-2"
-                      >
-                        <PropertyCard property={property} />
-                      </motion.div>
-                    </ErrorBoundary>
-                  );
+                  if (isPropertyItem(item)) {
+                    return (
+                      <ErrorBoundary key={item.id} componentName={`PropertyCard-${item.id}`}>
+                        <motion.div 
+                          key={item.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            delay: Math.random() * 0.2
+                          }} 
+                          className="mt-0 pt-0 mb-2"
+                        >
+                          <PropertyCard property={item} />
+                        </motion.div>
+                      </ErrorBoundary>
+                    );
+                  } else {
+                    // Log error if we have a vehicle item in property mode
+                    handleError(new Error('Vehicle item found in property mode'), 'AuctionList');
+                    return null;
+                  }
                 } else {
-                  // Para leilões de veículos, usar o AuctionCard existente
-                  const auction = item as AuctionItem;
-                  return (
-                    <ErrorBoundary key={auction.id} componentName={`AuctionCard-${auction.id}`}>
-                      <motion.div 
-                        key={auction.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.3,
-                          delay: Math.random() * 0.2
-                        }} 
-                        className="mt-0 pt-0 mb-2"
-                      >
-                        <AuctionCard auction={auction} />
-                      </motion.div>
-                    </ErrorBoundary>
-                  );
+                  if (!isPropertyItem(item)) {
+                    return (
+                      <ErrorBoundary key={item.id} componentName={`AuctionCard-${item.id}`}>
+                        <motion.div 
+                          key={item.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            delay: Math.random() * 0.2
+                          }} 
+                          className="mt-0 pt-0 mb-2"
+                        >
+                          <AuctionCard auction={item} />
+                        </motion.div>
+                      </ErrorBoundary>
+                    );
+                  } else {
+                    // Log error if we have a property item in vehicle mode
+                    handleError(new Error('Property item found in vehicle mode'), 'AuctionList');
+                    return null;
+                  }
                 }
               })}
             </>
