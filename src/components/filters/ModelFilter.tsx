@@ -12,7 +12,7 @@ interface ModelFilterProps {
 
 const ModelFilter: React.FC<ModelFilterProps> = ({
   onFilterChange
-}) => {
+}) => { 
   const { filters, updateFilter } = useFilterStore();
   
   const modelOptions = useMemo(() => {
@@ -32,28 +32,16 @@ const ModelFilter: React.FC<ModelFilterProps> = ({
   }, [updateFilter, onFilterChange]);
   
   return (
-    <div className="space-y-3">
-      <BrandFilter onFilterChange={onFilterChange} />
-      
-      <div>
-        <label htmlFor="model-filter" className="block text-sm font-medium text-gray-700 mb-1">
-          Modelo
-        </label>
-        {filters.brand === 'todas' ? (
-          <div className="relative h-10 w-full border border-gray-300 rounded-lg px-3 flex items-center text-gray-400 bg-gray-50 text-sm">
-            Selecione uma marca antes
-            <ChevronDown size={16} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
-          </div>
-        ) : (
-          <FilterDropdown 
-            id="model-filter" 
-            aria-label="Selecione o modelo" 
-            value={filters.model} 
-            onChange={handleModelChange} 
-            options={modelOptions} 
-          />
-        )}
-      </div>
+    <div className="w-full">
+      <FilterDropdown 
+        id="model-filter" 
+        aria-label="Selecione o modelo" 
+        value={filters.model} 
+        onChange={handleModelChange} 
+        options={modelOptions} 
+        disabled={filters.brand === 'todas'}
+        placeholder={filters.brand === 'todas' ? "Selecione uma marca antes" : undefined}
+      />
     </div>
   );
 };

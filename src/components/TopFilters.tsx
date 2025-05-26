@@ -1,16 +1,17 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
-import { logUserAction } from '@/utils/loggingUtils';
 import { Button } from '@/components/ui/button';
+import { logUserAction } from '@/utils/loggingUtils';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
 import ErrorBoundary from './ErrorBoundary';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Separator } from '@/components/ui/separator';
 
 /**
  * TopFilters - Barra de filtros rápidos para a versão desktop
@@ -18,7 +19,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
  * com visual e comportamento consistentes com a versão mobile
  */
 const TopFilters: React.FC = () => {
-  const { filters, updateFilter } = useFilterStore();
+  const { filters, updateFilter, getSelectedOrigins, getSelectedPlaces, updateMultipleOrigins, updateMultiplePlaces } = useFilterStore();
   const navigate = useNavigate();
 
   const handleContentTypeChange = useCallback((type: ContentType) => {
@@ -60,11 +61,12 @@ const TopFilters: React.FC = () => {
     // Log the filter change
     logUserAction('desktop_filter_change', { 
       filterType: 'origin', 
-      value: values[0] 
+      values 
     });
     
-    updateFilter('origin', values[0] as FilterOrigin);
-  }, [updateFilter]);
+    // Update with multiple origins
+    updateMultipleOrigins(values as FilterOrigin[]);
+  }, [updateMultipleOrigins]);
   
   const handlePlaceChange = useCallback((values: string[]) => {
     if (values.length === 0) return;
@@ -72,11 +74,12 @@ const TopFilters: React.FC = () => {
     // Log the filter change
     logUserAction('desktop_filter_change', { 
       filterType: 'place', 
-      value: values[0]
+      values
     });
     
-    updateFilter('place', values[0] as FilterPlace);
-  }, [updateFilter]);
+    // Update with multiple places
+    updateMultiplePlaces(values as FilterPlace[]);
+  }, [updateMultiplePlaces]);
   
   const handleResetFilters = useCallback(() => {
     // Reset format to default
@@ -97,20 +100,12 @@ const TopFilters: React.FC = () => {
            filters.place !== 'Praça Única';
   }, [filters.format, filters.origin, filters.place]);
   
-  // Function to determine if a filter is active
-  const isFilterActive = useCallback((type: 'format' | 'origin' | 'place', value: string) => {
-    if (type === 'format') {
-      return filters.format === value;
-    } else if (type === 'origin') {
-      return filters.origin === value;
-    } else if (type === 'place') {
-      return filters.place === value;
-    }
-    return false;
-  }, [filters.format, filters.origin, filters.place]);
+  // Get selected origins and places for multi-select
+  const selectedOrigins = getSelectedOrigins();
+  const selectedPlaces = getSelectedPlaces();
 
-  // Estilo base comum para todos os componentes
-  const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
+  // Estilo base comum para todos os componentes de filtro
+  const baseContainerStyle = "shadow-sm rounded-lg overflow-hidden";
 
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
@@ -126,10 +121,11 @@ const TopFilters: React.FC = () => {
 
   return (
     <ErrorBoundary componentName="TopFilters">
-      <div className="flex flex-col gap-4 mb-6" role="navigation" aria-label="Filtros rápidos">
-        {/* Primeiro componente - Tipo de conteúdo */}
-        <div className={`${COLORS.bg.white} ${baseContainerStyle} w-full`}>
-          <div className="flex h-10" role="tablist" aria-label="Tipo de conteúdo">
+      <div className="mb-6" role="navigation" aria-label="Filtros rápidos">
+        {/* Filter Groups Row - All in one row */}
+        <div className="flex flex-wrap items-center">
+          {/* Content Type Buttons */}
+          <div className={`${baseContainerStyle} h-10 flex w-auto border border-gray-200`} role="tablist" aria-label="Tipo de conteúdo">
             <button 
               onClick={() => handleContentTypeChange('property')}
               className={cn(
@@ -162,25 +158,23 @@ const TopFilters: React.FC = () => {
               <span>Veículos</span>
             </button>
           </div>
-        </div>
-        
-        {/* Filter Groups Row */}
-        <div className="flex flex-wrap gap-4 items-center">
+          
+          <Separator orientation="vertical" className="h-10 mx-4" />
+          
           {/* Format Filter Group */}
-          <div className="flex items-center gap-2 h-10">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16">Formato:</span>
+          <div className="w-auto">
             <ToggleGroup 
               type="single" 
               value={filters.format} 
               onValueChange={handleFormatChange}
-              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm"
+              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
               variant="brand"
             >
               {formatOptions.map(option => (
                 <ToggleGroupItem 
                   key={option.value} 
                   value={option.value}
-                  className="text-sm whitespace-nowrap px-4 rounded-none border-0"
+                  className="text-sm whitespace-nowrap px-4 rounded-md"
                   aria-label={`Formato: ${option.label}`}
                 >
                   {option.label}
@@ -189,21 +183,22 @@ const TopFilters: React.FC = () => {
             </ToggleGroup>
           </div>
     
+          <Separator orientation="vertical" className="h-10 mx-4" />
+          
           {/* Origin Filter Group */}
-          <div className="flex items-center gap-2 h-10">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16">Origem:</span>
+          <div className="w-auto">
             <ToggleGroup 
               type="multiple" 
-              value={[filters.origin]} 
+              value={selectedOrigins} 
               onValueChange={handleOriginChange}
-              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm"
+              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
               variant="multi"
             >
               {originOptions.map(option => (
                 <ToggleGroupItem 
                   key={option.value} 
                   value={option.value}
-                  className="text-sm whitespace-nowrap px-4 rounded-none border-0"
+                  className="text-sm whitespace-nowrap px-4 rounded-md"
                   aria-label={`Origem: ${option.label}`}
                 >
                   {option.label}
@@ -212,29 +207,27 @@ const TopFilters: React.FC = () => {
             </ToggleGroup>
           </div>
     
+          <Separator orientation="vertical" className="h-10 mx-4" />
+          
           {/* Place Filter Group */}
-          <div className="flex items-center gap-2 h-10">
-            <span className="text-sm font-medium text-gray-700 whitespace-nowrap min-w-16">Praça:</span>
+          <div className="w-auto">
             <ToggleGroup 
               type="multiple" 
-              value={[filters.place]} 
+              value={selectedPlaces} 
               onValueChange={handlePlaceChange}
-              className="flex border border-gray-200 rounded-md overflow-hidden shadow-sm"
+              className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1"
               variant="multi"
               disabled={filters.format === 'Venda Direta'}
             >
               {placeOptions.map(option => {
-                // Simplify the display text for place options
-                const displayText = option.value === 'Praça Única' ? 'Única' : 
-                                   option.value === '1ª Praça' ? '1ª' :
-                                   option.value === '2ª Praça' ? '2ª' :
-                                   option.value === '3ª Praça' ? '3ª' : option.label;
+                // Display the full text for place options
+                const displayText = option.label;
                 
                 return (
                   <ToggleGroupItem 
                     key={option.value} 
                     value={option.value}
-                    className="text-sm whitespace-nowrap px-4 rounded-none border-0"
+                    className="text-sm whitespace-nowrap px-4 rounded-md"
                     aria-label={`Praça: ${option.label}`}
                     disabled={filters.format === 'Venda Direta'}
                   >
@@ -247,16 +240,18 @@ const TopFilters: React.FC = () => {
           
           {/* Reset Filters Button - Only show when filters are active */}
           {hasActiveTopFilters && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleResetFilters}
-              className="ml-auto text-xs"
-            >
-              Limpar filtros
-            </Button>
+            <>
+              <Separator orientation="vertical" className="h-10 mx-4" />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleResetFilters}
+                className="text-xs"
+              >
+                Limpar filtros
+              </Button>
+            </>
           )}
-          </div>
         </div>
       </div>
     </ErrorBoundary>

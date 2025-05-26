@@ -69,10 +69,10 @@ export const applyAuctionMetadataFilters = <T extends GenericItem>(
 ): T[] => {
   let filteredItems = [...items];
   
-  // Always apply format filter
+  // Apply format filter
   filteredItems = filteredItems.filter(item => item.format === format);
   
-  // Always apply origin filter
+  // Apply origin filter
   filteredItems = filteredItems.filter(item => item.origin === origin);
   
   // Only apply place filter for Leilão format
