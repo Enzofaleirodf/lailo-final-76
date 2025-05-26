@@ -93,7 +93,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
           <FilterSectionComponent title="Características do veículo" isExpanded={true} onToggle={() => {}}>
             <div className="space-y-4">
               <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Modelo:</span>
+                
                 <div className="w-auto flex-1">
                   <ErrorBoundary componentName="ModelFilter">
                     <ModelFilter onFilterChange={onFilterChange} />
