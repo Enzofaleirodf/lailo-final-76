@@ -46,7 +46,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
   // Sempre renderizar o filtro de Categoria primeiro
   return <>
       <div className="flex items-start">
-        <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Categoria:</span>
+        
         <div className="w-auto flex-1">
           <ErrorBoundary componentName="CategoryFilter">
             <FilterSectionComponent title="Categoria" isExpanded={true} onToggle={() => {}}>
