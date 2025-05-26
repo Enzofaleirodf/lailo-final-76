@@ -3,6 +3,14 @@ import { render, screen } from '@testing-library/react';
 import ErrorBoundary from '../components/ErrorBoundary';
 import React from 'react';
 
+// Mock window.location.reload
+const mockReload = vi.fn();
+vi.stubGlobal('document', {
+  location: {
+    reload: mockReload
+  }
+});
+
 // Mock component that throws an error
 const ErrorComponent = ({ shouldThrow = true }: { shouldThrow?: boolean }) => {
   if (shouldThrow) {
@@ -14,6 +22,7 @@ const ErrorComponent = ({ shouldThrow = true }: { shouldThrow?: boolean }) => {
 // Mock console.error to prevent test output pollution
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
+  mockReload.mockClear();
 });
 
 describe('ErrorBoundary', () => {
@@ -71,7 +80,6 @@ describe('ErrorBoundary', () => {
     );
     
     expect(onError).toHaveBeenCalled();
-    // The first argument should be the error
     expect(onError.mock.calls[0][0].message).toBe('Test error');
   });
 });
