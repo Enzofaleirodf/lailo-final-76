@@ -70,7 +70,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
 
           <FilterSectionComponent title="Área útil" isExpanded={true} onToggle={() => {}}>
             <div className="flex items-center">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Área:</span>
+              
               <div className="w-auto flex-1">
                 <ErrorBoundary componentName="UsefulAreaFilter">
                   <UsefulAreaFilter onFilterChange={onFilterChange} />
