@@ -1,4 +1,3 @@
-
 import { useCallback, useRef, useEffect } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FILTER_NAMES } from '@/constants/filterConstants';
@@ -22,7 +21,7 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
     showToasts = false, 
     autoTriggerEvents = true 
   } = props || {};
-  const { filters, lastUpdatedFilter } = useFilterStore();
+  const { filters, lastUpdatedFilter, getActiveFiltersCount } = useFilterStore();
   const prevFilterState = useRef(filters);
   
   // Track scroll position to prevent jumps
@@ -38,6 +37,9 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
     if (autoTriggerEvents) {
       // Store scroll position before sending event
       scrollPositionRef.current = window.scrollY;
+      
+      // Get the count of active filters
+      const activeFilters = getActiveFiltersCount();
       
       // Log the filter change
       logUserAction('apply_filters', {
@@ -58,7 +60,7 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
         window.dispatchEvent(event);
       }, 10);
     }
-  }, [onChange, autoTriggerEvents]);
+  }, [onChange, autoTriggerEvents, getActiveFiltersCount, filters.contentType]);
   
   // Store previous filter state for comparison
   useEffect(() => {
@@ -73,7 +75,7 @@ export const useFilterConsistency = (props?: UseFilterConsistencyProps) => {
         contentType: filters.contentType
       });
     }
-  }, [filters]);
+  }, [filters, lastUpdatedFilter]);
   
   // Cleanup function for any listeners
   const cleanup = useCallback(() => {
