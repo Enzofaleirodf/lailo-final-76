@@ -191,7 +191,7 @@ export const useFilterStore = create<FilterStore>()(
       getActiveFiltersCount: () => {
         const { filters } = get();
         return countActiveFilters(filters);
-      }
+      },
       
       // Get selected origins (for multi-select)
       getSelectedOrigins: () => {
