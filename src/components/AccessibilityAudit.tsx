@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { logError } from '@/utils/errorUtils';
 
+// Define explicit type for accessibility issues
 interface AccessibilityIssue {
   id: string;
   element: string;
@@ -13,17 +14,22 @@ interface AccessibilityIssue {
   helpUrl?: string;
 }
 
+// Define component props interface
+interface AccessibilityAuditProps {
+  // No props for now, but the interface is defined for future extensibility
+}
+
 /**
  * Component that performs a basic accessibility audit on the current page
  * This is a development tool and should not be included in production builds
  */
-const AccessibilityAudit: React.FC = () => {
+const AccessibilityAudit: React.FC<AccessibilityAuditProps> = () => {
   const [issues, setIssues] = useState<AccessibilityIssue[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastRun, setLastRun] = useState<Date | null>(null);
   
   // Run the audit
-  const runAudit = async () => {
+  const runAudit = async (): Promise<void> => {
     setIsRunning(true);
     setIssues([]);
     
@@ -32,7 +38,7 @@ const AccessibilityAudit: React.FC = () => {
       const newIssues: AccessibilityIssue[] = [];
       
       // Check for images without alt text
-      document.querySelectorAll('img').forEach((img, index) => {
+      document.querySelectorAll('img').forEach((img: HTMLImageElement, index: number) => {
         if (!img.hasAttribute('alt')) {
           newIssues.push({
             id: `img-no-alt-${index}`,
@@ -45,7 +51,7 @@ const AccessibilityAudit: React.FC = () => {
       });
       
       // Check for buttons without accessible names
-      document.querySelectorAll('button').forEach((button, index) => {
+      document.querySelectorAll('button').forEach((button: HTMLButtonElement, index: number) => {
         if (!button.textContent?.trim() && 
             !button.getAttribute('aria-label') && 
             !button.getAttribute('aria-labelledby')) {
@@ -60,7 +66,7 @@ const AccessibilityAudit: React.FC = () => {
       });
       
       // Check for form elements without labels
-      document.querySelectorAll('input, select, textarea').forEach((input, index) => {
+      document.querySelectorAll('input, select, textarea').forEach((input: HTMLElement, index: number) => {
         const inputId = input.getAttribute('id');
         if (inputId) {
           const hasLabel = document.querySelector(`label[for="${inputId}"]`);
@@ -94,7 +100,7 @@ const AccessibilityAudit: React.FC = () => {
       });
       
       // Check for links with no text
-      document.querySelectorAll('a').forEach((link, index) => {
+      document.querySelectorAll('a').forEach((link: HTMLAnchorElement, index: number) => {
         if (!link.textContent?.trim() && 
             !link.getAttribute('aria-label') && 
             !link.getAttribute('aria-labelledby') &&
@@ -111,7 +117,7 @@ const AccessibilityAudit: React.FC = () => {
       
       // Check for headings that are not in a logical order
       let lastHeadingLevel = 0;
-      document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((heading, index) => {
+      document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((heading: HTMLHeadingElement, index: number) => {
         const level = parseInt(heading.tagName.substring(1));
         
         if (lastHeadingLevel > 0 && level > lastHeadingLevel + 1) {
@@ -128,7 +134,7 @@ const AccessibilityAudit: React.FC = () => {
       });
       
       // Check for color contrast (this is a basic check and not as accurate as a full color contrast analyzer)
-      document.querySelectorAll('*').forEach((element, index) => {
+      document.querySelectorAll('*').forEach((element: Element, index: number) => {
         const style = window.getComputedStyle(element);
         const color = style.color;
         const backgroundColor = style.backgroundColor;
@@ -161,7 +167,7 @@ const AccessibilityAudit: React.FC = () => {
   };
   
   // Get a CSS selector path for an element
-  const getElementPath = (element: Element): string => {
+  const getElementPath = (element: Element | null): string => {
     if (!element) return 'unknown';
     
     let path = element.tagName.toLowerCase();
@@ -176,7 +182,7 @@ const AccessibilityAudit: React.FC = () => {
   };
   
   // Get a color for the impact level
-  const getImpactColor = (impact: string): string => {
+  const getImpactColor = (impact: AccessibilityIssue['impact']): string => {
     switch (impact) {
       case 'critical':
         return 'bg-red-100 text-red-800 border-red-200';
@@ -255,4 +261,5 @@ const AccessibilityAudit: React.FC = () => {
   );
 };
 
-export default AccessibilityAudit;
+// Export with React.memo to prevent unnecessary re-renders
+export default React.memo(AccessibilityAudit);
