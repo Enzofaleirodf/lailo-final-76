@@ -18,18 +18,23 @@ const VehicleTypeFilter: React.FC<VehicleTypeFilterProps> = ({ onFilterChange })
   let availableTypes = getTypesByCategory(category, 'vehicle');
   
   // Ordenar alfabeticamente
-  if (availableTypes.includes('Todos')) {
+  // Make sure we always have 'Todos' as an option
+  if (!availableTypes.includes('Todos')) {
+    availableTypes = ['Todos', ...availableTypes];
+  } else {
     const todosIndex = availableTypes.indexOf('Todos');
     availableTypes.splice(todosIndex, 1);
     availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
     availableTypes.unshift('Todos');
-  } else {
-    availableTypes.sort((a, b) => a.localeCompare(b, 'pt-BR'));
   }
   
   const handleVehicleTypeChange = useCallback((value: string) => {
     // Convert to array with single value for compatibility with existing filter logic
-    updateFilter('vehicleTypes', value ? [value] : []);
+    if (value === 'Todos') {
+      updateFilter('vehicleTypes', []);
+    } else {
+      updateFilter('vehicleTypes', value ? [value] : []);
+    }
     
     // Notify parent component that filter has changed
     if (onFilterChange) {

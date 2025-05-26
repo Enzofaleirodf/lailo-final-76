@@ -95,14 +95,19 @@ export const applyPropertyFilters = (
     
     filteredItems = filteredItems.filter(property => {
       if (!property.propertyInfo || !property.propertyInfo.type) return false;
-      return categoryTypes.includes(property.propertyInfo.type) || categoryTypes.includes('Todos');
+      // Check if the property type is included in the category types or if the category includes 'Todos'
+      return categoryTypes.includes('Todos') || categoryTypes.includes(property.propertyInfo.type);
     });
   }
   
-  if (filters.propertyTypes.length > 0 && !filters.propertyTypes.includes('todos') && !filters.propertyTypes.includes('Todos')) {
+  // Only apply property type filter if specific types are selected
+  if (filters.propertyTypes && filters.propertyTypes.length > 0 && 
+      !filters.propertyTypes.includes('todos') && 
+      !filters.propertyTypes.includes('Todos')) {
     filteredItems = filteredItems.filter(property => {
       if (property.propertyInfo && property.propertyInfo.type) {
         return filters.propertyTypes.some(filterType => 
+          property.propertyInfo.type === filterType || 
           property.propertyInfo.type.toLowerCase() === filterType.toLowerCase()
         );
       }
@@ -133,10 +138,30 @@ export const applyVehicleFilters = (
 ): AuctionItem[] => {
   let filteredItems = [...items];
   
-  if (filters.vehicleTypes.length > 0) {
+  // Apply category filter first
+  if (filters.category && filters.category !== 'Todos') {
+    const categoryTypes = vehicleCategoryToTypesMap[filters.category] || [];
+    
     filteredItems = filteredItems.filter(auction => {
       if (!auction.vehicleInfo || !auction.vehicleInfo.type) return false;
-      return filters.vehicleTypes.includes(auction.vehicleInfo.type);
+      // If 'Todos' is in the category types, include all vehicles of this category
+      return categoryTypes.includes('Todos') || 
+             categoryTypes.some(type => 
+               auction.vehicleInfo.type.toLowerCase() === type.toLowerCase()
+             );
+    });
+  }
+  
+  // Then apply specific vehicle type filter if selected
+  if (filters.vehicleTypes && filters.vehicleTypes.length > 0 && 
+      !filters.vehicleTypes.includes('todos') && 
+      !filters.vehicleTypes.includes('Todos')) {
+    filteredItems = filteredItems.filter(auction => {
+      if (!auction.vehicleInfo || !auction.vehicleInfo.type) return false;
+      return filters.vehicleTypes.some(type => 
+        auction.vehicleInfo.type === type || 
+        auction.vehicleInfo.type.toLowerCase() === type.toLowerCase()
+      );
     });
   }
   
