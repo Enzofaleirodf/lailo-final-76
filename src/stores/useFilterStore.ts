@@ -142,7 +142,7 @@ export const useFilterStore = create<FilterStore>()(
             propertyTypes: [],
           }, 
           activeFilters: 0,
-          lastUpdatedFilter: 'reset'
+          lastUpdatedFilter: 'reset',
           selectedOrigins: ['Extrajudicial'],
           selectedPlaces: ['Praça Única']
         }));
