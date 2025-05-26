@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import { Filter, ArrowUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { COLORS } from '@/constants/designSystem';
-import { Button } from '@/components/ui/button';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useScreenUtils } from './use-screen-utils';
 import { logUserAction } from '@/utils/loggingUtils';
@@ -46,12 +45,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
   return (
     <>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
-      <Button
-        variant="ghost"
+      <button 
         onClick={handleFilterClick} 
         onKeyDown={(e) => handleKeyDown(e, handleFilterClick)}
         className={cn(
-          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 rounded-none border-0",
+          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors relative",
           getButtonSizeClass()
         )}
@@ -68,16 +66,15 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
             aria-hidden="true" // Usamos aria-hidden porque já incluímos a contagem no aria-label do botão
           >
             {activeFilters}
-          </span> 
+          </span>
         )}
-      </Button>
+      </button>
       <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
-      <Button
-        variant="ghost"
+      <button 
         onClick={handleSortClick} 
         onKeyDown={(e) => handleKeyDown(e, handleSortClick)}
         className={cn(
-          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50 rounded-none border-0",
+          "flex-1 flex items-center justify-center gap-2 text-sm font-normal bg-white text-gray-600 hover:bg-gray-50",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500 transition-colors",
           getButtonSizeClass()
         )}
@@ -87,7 +84,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onFilterClick, onSortClic
       >
         <ArrowUpDown size={getIconSize()} className="shrink-0" aria-hidden="true" />
         {showLabels && <span className="transition-opacity">Ordenar</span>}
-      </Button>
+      </button>
     </>
   );
 };

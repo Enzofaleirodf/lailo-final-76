@@ -3,23 +3,14 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-// Define breakpoints for better responsiveness
-const BREAKPOINTS = {
-  xs: 375,
-  sm: 640,
-  md: 768,
-  lg: 1024
-};
-
 /**
  * Hook para funções utilitárias relacionadas ao tamanho da tela
  * para o MobileFilterBar e componentes relacionados
  */
 export function useScreenUtils() {
   // Usar breakpoints pré-definidos para melhor consistência
-  const isExtraSmallScreen = useMediaQuery(`(max-width: ${BREAKPOINTS.xs}px)`);
-  const isVerySmallScreen = useMediaQuery('(max-width: 340px)');
-  const isTablet = useMediaQuery(`(min-width: ${BREAKPOINTS.sm}px) and (max-width: ${BREAKPOINTS.md}px)`);
+  const isExtraSmallScreen = useMediaQuery('xs');
+  const isVerySmallScreen = useMediaQuery('(max-width: 320px)');
   
   // Estado para animação de transição
   const [showLabels, setShowLabels] = useState(!isExtraSmallScreen);
@@ -31,13 +22,13 @@ export function useScreenUtils() {
   
   // Classes dinamicamente calculadas com base no tamanho da tela
   const getButtonSizeClass = () => {
-    if (isVerySmallScreen) return "h-10 py-1";
-    if (isExtraSmallScreen) return "h-10 py-1.5";
-    return "h-10 py-2";
+    if (isVerySmallScreen) return "w-9 h-9";
+    if (isExtraSmallScreen) return "w-10 h-10";
+    return "h-10";
   };
   
   const getIconSize = () => {
-    return isVerySmallScreen ? 16 : isExtraSmallScreen ? 17 : 18;
+    return isVerySmallScreen ? 16 : 18;
   };
   
   const getFilterBadgeClass = () => {
@@ -54,7 +45,6 @@ export function useScreenUtils() {
   return {
     isExtraSmallScreen,
     isVerySmallScreen,
-    isTablet,
     showLabels,
     getButtonSizeClass,
     getIconSize,

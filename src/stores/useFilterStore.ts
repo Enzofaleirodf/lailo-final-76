@@ -26,8 +26,6 @@ interface FilterStore extends FilterStoreState {
   getSelectedPlaces: () => FilterPlace[];
   updateMultipleOrigins: (origins: FilterOrigin[]) => void;
   updateMultiplePlaces: (places: FilterPlace[]) => void;
-  selectedOrigins: FilterOrigin[];
-  selectedPlaces: FilterPlace[];
 }
 
 // Count active filters to show in badge
@@ -96,8 +94,6 @@ export const useFilterStore = create<FilterStore>()(
       expandedSections: DEFAULT_EXPANDED_SECTIONS,
       activeFilters: 0,
       lastUpdatedFilter: 'initial',
-      selectedOrigins: ['Extrajudicial'],
-      selectedPlaces: ['Praça Única'],
       
       // Update a specific filter value
       updateFilter: (key, value) => {
@@ -143,8 +139,6 @@ export const useFilterStore = create<FilterStore>()(
           }, 
           activeFilters: 0,
           lastUpdatedFilter: 'reset'
-          selectedOrigins: ['Extrajudicial'],
-          selectedPlaces: ['Praça Única']
         }));
       },
       
@@ -157,17 +151,10 @@ export const useFilterStore = create<FilterStore>()(
             vehicleTypes: newFilters.vehicleTypes || [], // Ensure arrays are initialized
             propertyTypes: newFilters.propertyTypes || [],
           };
-          
-          // Update selected origins and places
-          const selectedOrigins = newFilters.origin ? [newFilters.origin as FilterOrigin] : state.selectedOrigins;
-          const selectedPlaces = newFilters.place ? [newFilters.place as FilterPlace] : state.selectedPlaces;
-          
           return { 
             filters: updatedFilters, 
             activeFilters: countActiveFilters(updatedFilters),
-            lastUpdatedFilter: 'bulk',
-            selectedOrigins,
-            selectedPlaces
+            lastUpdatedFilter: 'bulk'
           };
         });
       },
@@ -204,16 +191,18 @@ export const useFilterStore = create<FilterStore>()(
       getActiveFiltersCount: () => {
         const { filters } = get();
         return countActiveFilters(filters);
-      },
+      }
       
       // Get selected origins (for multi-select)
       getSelectedOrigins: () => {
-        return get().selectedOrigins;
+        const { filters } = get();
+        return [filters.origin];
       },
       
       // Get selected places (for multi-select)
       getSelectedPlaces: () => {
-        return get().selectedPlaces;
+        const { filters } = get();
+        return [filters.place];
       },
       
       // Update multiple origins
@@ -221,19 +210,15 @@ export const useFilterStore = create<FilterStore>()(
         if (origins.length === 0) return;
         
         set((state) => {
-          // Store all selected origins
-          const selectedOrigins = [...origins];
-          
           const newFilters = { 
             ...state.filters, 
-            origin: origins[0] // Keep the first one as the main filter for backward compatibility
+            origin: origins[0] 
           };
           
           return { 
             filters: newFilters, 
             activeFilters: countActiveFilters(newFilters),
-            lastUpdatedFilter: 'origin',
-            selectedOrigins
+            lastUpdatedFilter: 'origin'
           };
         });
       },
@@ -243,19 +228,15 @@ export const useFilterStore = create<FilterStore>()(
         if (places.length === 0) return;
         
         set((state) => {
-          // Store all selected places
-          const selectedPlaces = [...places];
-          
           const newFilters = { 
             ...state.filters, 
-            place: places[0] // Keep the first one as the main filter for backward compatibility
+            place: places[0] 
           };
           
           return { 
             filters: newFilters, 
             activeFilters: countActiveFilters(newFilters),
-            lastUpdatedFilter: 'place',
-            selectedPlaces
+            lastUpdatedFilter: 'place'
           };
         });
       }
