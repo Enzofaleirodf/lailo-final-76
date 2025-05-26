@@ -1,4 +1,3 @@
-
 import React from 'react';
 import FilterSectionComponent from '../FilterSectionComponent';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -14,7 +13,6 @@ import YearRangeFilter from '../YearRangeFilter';
 import PriceRangeFilter from '../PriceRangeFilter';
 import UsefulAreaFilter from '../UsefulAreaFilter';
 import CategoryFilter from '../CategoryFilter';
-
 interface FilterSectionsProps {
   onFilterChange: () => void;
 }
@@ -22,12 +20,20 @@ interface FilterSectionsProps {
 /**
  * ContentTypeFilters - Conditionally renders filter sections based on content type
  */
-export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { filters, expandedSections, toggleSection } = useFilterStore();
+export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
+  onFilterChange
+}) => {
+  const {
+    filters,
+    expandedSections,
+    toggleSection
+  } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
-  const { category } = filters;
-  const showTypeFilter = category && category !== 'Todos'; 
-  
+  const {
+    category
+  } = filters;
+  const showTypeFilter = category && category !== 'Todos';
+
   // Log which filters are being shown
   React.useEffect(() => {
     logUserAction('content_type_filters_rendered', {
@@ -38,85 +44,57 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
   }, [filters.contentType, category, showTypeFilter]);
 
   // Sempre renderizar o filtro de Categoria primeiro
-  return (
-    <>
+  return <>
       <div className="flex items-start">
         <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Categoria:</span>
         <div className="w-auto flex-1">
           <ErrorBoundary componentName="CategoryFilter">
-            <FilterSectionComponent 
-              title="Categoria" 
-              isExpanded={true} 
-              onToggle={() => {}}
-            >
+            <FilterSectionComponent title="Categoria" isExpanded={true} onToggle={() => {}}>
               <CategoryFilter onFilterChange={onFilterChange} />
             </FilterSectionComponent>
           </ErrorBoundary>
         </div>
       </div>
 
-      {isPropertyMode ? (
-        <>
-          {showTypeFilter && (
-            <div className="flex items-start">
+      {isPropertyMode ? <>
+          {showTypeFilter && <div className="flex items-start">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Tipo:</span>
               <div className="w-auto flex-1">
                 <ErrorBoundary componentName="PropertyTypeFilter">
-                  <FilterSectionComponent 
-                    title="Tipo de imóvel" 
-                    isExpanded={true} 
-                    onToggle={() => {}}
-                  >
+                  <FilterSectionComponent title="Tipo de imóvel" isExpanded={true} onToggle={() => {}}>
                     <PropertyTypeFilter onFilterChange={onFilterChange} />
                   </FilterSectionComponent>
                 </ErrorBoundary>
               </div>
-            </div>
-          )}
+            </div>}
 
           <div className="flex items-start">
             <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Área:</span>
             <div className="w-auto flex-1">
               <ErrorBoundary componentName="UsefulAreaFilter">
-                <FilterSectionComponent 
-                  title="Área útil" 
-                  isExpanded={true} 
-                  onToggle={() => {}}
-                >
+                <FilterSectionComponent title="Área útil" isExpanded={true} onToggle={() => {}}>
                   <UsefulAreaFilter onFilterChange={onFilterChange} />
                 </FilterSectionComponent>
               </ErrorBoundary>
             </div>
           </div>
-        </>
-      ) : (
-        <>
-          {showTypeFilter && (
-            <div className="flex items-start">
+        </> : <>
+          {showTypeFilter && <div className="flex items-start">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Tipo:</span>
               <div className="w-auto flex-1">
                 <ErrorBoundary componentName="VehicleTypeFilter">
-                  <FilterSectionComponent 
-                    title="Tipo de veículo" 
-                    isExpanded={true} 
-                    onToggle={() => {}}
-                  >
+                  <FilterSectionComponent title="Tipo de veículo" isExpanded={true} onToggle={() => {}}>
                     <VehicleTypeFilter onFilterChange={onFilterChange} />
                   </FilterSectionComponent>
                 </ErrorBoundary>
               </div>
-            </div>
-          )}
+            </div>}
 
           <div className="flex items-start">
             <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Detalhes:</span>
             <div className="w-auto flex-1">
               <ErrorBoundary componentName="VehicleCharacteristics">
-                <FilterSectionComponent 
-                  title="Características do veículo" 
-                  isExpanded={true} 
-                  onToggle={() => {}}
-                >
+                <FilterSectionComponent title="Características do veículo" isExpanded={true} onToggle={() => {}}>
                   <div className="space-y-4">
                     <div className="flex items-center">
                       <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Modelo:</span>
@@ -147,60 +125,55 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({ onFilterChan
               </ErrorBoundary>
               </div>
           </div>
-        </>
-      )}
-    </>
-  );
+        </>}
+    </>;
 };
 
 /**
  * CommonFilters - Renders filter sections common to all content types
  */
-export const CommonFilters: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { expandedSections, toggleSection, filters } = useFilterStore();
+export const CommonFilters: React.FC<FilterSectionsProps> = ({
+  onFilterChange
+}) => {
+  const {
+    expandedSections,
+    toggleSection,
+    filters
+  } = useFilterStore();
   const isPropertyMode = filters.contentType === 'property';
-  
-  return (
-    <>
+  return <>
       <div className="flex items-start">
-        <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Local:</span>
+        
         <div className="w-auto flex-1">
           <ErrorBoundary componentName="LocationFilter">
-            <FilterSectionComponent 
-              title="Localização" 
-              isExpanded={true} 
-              onToggle={() => {}}
-            >
+            <FilterSectionComponent title="Localização" isExpanded={true} onToggle={() => {}}>
               <LocationFilter onFilterChange={onFilterChange} />
             </FilterSectionComponent>
           </ErrorBoundary>
         </div>
       </div>
-    </>
-  );
+    </>;
 };
 
 /**
  * PriceFilter - Renders the price filter section separately to position it at the end
  * This ensures it appears as the last filter in both property and vehicle modes
  */
-export const PriceFilter: React.FC<FilterSectionsProps> = ({ onFilterChange }) => {
-  const { expandedSections, toggleSection } = useFilterStore();
-  
-  return (
-    <div className="flex items-start">
+export const PriceFilter: React.FC<FilterSectionsProps> = ({
+  onFilterChange
+}) => {
+  const {
+    expandedSections,
+    toggleSection
+  } = useFilterStore();
+  return <div className="flex items-start">
       <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Valor:</span>
       <div className="w-auto flex-1">
         <ErrorBoundary componentName="PriceRangeFilter">
-          <FilterSectionComponent 
-            title="Valor do lance atual" 
-            isExpanded={true} 
-            onToggle={() => {}}
-          >
+          <FilterSectionComponent title="Valor do lance atual" isExpanded={true} onToggle={() => {}}>
             <PriceRangeFilter onFilterChange={onFilterChange} />
           </FilterSectionComponent>
         </ErrorBoundary>
       </div>
-    </div>
-  );
+    </div>;
 };
