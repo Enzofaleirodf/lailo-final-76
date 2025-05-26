@@ -135,7 +135,7 @@ const loadAuctionParams = (
   
   if (searchParams.has('origin')) {
     const origin = searchParams.get('origin');
-    if (isValidOrigin(origin) && origin !== 'Todas') {
+    if (isValidOrigin(origin) && origin !== 'Extrajudicial') {
       newFilters.origin = origin;
       hasChanges = true;
     }
@@ -143,7 +143,7 @@ const loadAuctionParams = (
   
   if (searchParams.has('place')) {
     const place = searchParams.get('place');
-    if (isValidPlace(place) && place !== 'Todas') {
+    if (isValidPlace(place) && place !== 'Praça Única') {
       newFilters.place = place;
       hasChanges = true;
     }

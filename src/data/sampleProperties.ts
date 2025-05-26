@@ -71,7 +71,7 @@ export const sampleProperties: PropertyItem[] = [
     bidCount: 5,
     format: "Venda Direta",
     origin: "Particular",
-    place: "Praça única",
+    place: 'Praça Única',
     createdAt: new Date(2025, 5, 15)
   },
   {
@@ -160,7 +160,7 @@ export const sampleProperties: PropertyItem[] = [
     bidCount: 9,
     format: "Venda Direta",
     origin: "Extrajudicial",
-    place: "Praça única",
+    place: 'Praça Única',
     createdAt: new Date(2025, 6, 15)
   },
   {
@@ -290,7 +290,7 @@ export const sampleProperties: PropertyItem[] = [
     bidCount: 7,
     format: "Venda Direta",
     origin: "Particular",
-    place: "Praça única",
+    place: 'Praça Única',
     createdAt: new Date(2025, 8, 1)
   },
   

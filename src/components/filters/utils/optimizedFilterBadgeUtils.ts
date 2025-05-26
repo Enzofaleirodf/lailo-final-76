@@ -249,10 +249,10 @@ export const createFormatBadge = (format: string, onRemove: () => void): FilterB
   createSimpleBadge('format', format, 'Todos', 'Formato', onRemove);
 
 export const createOriginBadge = (origin: string, onRemove: () => void): FilterBadge | null => 
-  createSimpleBadge('origin', origin, 'Todas', 'Origem', onRemove);
+  createSimpleBadge('origin', origin, 'Extrajudicial', 'Origem', onRemove);
 
 export const createPlaceBadge = (place: string, onRemove: () => void): FilterBadge | null => 
-  createSimpleBadge('place', place, 'Todas', 'Etapa', onRemove);
+  createSimpleBadge('place', place, 'Praça Única', 'Etapa', onRemove);
 
 /**
  * Generate all filter badges based on current filter state with optimized caching
@@ -343,14 +343,14 @@ export const generateFilterBadges = (
   // Add origin badge
   const originBadge = createOriginBadge(
     filters.origin,
-    () => updateFilter('origin', 'Todas')
+    () => updateFilter('origin', 'Extrajudicial')
   );
   if (originBadge) badges.push(originBadge);
   
   // Add place badge
   const placeBadge = createPlaceBadge(
     filters.place,
-    () => updateFilter('place', 'Todas')
+    () => updateFilter('place', 'Praça Única')
   );
   if (placeBadge) badges.push(placeBadge);
   

@@ -191,7 +191,7 @@ export const createOriginBadge = (
   origin: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!origin || origin === 'Todas') return null;
+  if (!origin || origin === 'Extrajudicial') return null;
   
   return {
     key: 'origin',
@@ -207,7 +207,7 @@ export const createPlaceBadge = (
   place: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!place || place === 'Todas') return null;
+  if (!place || place === 'Praça Única') return null;
   
   return {
     key: 'place',
@@ -305,14 +305,14 @@ export const generateFilterBadges = (
   // Add origin badge
   const originBadge = createOriginBadge(
     filters.origin,
-    () => updateFilter('origin', 'Todas')
+    () => updateFilter('origin', 'Extrajudicial')
   );
   if (originBadge) badges.push(originBadge);
   
   // Add place badge
   const placeBadge = createPlaceBadge(
     filters.place,
-    () => updateFilter('place', 'Todas')
+    () => updateFilter('place', 'Praça Única')
   );
   if (placeBadge) badges.push(placeBadge);
   

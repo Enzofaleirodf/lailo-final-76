@@ -23,8 +23,8 @@ export const hasFilterChanged = (currentFilters: FilterState, params: URLSearchP
   const formatParam = params.get('format') || 'Leilão';
   if (formatParam !== currentFilters.format) return true;
   
-  if ((params.get('origin') || 'Todas') !== currentFilters.origin) return true;
-  if ((params.get('place') || 'Todas') !== currentFilters.place) return true;
+  if ((params.get('origin') || 'Extrajudicial') !== currentFilters.origin) return true;
+  if ((params.get('place') || 'Praça Única') !== currentFilters.place) return true;
   
   return false;
 };
@@ -190,13 +190,13 @@ const updateAuctionParams = (params: URLSearchParams, filters: FilterState): voi
     params.delete('format');
   }
   
-  if (filters.origin !== 'Todas') {
+  if (filters.origin !== 'Extrajudicial') {
     params.set('origin', filters.origin);
   } else {
     params.delete('origin');
   }
   
-  if (filters.place !== 'Todas') {
+  if (filters.place !== 'Praça Única') {
     params.set('place', filters.place);
   } else {
     params.delete('place');
