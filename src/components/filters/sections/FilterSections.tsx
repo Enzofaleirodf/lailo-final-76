@@ -105,7 +105,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Cor:</span>
+                      
                       <div className="w-auto flex-1">
                         <ErrorBoundary componentName="ColorFilter">
                           <ColorFilter onFilterChange={onFilterChange} />
