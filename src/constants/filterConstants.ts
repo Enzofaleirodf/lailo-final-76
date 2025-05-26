@@ -138,7 +138,7 @@ export const FILTER_NAMES = {
   color: 'Cor',
   format: 'Formato',
   origin: 'Origem',
-  place: 'Etapa',
+  place: 'Praça',
   category: 'Categoria'
 };
 

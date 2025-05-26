@@ -106,7 +106,7 @@ const MobileFilterOptions: React.FC = () => {
       </FilterSectionComponent>
 
       <FilterSectionComponent 
-        title="Etapa" 
+        title="Praça" 
         isExpanded={expandedSections.place} 
         onToggle={handleTogglePlace}
       >
@@ -119,17 +119,25 @@ const MobileFilterOptions: React.FC = () => {
           className="flex flex-wrap gap-2"
           disabled={filters.format === 'Venda Direta'}
         >
-          {placeOptions.map(option => (
-            <ToggleGroupItem 
-              key={option.value} 
-              value={option.value}
-              className="text-sm"
-              aria-label={`Etapa: ${option.label}`}
-              disabled={filters.format === 'Venda Direta'}
-            >
-              {option.label}
-            </ToggleGroupItem>
-          ))}
+          {placeOptions.map(option => {
+            // Simplify the display text for place options
+            const displayText = option.value === 'Praça Única' ? 'Única' : 
+                               option.value === '1ª Praça' ? '1ª' :
+                               option.value === '2ª Praça' ? '2ª' :
+                               option.value === '3ª Praça' ? '3ª' : option.label;
+            
+            return (
+              <ToggleGroupItem 
+                key={option.value} 
+                value={option.value}
+                className="text-sm"
+                aria-label={`Praça: ${option.label}`}
+                disabled={filters.format === 'Venda Direta'}
+              >
+                {displayText}
+              </ToggleGroupItem>
+            );
+          })}
         </ToggleGroup>
       </FilterSectionComponent>
     </div>

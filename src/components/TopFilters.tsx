@@ -5,12 +5,6 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
 import { logUserAction } from '@/utils/loggingUtils';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/filters';
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
@@ -65,7 +59,6 @@ const TopFilters: React.FC = () => {
 
   // Estilo base comum para todos os componentes
   const baseContainerStyle = "h-10 shadow-sm rounded-lg overflow-hidden border border-gray-200";
-  const baseDropdownStyle = "h-10 flex items-center justify-between px-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 font-urbanist shadow-sm rounded-lg border border-gray-200";
 
   // Set aria attributes for accessibility
   const getTabAttributes = (type: ContentType) => {
@@ -81,13 +74,9 @@ const TopFilters: React.FC = () => {
 
   return (
     <ErrorBoundary componentName="TopFilters">
-      <div 
-        className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" 
-        role="navigation" 
-        aria-label="Filtros rápidos"
-      >
+      <div className="flex flex-wrap gap-4 mb-6" role="navigation" aria-label="Filtros rápidos">
         {/* Primeiro componente - Tipo de conteúdo */}
-        <div className={`${COLORS.bg.white} ${baseContainerStyle}`}>
+        <div className={`${COLORS.bg.white} ${baseContainerStyle} w-full md:w-auto md:flex-1`}>
           <div className="flex h-10" role="tablist" aria-label="Tipo de conteúdo">
             <button 
               onClick={() => handleContentTypeChange('property')}
@@ -124,77 +113,91 @@ const TopFilters: React.FC = () => {
         </div>
         
         {/* Format Dropdown */}
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Formato:</label>
-          <ToggleGroup 
-            type="single" 
-            value={filters.format} 
-            onValueChange={(value) => {
-              if (value) handleFilterChange('format', value as FilterFormat);
-            }}
-            className="flex"
-          >
-            {formatOptions.map(option => (
-              <ToggleGroupItem 
-                key={option.value} 
-                value={option.value}
-                className="text-sm"
-                aria-label={`Formato: ${option.label}`}
-              >
-                {option.label}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+        <div className="flex items-center gap-2 h-10 w-full md:w-auto md:flex-1">
+          <span className="text-sm text-gray-500 whitespace-nowrap">Formato:</span>
+          <div className="flex-1">
+            <ToggleGroup 
+              type="single" 
+              value={filters.format} 
+              onValueChange={(value) => {
+                if (value) handleFilterChange('format', value as FilterFormat);
+              }}
+              className="flex w-full"
+            >
+              {formatOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-sm flex-1 whitespace-nowrap"
+                  aria-label={`Formato: ${option.label}`}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
         </div>
   
         {/* Origin Dropdown */}
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Origem:</label>
-          <ToggleGroup 
-            type="multiple" 
-            value={[filters.origin]} 
-            onValueChange={(value) => {
-              if (value.length > 0) handleFilterChange('origin', value[0] as FilterOrigin);
-            }}
-            className="flex"
-          >
-            {originOptions.map(option => (
-              <ToggleGroupItem 
-                key={option.value} 
-                value={option.value}
-                className="text-sm"
-                aria-label={`Origem: ${option.label}`}
-              >
-                {option.label}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+        <div className="flex items-center gap-2 h-10 w-full md:w-auto md:flex-1">
+          <span className="text-sm text-gray-500 whitespace-nowrap">Origem:</span>
+          <div className="flex-1">
+            <ToggleGroup 
+              type="multiple" 
+              value={[filters.origin]} 
+              onValueChange={(value) => {
+                if (value.length > 0) handleFilterChange('origin', value[0] as FilterOrigin);
+              }}
+              className="flex w-full"
+            >
+              {originOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-sm flex-1 whitespace-nowrap"
+                  aria-label={`Origem: ${option.label}`}
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
         </div>
   
         {/* Place options */}
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Etapa:</label>
-          <ToggleGroup 
-            type="multiple" 
-            value={[filters.place]} 
-            onValueChange={(value) => {
-              if (value.length > 0) handleFilterChange('place', value[0] as FilterPlace);
-            }}
-            className="flex"
-            disabled={filters.format === 'Venda Direta'}
-          >
-            {placeOptions.map(option => (
-              <ToggleGroupItem 
-                key={option.value} 
-                value={option.value}
-                className="text-sm"
-                aria-label={`Etapa: ${option.label}`}
-                disabled={filters.format === 'Venda Direta'}
-              >
-                {option.label}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+        <div className="flex items-center gap-2 h-10 w-full md:w-auto md:flex-1">
+          <span className="text-sm text-gray-500 whitespace-nowrap">Praça:</span>
+          <div className="flex-1">
+            <ToggleGroup 
+              type="multiple" 
+              value={[filters.place]} 
+              onValueChange={(value) => {
+                if (value.length > 0) handleFilterChange('place', value[0] as FilterPlace);
+              }}
+              className="flex w-full"
+              disabled={filters.format === 'Venda Direta'}
+            >
+              {placeOptions.map(option => {
+                // Simplify the display text for place options
+                const displayText = option.value === 'Praça Única' ? 'Única' : 
+                                   option.value === '1ª Praça' ? '1ª' :
+                                   option.value === '2ª Praça' ? '2ª' :
+                                   option.value === '3ª Praça' ? '3ª' : option.label;
+                
+                return (
+                  <ToggleGroupItem 
+                    key={option.value} 
+                    value={option.value}
+                    className="text-sm flex-1 whitespace-nowrap"
+                    aria-label={`Praça: ${option.label}`}
+                    disabled={filters.format === 'Venda Direta'}
+                  >
+                    {displayText}
+                  </ToggleGroupItem>
+                );
+              })}
+            </ToggleGroup>
+          </div>
         </div>
       </div>
     </ErrorBoundary>

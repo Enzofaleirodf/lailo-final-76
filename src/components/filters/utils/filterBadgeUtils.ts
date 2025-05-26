@@ -211,7 +211,7 @@ export const createPlaceBadge = (
   
   return {
     key: 'place',
-    label: `Etapa: ${place}`,
+    label: `Praça: ${place}`,
     onRemove
   };
 };

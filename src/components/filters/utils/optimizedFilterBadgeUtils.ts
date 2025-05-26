@@ -252,7 +252,7 @@ export const createOriginBadge = (origin: string, onRemove: () => void): FilterB
   createSimpleBadge('origin', origin, 'Extrajudicial', 'Origem', onRemove);
 
 export const createPlaceBadge = (place: string, onRemove: () => void): FilterBadge | null => 
-  createSimpleBadge('place', place, 'Praça Única', 'Etapa', onRemove);
+  createSimpleBadge('place', place, 'Praça Única', 'Praça', onRemove);
 
 /**
  * Generate all filter badges based on current filter state with optimized caching
