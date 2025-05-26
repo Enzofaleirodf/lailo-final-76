@@ -13,69 +13,8 @@ const getRandomPrice = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-// Helper function to create additional auction items
-const createAdditionalAuctions = (baseCount: number, total: number): AuctionItem[] => {
-  const additionalAuctions: AuctionItem[] = [];
-  const vehicleTypes = ['car', 'motorcycle', 'truck'];
-  const colors = ['Preto', 'Branco', 'Prata', 'Vermelho', 'Azul', 'Cinza', 'Verde', 'Amarelo'];
-  const brands = ['Honda', 'Toyota', 'Volkswagen', 'Ford', 'Chevrolet', 'Fiat', 'Hyundai', 'BMW', 'Mercedes', 'Audi'];
-  const models = {
-    Honda: ['Civic', 'City', 'Fit', 'HR-V', 'CR-V'],
-    Toyota: ['Corolla', 'Yaris', 'Hilux', 'RAV4', 'Etios'],
-    Volkswagen: ['Golf', 'Polo', 'T-Cross', 'Virtus', 'Tiguan'],
-    Ford: ['Ka', 'EcoSport', 'Ranger', 'Focus', 'Mustang'],
-    Chevrolet: ['Onix', 'Cruze', 'S10', 'Tracker', 'Spin'],
-    Fiat: ['Uno', 'Argo', 'Toro', 'Strada', 'Mobi'],
-    Hyundai: ['HB20', 'Creta', 'i30', 'Tucson', 'Santa Fe'],
-    BMW: ['320i', 'X1', 'X3', 'X5', '118i'],
-    Mercedes: ['Classe A', 'Classe C', 'GLA', 'GLC', 'CLA'],
-    Audi: ['A3', 'A4', 'Q3', 'Q5', 'A1']
-  };
-  const locations = ['São Paulo, SP', 'Rio de Janeiro, RJ', 'Belo Horizonte, MG', 'Brasília, DF', 'Curitiba, PR', 'Porto Alegre, RS', 'Salvador, BA', 'Recife, PE', 'Fortaleza, CE'];
-  const origins: ("Judicial" | "Extrajudicial")[] = ['Judicial', 'Extrajudicial'];
-  const places: ("Praça única" | "1ª Praça" | "2ª Praça" | "3ª Praça")[] = ['1ª Praça', '2ª Praça', 'Praça única'];
-  const formats: ("Leilão" | "Venda Direta")[] = ['Leilão', 'Venda Direta'];
-  const years = [2018, 2019, 2020, 2021, 2022, 2023];
-
-  for (let i = baseCount; i < total; i++) {
-    const brand = brands[Math.floor(Math.random() * brands.length)];
-    const model = models[brand as keyof typeof models][Math.floor(Math.random() * models[brand as keyof typeof models].length)];
-    const year = years[Math.floor(Math.random() * years.length)];
-    const vehicleType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
-    const currentBid = getRandomPrice(30000, 150000);
-    const hasDiscount = Math.random() > 0.5;
-    const originalPrice = hasDiscount ? currentBid * (1 + Math.random() * 0.3) : undefined;
-    
-    additionalAuctions.push({
-      id: `gen-${i}`,
-      title: `${brand} ${model} ${year}`,
-      description: `Veículo em bom estado, documentação em dia.`,
-      currentBid,
-      minBid: currentBid - 5000,
-      originalPrice,
-      imageUrl: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2970&auto=format&fit=crop',
-      endDate: getRandomFutureDate(),
-      location: locations[Math.floor(Math.random() * locations.length)],
-      vehicleInfo: {
-        brand,
-        model,
-        year,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        type: vehicleType,
-        mileage: Math.floor(Math.random() * 100000)
-      },
-      bidCount: Math.floor(Math.random() * 20) + 1,
-      format: formats[Math.floor(Math.random() * formats.length)],
-      origin: origins[Math.floor(Math.random() * origins.length)],
-      place: places[Math.floor(Math.random() * places.length)],
-      createdAt: new Date()
-    });
-  }
-  
-  return additionalAuctions;
-};
-
 export const sampleAuctions: AuctionItem[] = [
+  // LEVES - CARROS
   {
     id: '1',
     title: 'Honda Civic EX 2020',
@@ -90,7 +29,7 @@ export const sampleAuctions: AuctionItem[] = [
       model: 'Civic EX',
       year: 2020,
       color: 'Prata',
-      type: 'car',
+      type: 'Carros',
       mileage: 35000
     },
     bidCount: 12,
@@ -113,7 +52,7 @@ export const sampleAuctions: AuctionItem[] = [
       model: 'Corolla XEI',
       year: 2019,
       color: 'Branco',
-      type: 'car',
+      type: 'Carros',
       mileage: 45000
     },
     bidCount: 8,
@@ -122,6 +61,8 @@ export const sampleAuctions: AuctionItem[] = [
     place: '2ª Praça',
     createdAt: new Date()
   },
+  
+  // LEVES - MOTOS
   {
     id: '3',
     title: 'Yamaha MT-07 2021',
@@ -136,7 +77,7 @@ export const sampleAuctions: AuctionItem[] = [
       model: 'MT-07',
       year: 2021,
       color: 'Azul',
-      type: 'motorcycle',
+      type: 'Motos',
       mileage: 8000
     },
     bidCount: 15,
@@ -147,43 +88,45 @@ export const sampleAuctions: AuctionItem[] = [
   },
   {
     id: '4',
-    title: 'Volkswagen Golf GTI 2018',
-    description: 'Hatch esportivo, todas as revisões em concessionária.',
-    currentBid: 110000,
-    minBid: 105000,
-    imageUrl: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=2964&auto=format&fit=crop',
+    title: 'Honda CB 500X 2022',
+    description: 'Moto trail em perfeito estado, ideal para viagens.',
+    currentBid: 38000,
+    minBid: 36000,
+    imageUrl: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=2970&auto=format&fit=crop',
     endDate: getRandomFutureDate(),
     location: 'Curitiba, PR',
     vehicleInfo: {
-      brand: 'Volkswagen',
-      model: 'Golf GTI',
-      year: 2018,
+      brand: 'Honda',
+      model: 'CB 500X',
+      year: 2022,
       color: 'Vermelho',
-      type: 'car',
-      mileage: 52000
+      type: 'Motos',
+      mileage: 12000
     },
-    bidCount: 20,
+    bidCount: 10,
     format: 'Leilão',
     origin: 'Judicial',
     place: '2ª Praça',
     createdAt: new Date()
   },
+  
+  // PESADOS - CAMINHÕES
   {
     id: '5',
-    title: 'Ford Ranger XLT 2019',
-    description: 'Picape 4x4, diesel, completa, excelente para trabalho e lazer.',
-    currentBid: 135000,
-    minBid: 130000,
-    imageUrl: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2970&auto=format&fit=crop',
+    title: 'Ford Cargo 2428 2019',
+    description: 'Caminhão truck em bom estado, revisado e pronto para trabalhar.',
+    currentBid: 180000,
+    minBid: 175000,
+    imageUrl: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2970&auto=format&fit=crop',
     endDate: getRandomFutureDate(),
-    location: 'Brasília, DF',
+    location: 'Goiânia, GO',
     vehicleInfo: {
       brand: 'Ford',
-      model: 'Ranger XLT',
+      model: 'Cargo 2428',
       year: 2019,
-      color: 'Preto',
-      type: 'truck',
-      mileage: 65000
+      color: 'Branco',
+      type: 'Caminhões',
+      mileage: 120000
     },
     bidCount: 7,
     format: 'Leilão',
@@ -193,36 +136,275 @@ export const sampleAuctions: AuctionItem[] = [
   },
   {
     id: '6',
-    title: 'Jeep Compass Limited 2020',
-    description: 'SUV premium, teto solar panorâmico, pacote de tecnologia completo.',
-    currentBid: 145000,
-    minBid: 140000,
-    imageUrl: 'https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?q=80&w=2970&auto=format&fit=crop',
+    title: 'Volvo FH 540 2020',
+    description: 'Cavalo mecânico com cabine leito, completo e revisado.',
+    currentBid: 350000,
+    minBid: 340000,
+    imageUrl: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2970&auto=format&fit=crop',
     endDate: getRandomFutureDate(),
     location: 'Porto Alegre, RS',
     vehicleInfo: {
-      brand: 'Jeep',
-      model: 'Compass Limited',
+      brand: 'Volvo',
+      model: 'FH 540',
       year: 2020,
-      color: 'Cinza',
-      type: 'car',
-      mileage: 40000
+      color: 'Azul',
+      type: 'Cavalos Mecânicos',
+      mileage: 200000
     },
     bidCount: 14,
     format: 'Venda Direta',
     origin: 'Judicial',
     place: '2ª Praça',
     createdAt: new Date()
+  },
+  
+  // PESADOS - ÔNIBUS
+  {
+    id: '7',
+    title: 'Mercedes-Benz O500 2018',
+    description: 'Ônibus rodoviário com ar condicionado e banheiro.',
+    currentBid: 280000,
+    minBid: 270000,
+    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Salvador, BA',
+    vehicleInfo: {
+      brand: 'Mercedes-Benz',
+      model: 'O500',
+      year: 2018,
+      color: 'Prata',
+      type: 'Ônibus',
+      mileage: 250000
+    },
+    bidCount: 9,
+    format: 'Leilão',
+    origin: 'Extrajudicial',
+    place: '1ª Praça',
+    createdAt: new Date()
+  },
+  
+  // AÉREOS - AVIÕES
+  {
+    id: '8',
+    title: 'Cessna 172 Skyhawk 2015',
+    description: 'Avião monomotor em excelente estado, revisado e documentado.',
+    currentBid: 650000,
+    minBid: 630000,
+    imageUrl: 'https://images.unsplash.com/photo-1583396618422-597b2755de83?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'São Paulo, SP',
+    vehicleInfo: {
+      brand: 'Cessna',
+      model: '172 Skyhawk',
+      year: 2015,
+      color: 'Branco',
+      type: 'Aviões',
+      mileage: 1200
+    },
+    bidCount: 5,
+    format: 'Leilão',
+    origin: 'Judicial',
+    place: '2ª Praça',
+    createdAt: new Date()
+  },
+  
+  // AÉREOS - HELICÓPTEROS
+  {
+    id: '9',
+    title: 'Robinson R44 2017',
+    description: 'Helicóptero com baixas horas de voo, revisado e documentado.',
+    currentBid: 1200000,
+    minBid: 1150000,
+    imageUrl: 'https://images.unsplash.com/photo-1534786568720-8a8fce28f2c4?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Rio de Janeiro, RJ',
+    vehicleInfo: {
+      brand: 'Robinson',
+      model: 'R44',
+      year: 2017,
+      color: 'Vermelho',
+      type: 'Helicópteros',
+      mileage: 800
+    },
+    bidCount: 3,
+    format: 'Venda Direta',
+    origin: 'Extrajudicial',
+    place: 'Praça única',
+    createdAt: new Date()
+  },
+  
+  // NÁUTICOS - LANCHAS
+  {
+    id: '10',
+    title: 'Lancha Focker 280 2019',
+    description: 'Lancha em excelente estado, motor Mercury 300HP.',
+    currentBid: 320000,
+    minBid: 300000,
+    imageUrl: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Florianópolis, SC',
+    vehicleInfo: {
+      brand: 'Focker',
+      model: '280',
+      year: 2019,
+      color: 'Branco',
+      type: 'Lanchas',
+      mileage: 200
+    },
+    bidCount: 8,
+    format: 'Leilão',
+    origin: 'Judicial',
+    place: '1ª Praça',
+    createdAt: new Date()
+  },
+  
+  // NÁUTICOS - JET SKIS
+  {
+    id: '11',
+    title: 'Jet Ski Sea-Doo GTX 300 2021',
+    description: 'Jet ski com pouquíssimo uso, revisado e documentado.',
+    currentBid: 85000,
+    minBid: 80000,
+    imageUrl: 'https://images.unsplash.com/photo-1626438962460-c1df9a3c1f0e?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Balneário Camboriú, SC',
+    vehicleInfo: {
+      brand: 'Sea-Doo',
+      model: 'GTX 300',
+      year: 2021,
+      color: 'Azul',
+      type: 'Jet Skis',
+      mileage: 50
+    },
+    bidCount: 12,
+    format: 'Venda Direta',
+    origin: 'Particular',
+    place: 'Praça única',
+    createdAt: new Date()
+  },
+  
+  // RECREATIVOS - QUADRICICLOS
+  {
+    id: '12',
+    title: 'Quadriciclo Honda TRX 420 2020',
+    description: 'Quadriciclo 4x4 em excelente estado, pouco uso.',
+    currentBid: 45000,
+    minBid: 42000,
+    imageUrl: 'https://images.unsplash.com/photo-1621963249256-1dfe3e8a8d1c?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Goiânia, GO',
+    vehicleInfo: {
+      brand: 'Honda',
+      model: 'TRX 420',
+      year: 2020,
+      color: 'Vermelho',
+      type: 'Quadriciclos',
+      mileage: 1500
+    },
+    bidCount: 6,
+    format: 'Leilão',
+    origin: 'Extrajudicial',
+    place: '2ª Praça',
+    createdAt: new Date()
+  },
+  
+  // MÁQUINAS AGRÍCOLAS - TRATORES
+  {
+    id: '13',
+    title: 'Trator John Deere 6110J 2019',
+    description: 'Trator agrícola com cabine, ar condicionado e implementos.',
+    currentBid: 280000,
+    minBid: 270000,
+    imageUrl: 'https://images.unsplash.com/photo-1592805144716-feeccccef5ac?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Rondonópolis, MT',
+    vehicleInfo: {
+      brand: 'John Deere',
+      model: '6110J',
+      year: 2019,
+      color: 'Verde',
+      type: 'Tratores',
+      mileage: 3000
+    },
+    bidCount: 7,
+    format: 'Leilão',
+    origin: 'Judicial',
+    place: '1ª Praça',
+    createdAt: new Date()
+  },
+  
+  // MÁQUINAS AGRÍCOLAS - COLHEITADEIRAS
+  {
+    id: '14',
+    title: 'Colheitadeira Case IH 8250 2018',
+    description: 'Colheitadeira com plataforma de 30 pés, em bom estado.',
+    currentBid: 950000,
+    minBid: 920000,
+    imageUrl: 'https://images.unsplash.com/photo-1592805144716-feeccccef5ac?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Sorriso, MT',
+    vehicleInfo: {
+      brand: 'Case IH',
+      model: '8250',
+      year: 2018,
+      color: 'Vermelho',
+      type: 'Colheitadeiras',
+      mileage: 4500
+    },
+    bidCount: 5,
+    format: 'Venda Direta',
+    origin: 'Extrajudicial',
+    place: 'Praça única',
+    createdAt: new Date()
+  },
+  
+  // MÁQUINAS DE CONSTRUÇÃO - ESCAVADEIRAS
+  {
+    id: '15',
+    title: 'Escavadeira Caterpillar 320 2017',
+    description: 'Escavadeira hidráulica com 5.000 horas de uso, revisada.',
+    currentBid: 480000,
+    minBid: 450000,
+    imageUrl: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Cuiabá, MT',
+    vehicleInfo: {
+      brand: 'Caterpillar',
+      model: '320',
+      year: 2017,
+      color: 'Amarelo',
+      type: 'Escavadeiras',
+      mileage: 5000
+    },
+    bidCount: 6,
+    format: 'Leilão',
+    origin: 'Judicial',
+    place: '2ª Praça',
+    createdAt: new Date()
+  },
+  
+  // AUXILIARES - REBOQUES
+  {
+    id: '16',
+    title: 'Reboque para Barco 2020',
+    description: 'Reboque para barco de até 21 pés, galvanizado.',
+    currentBid: 12000,
+    minBid: 10000,
+    imageUrl: 'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?q=80&w=2970&auto=format&fit=crop',
+    endDate: getRandomFutureDate(),
+    location: 'Florianópolis, SC',
+    vehicleInfo: {
+      brand: 'Carretinha Brasil',
+      model: 'Náutica 21',
+      year: 2020,
+      color: 'Prata',
+      type: 'Reboques',
+      mileage: 0
+    },
+    bidCount: 4,
+    format: 'Venda Direta',
+    origin: 'Particular',
+    place: 'Praça única',
+    createdAt: new Date()
   }
 ];
-
-// Add additional auction items to total at least 31
-const baseCount = sampleAuctions.length;
-const additionalAuctions = createAdditionalAuctions(baseCount, 35);
-sampleAuctions.push(...additionalAuctions);
-
-export const fetchSampleAuctions = async () => {
-  // In a real app, this would be an API call
-  // For now, we'll just return the existing sample data
-  return sampleAuctions;
-};
