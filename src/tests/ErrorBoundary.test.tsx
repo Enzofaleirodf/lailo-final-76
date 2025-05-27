@@ -1,7 +1,19 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ErrorBoundary from '../components/ErrorBoundary';
 import React from 'react';
+
+// Extend Vitest matchers for better DOM testing
+expect.extend({
+  toBeInTheDocument(received) {
+    const pass = received !== null && document.body.contains(received);
+    return {
+      message: () => pass ? 'Element is in document' : 'Element is not in document',
+      pass,
+    };
+  },
+});
 
 // Mock window.location.reload
 const mockReload = vi.fn();

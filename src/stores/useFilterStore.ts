@@ -131,19 +131,26 @@ export const useFilterStore = create<FilterStore>()(
       
       // Reset all filters to initial state
       resetFilters: () => {
-        set((state) => ({ 
-          filters: { 
+        set((state) => {
+          const resetFilters: FilterState = { 
             ...DEFAULT_FILTER_VALUES,
             // Preserve content type when resetting
             contentType: state.filters.contentType,
             vehicleTypes: [],
             propertyTypes: [],
-          }, 
-          activeFilters: 0,
-          lastUpdatedFilter: 'reset',
-          selectedOrigins: ['Extrajudicial'],
-          selectedPlaces: ['Praça única']
-        }));
+            format: 'Leilão' as FilterFormat,
+            origin: 'Extrajudicial' as FilterOrigin,
+            place: 'Praça única' as FilterPlace
+          };
+          
+          return { 
+            filters: resetFilters, 
+            activeFilters: 0,
+            lastUpdatedFilter: 'reset',
+            selectedOrigins: ['Extrajudicial'],
+            selectedPlaces: ['Praça única']
+          };
+        });
       },
       
       // Set multiple filters at once (used for URL sync)
