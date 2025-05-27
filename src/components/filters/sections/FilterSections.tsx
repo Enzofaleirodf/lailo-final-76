@@ -58,7 +58,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
 
       {isPropertyMode ? <>
           {showTypeFilter && <div className="flex items-start">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Tipo:</span>
+              
               <div className="w-auto flex-1">
                 <ErrorBoundary componentName="PropertyTypeFilter">
                   <FilterSectionComponent title="Tipo de imóvel" isExpanded={true} onToggle={() => {}}>
