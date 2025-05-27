@@ -1,3 +1,4 @@
+
 import React, { useCallback, useMemo } from 'react';
 import { ChevronDown, Building2, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -142,13 +143,21 @@ const TopFilters: React.FC = () => {
             <RadioGroup
               value={filters.format}
               onValueChange={handleFormatChange}
-              className="group relative inline-grid grid-cols-[1fr_1fr] items-center gap-0 text-sm font-medium after:absolute after:inset-y-0 after:w-1/2 after:rounded-md after:bg-white after:shadow-sm after:shadow-black/5 after:outline-offset-2 after:transition-transform after:duration-300 after:[transition-timing-function:cubic-bezier(0.16,1,0.3,1)] has-[:focus-visible]:after:outline has-[:focus-visible]:after:outline-2 has-[:focus-visible]:after:outline-ring/70 data-[state=Leilão]:after:translate-x-0 data-[state=Venda\ Direta]:after:translate-x-full"
-              data-state={filters.format}
+              className={cn(
+                "group relative inline-grid grid-cols-[1fr_1fr] items-center gap-0 text-sm font-medium",
+                "after:absolute after:inset-y-0 after:w-1/2 after:rounded-md after:bg-white after:shadow-sm after:shadow-black/5",
+                "after:outline-offset-2 after:transition-transform after:duration-300 after:[transition-timing-function:cubic-bezier(0.16,1,0.3,1)]",
+                "has-[:focus-visible]:after:outline has-[:focus-visible]:after:outline-2 has-[:focus-visible]:after:outline-ring/70",
+                filters.format === 'Leilão' ? "after:translate-x-0" : "after:translate-x-full"
+              )}
             >
               {formatOptions.map((option, index) => (
                 <label 
                   key={option.value}
-                  className="relative z-10 inline-flex h-9 min-w-0 cursor-pointer select-none items-center justify-center whitespace-nowrap px-4 transition-colors group-data-[state=Venda\ Direta]:first:text-muted-foreground/70 group-data-[state=Leilão]:last:text-muted-foreground/70"
+                  className={cn(
+                    "relative z-10 inline-flex h-9 min-w-0 cursor-pointer select-none items-center justify-center whitespace-nowrap px-4 transition-colors",
+                    filters.format !== option.value && "text-muted-foreground/70"
+                  )}
                 >
                   {option.label}
                   <RadioGroupItem 
