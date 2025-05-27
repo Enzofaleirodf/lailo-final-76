@@ -10,6 +10,7 @@ import { FilterFormat, FilterOrigin, FilterPlace, ContentType } from '@/types/fi
 import { formatOptions, originOptions, placeOptions } from '@/utils/filterUtils';
 import ErrorBoundary from './ErrorBoundary';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 
 /**
@@ -136,26 +137,28 @@ const TopFilters: React.FC = () => {
           
           <Separator orientation="vertical" className="h-10" />
           
-          {/* Format Filter Group - Segmented Control */}
-          <div className="w-auto">
-            <ToggleGroup 
-              type="single" 
-              value={filters.format} 
-              onValueChange={handleFormatChange} 
-              className="h-10 bg-gray-100 border border-gray-200 rounded-lg p-1" 
-              variant="brand"
+          {/* Format Filter Group - Segmented Control with RadioGroup */}
+          <div className="inline-flex h-10 rounded-lg bg-gray-100 border border-gray-200 p-0.5">
+            <RadioGroup
+              value={filters.format}
+              onValueChange={handleFormatChange}
+              className="group relative inline-grid grid-cols-[1fr_1fr] items-center gap-0 text-sm font-medium after:absolute after:inset-y-0 after:w-1/2 after:rounded-md after:bg-white after:shadow-sm after:shadow-black/5 after:outline-offset-2 after:transition-transform after:duration-300 after:[transition-timing-function:cubic-bezier(0.16,1,0.3,1)] has-[:focus-visible]:after:outline has-[:focus-visible]:after:outline-2 has-[:focus-visible]:after:outline-ring/70 data-[state=Leilão]:after:translate-x-0 data-[state=Venda\ Direta]:after:translate-x-full"
+              data-state={filters.format}
             >
-              {formatOptions.map(option => (
-                <ToggleGroupItem 
-                  key={option.value} 
-                  value={option.value} 
-                  className="h-8 text-sm whitespace-nowrap px-4 rounded-md data-[state=on]:bg-white data-[state=on]:shadow-sm" 
-                  aria-label={`Formato: ${option.label}`}
+              {formatOptions.map((option, index) => (
+                <label 
+                  key={option.value}
+                  className="relative z-10 inline-flex h-9 min-w-0 cursor-pointer select-none items-center justify-center whitespace-nowrap px-4 transition-colors group-data-[state=Venda\ Direta]:first:text-muted-foreground/70 group-data-[state=Leilão]:last:text-muted-foreground/70"
                 >
                   {option.label}
-                </ToggleGroupItem>
+                  <RadioGroupItem 
+                    value={option.value} 
+                    className="sr-only" 
+                    aria-label={`Formato: ${option.label}`}
+                  />
+                </label>
               ))}
-            </ToggleGroup>
+            </RadioGroup>
           </div>
     
           <Separator orientation="vertical" className="h-10" />
