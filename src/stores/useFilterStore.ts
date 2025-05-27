@@ -31,7 +31,6 @@ interface FilterStore extends FilterStoreState {
 }
 
 // Count active filters to show in badge
-// Improved to only count filters that differ from default values or initial state
 const countActiveFilters = (filters: FilterState): number => {
   let count = 0;
   
@@ -47,7 +46,6 @@ const countActiveFilters = (filters: FilterState): number => {
   if (propertyTypes.length > 0) count++;
   
   // Price range - só contar se os valores forem significativamente diferentes dos padrões
-  // Verificar se o valor mínimo e máximo são próximos dos padrões (com uma margem de tolerância)
   const isPriceDefault = 
     (!filters.price?.range?.min || filters.price.range.min === DEFAULT_RANGE_VALUES.price.min) && 
     (!filters.price?.range?.max || filters.price.range.max === DEFAULT_RANGE_VALUES.price.max);
@@ -73,10 +71,10 @@ const countActiveFilters = (filters: FilterState): number => {
   if (filters.model !== 'todos') count++;
   if (filters.color !== 'todas') count++;
   
-  // Auction format, origin, place - Only count if different from visual defaults
-  if (filters.format !== 'Leilão') count++; // Using 'Leilão' as the default
-  if (filters.origin !== 'Todas') count++;
-  if (filters.place !== 'Todas') count++;
+  // Auction format, origin, place - Using correct default values
+  if (filters.format !== 'Leilão') count++;
+  if (filters.origin !== 'Extrajudicial') count++;
+  if (filters.place !== 'Praça única') count++;
 
   // Category - conta se for diferente do padrão
   if (filters.category !== 'Todos') count++;
@@ -90,14 +88,14 @@ export const useFilterStore = create<FilterStore>()(
     (set, get) => ({
       filters: {
         ...DEFAULT_FILTER_VALUES,
-        vehicleTypes: [], // Ensure vehicleTypes is initialized as an empty array
-        propertyTypes: [], // Ensure propertyTypes is initialized as an empty array
+        vehicleTypes: [],
+        propertyTypes: [],
       },
       expandedSections: DEFAULT_EXPANDED_SECTIONS,
       activeFilters: 0,
       lastUpdatedFilter: 'initial',
       selectedOrigins: ['Extrajudicial'],
-      selectedPlaces: ['Praça Única'],
+      selectedPlaces: ['Praça única'],
       
       // Update a specific filter value
       updateFilter: (key, value) => {
@@ -138,13 +136,13 @@ export const useFilterStore = create<FilterStore>()(
             ...DEFAULT_FILTER_VALUES,
             // Preserve content type when resetting
             contentType: state.filters.contentType,
-            vehicleTypes: [], // Ensure arrays are initialized
+            vehicleTypes: [],
             propertyTypes: [],
           }, 
           activeFilters: 0,
           lastUpdatedFilter: 'reset',
           selectedOrigins: ['Extrajudicial'],
-          selectedPlaces: ['Praça Única']
+          selectedPlaces: ['Praça única']
         }));
       },
       
@@ -221,12 +219,11 @@ export const useFilterStore = create<FilterStore>()(
         if (origins.length === 0) return;
         
         set((state) => {
-          // Store all selected origins
           const selectedOrigins = [...origins];
           
           const newFilters = { 
             ...state.filters, 
-            origin: origins[0] // Keep the first one as the main filter for backward compatibility
+            origin: origins[0]
           };
           
           return { 
@@ -243,12 +240,11 @@ export const useFilterStore = create<FilterStore>()(
         if (places.length === 0) return;
         
         set((state) => {
-          // Store all selected places
           const selectedPlaces = [...places];
           
           const newFilters = { 
             ...state.filters, 
-            place: places[0] // Keep the first one as the main filter for backward compatibility
+            place: places[0]
           };
           
           return { 

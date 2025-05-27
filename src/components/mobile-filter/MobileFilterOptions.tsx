@@ -1,3 +1,5 @@
+
+import React, { useCallback, memo } from 'react';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { FilterFormat, FilterOrigin, FilterPlace } from '@/types/filters';
 import { COLORS, TYPOGRAPHY } from '@/constants/designSystem';
@@ -52,14 +54,14 @@ const MobileFilterOptions: React.FC = () => {
   const handleResetFilters = useCallback(() => {
     updateFilter('format', 'Leilão');
     updateFilter('origin', 'Extrajudicial');
-    updateFilter('place', 'Praça Única');
+    updateFilter('place', 'Praça única');
   }, [updateFilter]);
 
   // Check if any filters are active
   const hasActiveFilters = 
     filters.format !== 'Leilão' || 
     filters.origin !== 'Extrajudicial' || 
-    filters.place !== 'Praça Única';
+    filters.place !== 'Praça única';
     
   // Get selected origins and places for multi-select
   const selectedOrigins = getSelectedOrigins();
@@ -138,7 +140,7 @@ const MobileFilterOptions: React.FC = () => {
         >
           {placeOptions.map(option => {
             // Simplify the display text for place options
-            const displayText = option.value === 'Praça Única' ? 'Única' : 
+            const displayText = option.value === 'Praça única' ? 'Única' : 
                                option.value === '1ª Praça' ? '1ª' :
                                option.value === '2ª Praça' ? '2ª' :
                                option.value === '3ª Praça' ? '3ª' : option.label;

@@ -175,7 +175,7 @@ export const createFormatBadge = (
   format: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!format || format === 'Todos') return null;
+  if (!format || format === 'Leilão') return null;
   
   return {
     key: 'format',
@@ -207,7 +207,7 @@ export const createPlaceBadge = (
   place: string,
   onRemove: () => void
 ): FilterBadge | null => {
-  if (!place || place === 'Praça Única') return null;
+  if (!place || place === 'Praça única') return null;
   
   return {
     key: 'place',
@@ -298,7 +298,7 @@ export const generateFilterBadges = (
   // Add format badge
   const formatBadge = createFormatBadge(
     filters.format,
-    () => updateFilter('format', 'Todos')
+    () => updateFilter('format', 'Leilão')
   );
   if (formatBadge) badges.push(formatBadge);
   
@@ -312,7 +312,7 @@ export const generateFilterBadges = (
   // Add place badge
   const placeBadge = createPlaceBadge(
     filters.place,
-    () => updateFilter('place', 'Praça Única')
+    () => updateFilter('place', 'Praça única')
   );
   if (placeBadge) badges.push(placeBadge);
   

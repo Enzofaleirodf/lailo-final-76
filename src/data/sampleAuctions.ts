@@ -83,7 +83,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 15,
     format: 'Venda Direta',
     origin: 'Extrajudicial',
-    place: 'Praça Única',
+    place: 'Praça única',
     createdAt: new Date()
   },
   {
@@ -154,7 +154,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 14,
     format: 'Venda Direta',
     origin: 'Judicial',
-    place: 'Praça Única',
+    place: 'Praça única',
     createdAt: new Date()
   },
   
@@ -229,7 +229,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 3,
     format: 'Venda Direta',
     origin: 'Extrajudicial',
-    place: 'Praça Única',
+    place: 'Praça única',
     createdAt: new Date()
   },
   
@@ -278,8 +278,8 @@ export const sampleAuctions: AuctionItem[] = [
     },
     bidCount: 12,
     format: 'Venda Direta',
-    origin: 'Particular',
-    place: 'Praça Única',
+    origin: 'Extrajudicial',
+    place: 'Praça única',
     createdAt: new Date()
   },
   
@@ -354,7 +354,7 @@ export const sampleAuctions: AuctionItem[] = [
     bidCount: 5,
     format: 'Venda Direta',
     origin: 'Extrajudicial',
-    place: 'Praça Única',
+    place: 'Praça única',
     createdAt: new Date()
   },
   
@@ -403,8 +403,8 @@ export const sampleAuctions: AuctionItem[] = [
     },
     bidCount: 4,
     format: 'Venda Direta',
-    origin: 'Particular',
-    place: 'Praça Única',
+    origin: 'Extrajudicial',
+    place: 'Praça única',
     createdAt: new Date()
   }
 ];
