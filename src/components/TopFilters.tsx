@@ -148,7 +148,7 @@ const TopFilters: React.FC = () => {
           {/* Origin Filter Group */}
           <div className="w-auto">
             <ToggleGroup type="multiple" value={selectedOrigins} onValueChange={handleOriginChange} className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1" variant="multi">
-              {originOptions.map(option => <ToggleGroupItem key={option.value} value={option.value} aria-label={`Origem: ${option.label}`} className="text-sm whitespace-nowrap px-4 rounded-md bg-purple-100">
+              {originOptions.map(option => <ToggleGroupItem key={option.value} value={option.value} aria-label={`Origem: ${option.label}`} className="text-sm whitespace-nowrap px-4 rounded-md">
                   {option.label}
                 </ToggleGroupItem>)}
             </ToggleGroup>
