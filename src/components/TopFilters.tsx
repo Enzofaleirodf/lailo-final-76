@@ -115,25 +115,26 @@ const TopFilters: React.FC = () => {
       tabIndex: isSelected ? 0 : -1
     };
   };
+  
   return <ErrorBoundary componentName="TopFilters">
       <div className="mb-6" role="navigation" aria-label="Filtros rápidos">
-        {/* Filter Groups Row - All in one row */}
-        <div className="flex flex-wrap items-center">
-          {/* Content Type Buttons */}
-          <div className={`${baseContainerStyle} h-10 flex w-auto border border-gray-200`} role="tablist" aria-label="Tipo de conteúdo">
+        {/* Content Type Buttons - Full Width */}
+        <div className="w-full mb-4">
+          <div className={`${baseContainerStyle} h-10 flex w-full border border-gray-200`} role="tablist" aria-label="Tipo de conteúdo">
             <button onClick={() => handleContentTypeChange('property')} className={cn("flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-urbanist", filters.contentType === 'property' ? `bg-gradient-to-r from-brand-600 to-brand-700 ${COLORS.text.white}` : `${COLORS.text.gray[700]} hover:bg-gray-50`, "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50")} aria-label="Filtrar imóveis" {...getTabAttributes('property')}>
               <Building2 size={18} className="shrink-0" aria-hidden="true" />
-              
+              Imóveis
             </button>
             <div className="w-[1px] bg-gray-200" aria-hidden="true"></div>
             <button onClick={() => handleContentTypeChange('vehicle')} className={cn("flex-1 h-10 flex items-center justify-center gap-2 text-sm font-medium transition-colors font-urbanist", filters.contentType === 'vehicle' ? `bg-gradient-to-r from-brand-600 to-brand-700 ${COLORS.text.white}` : `${COLORS.text.gray[700]} hover:bg-gray-50`, "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50")} aria-label="Filtrar veículos" {...getTabAttributes('vehicle')}>
               <Car size={18} className="shrink-0" aria-hidden="true" />
-              
+              Veículos
             </button>
           </div>
-          
-          <Separator orientation="vertical" className="h-10 mx-4" />
-          
+        </div>
+        
+        {/* Other Filter Groups Row */}
+        <div className="flex flex-wrap items-center gap-4">
           {/* Format Filter Group */}
           <div className="w-auto">
             <ToggleGroup type="single" value={filters.format} onValueChange={handleFormatChange} className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1" variant="brand">
@@ -143,7 +144,7 @@ const TopFilters: React.FC = () => {
             </ToggleGroup>
           </div>
     
-          <Separator orientation="vertical" className="h-10 mx-4" />
+          <Separator orientation="vertical" className="h-10" />
           
           {/* Origin Filter Group */}
           <div className="w-auto">
@@ -154,7 +155,7 @@ const TopFilters: React.FC = () => {
             </ToggleGroup>
           </div>
     
-          <Separator orientation="vertical" className="h-10 mx-4" />
+          <Separator orientation="vertical" className="h-10" />
           
           {/* Place Filter Group */}
           <div className="w-auto">
@@ -171,11 +172,12 @@ const TopFilters: React.FC = () => {
           
           {/* Reset Filters Button - Only show when filters are active */}
           {hasActiveTopFilters && <>
-              <Separator orientation="vertical" className="h-10 mx-4" />
+              <Separator orientation="vertical" className="h-10" />
               
             </>}
         </div>
       </div>
     </ErrorBoundary>;
 };
+
 export default React.memo(TopFilters);
