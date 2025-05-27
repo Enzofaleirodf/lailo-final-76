@@ -67,3 +67,9 @@ export interface FilterStoreState {
   activeFilters: number;
   lastUpdatedFilter: string | null;
 }
+
+export interface ActiveFilterBadge {
+  key: string;
+  label: string;
+  onRemove: () => void;
+}

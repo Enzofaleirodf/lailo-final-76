@@ -24,7 +24,7 @@ export const hasFilterChanged = (currentFilters: FilterState, params: URLSearchP
   if (formatParam !== currentFilters.format) return true;
   
   if ((params.get('origin') || 'Extrajudicial') !== currentFilters.origin) return true;
-  if ((params.get('place') || 'Praça Única') !== currentFilters.place) return true;
+  if ((params.get('place') || 'Praça única') !== currentFilters.place) return true;
   
   return false;
 };
@@ -196,7 +196,7 @@ const updateAuctionParams = (params: URLSearchParams, filters: FilterState): voi
     params.delete('origin');
   }
   
-  if (filters.place !== 'Praça Única') {
+  if (filters.place !== 'Praça única') {
     params.set('place', filters.place);
   } else {
     params.delete('place');

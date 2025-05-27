@@ -87,7 +87,7 @@ const TopFilters: React.FC = () => {
     // Reset origin to default
     updateFilter('origin', 'Extrajudicial');
     // Reset place to default
-    updateFilter('place', 'Praça Única');
+    updateFilter('place', 'Praça única');
 
     // Log the reset action
     logUserAction('reset_top_filters', {});
@@ -95,7 +95,7 @@ const TopFilters: React.FC = () => {
 
   // Check if any top filters are active
   const hasActiveTopFilters = useMemo(() => {
-    return filters.format !== 'Leilão' || filters.origin !== 'Extrajudicial' || filters.place !== 'Praça Única';
+    return filters.format !== 'Leilão' || filters.origin !== 'Extrajudicial' || filters.place !== 'Praça única';
   }, [filters.format, filters.origin, filters.place]);
 
   // Get selected origins and places for multi-select

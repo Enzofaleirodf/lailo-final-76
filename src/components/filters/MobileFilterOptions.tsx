@@ -27,7 +27,9 @@ const MobileFilterOptions: React.FC = () => {
     filters,
     updateFilter,
     expandedSections,
-    toggleSection
+    toggleSection,
+    getSelectedOrigins,
+    getSelectedPlaces
   } = useFilterStore();
 
   // Handlers memoizados para evitar renderizações desnecessárias
@@ -55,14 +57,18 @@ const MobileFilterOptions: React.FC = () => {
   const handleResetFilters = useCallback(() => {
     updateFilter('format', 'Leilão');
     updateFilter('origin', 'Extrajudicial');
-    updateFilter('place', 'Praça Única');
+    updateFilter('place', 'Praça única');
   }, [updateFilter]);
 
   // Check if any filters are active
   const hasActiveFilters = 
     filters.format !== 'Leilão' || 
     filters.origin !== 'Extrajudicial' || 
-    filters.place !== 'Praça Única';
+    filters.place !== 'Praça única';
+
+  // Get selected origins and places for multi-select
+  const selectedOrigins = getSelectedOrigins();
+  const selectedPlaces = getSelectedPlaces();
 
   return (
     <div 
@@ -135,7 +141,7 @@ const MobileFilterOptions: React.FC = () => {
       <FilterSectionComponent 
         title="Praça" 
         isExpanded={expandedSections.place} 
-        onToggle={handleTogglePraça}
+        onToggle={handleTogglePlace}
       >
         <div className="flex items-center">
           <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2">Praça:</span>
@@ -150,7 +156,7 @@ const MobileFilterOptions: React.FC = () => {
             >
               {placeOptions.map(option => {
                 // Simplify the display text for place options
-                const displayText = option.value === 'Praça Única' ? 'Única' : 
+                const displayText = option.value === 'Praça única' ? 'Única' : 
                                    option.value === '1ª Praça' ? '1ª' :
                                    option.value === '2ª Praça' ? '2ª' :
                                    option.value === '3ª Praça' ? '3ª' : option.label;
