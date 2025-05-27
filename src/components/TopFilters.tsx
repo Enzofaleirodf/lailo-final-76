@@ -136,12 +136,25 @@ const TopFilters: React.FC = () => {
           
           <Separator orientation="vertical" className="h-10" />
           
-          {/* Format Filter Group */}
+          {/* Format Filter Group - Segmented Control */}
           <div className="w-auto">
-            <ToggleGroup type="single" value={filters.format} onValueChange={handleFormatChange} className="flex rounded-md overflow-hidden shadow-sm gap-1 p-1" variant="brand">
-              {formatOptions.map(option => <ToggleGroupItem key={option.value} value={option.value} className="text-sm whitespace-nowrap px-4 rounded-md" aria-label={`Formato: ${option.label}`}>
+            <ToggleGroup 
+              type="single" 
+              value={filters.format} 
+              onValueChange={handleFormatChange} 
+              className="h-10 bg-gray-100 border border-gray-200 rounded-lg p-1" 
+              variant="brand"
+            >
+              {formatOptions.map(option => (
+                <ToggleGroupItem 
+                  key={option.value} 
+                  value={option.value} 
+                  className="h-8 text-sm whitespace-nowrap px-4 rounded-md data-[state=on]:bg-white data-[state=on]:shadow-sm" 
+                  aria-label={`Formato: ${option.label}`}
+                >
                   {option.label}
-                </ToggleGroupItem>)}
+                </ToggleGroupItem>
+              ))}
             </ToggleGroup>
           </div>
     
