@@ -4,23 +4,10 @@ import { render, screen } from '@testing-library/react';
 import ErrorBoundary from '../components/ErrorBoundary';
 import React from 'react';
 
-// Extend Vitest matchers for better DOM testing
-expect.extend({
-  toBeInTheDocument(received) {
-    const pass = received !== null && document.body.contains(received);
-    return {
-      message: () => pass ? 'Element is in document' : 'Element is not in document',
-      pass,
-    };
-  },
-});
-
 // Mock window.location.reload
 const mockReload = vi.fn();
-vi.stubGlobal('document', {
-  location: {
-    reload: mockReload
-  }
+vi.stubGlobal('location', {
+  reload: mockReload
 });
 
 // Mock component that throws an error
@@ -45,7 +32,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     
-    expect(screen.getByText('Test content')).toBeInTheDocument();
+    expect(screen.getByText('Test content')).toBeDefined();
   });
   
   it('renders fallback UI when there is an error', () => {
@@ -55,9 +42,9 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     
-    expect(screen.getByText('Algo deu errado')).toBeInTheDocument();
-    expect(screen.getByText(/Ocorreu um erro ao renderizar este componente/)).toBeInTheDocument();
-    expect(screen.getByText('Recarregar página')).toBeInTheDocument();
+    expect(screen.getByText('Algo deu errado')).toBeDefined();
+    expect(screen.getByText(/Ocorreu um erro ao renderizar este componente/)).toBeDefined();
+    expect(screen.getByText('Recarregar página')).toBeDefined();
   });
   
   it('renders custom fallback when provided', () => {
@@ -67,7 +54,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     
-    expect(screen.getByText('Custom fallback')).toBeInTheDocument();
+    expect(screen.getByText('Custom fallback')).toBeDefined();
   });
   
   it('calls onError when there is an error', () => {
