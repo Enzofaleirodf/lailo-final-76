@@ -80,7 +80,7 @@ export const ContentTypeFilters: React.FC<FilterSectionsProps> = ({
           </div>
         </> : <>
           {showTypeFilter && <div className="flex items-start">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap mr-2 mt-2">Tipo:</span>
+              
               <div className="w-auto flex-1">
                 <ErrorBoundary componentName="VehicleTypeFilter">
                   <FilterSectionComponent title="Tipo de veículo" isExpanded={true} onToggle={() => {}}>
